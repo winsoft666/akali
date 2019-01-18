@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\base\assert.h" />
+    <ClInclude Include="..\include\base\base64.h" />
+    <ClInclude Include="..\include\base\bind.h" />
+    <ClInclude Include="..\include\base\bind_helpers.h" />
+    <ClInclude Include="..\include\base\bind_internal.h" />
+    <ClInclude Include="..\include\base\buffer_queue.h" />
+    <ClInclude Include="..\include\base\byteorder.h" />
+    <ClInclude Include="..\include\base\callback.h" />
+    <ClInclude Include="..\include\base\callback_forward.h" />
+    <ClInclude Include="..\include\base\callback_internal.h" />
+    <ClInclude Include="..\include\base\cmdline_parse.h" />
+    <ClInclude Include="..\include\base\compiler_specific.h" />
+    <ClInclude Include="..\include\base\constructormagic.h" />
+    <ClInclude Include="..\include\base\criticalsection.h" />
+    <ClInclude Include="..\include\base\deprecation.h" />
+    <ClInclude Include="..\include\base\driver_info.h" />
+    <ClInclude Include="..\include\base\endianess_detect.h" />
+    <ClInclude Include="..\include\base\event.h" />
+    <ClInclude Include="..\include\base\file_util.h" />
+    <ClInclude Include="..\include\base\flags.h" />
+    <ClInclude Include="..\include\base\ini.h" />
+    <ClInclude Include="..\include\base\logging.h" />
+    <ClInclude Include="..\include\base\macros.h" />
+    <ClInclude Include="..\include\base\md5.h" />
+    <ClInclude Include="..\include\base\memory_pool.hpp" />
+    <ClInclude Include="..\include\base\module_safe_string.h" />
+    <ClInclude Include="..\include\base\pc_info.h" />
+    <ClInclude Include="..\include\base\os_ver.h" />
+    <ClInclude Include="..\include\base\random.h" />
+    <ClInclude Include="..\include\base\safe_compare.h" />
+    <ClInclude Include="..\include\base\safe_conversions.h" />
+    <ClInclude Include="..\include\base\safe_conversions_impl.h" />
+    <ClInclude Include="..\include\base\string.h" />
+    <ClInclude Include="..\include\base\template_util.h" />
+    <ClInclude Include="..\include\base\thread_util.h" />
+    <ClInclude Include="..\include\base\registry.h" />
+    <ClInclude Include="..\include\base\safe_release_macro.h" />
+    <ClInclude Include="..\include\base\singleton.h" />
+    <ClInclude Include="..\include\base\logging_file_sink_win.h" />
+    <ClInclude Include="..\include\base\stringencode.h" />
+    <ClInclude Include="..\include\base\timeutils.h" />
+    <ClInclude Include="..\include\base\file_info.h" />
+    <ClInclude Include="..\include\base\win_main.h" />
+    <ClInclude Include="..\include\base\process_util.h" />
+    <ClInclude Include="..\include\base\timer.h" />
+    <ClInclude Include="..\include\base\win_service_base.h" />
+    <ClInclude Include="..\include\base\win_service_installer.h" />
+    <ClInclude Include="..\include\encrypt\encrypt_helper.h" />
+    <ClInclude Include="..\include\net\file_download.h" />
+    <ClInclude Include="..\include\net\file_transfer_base.h" />
+    <ClInclude Include="..\include\net\global_env.h" />
+    <ClInclude Include="..\include\net\host_resolve.h" />
+    <ClInclude Include="..\include\net\http_request.h" />
+    <ClInclude Include="..\include\net\iocp.h" />
+    <ClInclude Include="..\include\net\iocpserver.h" />
+    <ClInclude Include="..\include\net\ipaddress.h" />
+    <ClInclude Include="..\include\net\networkprotocoldef.h" />
+    <ClInclude Include="..\include\net\overlappedsocket.h" />
+    <ClInclude Include="..\include\net\ping.h" />
+    <ClInclude Include="..\include\net\socket.h" />
+    <ClInclude Include="..\include\net\socketaddress.h" />
+    <ClInclude Include="..\include\ppx.h" />
+    <ClInclude Include="..\include\ppx_export.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+    <None Include="..\src\.gitignore" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\base\assert.cpp" />
+    <ClCompile Include="..\src\base\base64.cpp" />
+    <ClCompile Include="..\src\base\bind_helpers.cpp" />
+    <ClCompile Include="..\src\base\buffer_queue.cpp" />
+    <ClCompile Include="..\src\base\byteorder.cpp" />
+    <ClCompile Include="..\src\base\callback_internal.cpp" />
+    <ClCompile Include="..\src\base\cmdline_parse.cpp" />
+    <ClCompile Include="..\src\base\criticalsection.cpp" />
+    <ClCompile Include="..\src\base\driver_info.cpp" />
+    <ClCompile Include="..\src\base\endianess_detect.cpp" />
+    <ClCompile Include="..\src\base\event.cpp" />
+    <ClCompile Include="..\src\base\file_info.cpp" />
+    <ClCompile Include="..\src\base\file_util.cpp" />
+    <ClCompile Include="..\src\base\flags.cpp" />
+    <ClCompile Include="..\src\base\ini.cpp" />
+    <ClCompile Include="..\src\base\logging.cpp" />
+    <ClCompile Include="..\src\base\logging_file_sink_win.cpp" />
+    <ClCompile Include="..\src\base\md5.cpp" />
+    <ClCompile Include="..\src\base\os_ver.cpp" />
+    <ClCompile Include="..\src\base\pc_info.cpp" />
+    <ClCompile Include="..\src\base\process_util.cpp" />
+    <ClCompile Include="..\src\base\random.cpp" />
+    <ClCompile Include="..\src\base\registry.cpp" />
+    <ClCompile Include="..\src\base\string.cpp" />
+    <ClCompile Include="..\src\base\stringencode.cpp" />
+    <ClCompile Include="..\src\base\thread_util.cpp" />
+    <ClCompile Include="..\src\base\timer.cpp" />
+    <ClCompile Include="..\src\base\timeutils.cpp" />
+    <ClCompile Include="..\src\base\win_main.cpp" />
+    <ClCompile Include="..\src\base\win_service_base.cpp" />
+    <ClCompile Include="..\src\base\win_service_installer.cpp" />
+    <ClCompile Include="..\src\base\win_util.cpp" />
+    <ClCompile Include="..\src\encrypt\encrypt_helper.cpp" />
+    <ClCompile Include="..\src\net\file_download.cpp" />
+    <ClCompile Include="..\src\net\file_transfer_base.cpp" />
+    <ClCompile Include="..\src\net\global_env.cpp" />
+    <ClCompile Include="..\src\net\host_resolve.cpp" />
+    <ClCompile Include="..\src\net\http_request.cpp" />
+    <ClCompile Include="..\src\net\iocp.cpp" />
+    <ClCompile Include="..\src\net\iocpserver.cpp" />
+    <ClCompile Include="..\src\net\ipaddress.cpp" />
+    <ClCompile Include="..\src\net\networkprotocoldef.cpp" />
+    <ClCompile Include="..\src\net\overlappedsocket.cpp" />
+    <ClCompile Include="..\src\net\ping.cpp" />
+    <ClCompile Include="..\src\net\socketaddress.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{CE0CBFB3-8D7E-4833-BE49-615F075A8CCC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>cpp4j</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>ppx</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\_Clean\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <Linkage>StaticLibrary_MT</Linkage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\_Clean\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <Linkage>DynamicLibrary_MD</Linkage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\_Clean\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <Linkage>StaticLibrary_MT</Linkage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\_Clean\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <Linkage>DynamicLibrary_MD</Linkage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <PostBuildEvent>
+      <Command>xcopy "..\include\*.*" "..\ppx_nuget\build\native\include\" /E /Y
+xcopy "$(TargetDir)$(TargetFileName)" "..\ppx_nuget\build\native\lib\vc140_x86_static_mt_debug\" /Y
+</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;PPX_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <PostBuildEvent>
+      <Command>xcopy "..\include\*.*" "..\ppx_nuget\build\native\include\" /E /Y
+xcopy "$(TargetDir)$(ProjectName).lib" "..\ppx_nuget\build\native\lib\vc140_x86_dynamic_md_debug\" /Y
+xcopy "$(TargetDir)$(TargetFileName)" "..\ppx_nuget\build\native\bin\vc140_x86_dynamic_md_debug\" /Y
+xcopy "$(OutDir)$(TargetName).pdb" "..\ppx_nuget\build\native\bin\vc140_x86_dynamic_md_debug\" /Y</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..;../include;../include/curlpp;../include/multimedia;$(PPX_CURL_DIR)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Dbghelp.lib;shell32.lib;WtsApi32.lib;UserEnv.lib;shlwapi.lib;Ws2_32.lib;Wldap32.lib;Normaliz.lib;Winmm.lib;Msdmo.lib;Dmoguids.lib;strmiids.lib;wmcodecdspuuid.lib;libcurl.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(PPX_CURL_DEPS)\lib\Debug;$(PPX_CURL_DIR)\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..;../include;../include/curlpp;../include/multimedia;$(PPX_CURL_DIR)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Dbghelp.lib;shell32.lib;WtsApi32.lib;UserEnv.lib;shlwapi.lib;Ws2_32.lib;Wldap32.lib;Normaliz.lib;Winmm.lib;Msdmo.lib;Dmoguids.lib;strmiids.lib;wmcodecdspuuid.lib;libcurl.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(PPX_CURL_DEPS)\lib\Debug;$(PPX_CURL_DIR)\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NOMINMAX;PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+    <PostBuildEvent>
+      <Command>xcopy "..\include\*.*" "..\ppx_nuget\build\native\include\" /E /Y
+xcopy "$(TargetDir)$(TargetFileName)" "..\ppx_nuget\build\native\lib\vc140_x86_static_mt_release\" /Y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NOMINMAX;PPX_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+    <PostBuildEvent>
+      <Command>xcopy "..\include\*.*" "..\ppx_nuget\build\native\include\" /E /Y
+xcopy "$(TargetDir)$(ProjectName).lib" "..\ppx_nuget\build\native\lib\vc140_x86_dynamic_md_release\" /Y
+xcopy "$(TargetDir)$(TargetFileName)" "..\ppx_nuget\build\native\bin\vc140_x86_dynamic_md_release\" /Y
+xcopy "$(OutDir)$(TargetName).pdb" "..\ppx_nuget\build\native\bin\vc140_x86_dynamic_md_release\" /Y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\zlib-1.2.11-jefferyjiang.targets" Condition="Exists('packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\zlib-1.2.11-jefferyjiang.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\zlib-1.2.11-jefferyjiang.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\zlib-1.2.11-jefferyjiang.targets'))" />
+    <Error Condition="!Exists('packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\openssl-1.1.1-jefferyjiang.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\openssl-1.1.1-jefferyjiang.targets'))" />
+    <Error Condition="!Exists('packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\curl-7.63.0-jefferyjiang.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\curl-7.63.0-jefferyjiang.targets'))" />
+    <Error Condition="!Exists('packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\cryptopp-7.0-jefferyjiang.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\cryptopp-7.0-jefferyjiang.targets'))" />
+  </Target>
+  <Import Project="packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\openssl-1.1.1-jefferyjiang.targets" Condition="Exists('packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\openssl-1.1.1-jefferyjiang.targets')" />
+  <Import Project="packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\curl-7.63.0-jefferyjiang.targets" Condition="Exists('packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\curl-7.63.0-jefferyjiang.targets')" />
+  <Import Project="packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\cryptopp-7.0-jefferyjiang.targets" Condition="Exists('packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\cryptopp-7.0-jefferyjiang.targets')" />
+</Project>

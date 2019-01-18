@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework">
+  <Rule Name="ProjectSettings_ppx_1_0_0_1" PageTemplate="tool" DisplayName="Nuget Library Settings" SwitchPrefix="/">
+    <Rule.Categories>
+      <Category Name="ppx_1_0_0_1_cpp" DisplayName="ppx-1.0.0.1 Settings" />
+    </Rule.Categories>
+	
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="" />
+    </Rule.DataSource>
+	
+	<EnumProperty Name="Linkage" DisplayName="Linkage" Description="How to link this library, static or dynamic, mt or md." Category="ppx_1_0_0_1_cpp" >
+      <EnumValue Name="StaticLibrary_MT"  DisplayName="Static Library With MT" Description="Static Library">
+      </EnumValue>
+      <EnumValue Name="DynamicLibrary_MD" DisplayName="Dynamic Library With MD" Description="Dynamic Library">
+      </EnumValue>
+    </EnumProperty>
+  </Rule>
+</ProjectSchemaDefinitions>

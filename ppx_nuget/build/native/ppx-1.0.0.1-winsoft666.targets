@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- user interface -->
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)default-propertiesui.xml" />
+  </ItemGroup>
+
+  <!-- general -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+		<AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+	
+    <Link>
+		<AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+		<AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <!-- v140 Win32 StaticLibrary MT Debug -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And $(Configuration.IndexOf('Debug')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>vc140_x86_static_mt_debug\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <!-- v140 Win32 StaticLibrary MT Release -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And $(Configuration.IndexOf('Release')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>vc140_x86_static_mt_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <!-- v140 Win32 DynamicLibrary MD Debug -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Debug')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>vc140_x86_dynamic_md_debug\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <!-- v140 Win32 DynamicLibrary MD Release -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Release')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>vc140_x86_dynamic_md_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <Target Name="ppx_1_0_0_1_AfterBuild" AfterTargets="AfterBuild" />
+  <Target Name="ppx_1_0_0_1_afterbuild_cmd1"
+          Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Debug')) != -1"
+          AfterTargets="ppx_1_0_0_1_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_debug\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="ppx_1_0_0_1_afterbuild_cmd2"
+          Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Release')) != -1"
+          AfterTargets="ppx_1_0_0_1_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_release\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
+  </Target>
+  
+</Project>

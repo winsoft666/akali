@@ -167,14 +167,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\include;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\include;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\include;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\include;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\include;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\include;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Wldap32.lib;Crypt32.lib;ppx.lib;cryptlib.lib;libcurld.lib;libssl.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\lib\vc140_x86_static_mt_debug;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\lib\vc140_x86_static_mt_debug;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\StaticLibrary\MT\Release;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\StaticLibrary\MT\Debug;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_static_mt_debug;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_static_mt_debug;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\lib\v140\Win32\StaticLibrary\MT\Release;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\lib\v140\Win32\StaticLibrary\MT\Debug;$(OutDir)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -189,14 +189,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\include;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\include;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\include;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\include;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\include;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\include;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Wldap32.lib;Crypt32.lib;ppx.lib;cryptopp.lib;libcurld.lib;libssl.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\lib\vc140_x86_dynamic_md_debug;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\lib\vc140_x86_dynamic_md_debug;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\DynamicLibrary\MD\Release;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\DynamicLibrary\MD\Debug;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_dynamic_md_debug;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_dynamic_md_debug;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\lib\v140\Win32\DynamicLibrary\MD\Release;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\lib\v140\Win32\DynamicLibrary\MD\Debug;$(OutDir)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -241,7 +241,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\include;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\include;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\include;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\include;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\include;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\include;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -250,7 +250,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Wldap32.lib;Crypt32.lib;ppx.lib;cryptlib.lib;libcurl.lib;libssl.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\lib\vc140_x86_static_mt_release;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\lib\vc140_x86_static_mt_release;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\StaticLibrary\MT\Release;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\StaticLibrary\MT\Release;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_static_mt_release;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_static_mt_release;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\lib\v140\Win32\StaticLibrary\MT\Release;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\lib\v140\Win32\StaticLibrary\MT\Release;$(OutDir)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
@@ -263,7 +263,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\include;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\include;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\include;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../include;../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\include;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\include;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\include;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -272,7 +272,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Wldap32.lib;Crypt32.lib;ppx.lib;cryptopp.lib;libcurl.lib;libssl.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-jefferyjiang.1.0.0.3\build\native\lib\vc140_x86_dynamic_md_release;../../packages\curl-7.63.0-jefferyjiang.1.0.0.10\build\native\lib\vc140_x86_dynamic_md_release;../../packages\openssl-1.1.1-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\DynamicLibrary\MD\Release;../../packages\zlib-1.2.11-jefferyjiang.1.0.0.9\build\native\lib\v140\Win32\DynamicLibrary\MD\Release;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_dynamic_md_release;../../packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\lib\vc140_x86_dynamic_md_release;../../packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\lib\v140\Win32\DynamicLibrary\MD\Release;../../packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\lib\v140\Win32\DynamicLibrary\MD\Release;$(OutDir)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

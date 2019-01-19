@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="..\test-01\stdafx.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="..\test-01\targetver.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="..\test-01\stdafx.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="test-nuget.cpp">
+    <ClCompile Include="..\test-01\test-01.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

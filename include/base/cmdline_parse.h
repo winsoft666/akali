@@ -16,36 +16,37 @@
 #define PPX_BASE_CMDLIBE_PARSE_H__
 
 
-#include <string>
-#include <map>
 #include "ppx_export.h"
+#include "base/string.h"
+#include <map>
 
 namespace ppx
 {
     namespace base {
+
         class PPX_API CmdLineParser {
         public:
-            typedef std::map<std::wstring, std::wstring> ValsMap;
-            typedef ValsMap::const_iterator ITERPOS;
+			typedef std::map<String, String> ValsMap;
+			typedef ValsMap::const_iterator ITERPOS;
 
-            CmdLineParser(const std::wstring &cmdline);
+            explicit CmdLineParser(const String &cmdline);
             ~CmdLineParser();
 
             ITERPOS Begin() const;
             ITERPOS End() const;
 
-            bool HasKey(const std::wstring &key) const;
+            bool HasKey(const String &key) const;
 
-            bool HasVal(const std::wstring &key) const;
+            bool HasVal(const String &key) const;
 
-            std::wstring GetVal(const std::wstring &key) const;
+            String GetVal(const String &key) const;
 
         private:
-            bool Parse(const std::wstring &cmdline);
-            ValsMap::const_iterator findKey(const std::wstring &key) const;
+            bool Parse(const String &cmdline);
 
-            std::wstring   cmdline_;
-            ValsMap        value_map_;
+            String         cmdline_;
+			class Impl;
+			Impl*		   impl_;
         };
     }
 }

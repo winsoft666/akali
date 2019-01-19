@@ -25,6 +25,7 @@
     #undef ERROR  // wingdi.h
 #endif
 
+#include <string.h>
 #include <time.h>
 #include <limits.h>
 #include <algorithm>
@@ -36,6 +37,7 @@
 #include "base/logging.h"
 #include "base/stringencode.h"
 #include "base/timeutils.h"
+#include "base/safe_release_macro.h"
 
 namespace ppx {
     namespace base {
@@ -76,46 +78,83 @@ namespace ppx {
         }  // namespace
 
 
+		class LogMessage::Impl {
+		public:
+			Impl() {
+				is_noop_ = false;
+			}
 
-        bool LogMessage::log_to_stderr_ = true;
+			~Impl() {
 
-        LogMessage::StreamList LogMessage::streams_;
+			}
+
+			// The ostream that buffers the formatted message before output
+			std::ostringstream print_stream_;
+
+			// The severity level of this message
+			LoggingSeverity severity_;
+
+			// String data generated in the constructor, that should be appended to the message before output.
+			std::string extra_;
+
+			bool is_noop_;
+
+			// The output streams and their associated severities
+			static StreamList streams_;
+
+			// Flags for formatting options
+			static bool thread_;
+			static bool timestamp_;
+
+			// Determines if logs will be directed to stderr in debug mode.
+			static bool log_to_stderr_;
+		};
+
+
+        bool LogMessage::Impl::log_to_stderr_ = true;
+
+        LogMessage::StreamList LogMessage::Impl::streams_;
 
         // Boolean options default to true (1)
-        bool LogMessage::thread_ = 1;
-        bool LogMessage::timestamp_ = 1;
+        bool LogMessage::Impl::thread_ = 1;
+        bool LogMessage::Impl::timestamp_ = 1;
 
         LogMessage::LogMessage(const char *file, int line, LoggingSeverity sev, LogErrorContext err_ctx, int err)
-            : severity_(sev), is_noop_(IsNoop(sev)) {
-            if (is_noop_)
+             {
+			impl_ = new Impl();
+
+			impl_->severity_ = sev;
+			impl_->is_noop_ = IsNoop(sev);
+
+            if (impl_->is_noop_)
                 return;
 
-            if (timestamp_) {
-                print_stream_ << "[" << GetLocalTime().ToString(true) << "] ";
+            if (impl_->timestamp_) {
+				impl_->print_stream_ << "[" << GetLocalTime().ToString(true) << "] ";
             }
 
-            if (thread_) {
+            if (impl_->thread_) {
 #ifdef _WIN32
                 DWORD id = GetCurrentThreadId();
-                print_stream_ << "[" << std::dec << id << "] ";
+				impl_->print_stream_ << "[" << std::dec << id << "] ";
 #endif
             }
 
             switch (sev) {
             case ppx::base::LS_SENSITIVE:
-                print_stream_ << "[SENSITIVE] ";
+				impl_->print_stream_ << "[SENSITIVE] ";
                 break;
             case ppx::base::LS_VERBOSE:
-                print_stream_ << "[VERBOSE] ";
+				impl_->print_stream_ << "[VERBOSE] ";
                 break;
             case ppx::base::LS_INFO:
-                print_stream_ << "[INFO] ";
+				impl_->print_stream_ << "[INFO] ";
                 break;
             case ppx::base::LS_WARNING:
-                print_stream_ << "[WARNING] ";
+				impl_->print_stream_ << "[WARNING] ";
                 break;
             case ppx::base::LS_ERROR:
-                print_stream_ << "[ERROR] ";
+				impl_->print_stream_ << "[ERROR] ";
                 break;
             case ppx::base::LS_NONE:
             default:
@@ -123,17 +162,19 @@ namespace ppx {
             }
 
             if (file != nullptr)
-                print_stream_ << "(" << FilenameFromPath(file) << ":" << line << "): ";
+				impl_->print_stream_ << "(" << FilenameFromPath(file) << ":" << line << "): ";
 
             if (err_ctx != ERRCTX_NONE) {
                 std::stringstream tmp;
                 char prefix[14] = { 0 };
                 sprintf_s(prefix, sizeof(prefix), "[0x%08X]", err);
                 tmp << prefix;
+				char err_buf[100] = { 0 };
 
                 switch (err_ctx) {
                     case ERRCTX_ERRNO:
-                        tmp << " " << strerror(err);
+						strerror_s(err_buf, 100, err);
+                        tmp << " " << err_buf;
                         break;
 #ifdef _WIN32
 
@@ -159,33 +200,35 @@ namespace ppx {
                         break;
                 }
 
-                extra_ = tmp.str();
+				impl_->extra_ = tmp.str();
             }
         }
 
         LogMessage::~LogMessage() {
-            if (is_noop_)
+            if (impl_->is_noop_)
                 return;
 
             FinishPrintStream();
 
-            const std::string str = print_stream_.str();
+            const std::string str = impl_->print_stream_.str();
 
-            if (severity_ >= g_dbg_sev) {
-                OutputToDebug(str, severity_);
+            if (impl_->severity_ >= g_dbg_sev) {
+                OutputToDebug(str, impl_->severity_);
             }
 
             CritScope cs(&g_log_crit);
 
-            for (auto &kv : streams_) {
-                if (severity_ >= kv.second) {
+            for (auto &kv : impl_->streams_) {
+                if (impl_->severity_ >= kv.second) {
                     kv.first->OnLogMessage(str);
                 }
             }
+
+			SAFE_DELETE(impl_);
         }
 
         std::ostream &LogMessage::stream() {
-            return is_noop_ ? GetNoopStream() : print_stream_;
+            return impl_->is_noop_ ? GetNoopStream() : impl_->print_stream_;
         }
 
         bool LogMessage::Loggable(LoggingSeverity sev) {
@@ -206,11 +249,11 @@ namespace ppx {
         }
 
         void LogMessage::LogThreads(bool on) {
-            thread_ = on;
+			Impl::thread_ = on;
         }
 
         void LogMessage::LogTimestamps(bool on) {
-            timestamp_ = on;
+			Impl::timestamp_ = on;
         }
 
         void LogMessage::LogToDebug(LoggingSeverity min_sev) {
@@ -220,14 +263,14 @@ namespace ppx {
         }
 
         void LogMessage::SetLogToStderr(bool log_to_stderr) {
-            log_to_stderr_ = log_to_stderr;
+			Impl::log_to_stderr_ = log_to_stderr;
         }
 
         int LogMessage::GetLogToStream(LogSink *stream) {
             CritScope cs(&g_log_crit);
             LoggingSeverity sev = LS_NONE;
 
-            for (auto &kv : streams_) {
+            for (auto &kv : Impl::streams_) {
                 if (!stream || stream == kv.first) {
                     sev = std::min(sev, kv.second);
                 }
@@ -238,16 +281,16 @@ namespace ppx {
 
         void LogMessage::AddLogToStream(LogSink *stream, LoggingSeverity min_sev) {
             CritScope cs(&g_log_crit);
-            streams_.push_back(std::make_pair(stream, min_sev));
+			Impl::streams_.push_back(std::make_pair(stream, min_sev));
             UpdateMinLogSeverity();
         }
 
         void LogMessage::RemoveLogToStream(LogSink *stream) {
             CritScope cs(&g_log_crit);
 
-            for (StreamList::iterator it = streams_.begin(); it != streams_.end(); ++it) {
+            for (StreamList::iterator it = Impl::streams_.begin(); it != Impl::streams_.end(); ++it) {
                 if (stream == it->first) {
-                    streams_.erase(it);
+                    Impl::streams_.erase(it);
                     break;
                 }
             }
@@ -258,7 +301,7 @@ namespace ppx {
         void LogMessage::UpdateMinLogSeverity() {
             LoggingSeverity min_sev = g_dbg_sev;
 
-            for (auto &kv : streams_) {
+            for (auto &kv : Impl::streams_) {
                 min_sev = std::min(g_dbg_sev, kv.second);
             }
 
@@ -266,7 +309,7 @@ namespace ppx {
         }
 
         void LogMessage::OutputToDebug(const std::string &str, LoggingSeverity severity) {
-            bool log_to_stderr = log_to_stderr_;
+            bool log_to_stderr = Impl::log_to_stderr_;
 #if defined(_WIN32)
             OutputDebugStringA(str.c_str());
 
@@ -292,17 +335,17 @@ namespace ppx {
                 return false;
 
             CritScope cs(&g_log_crit);
-            return streams_.size() == 0;
+            return Impl::streams_.size() == 0;
         }
 
         void LogMessage::FinishPrintStream() {
-            if (is_noop_)
+            if (impl_->is_noop_)
                 return;
 
-            if (!extra_.empty())
-                print_stream_ << " : " << extra_;
+            if (!impl_->extra_.empty())
+				impl_->print_stream_ << " : " << impl_->extra_;
 
-            print_stream_ << std::endl;
+			impl_->print_stream_ << std::endl;
         }
 
         //////////////////////////////////////////////////////////////////////

@@ -67,27 +67,27 @@ namespace ppx {
         }
 
         static size_t WriteCB(char *ptr, size_t size, size_t nmemb, void *userdata) {
-            std::string *response = (std::string *)userdata;
+			base::BufferQueue *response = (base::BufferQueue *)userdata;
             if (NULL == response || NULL == ptr || 0 == size * nmemb)
                 return -1;
 
             size_t resSize = size * nmemb;
-            response->append(ptr, resSize);
+			response->AddToLast(ptr, resSize);
             return resSize;
         }
 
-        int HttpRequest::Get(const std::string &url, std::string &response) {
+        int HttpRequest::Get(const base::String &url, base::BufferQueue &response) {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.ToDataA().c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_READFUNCTION, NULL);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, WriteCB);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, (void*)&response);
             curl_easy_setopt(impl_->curl_, CURLOPT_NOSIGNAL, 1);
             curl_easy_setopt(impl_->curl_, CURLOPT_TIMEOUT_MS, read_timeout_ms_);
             curl_easy_setopt(impl_->curl_, CURLOPT_CONNECTTIMEOUT_MS, connect_timeout_ms_);
-            if (ca_path_.length() == 0) {
+            if (ca_path_.GetLength() == 0) {
                 curl_easy_setopt(impl_->curl_, CURLOPT_SSL_VERIFYPEER, false);
                 curl_easy_setopt(impl_->curl_, CURLOPT_SSL_VERIFYHOST, false);
             }
@@ -101,20 +101,20 @@ namespace ppx {
             return (int)code;
         }
 
-        int HttpRequest::Post(const std::string &url, const std::string &post_data, std::string &response) {
+        int HttpRequest::Post(const base::String &url, const base::String &post_data, base::BufferQueue &response) {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.ToDataA().c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_POST, 1);
-            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data.c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data.ToDataA().c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_READFUNCTION, NULL);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, WriteCB);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, (void*)&response);
             curl_easy_setopt(impl_->curl_, CURLOPT_NOSIGNAL, 1);
             curl_easy_setopt(impl_->curl_, CURLOPT_TIMEOUT_MS, read_timeout_ms_);
             curl_easy_setopt(impl_->curl_, CURLOPT_CONNECTTIMEOUT_MS, connect_timeout_ms_);
-            if (ca_path_.length() == 0) {
+            if (ca_path_.GetLength() == 0) {
                 curl_easy_setopt(impl_->curl_, CURLOPT_SSL_VERIFYPEER, false);
                 curl_easy_setopt(impl_->curl_, CURLOPT_SSL_VERIFYHOST, false);
             }
@@ -128,13 +128,13 @@ namespace ppx {
             return (int)code;
         }
 
-        bool HttpRequest::IsHttps(const std::string &url) {
-            if (url.find_first_of("https") == 0)
+        bool HttpRequest::IsHttps(const base::String &url) {
+            if (url.Find(TEXT("https")) == 0)
                 return true;
             return false;
         }
 
-        void HttpRequest::SetCAPath(const std::string &ca_path) {
+        void HttpRequest::SetCAPath(const base::String &ca_path) {
             ca_path_ = ca_path;
         }
 

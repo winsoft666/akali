@@ -367,5 +367,8 @@
     <ClCompile Include="..\src\encrypt\encrypt_helper.cpp">
       <Filter>source\encrypt</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ppx.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

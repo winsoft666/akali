@@ -101,26 +101,10 @@ namespace ppx {
             // information to the log stream and a newline character.
             void FinishPrintStream();
 
-            // The ostream that buffers the formatted message before output
-            std::ostringstream print_stream_;
+			class Impl;
+			Impl* impl_;
 
-            // The severity level of this message
-            LoggingSeverity severity_;
 
-            // String data generated in the constructor, that should be appended to the message before output.
-            std::string extra_;
-
-            const bool is_noop_;
-
-            // The output streams and their associated severities
-            static StreamList streams_;
-
-            // Flags for formatting options
-            static bool thread_;
-            static bool timestamp_;
-
-            // Determines if logs will be directed to stderr in debug mode.
-            static bool log_to_stderr_;
 
             PPX_DISALLOW_COPY_AND_ASSIGN(LogMessage);
         };

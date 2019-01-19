@@ -18,6 +18,8 @@
 
 #include <string>
 #include "ppx_export.h"
+#include "base/string.h"
+#include "base/buffer_queue.h"
 
 namespace ppx {
     namespace net {
@@ -32,16 +34,16 @@ namespace ppx {
             void SetReadTimeoutMS(int ms);
             int GetReadTimeoutMS() const;
 
-            int Get(const std::string &url, std::string &response);
-            int Post(const std::string &url, const std::string &post_data, std::string &response);
+            int Get(const base::String &url, base::BufferQueue &response);
+            int Post(const base::String &url, const base::String &post_data, base::BufferQueue &response);
             
-            bool IsHttps(const std::string &url);
-            void SetCAPath(const std::string &ca_path);
+            bool IsHttps(const base::String &url);
+            void SetCAPath(const base::String &ca_path);
 
         private:
             int connect_timeout_ms_; // default 1000ms
             int read_timeout_ms_;    // default 1000ms
-            std::string ca_path_;
+            base::String ca_path_;
 
             class HttpRequestImpl;
             HttpRequestImpl* impl_;

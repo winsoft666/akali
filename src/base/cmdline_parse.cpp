@@ -13,35 +13,60 @@
 *******************************************************************************/
 
 #include "base/cmdline_parse.h"
+#include "base/safe_release_macro.h"
 #include <locale>
 #include <algorithm>
 #include <tchar.h>
+#include <map>
 
 namespace ppx {
     namespace base {
+
+		class CmdLineParser::Impl {
+		public:
+			Impl() {
+				value_map_.clear();
+			}
+
+			~Impl() {
+				value_map_.clear();
+			}
+
+			ITERPOS findKey(const String &key) const {
+				String s = key;
+				s.MakeLower();
+				return value_map_.find(s);
+			}
+
+			CmdLineParser::ValsMap        value_map_;
+		};
+
         const wchar_t delims[] = L"-/";
         const wchar_t quotes[] = L"\"";
         const wchar_t value_sep[] = L" :"; // don't forget space!!
 
 
-        CmdLineParser::CmdLineParser(const std::wstring &cmdline) {
-            if (cmdline.length() > 0) {
+        CmdLineParser::CmdLineParser(const String &cmdline) {
+			impl_ = new Impl();
+
+            if (cmdline.GetLength() > 0) {
                 Parse(cmdline);
             }
         }
 
         CmdLineParser::~CmdLineParser() {
-            value_map_.clear();
+			SAFE_DELETE(impl_);
         }
 
-        bool CmdLineParser::Parse(const std::wstring &cmdline) {
-            const std::wstring sEmpty = L"";
+        bool CmdLineParser::Parse(const String &cmdline) {
+            const String sEmpty = L"";
             int nArgs = 0;
 
-            value_map_.clear();
+			impl_->value_map_.clear();
             cmdline_ = cmdline;
 
-            const wchar_t *sCurrent = cmdline_.c_str();
+			std::wstring strW = cmdline_.ToDataW();
+			const wchar_t *sCurrent = strW.c_str();
 
             for (;;) {
                 if (sCurrent[0] == L'\0')
@@ -61,25 +86,25 @@ namespace ppx {
                 const wchar_t *sVal = wcspbrk(sArg, value_sep);
 
                 if (sVal == NULL) {
-                    std::wstring Key(sArg);
-                    std::transform(Key.begin(), Key.end(), Key.begin(), ::tolower);
-                    value_map_.insert(ValsMap::value_type(Key, sEmpty));
+                    String Key(sArg);
+					Key.MakeLower();
+					impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, sEmpty));
                     break;
                 } else if (sVal[0] == L' ' || wcslen(sVal) == 1) {
                     // cmdline ends with /Key: or a key with no value
-                    std::wstring Key(sArg, (int)(sVal - sArg));
+                    String Key(sArg, (int)(sVal - sArg));
 
-                    if (!Key.empty()) {
-                        std::transform(Key.begin(), Key.end(), Key.begin(), ::tolower);
-                        value_map_.insert(ValsMap::value_type(Key, sEmpty));
+                    if (!Key.IsEmpty()) {
+						Key.MakeLower();
+						impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, sEmpty));
                     }
 
                     sCurrent = _wcsinc(sVal);
                     continue;
                 } else {
                     // key has value
-                    std::wstring Key(sArg, (int)(sVal - sArg));
-                    std::transform(Key.begin(), Key.end(), Key.begin(), ::tolower);
+                    String Key(sArg, (int)(sVal - sArg));
+					Key.MakeLower();
 
                     sVal = _wcsinc(sVal);
 
@@ -97,18 +122,18 @@ namespace ppx {
 
                     if (sEndQuote == NULL) {
                         // no end quotes or terminating space, take the rest of the string to its end
-                        std::wstring csVal(sQuote);
+                        String csVal(sQuote);
 
-                        if (!Key.empty()) {
-                            value_map_.insert(ValsMap::value_type(Key, csVal));
+                        if (!Key.IsEmpty()) {
+                            impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
                         }
 
                         break;
                     } else {
                         // end quote
-                        if (!Key.empty()) {
-                            std::wstring csVal(sQuote, (int)(sEndQuote - sQuote));
-                            value_map_.insert(ValsMap::value_type(Key, csVal));
+                        if (!Key.IsEmpty()) {
+                            String csVal(sQuote, (int)(sEndQuote - sQuote));
+							impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
                         }
 
                         sCurrent = _wcsinc(sEndQuote);
@@ -120,50 +145,46 @@ namespace ppx {
             return (nArgs > 0);     //TRUE if arguments were found
         }
 
-        CmdLineParser::ValsMap::const_iterator CmdLineParser::findKey(const std::wstring &key) const {
-            std::wstring s = key;
-            std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-            return value_map_.find(s);
-        }
 
-        bool CmdLineParser::HasKey(const std::wstring &key) const {
-            ValsMap::const_iterator it = findKey(key);
 
-            if (it == value_map_.end())
+        bool CmdLineParser::HasKey(const String &key) const {
+			ITERPOS it = impl_->findKey(key);
+
+            if (it == impl_->value_map_.end())
                 return false;
 
             return true;
         }
 
 
-        bool CmdLineParser::HasVal(const std::wstring &key) const {
-            ValsMap::const_iterator it = findKey(key);
+        bool CmdLineParser::HasVal(const String &key) const {
+			ITERPOS it = impl_->findKey(key);
 
-            if (it == value_map_.end())
+            if (it == impl_->value_map_.end())
                 return false;
 
-            if (it->second.empty())
+            if (it->second.IsEmpty())
                 return false;
 
             return true;
         }
 
-        std::wstring CmdLineParser::GetVal(const std::wstring &key) const {
-            ValsMap::const_iterator it = findKey(key);
+        String CmdLineParser::GetVal(const String &key) const {
+			ITERPOS it = impl_->findKey(key);
 
-            if (it == value_map_.end())
-                return 0;
+            if (it == impl_->value_map_.end())
+                return String();
 
             return it->second;
         }
 
 
         CmdLineParser::ITERPOS CmdLineParser::Begin() const {
-            return value_map_.begin();
+            return impl_->value_map_.begin();
         }
 
         CmdLineParser::ITERPOS CmdLineParser::End() const {
-            return value_map_.end();
+            return impl_->value_map_.end();
         }
     }
 }

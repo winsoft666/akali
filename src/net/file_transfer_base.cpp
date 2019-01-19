@@ -14,151 +14,187 @@
 
 #include "net/file_transfer_base.h"
 #include "base/timeutils.h"
+#include "base/string.h"
+#include "base/safe_release_macro.h"
 #include <inttypes.h>
 #include <algorithm>
 
 namespace ppx {
     namespace net {
-        FileTransferBase::FileTransferBase() :
-            thread_num_(1),
-            actual_thread_num_(0),
-            status_(Ready),
-            finished_thread_num_(0),
-            start_time_(0L),
-            tmp_fileext_(".download"),
-            progress_interval_(0L) {
+		class FileTransferBase::FileTransferBaseImpl {
+		public:
+			FileTransferBaseImpl() :
+				status_(FileTransferBase::Ready),
+				finished_thread_num_(0) {
+
+			}
+
+			~FileTransferBaseImpl() {
+			}
+
+			
+			std::atomic<FileTransferBase::Status> status_;
+			FileTransferBase::StatusFunctor status_cb_;
+			FileTransferBase::ProgressFunctor progress_cb_;
+			std::atomic<size_t> finished_thread_num_;
+		};
+
+		FileTransferBase::FileTransferBase() :
+			thread_num_(1),
+			actual_thread_num_(0),
+			start_time_(0L),
+			tmp_fileext_(".download"),
+			progress_interval_(0L) {
+			base_impl_ = new FileTransferBaseImpl();
         }
 
         FileTransferBase::~FileTransferBase() {
-
+			SAFE_DELETE(base_impl_);
         }
 
         void FileTransferBase::SetThreadNum(size_t thread_num) {
-            if (status_ != Progress && thread_num > 0)
-                thread_num_ = thread_num;
+            if (base_impl_->status_ != Progress && thread_num > 0)
+				thread_num_ = thread_num;
         }
 
         size_t FileTransferBase::GetThreadNum() const {
             return thread_num_;
         }
 
-        void FileTransferBase::SetUrl(const std::string &url) {
-            if (status_ != Progress)
-                url_ = url;
+        void FileTransferBase::SetUrl(const base::String &url) {
+            if (base_impl_->status_ != Progress)
+				url_ = url;
         }
 
-        std::string FileTransferBase::GetUrl() const {
+        base::String FileTransferBase::GetUrl() const {
             return url_;
         }
 
-        void FileTransferBase::SetFileDir(const std::string &filedir) {
-            if (status_ == Progress)
+        void FileTransferBase::SetFileDir(const base::String &filedir) {
+            if (base_impl_->status_ == Progress)
                 return;
 
-            file_dir_ = filedir;
+			file_dir_ = filedir;
 
-            if (file_dir_.length() > 0) {
-                if (file_dir_[file_dir_.length() - 1] != '\\' || file_dir_[file_dir_.length() - 1] != '/') {
+            if (file_dir_.GetLength() > 0) {
+                if (file_dir_[file_dir_.GetLength() - 1] != '\\' || file_dir_[file_dir_.GetLength() - 1] != '/') {
 #ifdef _WIN32
-                    file_dir_ += "\\";
+					file_dir_ += "\\";
 #else
-                    file_dir_ += "/";
+					file_dir_ += "/";
 #endif
                 }
             }
         }
 
-        std::string FileTransferBase::GetFileDir() const {
+        base::String FileTransferBase::GetFileDir() const {
             return file_dir_;
         }
 
-        void FileTransferBase::SetFileName(const std::string &filename) {
-            if (status_ == Progress)
+        void FileTransferBase::SetFileName(const base::String &filename) {
+            if (base_impl_->status_ == Progress)
                 return;
 
-            file_name_ = filename;
+			file_name_ = filename;
         }
 
-        std::string FileTransferBase::GetFileName() const {
+        base::String FileTransferBase::GetFileName() const {
             return file_name_;
         }
 
-        void FileTransferBase::SetFileExt(const std::string &ext) {
-            file_ext_ = ext;
+        void FileTransferBase::SetFileExt(const base::String &ext) {
+			file_ext_ = ext;
         }
 
-        std::string FileTransferBase::GetFileExt() const {
+        base::String FileTransferBase::GetFileExt() const {
             return file_ext_;
         }
 
-        void FileTransferBase::SetFileMd5(const std::string &md5) {
-            if (status_ == Progress)
+        void FileTransferBase::SetFileMd5(const base::String &md5) {
+            if (base_impl_->status_ == Progress)
                 return;
-            file_md5_ = md5;
-            std::transform(file_md5_.begin(), file_md5_.end(), file_md5_.begin(), ::tolower);
+			file_md5_ = md5;
+			file_md5_.MakeLower();
         }
 
-        std::string FileTransferBase::GetFileMd5() const {
+        base::String FileTransferBase::GetFileMd5() const {
             return file_md5_;
         }
 
         void FileTransferBase::GenerateTmpFileName(int64_t filesize) {
-            if (file_name_.length() == 0) {
+            if (file_name_.GetLength() == 0) {
                 // "must first set file path"
                 return;
             }
 
-            if (file_md5_.length() == 0) {
+            if (file_md5_.GetLength() == 0) {
                 char buf[50] = { 0 };
                 sprintf_s(buf, "%" PRId64 "", filesize);
-                tmp_filename_ = file_name_ + "_" + std::string(buf);
+				tmp_filename_ = file_name_ + "_" + base::String(buf);
             }
             else {
-                tmp_filename_ = file_name_ + "_" + file_md5_;
+				tmp_filename_ = file_name_ + "_" + file_md5_;
             }
         }
 
-        std::string FileTransferBase::GetTmpFileName() const {
+        base::String FileTransferBase::GetTmpFileName() const {
             return tmp_filename_;
         }
 
-        std::string FileTransferBase::GetTmpFileExt() const {
+        base::String FileTransferBase::GetTmpFileExt() const {
             return tmp_fileext_;
         }
 
-        void FileTransferBase::SetCAPath(const std::string &caPath) {
-            if (status_ != Progress) {
-                ca_path_ = caPath;
+        void FileTransferBase::SetCAPath(const base::String &caPath) {
+            if (base_impl_->status_ != Progress) {
+				ca_path_ = caPath;
             }
         }
 
-        std::string FileTransferBase::GetCAPath() const {
+        base::String FileTransferBase::GetCAPath() const {
             return ca_path_;
         }
 
         void FileTransferBase::SetStatusCallback(const StatusFunctor &functor) {
-            if (status_ == Progress)
+            if (base_impl_->status_ == Progress)
                 return;
 
-            status_cb_ = functor;
+			base_impl_->status_cb_ = functor;
         }
 
         void FileTransferBase::SetProgressCallback(const ProgressFunctor &functor) {
-            if (status_ == Progress)
+            if (base_impl_->status_ == Progress)
                 return;
 
-            progress_cb_ = functor;
+			base_impl_->progress_cb_ = functor;
         }
 
         void FileTransferBase::SetProgressInterval(int64_t ms) {
-            if (status_ == Progress)
+            if (base_impl_->status_ == Progress)
                 return;
 
-            progress_interval_ = ms;
+			progress_interval_ = ms;
         }
 
         int64_t FileTransferBase::GetProgressInterval() const {
             return progress_interval_;
         }
-    }
+
+		FileTransferBase::Status FileTransferBase::GetStatus() const {
+			return base_impl_->status_;
+		}
+
+		void FileTransferBase::SetStatus(Status s) {
+			base_impl_->status_ = s;
+		}
+
+		FileTransferBase::StatusFunctor FileTransferBase::GetStatusFunctor() const {
+			return base_impl_->status_cb_;
+		}
+
+		FileTransferBase::ProgressFunctor FileTransferBase::GetProgressFunctor() const {
+			return base_impl_->progress_cb_;
+		}
+
+	}
 }

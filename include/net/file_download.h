@@ -58,24 +58,6 @@ namespace ppx {
             bool DeleteTmpFile();
             void LastCurlClear();
         private:
-            bool interruption_resuming_;
-            bool actual_interruption_resuming_;
-            bool is_new_download_;
-            int64_t file_size_;
-#ifdef _WIN32
-            HANDLE file_;
-#else
-            int file_;
-#endif
-            std::mutex file_write_mutex_;
-            std::atomic_bool stop_;
-            std::thread work_thread_;
-            std::unique_ptr<FileDownloadHeader> download_header_;
-            size_t download_header_size_;
-            int64_t last_time_downloaded_;
-            
-            std::vector<FileDownloadWork*> works_;
-
             class PrivateData;
             PrivateData* data_;
         };

@@ -20,6 +20,7 @@
 #include <functional>
 #include <atomic>
 #include "ppx_export.h"
+#include "base/string.h"
 
 namespace ppx {
     namespace net {
@@ -31,8 +32,8 @@ namespace ppx {
                 Finished,
                 Failed
             }Status;
-            typedef std::function< void(std::string /*filename*/, Status, std::string /*reason*/, int64_t /*used_millsec*/) > StatusFunctor;
-            typedef std::function< void(std::string /*filename*/, int64_t /*total*/, int64_t /* download/upload */) > ProgressFunctor;
+            typedef std::function< void(base::String /*filename*/, Status, base::String /*reason*/, int64_t /*used_millsec*/) > StatusFunctor;
+            typedef std::function< void(base::String /*filename*/, int64_t /*total*/, int64_t /* download/upload */) > ProgressFunctor;
 
             FileTransferBase();
             virtual ~FileTransferBase();
@@ -40,27 +41,27 @@ namespace ppx {
             virtual void SetThreadNum(size_t thread_num);
             virtual size_t GetThreadNum() const;
 
-            virtual void SetUrl(const std::string &url);
-            virtual std::string GetUrl() const;
+            virtual void SetUrl(const base::String &url);
+            virtual base::String GetUrl() const;
 
-            virtual void SetFileDir(const std::string &filedir);
-            virtual std::string GetFileDir() const;
+            virtual void SetFileDir(const base::String &filedir);
+            virtual base::String GetFileDir() const;
 
-            virtual void SetFileName(const std::string &filename);
-            virtual std::string GetFileName() const;
+            virtual void SetFileName(const base::String &filename);
+            virtual base::String GetFileName() const;
 
-            virtual void SetFileExt(const std::string &ext);
-            virtual std::string GetFileExt() const;
+            virtual void SetFileExt(const base::String &ext);
+            virtual base::String GetFileExt() const;
 
-            virtual void SetFileMd5(const std::string &md5);
-            virtual std::string GetFileMd5() const;
+            virtual void SetFileMd5(const base::String &md5);
+            virtual base::String GetFileMd5() const;
 
             virtual void GenerateTmpFileName(int64_t filesize);
-            virtual std::string GetTmpFileName() const;
-            virtual std::string GetTmpFileExt() const;
+            virtual base::String GetTmpFileName() const;
+            virtual base::String GetTmpFileExt() const;
 
-            virtual void SetCAPath(const std::string &caPath);
-            virtual std::string GetCAPath() const;
+            virtual void SetCAPath(const base::String &caPath);
+            virtual base::String GetCAPath() const;
 
             virtual void SetStatusCallback(const StatusFunctor &functor);
             virtual void SetProgressCallback(const ProgressFunctor &functor);
@@ -73,23 +74,26 @@ namespace ppx {
             virtual bool Start() = 0;
             virtual void Stop() = 0;
 
+			Status GetStatus() const;
+			void SetStatus(Status s);
+			StatusFunctor GetStatusFunctor() const;
+			ProgressFunctor GetProgressFunctor() const;
         protected:
-            size_t thread_num_;
-            size_t actual_thread_num_;
-            int64_t start_time_;
-            std::string ca_path_;
-            std::string url_;
-            std::string file_dir_;
-            std::string file_name_;
-            std::string file_ext_;
-            std::string tmp_filename_;
-            std::string tmp_fileext_;
-            std::string file_md5_;
-            std::atomic<Status> status_;
-            int64_t progress_interval_;
-            StatusFunctor status_cb_;
-            ProgressFunctor progress_cb_;
-            std::atomic<size_t> finished_thread_num_;
+			class FileTransferBaseImpl;
+			FileTransferBaseImpl* base_impl_;
+
+			size_t thread_num_;
+			size_t actual_thread_num_;
+			int64_t start_time_;
+			base::String ca_path_;
+			base::String url_;
+			base::String file_dir_;
+			base::String file_name_;
+			base::String file_ext_;
+			base::String tmp_filename_;
+			base::String tmp_fileext_;
+			base::String file_md5_;
+			int64_t progress_interval_;
         };
     }
 }

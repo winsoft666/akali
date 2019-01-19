@@ -1,6 +1,7 @@
 #include "base/string.h"
 #include "base/stringencode.h"
 #include "base/assert.h"
+#include "base/safe_release_macro.h"
 #include <tchar.h>
 #include <strsafe.h>
 #include <algorithm>
@@ -62,35 +63,53 @@ namespace ppx {
 			}
 		}
 
+		class String::StringImpl {
+		public:
+			StringImpl() {
+
+			}
+
+			~StringImpl() {
+			}
+
+			tstring m_str;
+		};
 
 		String::String() {
+			m_pImpl = new StringImpl();
 		}
 
 		String::String(const TCHAR ch) {
-			m_str = ch;
+			m_pImpl = new StringImpl();
+			m_pImpl->m_str = ch;
 		}
 
 		String::String(LPCTSTR lpsz, int nLen) {
-			m_str.clear();
+			m_pImpl = new StringImpl();
+			m_pImpl->m_str.clear();
 			if (!lpsz)
 				return;
 			if (nLen != -1)
-				m_str.assign(lpsz, nLen);
+				m_pImpl->m_str.assign(lpsz, nLen);
 			else
-				m_str = lpsz;
+				m_pImpl->m_str = lpsz;
 		}
 
 		String::String(const String &src) {
-			m_str = src.m_str;
+			m_pImpl = new StringImpl();
+			m_pImpl->m_str = src.m_pImpl->m_str;
 		}
 
 		String::String(const tstring &src) {
-			m_str = src;
+			m_pImpl = new StringImpl();
+			m_pImpl->m_str = src;
 		}
 
 #ifdef _UNICODE
 		String::String(const char* lpsz, int nLen /*= -1*/) {
-			m_str.clear();
+			m_pImpl = new StringImpl();
+
+			m_pImpl->m_str.clear();
 			if (!lpsz)
 				return;
 
@@ -100,15 +119,19 @@ namespace ppx {
 			else
 				str = lpsz;
 
-			m_str = AnsiToTCHAR(str);
+			m_pImpl->m_str = AnsiToTCHAR(str);
 		}
 
 		String::String(const std::string &src) {
-			m_str = AnsiToTCHAR(src);
+			m_pImpl = new StringImpl();
+
+			m_pImpl->m_str = AnsiToTCHAR(src);
 		}
 #else
 		String::String(const wchar_t* lpsz, int nLen /*= -1*/) {
-			m_str.clear();
+			m_pImpl = new StringImpl();
+
+			m_pImpl->m_str.clear();
 			if (!lpsz)
 				return;
 
@@ -118,51 +141,64 @@ namespace ppx {
 			else
 				str = lpsz;
 
-			m_str = UnicodeToTCHAR(str);
+			m_pImpl->m_str = UnicodeToTCHAR(str);
 		}
 
 		String::String(const std::wstring &src) {
-			m_str = UnicodeToTCHAR(src);
+			m_pImpl = new StringImpl();
+
+			m_pImpl->m_str = UnicodeToTCHAR(src);
 		}
 #endif
 
 		String::~String() {
-			m_str.clear();
+			m_pImpl->m_str.clear();
+
+			SAFE_DELETE(m_pImpl);
 		}
 
 		int String::GetLength() const {
-			return m_str.size();
+			return m_pImpl->m_str.size();
 		}
 
 		String::operator tstring() const {
-			return m_str;
+			return m_pImpl->m_str;
 		}
 
 		void String::Append(const String & str) {
-			m_str.append(str.m_str);
+			m_pImpl->m_str.append(str.m_pImpl->m_str);
+		}
+
+		void String::Append(LPCTSTR str, int nLen /*= -1*/) {
+			if (nLen == -1) {
+				m_pImpl->m_str.append(str);
+			}
+			else {
+				m_pImpl->m_str.append(str, nLen);
+			}
 		}
 
 		void String::Assign(LPCTSTR pstr, int cchMax) {
 			if (cchMax == -1)
-				m_str.assign(pstr);
+				m_pImpl->m_str.assign(pstr);
 			else
-				m_str.assign(cchMax, cchMax);
+				m_pImpl->m_str.assign(cchMax, cchMax);
 		}
 
 		void String::Assign(const String & str) {
-			m_str.assign(str.m_str);
+			m_pImpl->m_str.assign(str.m_pImpl->m_str);
 		}
 
 		void String::TrimLeft() {
-			m_str.erase(m_str.begin(), std::find_if(m_str.begin(), m_str.end(), [](int ch) {
+			m_pImpl->m_str.erase(m_pImpl->m_str.begin(), std::find_if(m_pImpl->m_str.begin(), m_pImpl->m_str.end(), [](int ch) {
 				return !std::isspace(ch);
 			}));
 		}
 
 		void String::TrimRight() {
-			m_str.erase(std::find_if(m_str.rbegin(), m_str.rend(), [](int ch) {
+			m_pImpl->m_str.erase(std::find_if(m_pImpl->m_str.rbegin(), m_pImpl->m_str.rend(), [](int ch) {
 				return !std::isspace(ch);
-			}).base(), m_str.end());
+			}).base(), m_pImpl->m_str.end());
 		}
 
 		void String::Trim() {
@@ -171,29 +207,47 @@ namespace ppx {
 		}
 
 		bool String::IsEmpty() const {
-			return m_str.size() == 0;
+			return m_pImpl->m_str.size() == 0;
 		}
 
 		void String::Empty() {
-			m_str.clear();
+			m_pImpl->m_str.clear();
 		}
 
 		LPCTSTR String::GetDataPointer() const {
-			return m_str.c_str();
+			return m_pImpl->m_str.c_str();
+		}
+
+		std::string String::ToDataA() const {
+#ifdef _UNICODE
+			std::string strA = UnicodeToAnsi(m_pImpl->m_str);
+			return strA;
+#else
+			return m_pImpl->m_str;
+#endif
+		}
+
+		std::wstring String::ToDataW() const {
+#ifdef _UNICODE
+			return m_pImpl->m_str;
+#else
+			std::string strW = AnsiToUnicode(m_pImpl->m_str);
+			return strW;
+#endif
 		}
 
 		tstring String::GetData() const {
-			return m_str;
+			return m_pImpl->m_str;
 		}
 
 		TCHAR String::GetAt(int nIndex) const {
 			PPX_ASSERT(nIndex >= 0);
-			return m_str[nIndex];
+			return m_pImpl->m_str[nIndex];
 		}
 
 		TCHAR String::operator[] (int nIndex) const {
 			PPX_ASSERT(nIndex >= 0);
-			return m_str[nIndex];
+			return m_pImpl->m_str[nIndex];
 		}
 
 		const String &String::operator=(const String &src) {
@@ -203,8 +257,8 @@ namespace ppx {
 
 		const String &String::operator=(LPCTSTR lpStr) {
 			if (lpStr) {
-				m_str.clear();
-				m_str = lpStr;
+				m_pImpl->m_str.clear();
+				m_pImpl->m_str = lpStr;
 			}
 			else {
 				Empty();
@@ -217,7 +271,7 @@ namespace ppx {
 
 		const String &String::operator=(LPCSTR lpStr) {
 			if (lpStr) {
-				m_str = AnsiToUnicode(lpStr);
+				m_pImpl->m_str = AnsiToUnicode(lpStr);
 			}
 			else {
 				Empty();
@@ -228,7 +282,7 @@ namespace ppx {
 
 		const String &String::operator+=(LPCSTR lpStr) {
 			if (lpStr) {
-				m_str += AnsiToUnicode(lpStr);
+				m_pImpl->m_str += AnsiToUnicode(lpStr);
 			}
 
 			return *this;
@@ -238,7 +292,7 @@ namespace ppx {
 
 		const String &String::operator=(LPCWSTR lpwStr) {
 			if (lpwStr) {
-				m_str = UnicodeToAnsi(lpStr);
+				m_pImpl->m_str = UnicodeToAnsi(lpStr);
 			}
 			else {
 				Empty();
@@ -249,7 +303,7 @@ namespace ppx {
 
 		const String &String::operator+=(LPCWSTR lpwStr) {
 			if (lpwStr) {
-				m_str += UnicodeToAnsi(lpStr);
+				m_pImpl->m_str += UnicodeToAnsi(lpStr);
 			}
 
 			return *this;
@@ -258,8 +312,8 @@ namespace ppx {
 #endif // _UNICODE
 
 		const String &String::operator=(const TCHAR ch) {
-			m_str.clear();
-			m_str = ch;
+			m_pImpl->m_str.clear();
+			m_pImpl->m_str = ch;
 			return *this;
 		}
 
@@ -324,30 +378,30 @@ namespace ppx {
 
 		void String::SetAt(int nIndex, TCHAR ch) {
 			if (nIndex >= 0 && (GetLength() == 0 || nIndex < GetLength()))
-				m_str[nIndex] = ch;
+				m_pImpl->m_str[nIndex] = ch;
 		}
 
 		int String::Compare(const String & str) const {
-			return _tcscmp(m_str.c_str(), str.m_str.c_str());
+			return _tcscmp(m_pImpl->m_str.c_str(), str.m_pImpl->m_str.c_str());
 		}
 
 		int String::CompareNoCase(const String & str) const {
-			return _tcsicmp(m_str.c_str(), str.m_str.c_str());
+			return _tcsicmp(m_pImpl->m_str.c_str(), str.m_pImpl->m_str.c_str());
 		}
 
 		void String::MakeUpper() {
 #ifdef _UNICODE
-			std::transform(m_str.begin(), m_str.end(), m_str.begin(), Internal::EasyToUpperW);
+			std::transform(m_pImpl->m_str.begin(), m_pImpl->m_str.end(), m_pImpl->m_str.begin(), Internal::EasyToUpperW);
 #else
-			std::transform(m_str.begin(), m_str.end(), m_str.begin(), Internal::EasyToUpperA);
+			std::transform(m_pImpl->m_str.begin(), m_pImpl->m_str.end(), m_pImpl->m_str.begin(), Internal::EasyToUpperA);
 #endif
 		}
 
 		void String::MakeLower() {
 #ifdef _UNICODE
-			std::transform(m_str.begin(), m_str.end(), m_str.begin(), Internal::EasyToLowerW);
+			std::transform(m_pImpl->m_str.begin(), m_pImpl->m_str.end(), m_pImpl->m_str.begin(), Internal::EasyToLowerW);
 #else
-			std::transform(m_str.begin(), m_str.end(), m_str.begin(), Internal::EasyToLowerA);
+			std::transform(m_pImpl->m_str.begin(), m_pImpl->m_str.end(), m_pImpl->m_str.begin(), Internal::EasyToLowerA);
 #endif
 		}
 
@@ -358,7 +412,7 @@ namespace ppx {
 			if (iLength > GetLength())
 				iLength = GetLength();
 
-			return m_str.substr(0, iLength);
+			return m_pImpl->m_str.substr(0, iLength);
 		}
 
 		String String::Mid(int iPos, int iLength) const {
@@ -371,7 +425,7 @@ namespace ppx {
 			if (iLength <= 0) 
 				return String();
 
-			return m_str.substr(iPos, iLength);
+			return m_pImpl->m_str.substr(iPos, iLength);
 		}
 
 		String String::Right(int iLength) const {
@@ -382,14 +436,14 @@ namespace ppx {
 				iLength = GetLength();
 			}
 
-			return m_str.substr(iPos, iLength);
+			return m_pImpl->m_str.substr(iPos, iLength);
 		}
 
 		int String::Find(TCHAR ch, int iOffset /*= 0*/) const {
 			if (iOffset < 0 || iOffset > GetLength())
 				return -1;
 
-			size_t ret = m_str.find_first_of(ch, iOffset);
+			size_t ret = m_pImpl->m_str.find_first_of(ch, iOffset);
 			if (ret == tstring::npos)
 				return -1;
 
@@ -400,17 +454,17 @@ namespace ppx {
 			if (iOffset < 0 || iOffset > GetLength())
 				return -1;
 
-			LPCTSTR p = _tcsstr(m_str.c_str() + iOffset, strSub.GetDataPointer());
+			LPCTSTR p = _tcsstr(m_pImpl->m_str.c_str() + iOffset, strSub.GetDataPointer());
 
 			if (p == NULL) return -1;
 
-			return (int)(p - m_str.c_str());
+			return (int)(p - m_pImpl->m_str.c_str());
 		}
 
 		int String::ReverseFind(TCHAR ch, int iOffset /* = 0*/) const {
 			if (iOffset < 0 || iOffset > GetLength())
 				return -1;
-			size_t ret = m_str.find_last_of(ch, GetLength() - iOffset - 1);
+			size_t ret = m_pImpl->m_str.find_last_of(ch, GetLength() - iOffset - 1);
 			if (ret == tstring::npos)
 				return -1;
 
@@ -481,7 +535,7 @@ namespace ppx {
 
 		std::vector<ppx::base::String> String::Split(const String& delimiter) const {
 			std::vector<ppx::base::String> fields;
-			String src = m_str;
+			String src = m_pImpl->m_str;
 			int pos = src.Find(delimiter, 0);
 
 			while (pos >= 0) {
@@ -505,7 +559,7 @@ namespace ppx {
 				joined_string += source[i];
 			}
 
-			m_str = joined_string.m_str;
+			m_pImpl->m_str = joined_string.m_pImpl->m_str;
 		}
 
 		String MakeString(LPCTSTR pstrFormat, ...) {

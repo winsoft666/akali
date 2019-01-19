@@ -14,10 +14,6 @@
 		<AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
 	
-    <Link>
-		<AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-		<AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   
   <!-- v140 Win32 StaticLibrary MT Debug -->
@@ -26,7 +22,7 @@
 		<PreprocessorDefinitions>PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_static_mt_debug\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_debug\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -36,7 +32,7 @@
 		<PreprocessorDefinitions>PPX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_static_mt_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -46,7 +42,7 @@
 		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_dynamic_md_debug\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_dynamic_md_debug\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -56,7 +52,7 @@
 		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_dynamic_md_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_dynamic_md_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   

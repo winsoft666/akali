@@ -16,9 +16,9 @@
 #ifndef PPX_BASE_BUFFER_QUEUE_H__
 #define PPX_BASE_BUFFER_QUEUE_H__
 
-#include <string>
 #include <mutex>
 #include "base/constructormagic.h"
+#include "base/string.h"
 #include "ppx_export.h"
 
 namespace ppx {
@@ -33,7 +33,7 @@ namespace ppx {
 
         class PPX_API BufferQueue {
         public:
-            BufferQueue(const std::wstring& queue_name = L"");
+            explicit BufferQueue(const String& queue_name = TEXT(""));
             ~BufferQueue();
 
             bool AddToFront(void *pSrcData, unsigned int nSrcDataSize);
@@ -50,9 +50,9 @@ namespace ppx {
 
             unsigned int Clear();
 
-            unsigned int GetElementCount();
+            unsigned int GetElementCount() const;
 
-            unsigned int GetTotalDataSize();
+            unsigned int GetTotalDataSize() const;
 
             unsigned int PopDataCrossElement(void *pOutputBuffer, unsigned int nBytesToRead, int *pBufferIsThrown);
 
@@ -60,13 +60,12 @@ namespace ppx {
 
             unsigned int GetFrontDataSize();
             unsigned int GetLastDataSize();
+
+			int64_t ToOneBuffer(char** ppBuf) const;
         private:
-            QUEUE_ELEMENT *first_element_;
-            QUEUE_ELEMENT *last_element_;
-            unsigned int element_num_;
-            unsigned int total_data_size_;
-            std::wstring queue_name_;
-            std::recursive_mutex queue_mutex_;
+
+			class BufferQueueImpl;
+			BufferQueueImpl* impl_;
 
             PPX_DISALLOW_COPY_AND_ASSIGN(BufferQueue);
         };

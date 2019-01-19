@@ -59,10 +59,10 @@ namespace ppx {
             return Create(szBuf);
         }
 
-        bool FileInfo::Create(const std::wstring &strFileName) {
+        bool FileInfo::Create(const String &strFileName) {
             Reset();
 
-            HANDLE hFile = CreateFileW(strFileName.c_str(), GENERIC_READ, 
+            HANDLE hFile = CreateFile(strFileName.GetDataPointer(), GENERIC_READ, 
                 FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
             if (hFile == INVALID_HANDLE_VALUE) {
                 return false;
@@ -79,7 +79,7 @@ namespace ppx {
             hFile = INVALID_HANDLE_VALUE;
 
             DWORD   dwHandle;
-            DWORD   dwFileVersionInfoSize = GetFileVersionInfoSize(strFileName.c_str(), &dwHandle);
+            DWORD   dwFileVersionInfoSize = GetFileVersionInfoSize(strFileName.GetDataPointer(), &dwHandle);
 
             if (!dwFileVersionInfoSize)
                 return false;
@@ -90,7 +90,7 @@ namespace ppx {
                 return false;
 
             try {
-                if (!GetFileVersionInfo((LPTSTR)strFileName.c_str(), dwHandle, dwFileVersionInfoSize, lpData))
+                if (!GetFileVersionInfo((LPTSTR)strFileName.GetDataPointer(), dwHandle, dwFileVersionInfoSize, lpData))
                     return false;
 
                 LPVOID  lpInfo;
@@ -250,19 +250,19 @@ namespace ppx {
             return m_FileInfo.dwFileSubtype;
         }
 
-        std::wstring FileInfo::GetCompanyName() {
+        String FileInfo::GetCompanyName() {
             return m_strCompanyName;
         }
 
-        std::wstring FileInfo::GetFileDescription() {
+        String FileInfo::GetFileDescription() {
             return m_strFileDescription;
         }
 
-        std::wstring FileInfo::GetFileVersion() {
+        String FileInfo::GetFileVersion() {
             return m_strFileVersion;
         }
 
-        std::wstring FileInfo::GetFileVersionEx() {
+        String FileInfo::GetFileVersionEx() {
             wchar_t strTemp[MAX_PATH * 2] = { 0 };
 
             StringCchPrintfW(strTemp, MAX_PATH * 2, L"%d.%d.%d.%d", (m_FileInfo.dwFileVersionMS & 0xFFFF0000) >> 16,
@@ -273,39 +273,39 @@ namespace ppx {
             return strTemp;
         }
 
-        std::wstring FileInfo::GetInternalName() {
+        String FileInfo::GetInternalName() {
             return m_strInternalName;
         }
 
-        std::wstring FileInfo::GetLegalCopyright() {
+        String FileInfo::GetLegalCopyright() {
             return m_strLegalCopyright;
         }
 
-        std::wstring FileInfo::GetOriginalFileName() {
+        String FileInfo::GetOriginalFileName() {
             return m_strOriginalFileName;
         }
 
-        std::wstring FileInfo::GetProductName() {
+        String FileInfo::GetProductName() {
             return m_strProductName;
         }
 
-        std::wstring FileInfo::GetProductVersion() {
+        String FileInfo::GetProductVersion() {
             return m_strProductVersion;
         }
 
-        std::wstring FileInfo::GetComments() {
+        String FileInfo::GetComments() {
             return m_strComments;
         }
 
-        std::wstring FileInfo::GetLegalTrademarks() {
+        String FileInfo::GetLegalTrademarks() {
             return m_strLegalTrademarks;
         }
 
-        std::wstring FileInfo::GetPrivateBuild() {
+        String FileInfo::GetPrivateBuild() {
             return m_strPrivateBuild;
         }
 
-        std::wstring FileInfo::GetSpecialBuild() {
+        String FileInfo::GetSpecialBuild() {
             return m_strSpecialBuild;
         }
 
@@ -323,18 +323,18 @@ namespace ppx {
 
         void FileInfo::Reset() {
             ZeroMemory(&m_FileInfo, sizeof(m_FileInfo));
-            m_strCompanyName.clear();
-            m_strFileDescription.clear();
-            m_strFileVersion.clear();
-            m_strInternalName.clear();
-            m_strLegalCopyright.clear();
-            m_strOriginalFileName.clear();
-            m_strProductName.clear();
-            m_strProductVersion.clear();
-            m_strComments.clear();
-            m_strLegalTrademarks.clear();
-            m_strPrivateBuild.clear();
-            m_strSpecialBuild.clear();
+            m_strCompanyName.Empty();
+            m_strFileDescription.Empty();
+            m_strFileVersion.Empty();
+            m_strInternalName.Empty();
+            m_strLegalCopyright.Empty();
+            m_strOriginalFileName.Empty();
+            m_strProductName.Empty();
+            m_strProductVersion.Empty();
+            m_strComments.Empty();
+            m_strLegalTrademarks.Empty();
+            m_strPrivateBuild.Empty();
+            m_strSpecialBuild.Empty();
 
             m_ftCreationTime.dwHighDateTime = m_ftCreationTime.dwLowDateTime = 0;
             m_ftLastAccessTime.dwHighDateTime = m_ftLastAccessTime.dwLowDateTime = 0;

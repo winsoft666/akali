@@ -1,6 +1,6 @@
 /*******************************************************************************
 *
-* Copyright (C) 2013 - 2015, Jeffery Jiang, <china_jeffery@163.com>.
+* Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
 * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED 

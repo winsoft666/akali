@@ -24,7 +24,7 @@
 #endif
 #include <Windows.h>
 #endif
-#include <string>
+#include "base/string.h"
 #include "base/timeutils.h"
 #include "ppx_export.h"
 
@@ -37,7 +37,7 @@ namespace ppx
             ~FileInfo();
 
             bool Create(HMODULE hModule = NULL);
-            bool Create(const std::wstring &strFileName);
+            bool Create(const String &strFileName);
 
         public:
             WORD GetFileVersion(int nIndex) const;
@@ -48,19 +48,19 @@ namespace ppx
             DWORD GetFileType() const;
             DWORD GetFileSubtype() const;
 
-            std::wstring GetCompanyName();
-            std::wstring GetFileDescription();
-            std::wstring GetFileVersion();
-            std::wstring GetFileVersionEx();
-            std::wstring GetInternalName();
-            std::wstring GetLegalCopyright();
-            std::wstring GetOriginalFileName();
-            std::wstring GetProductName();
-            std::wstring GetProductVersion();
-            std::wstring GetComments();
-            std::wstring GetLegalTrademarks();
-            std::wstring GetPrivateBuild();
-            std::wstring GetSpecialBuild();
+            String GetCompanyName();
+            String GetFileDescription();
+            String GetFileVersion();
+            String GetFileVersionEx();
+            String GetInternalName();
+            String GetLegalCopyright();
+            String GetOriginalFileName();
+            String GetProductName();
+            String GetProductVersion();
+            String GetComments();
+            String GetLegalTrademarks();
+            String GetPrivateBuild();
+            String GetSpecialBuild();
 
             // Windows的文件时间为一个64位整数（用FILETIME结构体存储）,它记录从1601-1-1 00:00:00到当前格林威治时间（UTC）所经过的100纳秒(ns)数
             // See: https ://blog.csdn.net/china_jeffery/article/details/78409614 
@@ -76,18 +76,18 @@ namespace ppx
         private:
             VS_FIXEDFILEINFO m_FileInfo;
 
-            std::wstring m_strCompanyName;
-            std::wstring m_strFileDescription;
-            std::wstring m_strFileVersion;
-            std::wstring m_strInternalName;
-            std::wstring m_strLegalCopyright;
-            std::wstring m_strOriginalFileName;
-            std::wstring m_strProductName;
-            std::wstring m_strProductVersion;
-            std::wstring m_strComments;
-            std::wstring m_strLegalTrademarks;
-            std::wstring m_strPrivateBuild;
-            std::wstring m_strSpecialBuild;
+            String m_strCompanyName;
+            String m_strFileDescription;
+            String m_strFileVersion;
+            String m_strInternalName;
+            String m_strLegalCopyright;
+            String m_strOriginalFileName;
+            String m_strProductName;
+            String m_strProductVersion;
+            String m_strComments;
+            String m_strLegalTrademarks;
+            String m_strPrivateBuild;
+            String m_strSpecialBuild;
 
             FILETIME     m_ftCreationTime;
             FILETIME     m_ftLastAccessTime;

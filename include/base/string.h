@@ -40,12 +40,15 @@ namespace ppx {
 			bool IsEmpty() const;
 			TCHAR GetAt(int nIndex) const;
 			void Append(const String & str);
+			void Append(LPCTSTR str, int nLen = -1);
 			void Assign(LPCTSTR pstr, int nLength = -1);
 			void Assign(const String & str);
 			void TrimLeft();
 			void TrimRight();
 			void Trim();
 			LPCTSTR GetDataPointer() const;
+			std::string ToDataA() const;
+			std::wstring ToDataW() const;
 			tstring GetData() const;
 
 			void SetAt(int nIndex, TCHAR ch);
@@ -128,7 +131,8 @@ namespace ppx {
 				return ret;
 			}
 		protected:
-			tstring m_str;
+			class StringImpl;
+			StringImpl* m_pImpl;
 		};
 
         PPX_API String MakeString(LPCTSTR pstrFormat, ...);

@@ -54,6 +54,46 @@ namespace ppx {
         } FileDownloadHeader;
 #pragma pack()
 
+		class FileDownload::PrivateData {
+		public:
+			PrivateData() :
+				is_new_download_(false),
+				interruption_resuming_(false),
+				file_size_(0L),
+				download_header_size_(0),
+				last_time_downloaded_(0L),
+				actual_interruption_resuming_(false),
+#ifdef _WIN32
+				file_(INVALID_HANDLE_VALUE),
+#else
+				file_(0),
+#endif
+				stop_(false) {
+				multi_ = nullptr;
+			}
+
+		public:
+			CURLM* multi_;
+			std::vector<CURL*> easys_;
+
+			bool interruption_resuming_;
+			bool actual_interruption_resuming_;
+			bool is_new_download_;
+			int64_t file_size_;
+#ifdef _WIN32
+			HANDLE file_;
+#else
+			int file_;
+#endif
+			std::mutex file_write_mutex_;
+			std::atomic_bool stop_;
+			std::thread work_thread_;
+			std::unique_ptr<FileDownloadHeader> download_header_;
+			size_t download_header_size_;
+			int64_t last_time_downloaded_;
+
+			std::vector<FileDownloadWork*> works_;
+		};
 
         class FileDownload::FileDownloadWork {
         public:
@@ -128,7 +168,7 @@ namespace ppx {
             }
 
             int64_t writeAllBuffer() {
-                std::lock_guard<std::mutex> locker(parent_->file_write_mutex_);
+                std::lock_guard<std::mutex> locker(parent_->data_->file_write_mutex_);
                 assert(parent_);
 
                 if (parent_) {
@@ -136,10 +176,10 @@ namespace ppx {
                     BOOL b;
                     DWORD written = 0;
 
-                    liOffset.QuadPart = (start_pos_ + written_ + parent_->download_header_size_);
-                    b = SetFilePointerEx(parent_->file_, liOffset, NULL, FILE_BEGIN);
+                    liOffset.QuadPart = (start_pos_ + written_ + parent_->data_->download_header_size_);
+                    b = SetFilePointerEx(parent_->data_->file_, liOffset, NULL, FILE_BEGIN);
                     if (b) {
-                        b = WriteFile(parent_->file_, buffer_, buffer_used_, &written, NULL);
+                        b = WriteFile(parent_->data_->file_, buffer_, buffer_used_, &written, NULL);
                         assert(b && written == buffer_used_);
 
                         written_ += written;
@@ -168,30 +208,9 @@ namespace ppx {
             size_t buffer_used_;
         };
 
-        class FileDownload::PrivateData {
-        public:
-            PrivateData() {
-                multi_ = nullptr;
-            }
+       
 
-        public:
-            CURLM* multi_;
-            std::vector<CURL*> easys_;
-        };
-
-        FileDownload::FileDownload() :
-            is_new_download_(false),
-            interruption_resuming_(false),
-            file_size_(0L),
-            download_header_size_(0),
-            last_time_downloaded_(0L),
-            actual_interruption_resuming_(false),
-#ifdef _WIN32
-            file_(INVALID_HANDLE_VALUE),
-#else
-            file_(0),
-#endif
-            stop_(false) {
+        FileDownload::FileDownload() {
             data_ = new PrivateData();
         }
 
@@ -205,9 +224,9 @@ namespace ppx {
         }
 
         void FileDownload::TransferProgress(int64_t &total, int64_t &transfered) {
-            int64_t total_value = file_size_;
-            int64_t transfered_value = last_time_downloaded_;
-            for_each(works_.begin(), works_.end(), [&transfered_value, &total_value](FileDownloadWork * work)->void {
+            int64_t total_value = data_->file_size_;
+            int64_t transfered_value = data_->last_time_downloaded_;
+            for_each(data_->works_.begin(), data_->works_.end(), [&transfered_value, &total_value](FileDownloadWork * work)->void {
                 if (work) {
                     transfered_value += work->downloaded();
                 }
@@ -218,21 +237,22 @@ namespace ppx {
         }
 
         bool FileDownload::Start() {
-            if (status_ == Progress || thread_num_ < 1 ||
-                file_dir_.length() == 0 || file_name_.length() == 0 || url_.length() == 0) {
+            if (GetStatus() == Progress || thread_num_ < 1 ||
+                file_dir_.GetLength() == 0 || file_name_.GetLength() == 0 || url_.GetLength() == 0) {
                 return false;
             }
 
-            stop_ = false;
-            file_size_ = 0L;
-            file_ = nullptr;
+            data_->stop_ = false;
+			data_->file_size_ = 0L;
+			data_->file_ = nullptr;
             actual_thread_num_ = thread_num_;
-            actual_interruption_resuming_ = interruption_resuming_;
-            last_time_downloaded_ = 0L;
-            is_new_download_ = true;
+			data_->actual_interruption_resuming_ = data_->interruption_resuming_;
+			data_->last_time_downloaded_ = 0L;
+			data_->is_new_download_ = true;
 
-            if (status_cb_)
-                status_cb_(file_name_ + file_ext_, FileTransferBase::Progress, "", 0L);
+			StatusFunctor sf = GetStatusFunctor();
+            if (sf)
+				sf(file_name_ + file_ext_, FileTransferBase::Progress, "", 0L);
 
             start_time_ = ppx::base::GetTimeStamp();
 
@@ -242,20 +262,20 @@ namespace ppx {
                 query_size_ret = QueryFileSize(); // once again.
             }
 
-            if (!query_size_ret || file_size_ <= 0) {
-                actual_interruption_resuming_ = false;
+            if (!query_size_ret || data_->file_size_ <= 0) {
+				data_->actual_interruption_resuming_ = false;
                 actual_thread_num_ = 1;
                 PPX_LOG(LS_INFO) << "get file size failed, set multi-thread_support = false, interruption_resuming = false";
             }
 
-            GenerateTmpFileName(file_size_);
+            GenerateTmpFileName(data_->file_size_);
 
             // If can't interruption resuming, need choose a temp file that not exist.
-            if (!actual_interruption_resuming_) {
+            if (!data_->actual_interruption_resuming_) {
                 int index = 1;
-                std::string name = tmp_filename_;
+                base::String name = tmp_filename_;
 
-                while (_access((file_dir_ + name + tmp_fileext_).c_str(), 0) == 0) {
+                while (_access((file_dir_ + name + tmp_fileext_).ToDataA().c_str(), 0) == 0) {
                     name = tmp_filename_ + "(" + std::to_string((_Longlong)index++) + ")";
                 }
 
@@ -264,20 +284,20 @@ namespace ppx {
 
 #ifdef _WIN32
             // generate temp file
-            file_ = CreateFileA((file_dir_ + tmp_filename_ + tmp_fileext_).c_str(),
+			data_->file_ = CreateFile((file_dir_ + tmp_filename_ + tmp_fileext_).GetDataPointer(),
                 GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
                 NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-            if (file_ == INVALID_HANDLE_VALUE) {
+            if (data_->file_ == INVALID_HANDLE_VALUE) {
                 return false;
             }
 
-            if (actual_interruption_resuming_) {
+            if (data_->actual_interruption_resuming_) {
                 LARGE_INTEGER liSize;
 
-                if (!GetFileSizeEx(file_, &liSize)) {
-                    CloseHandle(file_);
-                    file_ = INVALID_HANDLE_VALUE;
+                if (!GetFileSizeEx(data_->file_, &liSize)) {
+                    CloseHandle(data_->file_);
+					data_->file_ = INVALID_HANDLE_VALUE;
                     return false;
                 }
 
@@ -286,44 +306,44 @@ namespace ppx {
                         PPX_LOG(LS_WARNING) << "temp file has exist, but format error";
                     }
                     else {
-                        is_new_download_ = false; // if read header successful from temp file, is_new_download_ = false.
-                        actual_thread_num_ = download_header_->split_num;
+						data_->is_new_download_ = false; // if read header successful from temp file, is_new_download_ = false.
+                        actual_thread_num_ = data_->download_header_->split_num;
                     }
                 }
 
-                if (is_new_download_) { // don't read header from temp file.
-                    download_header_.reset(new FileDownloadHeader());
-                    download_header_->split_num = actual_thread_num_;
-                    download_header_->split_infos.reset(new FileSplitInfo[actual_thread_num_]);
+                if (data_->is_new_download_) { // don't read header from temp file.
+					data_->download_header_.reset(new FileDownloadHeader());
+					data_->download_header_->split_num = actual_thread_num_;
+					data_->download_header_->split_infos.reset(new FileSplitInfo[actual_thread_num_]);
                 }
             }
 
-            download_header_size_ = GetDownloadHeaderSize();
+			data_->download_header_size_ = GetDownloadHeaderSize();
            
 #else
             // TODO
 #endif
 
-            PPX_LOG(LS_INFO) << "interruption-resuming support: " << (actual_interruption_resuming_ ? "true" : "false");
-            PPX_LOG(LS_INFO) << "download header size: " << download_header_size_;
+            PPX_LOG(LS_INFO) << "interruption-resuming support: " << (data_->actual_interruption_resuming_ ? "true" : "false");
+            PPX_LOG(LS_INFO) << "download header size: " << data_->download_header_size_;
             PPX_LOG(LS_INFO) << "thread num: " << actual_thread_num_;
 
-            if (work_thread_.joinable())
-                work_thread_.join();
-            work_thread_ = std::thread(&FileDownload::WorkLoop, this);
+            if (data_->work_thread_.joinable())
+				data_->work_thread_.join();
+			data_->work_thread_ = std::thread(&FileDownload::WorkLoop, this);
             return true;
         }
 
         void FileDownload::Stop() {
-            stop_ = true;
+			data_->stop_ = true;
 
-            if (work_thread_.joinable())
-                work_thread_.join();
+            if (data_->work_thread_.joinable())
+				data_->work_thread_.join();
         }
 
         void FileDownload::SetInterruptionResuming(bool b) {
-            if (status_ != Progress)
-                interruption_resuming_ = b;
+            if (GetStatus() != Progress)
+				data_->interruption_resuming_ = b;
         }
 
         static size_t callback_4_query_file_size(char *buffer, size_t size, size_t nitems, void *outstream) {
@@ -352,24 +372,24 @@ namespace ppx {
             curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
 #endif
             curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
-            curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
+            curl_easy_setopt(curl, CURLOPT_URL, url_.ToDataA().c_str());
             curl_easy_setopt(curl, CURLOPT_HEADER, 1);
             curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, ca_path_.length() > 0);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, ca_path_.length() > 0);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, ca_path_.GetLength() > 0);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, ca_path_.GetLength() > 0);
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 3); // Time-out connect operations after this amount of seconds
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, 2); // Time-out the read operation after this amount of seconds
 
-            if (ca_path_.length() > 0)
-                curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.c_str());
+            if (ca_path_.GetLength() > 0)
+                curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.ToDataA().c_str());
 
             // avoid libcurl failed with "Failed writing body".
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_4_query_file_size);
 
             CURLcode ret_code = curl_easy_perform(curl);
             if (ret_code != CURLE_OK) {
-                PPX_LOG(LS_ERROR) << "[" << url_ << "] get file size failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
                 return false;
             }
 
@@ -378,30 +398,30 @@ namespace ppx {
 
             if (ret_code == CURLE_OK) {
                 if (http_code != 200) {
-                    PPX_LOG(LS_ERROR) << "[" << url_ << "] get file size failed, http_code=" << http_code;
+                    PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, http_code=" << http_code;
                     return false;
                 }
             }
             else {
-                PPX_LOG(LS_ERROR) << "[" << url_ << "] get file size failed, and get http code failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, and get http code failed, ret_code=" << ret_code;
                 return false;
             }
 
             int64_t filesize = 0L;
             ret_code = curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &filesize);
             if (ret_code != CURLE_OK) {
-                PPX_LOG(LS_ERROR) << "[" << url_ << "] get file size failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
                 return false;
             }
 
-            file_size_ = filesize;
+			data_->file_size_ = filesize;
 
-            PPX_LOG(LS_INFO) << "[" << url_ << "] size: " << file_size_;
+            PPX_LOG(LS_INFO) << "[" << url_.ToDataA().c_str() << "] size: " << data_->file_size_;
             return true;
         }
 
         void FileDownload::WorkLoop() {
-            int64_t per = file_size_ / actual_thread_num_;
+            int64_t per = data_->file_size_ / actual_thread_num_;
             int64_t start_pos = 0, end_pos = 0;
             size_t run_thread_num = 0;
 
@@ -409,18 +429,19 @@ namespace ppx {
 
             size_t work_index = 0;
             bool need_break = false;
+			StatusFunctor sf = GetStatusFunctor();
 
             for (size_t i = 0; i < actual_thread_num_; i++) {
-                if (!is_new_download_) { // use last time split info
-                    start_pos = download_header_->split_infos[i].start_pos + download_header_->split_infos[i].downloaded - 1;
+                if (!data_->is_new_download_) { // use last time split info
+                    start_pos = data_->download_header_->split_infos[i].start_pos + data_->download_header_->split_infos[i].downloaded - 1;
                     if (start_pos < 0)
                         start_pos = 0; // start pos must > 0, because FileDownloadWork will use it to set file write offset.
-                    end_pos = download_header_->split_infos[i].end_pos;
-                    last_time_downloaded_ += download_header_->split_infos[i].downloaded;
+                    end_pos = data_->download_header_->split_infos[i].end_pos;
+					data_->last_time_downloaded_ += data_->download_header_->split_infos[i].downloaded;
 
-                    PPX_LOG(LS_INFO) << "#" << i << ": " << download_header_->split_infos[i].start_pos
-                        << " ~ " << download_header_->split_infos[i].end_pos << " , "
-                        << download_header_->split_infos[i].downloaded << " downloaded.";
+                    PPX_LOG(LS_INFO) << "#" << i << ": " << data_->download_header_->split_infos[i].start_pos
+                        << " ~ " << data_->download_header_->split_infos[i].end_pos << " , "
+                        << data_->download_header_->split_infos[i].downloaded << " downloaded.";
 
                     if (start_pos == end_pos) {
                         continue;
@@ -430,17 +451,17 @@ namespace ppx {
                         start_pos = i * per;
 
                         if (i == actual_thread_num_ - 1)
-                            end_pos = file_size_ - 1;
+                            end_pos = data_->file_size_ - 1;
                         else
                             end_pos = (i + 1) * per - 1;
 
                         if (end_pos < 0)
                             end_pos = 0;
                     
-                    if (download_header_) {
-                        download_header_->split_infos[i].start_pos = start_pos;
-                        download_header_->split_infos[i].end_pos = end_pos;
-                        download_header_->split_infos[i].downloaded = 0L;
+                    if (data_->download_header_) {
+						data_->download_header_->split_infos[i].start_pos = start_pos;
+						data_->download_header_->split_infos[i].end_pos = end_pos;
+						data_->download_header_->split_infos[i].downloaded = 0L;
                     }
                     PPX_LOG(LS_INFO) << "#" << i << ": " << start_pos << " ~ " << end_pos << " , 0 downloaded.";
                 }
@@ -451,7 +472,7 @@ namespace ppx {
                 if (start_pos >= 0 && end_pos > 0 && end_pos >= start_pos)
                     snprintf(range, sizeof(range), "%lld-%lld", start_pos, end_pos);
                 FileDownloadWork *work = new FileDownloadWork(work_index++, this, start_pos, end_pos);
-                works_.push_back(work);
+				data_->works_.push_back(work);
 
                 CURL* curl = curl_easy_init();
                 data_->easys_.push_back(curl);
@@ -461,13 +482,13 @@ namespace ppx {
 #else
                 curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
 #endif
-                curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
+                curl_easy_setopt(curl, CURLOPT_URL, url_.ToDataA().c_str());
                 curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
                 curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, ca_path_.length() > 0);
-                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, ca_path_.length() > 0);
-                if (ca_path_.length() > 0)
-                    curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.c_str());
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, ca_path_.GetLength() > 0);
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, ca_path_.GetLength() > 0);
+                if (ca_path_.GetLength() > 0)
+                    curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.ToDataA().c_str());
                 curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 10L);
                 curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 30L);
 
@@ -484,7 +505,7 @@ namespace ppx {
                     if (err != CURLE_OK) {
                         PPX_LOG(LS_WARNING) << "curl_easy_setopt CURLOPT_RANGE failed, code=" << err;
                         
-                        if (is_new_download_ && // a new download, not resume download.
+                        if (data_->is_new_download_ && // a new download, not resume download.
                             i== 0) { // and error occur on first set CURLOPT_RANGE
                             need_break = true; // we use on thread to download.
                         }
@@ -495,13 +516,14 @@ namespace ppx {
                 if (m_code != CURLE_OK) {
                     PPX_LOG(LS_ERROR) << "curl_multi_add_handle failed, code=" << m_code;
                     LastCurlClear();
-                    for_each(works_.begin(), works_.end(), [](FileDownloadWork * work)->void {if (work) { delete work; } });
-                    works_.clear();
+                    for_each(data_->works_.begin(), data_->works_.end(), [](FileDownloadWork * work)->void {if (work) { delete work; } });
+					data_->works_.clear();
 #ifdef _WIN32
-                    SAFE_CLOSE_ON_VALID_HANDLE(file_);
+                    SAFE_CLOSE_ON_VALID_HANDLE(data_->file_);
 #endif
-                    if (status_cb_)
-                        status_cb_(file_name_ + file_ext_, FileTransferBase::Failed, "curl_multi_add_handle failed", 0L);
+
+                    if (sf)
+						sf(file_name_ + file_ext_, FileTransferBase::Failed, "curl_multi_add_handle failed", 0L);
                     return;
                 }
 
@@ -509,7 +531,7 @@ namespace ppx {
                     break;
             }
 
-            if (actual_interruption_resuming_ && is_new_download_) {
+            if (data_->actual_interruption_resuming_ && data_->is_new_download_) {
                 // write new header
                 if (!WriteDownloadHeader()) {
                     for_each(data_->easys_.begin(), data_->easys_.end(), [this](CURL * e)->void {
@@ -525,11 +547,11 @@ namespace ppx {
                     for_each(data_->easys_.begin(), data_->easys_.end(), [this](CURL * e)->void { if (e) curl_easy_cleanup(e); });
                     data_->easys_.clear();
 
-                    for_each(works_.begin(), works_.end(), [](FileDownloadWork * work)->void {if (work) {
+                    for_each(data_->works_.begin(), data_->works_.end(), [](FileDownloadWork * work)->void {if (work) {
                         work->writeAllBuffer();
                         delete work;
                     } });
-                    works_.clear();
+					data_->works_.clear();
 
                     return;
                 }
@@ -537,20 +559,21 @@ namespace ppx {
 
 #ifdef _WIN32
             LARGE_INTEGER liSize;
-            liSize.QuadPart = file_size_ + download_header_size_;
-            SetFilePointerEx(file_, liSize, NULL, FILE_BEGIN);
-            SetEndOfFile(file_);
+            liSize.QuadPart = data_->file_size_ + data_->download_header_size_;
+            SetFilePointerEx(data_->file_, liSize, NULL, FILE_BEGIN);
+            SetEndOfFile(data_->file_);
 #else
 #endif
 
             int still_running = 0;
             CURLMcode m_code = curl_multi_perform(data_->multi_, &still_running);
 
-            if (status_cb_)
-                status_cb_(file_name_ + file_ext_, FileTransferBase::Progress, "", 0L);
+
+            if (sf)
+                sf(file_name_ + file_ext_, FileTransferBase::Progress, "", 0L);
 
             do {
-                if (stop_) {
+                if (data_->stop_) {
                     break;
                 }
 
@@ -652,20 +675,21 @@ namespace ppx {
 
             LastCurlClear();
             int64_t total_downloaded = 0L;
-            for_each(works_.begin(), works_.end(), [&total_downloaded](FileDownloadWork * work)->void {if (work) {
+            for_each(data_->works_.begin(), data_->works_.end(), [&total_downloaded](FileDownloadWork * work)->void {if (work) {
                 work->writeAllBuffer();
                 total_downloaded += work->downloaded();
                 delete work;
             } });
-            works_.clear();
-        
+			data_->works_.clear();
+
+
             // sometimes get filesize failed, file_size_ is 0;
             // sometimes split failed(such as set CURLOPT_RANGE failed), run_thread_num_ just 1.
-            if (done_thread == run_thread_num || total_downloaded == file_size_) { // download complete.
+            if (done_thread == run_thread_num || total_downloaded == data_->file_size_) { // download complete.
                 bool copy_ret = CopyDataToFile();
 
 #ifdef _WIN32
-                SAFE_CLOSE_ON_VALID_HANDLE(file_);
+                SAFE_CLOSE_ON_VALID_HANDLE(data_->file_);
 #endif
                 int64_t used = (ppx::base::GetTimeStamp() - start_time_) / 1000;
 
@@ -674,60 +698,63 @@ namespace ppx {
                 if (copy_ret) {
                     bool del_ret = DeleteTmpFile();
                     
-                    PPX_LOG(LS_INFO) << "Download [" << file_name_ + file_ext_ << "] successful, used " << used << " ms";
+                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).ToDataA().c_str() << "] successful, used " << used << " ms";
 
-                    if (file_md5_.length() > 0) {
-                        std::string md5 = ppx::base::GetFileMd5(file_dir_ + file_name_ + file_ext_);
-                        std::transform(md5.begin(), md5.end(), md5.begin(), ::tolower);
+                    if (file_md5_.GetLength() > 0) {
+                        base::String md5 = ppx::base::GetFileMd5((file_dir_ + file_name_ + file_ext_).ToDataA().c_str());
+						md5.MakeLower();
                         if (md5 != file_md5_) {
-                            PPX_LOG(LS_ERROR) << "Md5 error, " << file_md5_ << " != " << md5;
-                            status_ = FileTransferBase::Failed;
+                            PPX_LOG(LS_ERROR) << "Md5 error, " << file_md5_.ToDataA().c_str() << " != " << md5.ToDataA().c_str();
+							SetStatus(FileTransferBase::Failed);
                             reason = "md5 error";
                         }
                         else {
-                            status_ = FileTransferBase::Finished;
+							SetStatus(FileTransferBase::Finished);
                         }
                     }
                     else {
-                        status_ = FileTransferBase::Finished;
+						SetStatus(FileTransferBase::Finished);
                     }
                 }
                 else {
-                    PPX_LOG(LS_INFO) << "Download [" << file_name_ + file_ext_ << "] failed (copy data from temp file failed)";
-                    status_ = FileTransferBase::Failed;
+                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).ToDataA().c_str() << "] failed (copy data from temp file failed)";
+					SetStatus(FileTransferBase::Failed);
                     reason = "copy file failed";
                 }
 
-                if (status_cb_) {
-                    status_cb_(file_name_ + file_ext_, status_, reason, used);
+                if (sf) {
+					sf(file_name_ + file_ext_, GetStatus(), reason, used);
                 }
             }
             else {
                 bool b = UpdateDownloadHeader();
 
 #ifdef _WIN32
-                SAFE_CLOSE_ON_VALID_HANDLE(file_);
+                SAFE_CLOSE_ON_VALID_HANDLE(data_->file_);
 #endif
-                status_ = FileTransferBase::Ready;
 
-                if (status_cb_) {
-                    if (stop_)
-                        status_cb_(file_name_ + file_ext_, FileTransferBase::Ready, "", 0L);
+				SetStatus(FileTransferBase::Ready);
+
+                if (sf) {
+                    if (data_->stop_)
+						sf(file_name_ + file_ext_, FileTransferBase::Ready, "", 0L);
                     else
-                        status_cb_(file_name_ + file_ext_, FileTransferBase::Failed, "", 0L);
+						sf(file_name_ + file_ext_, FileTransferBase::Failed, "", 0L);
                 }
             }
 
-            download_header_.release();
+			data_->download_header_.release();
         }
 
         void FileDownload::ProgressChange(size_t index) {
-            if (download_header_) {
-                download_header_->split_infos[index].downloaded =
-                    download_header_->split_infos[index].last_downloaded + works_[index]->downloaded();
+            if (data_->download_header_) {
+				data_->download_header_->split_infos[index].downloaded =
+					data_->download_header_->split_infos[index].last_downloaded + data_->works_[index]->downloaded();
             }
 
-            if (progress_cb_) {
+			ProgressFunctor pf = GetProgressFunctor();
+
+            if (pf) {
                 static int64_t last_total = 0L;
                 static int64_t last_transfer = 0L;
                 static int64_t last_time = 0;
@@ -740,7 +767,7 @@ namespace ppx {
                     if (now_ms - last_time >= progress_interval_ || total == transfer) {
                         last_time = now_ms;
                         last_transfer = transfer;
-                        progress_cb_(file_name_ + file_ext_, total, transfer);
+						pf(file_name_ + file_ext_, total, transfer);
                     }
                 }
             }
@@ -752,47 +779,47 @@ namespace ppx {
             DWORD read = 0;
             BOOL read_ret = FALSE;
 
-            download_header_.reset(new FileDownloadHeader());
+			data_->download_header_.reset(new FileDownloadHeader());
 
-            read_ret = ReadFile(file_, &download_header_->flag, sizeof(download_header_->flag), &read, NULL);
+            read_ret = ReadFile(data_->file_, &data_->download_header_->flag, sizeof(data_->download_header_->flag), &read, NULL);
 
-            if (!read_ret || read != sizeof(download_header_->flag)) {
-                download_header_.release();
+            if (!read_ret || read != sizeof(data_->download_header_->flag)) {
+				data_->download_header_.release();
                 return false;
             }
 
-            if (strcmp(download_header_->flag, FILE_DOWNLOAD_HEADER_SIGN) != 0) {
-                download_header_.release();
+            if (strcmp(data_->download_header_->flag, FILE_DOWNLOAD_HEADER_SIGN) != 0) {
+				data_->download_header_.release();
                 return false;
             }
 
-            read_ret = ReadFile(file_, &download_header_->split_num, sizeof(download_header_->split_num), &read, NULL);
+            read_ret = ReadFile(data_->file_, &data_->download_header_->split_num, sizeof(data_->download_header_->split_num), &read, NULL);
 
-            if (!read_ret || read != sizeof(download_header_->split_num)) {
-                download_header_.release();
+            if (!read_ret || read != sizeof(data_->download_header_->split_num)) {
+				data_->download_header_.release();
                 return false;
             }
 
-            if (download_header_->split_num <= 0) {
-                download_header_.release();
+            if (data_->download_header_->split_num <= 0) {
+				data_->download_header_.release();
                 return false;
             }
 
-            download_header_->split_infos.reset(new FileSplitInfo[download_header_->split_num]);
+			data_->download_header_->split_infos.reset(new FileSplitInfo[data_->download_header_->split_num]);
 
-            for (size_t i = 0; i < download_header_->split_num; i++) {
-                read_ret = ReadFile(file_, &(download_header_->split_infos[i]), sizeof(FileSplitInfo), &read, NULL);
+            for (size_t i = 0; i < data_->download_header_->split_num; i++) {
+                read_ret = ReadFile(data_->file_, &(data_->download_header_->split_infos[i]), sizeof(FileSplitInfo), &read, NULL);
 
                 if (!read_ret || read != sizeof(FileSplitInfo)) {
-                    download_header_.release();
+					data_->download_header_.release();
                     return false;
                 }
 
 
-                FileSplitInfo *info = &(download_header_->split_infos[i]);
+                FileSplitInfo *info = &(data_->download_header_->split_infos[i]);
                 if (info->start_pos < 0 || info->end_pos <= 0 || info->downloaded < 0 ||
                     (info->start_pos + info->downloaded > info->end_pos + 1)) {
-                    download_header_.release();
+					data_->download_header_.release();
                     return false;
                 }
             }
@@ -805,27 +832,27 @@ namespace ppx {
             BOOL b;
             DWORD written = 0;
 
-            if (!download_header_)
+            if (!data_->download_header_)
                 return false;
 
             liOffset.QuadPart = 0;
-            b = SetFilePointerEx(file_, liOffset, NULL, FILE_BEGIN);
+            b = SetFilePointerEx(data_->file_, liOffset, NULL, FILE_BEGIN);
 
             if (!b)
                 return false;
 
-            b = WriteFile(file_, FILE_DOWNLOAD_HEADER_SIGN, strlen(FILE_DOWNLOAD_HEADER_SIGN), &written, NULL);
+            b = WriteFile(data_->file_, FILE_DOWNLOAD_HEADER_SIGN, strlen(FILE_DOWNLOAD_HEADER_SIGN), &written, NULL);
 
             if (!b || written != strlen(FILE_DOWNLOAD_HEADER_SIGN))
                 return false;
 
-            b = WriteFile(file_, &download_header_->split_num, sizeof(download_header_->split_num), &written, NULL);
+            b = WriteFile(data_->file_, &data_->download_header_->split_num, sizeof(data_->download_header_->split_num), &written, NULL);
 
-            if (!b || written != sizeof(download_header_->split_num))
+            if (!b || written != sizeof(data_->download_header_->split_num))
                 return false;
 
-            for (size_t i = 0; i < download_header_->split_num; i++) {
-                b = WriteFile(file_, &(download_header_->split_infos[i]), sizeof(FileSplitInfo), &written, NULL);
+            for (size_t i = 0; i < data_->download_header_->split_num; i++) {
+                b = WriteFile(data_->file_, &(data_->download_header_->split_infos[i]), sizeof(FileSplitInfo), &written, NULL);
 
                 if (!b || written != sizeof(FileSplitInfo))
                     return false;
@@ -839,26 +866,26 @@ namespace ppx {
             BOOL b;
             DWORD written = 0;
 
-            if (!download_header_)
+            if (!data_->download_header_)
                 return false;
 
             // sign, split_num will not be changed in download progress.
 
-            liOffset.QuadPart = strlen(FILE_DOWNLOAD_HEADER_SIGN) + sizeof(download_header_->split_num);
-            b = SetFilePointerEx(file_, liOffset, NULL, FILE_BEGIN);
+            liOffset.QuadPart = strlen(FILE_DOWNLOAD_HEADER_SIGN) + sizeof(data_->download_header_->split_num);
+            b = SetFilePointerEx(data_->file_, liOffset, NULL, FILE_BEGIN);
 
             if (!b)
                 return false;
 
             PPX_LOG(LS_INFO) << "Download broken:";
 
-            for (size_t i = 0; i < download_header_->split_num; i++) {
+            for (size_t i = 0; i < data_->download_header_->split_num; i++) {
                 // note: important
-                download_header_->split_infos[i].last_downloaded = download_header_->split_infos[i].downloaded;
-                b = WriteFile(file_, &(download_header_->split_infos[i]), sizeof(FileSplitInfo), &written, NULL);
-                PPX_LOG(LS_INFO) << "#" << i << ": " << download_header_->split_infos[i].start_pos
-                    << " ~ " << download_header_->split_infos[i].end_pos
-                    << " , " << download_header_->split_infos[i].downloaded << " downloaded";
+				data_->download_header_->split_infos[i].last_downloaded = data_->download_header_->split_infos[i].downloaded;
+                b = WriteFile(data_->file_, &(data_->download_header_->split_infos[i]), sizeof(FileSplitInfo), &written, NULL);
+                PPX_LOG(LS_INFO) << "#" << i << ": " << data_->download_header_->split_infos[i].start_pos
+                    << " ~ " << data_->download_header_->split_infos[i].end_pos
+                    << " , " << data_->download_header_->split_infos[i].downloaded << " downloaded";
 
                 if (!b || written != sizeof(FileSplitInfo))
                     return false;
@@ -868,27 +895,27 @@ namespace ppx {
         }
 
         size_t FileDownload::GetDownloadHeaderSize() {
-            if (download_header_) {
-                return (FILE_DOWNLAD_HEADER_SIZE + sizeof(download_header_->split_num) + download_header_->split_num * sizeof(FileSplitInfo));;
+            if (data_->download_header_) {
+                return (FILE_DOWNLAD_HEADER_SIZE + sizeof(data_->download_header_->split_num) + data_->download_header_->split_num * sizeof(FileSplitInfo));;
             }
 
             return 0;
         }
 
         bool FileDownload::CopyDataToFile() {
-            if (file_ == INVALID_HANDLE_VALUE)
+            if (data_->file_ == INVALID_HANDLE_VALUE)
                 return false;
 
             int index = 1;
-            std::string name = file_name_;
+            base::String name = file_name_;
 
-            while (_access((file_dir_ + name + file_ext_).c_str(), 0) == 0) {
+            while (_access((file_dir_ + name + file_ext_).ToDataA().c_str(), 0) == 0) {
                 name = file_name_ + "(" + std::to_string((_Longlong)index++) + ")";
             }
 
             file_name_ = name;
 
-            HANDLE f = CreateFileA((file_dir_ + file_name_ + file_ext_).c_str(),
+            HANDLE f = CreateFile((file_dir_ + file_name_ + file_ext_).GetDataPointer(),
                 GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
 
             if (f == INVALID_HANDLE_VALUE) {
@@ -909,12 +936,12 @@ namespace ppx {
             LARGE_INTEGER liOffset;
             liOffset.QuadPart = GetDownloadHeaderSize();
 
-            if (!SetFilePointerEx(file_, liOffset, NULL, FILE_BEGIN)) {
+            if (!SetFilePointerEx(data_->file_, liOffset, NULL, FILE_BEGIN)) {
                 CloseHandle(f);
                 return false;
             }
 
-            while (ReadFile(file_, buf, 1024, &read, NULL) && read > 0) {
+            while (ReadFile(data_->file_, buf, 1024, &read, NULL) && read > 0) {
                 b = WriteFile(f, buf, read, &written, NULL);
                 assert(b && read == written);
             }
@@ -928,8 +955,8 @@ namespace ppx {
 
         bool FileDownload::DeleteTmpFile() {
 #ifdef _WIN32
-            SAFE_CLOSE_ON_VALID_HANDLE(file_);
-            return DeleteFileA((file_dir_ + tmp_filename_ + tmp_fileext_).c_str()) == TRUE;
+            SAFE_CLOSE_ON_VALID_HANDLE(data_->file_);
+            return DeleteFile((file_dir_ + tmp_filename_ + tmp_fileext_).GetDataPointer()) == TRUE;
 #endif
         }
 

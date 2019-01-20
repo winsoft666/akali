@@ -481,17 +481,17 @@ xcopy "$(OutDir)$(TargetName).pdb" "..\ppx_nuget\build\native\bin\vc140_x86_dyna
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\cryptopp-7.0-winsoft666.targets" Condition="Exists('packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\cryptopp-7.0-winsoft666.targets')" />
+  <Import Project="packages\cryptopp-7.0-winsoft666.1.0.0.2\build\native\cryptopp-7.0-winsoft666.targets" Condition="Exists('packages\cryptopp-7.0-winsoft666.1.0.0.2\build\native\cryptopp-7.0-winsoft666.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\cryptopp-7.0-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cryptopp-7.0-winsoft666.1.0.0.1\build\native\cryptopp-7.0-winsoft666.targets'))" />
-    <Error Condition="!Exists('packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\zlib-1.2.11-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\zlib-1.2.11-winsoft666.targets'))" />
-    <Error Condition="!Exists('packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\openssl-1.1.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\openssl-1.1.1-winsoft666.targets'))" />
-    <Error Condition="!Exists('packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\curl-7.63.0-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\curl-7.63.0-winsoft666.targets'))" />
+    <Error Condition="!Exists('packages\cryptopp-7.0-winsoft666.1.0.0.2\build\native\cryptopp-7.0-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cryptopp-7.0-winsoft666.1.0.0.2\build\native\cryptopp-7.0-winsoft666.targets'))" />
+    <Error Condition="!Exists('packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets'))" />
+    <Error Condition="!Exists('packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets'))" />
+    <Error Condition="!Exists('packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets'))" />
   </Target>
-  <Import Project="packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\zlib-1.2.11-winsoft666.targets" Condition="Exists('packages\zlib-1.2.11-winsoft666.1.0.0.1\build\native\zlib-1.2.11-winsoft666.targets')" />
-  <Import Project="packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\openssl-1.1.1-winsoft666.targets" Condition="Exists('packages\openssl-1.1.1-winsoft666.1.0.0.1\build\native\openssl-1.1.1-winsoft666.targets')" />
-  <Import Project="packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\curl-7.63.0-winsoft666.targets" Condition="Exists('packages\curl-7.63.0-winsoft666.1.0.0.1\build\native\curl-7.63.0-winsoft666.targets')" />
+  <Import Project="packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets" Condition="Exists('packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets')" />
+  <Import Project="packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets" Condition="Exists('packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets')" />
+  <Import Project="packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets" Condition="Exists('packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets')" />
 </Project>

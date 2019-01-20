@@ -94,6 +94,35 @@ namespace ppx {
 			return iBufSize;
 		}
 
+		int64_t BufferQueue::ToOneBufferWithNullEnding(char** ppBuf) const {
+			std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
+			if (ppBuf == NULL)
+				return -1;
+
+			const unsigned int iBufSize = GetTotalDataSize();
+
+			*ppBuf = (char*)malloc(iBufSize + 1);
+
+			if (*ppBuf == NULL)
+				return -1;
+
+			(*ppBuf)[iBufSize] = 0;
+
+			QUEUE_ELEMENT * p = impl_->first_element_;
+			unsigned int remaind = iBufSize;
+			char* pB = *ppBuf;
+			while (p && remaind > 0)
+			{
+				memcpy(pB, p->dataReadAddress, p->size);
+				remaind -= p->size;
+				pB += p->size;
+
+				p = p->next;
+			}
+
+			return iBufSize + 1;
+		}
+
 		bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
             if (pSrcData == 0 || nSrcDataSize == 0)
                 return false;

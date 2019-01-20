@@ -62,6 +62,7 @@ namespace ppx {
             unsigned int GetLastDataSize();
 
 			int64_t ToOneBuffer(char** ppBuf) const;
+			int64_t ToOneBufferWithNullEnding(char** ppBuf) const;
         private:
 
 			class BufferQueueImpl;

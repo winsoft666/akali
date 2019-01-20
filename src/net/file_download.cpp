@@ -275,7 +275,7 @@ namespace ppx {
                 int index = 1;
                 base::String name = tmp_filename_;
 
-                while (_access((file_dir_ + name + tmp_fileext_).ToDataA().c_str(), 0) == 0) {
+                while (_access((file_dir_ + name + tmp_fileext_).GetDataA().c_str(), 0) == 0) {
                     name = tmp_filename_ + "(" + std::to_string((_Longlong)index++) + ")";
                 }
 
@@ -372,7 +372,7 @@ namespace ppx {
             curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
 #endif
             curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
-            curl_easy_setopt(curl, CURLOPT_URL, url_.ToDataA().c_str());
+            curl_easy_setopt(curl, CURLOPT_URL, url_.GetDataA().c_str());
             curl_easy_setopt(curl, CURLOPT_HEADER, 1);
             curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -382,14 +382,14 @@ namespace ppx {
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, 2); // Time-out the read operation after this amount of seconds
 
             if (ca_path_.GetLength() > 0)
-                curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.ToDataA().c_str());
+                curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.GetDataA().c_str());
 
             // avoid libcurl failed with "Failed writing body".
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_4_query_file_size);
 
             CURLcode ret_code = curl_easy_perform(curl);
             if (ret_code != CURLE_OK) {
-                PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
                 return false;
             }
 
@@ -398,25 +398,25 @@ namespace ppx {
 
             if (ret_code == CURLE_OK) {
                 if (http_code != 200) {
-                    PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, http_code=" << http_code;
+                    PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, http_code=" << http_code;
                     return false;
                 }
             }
             else {
-                PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, and get http code failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, and get http code failed, ret_code=" << ret_code;
                 return false;
             }
 
             int64_t filesize = 0L;
             ret_code = curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &filesize);
             if (ret_code != CURLE_OK) {
-                PPX_LOG(LS_ERROR) << "[" << url_.ToDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
                 return false;
             }
 
 			data_->file_size_ = filesize;
 
-            PPX_LOG(LS_INFO) << "[" << url_.ToDataA().c_str() << "] size: " << data_->file_size_;
+            PPX_LOG(LS_INFO) << "[" << url_.GetDataA().c_str() << "] size: " << data_->file_size_;
             return true;
         }
 
@@ -482,13 +482,13 @@ namespace ppx {
 #else
                 curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
 #endif
-                curl_easy_setopt(curl, CURLOPT_URL, url_.ToDataA().c_str());
+                curl_easy_setopt(curl, CURLOPT_URL, url_.GetDataA().c_str());
                 curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
                 curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, ca_path_.GetLength() > 0);
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, ca_path_.GetLength() > 0);
                 if (ca_path_.GetLength() > 0)
-                    curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.ToDataA().c_str());
+                    curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.GetDataA().c_str());
                 curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 10L);
                 curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 30L);
 
@@ -698,13 +698,13 @@ namespace ppx {
                 if (copy_ret) {
                     bool del_ret = DeleteTmpFile();
                     
-                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).ToDataA().c_str() << "] successful, used " << used << " ms";
+                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).GetDataA().c_str() << "] successful, used " << used << " ms";
 
                     if (file_md5_.GetLength() > 0) {
-                        base::String md5 = ppx::base::GetFileMd5((file_dir_ + file_name_ + file_ext_).ToDataA().c_str());
+                        base::String md5 = ppx::base::GetFileMd5((file_dir_ + file_name_ + file_ext_).GetDataA().c_str());
 						md5.MakeLower();
                         if (md5 != file_md5_) {
-                            PPX_LOG(LS_ERROR) << "Md5 error, " << file_md5_.ToDataA().c_str() << " != " << md5.ToDataA().c_str();
+                            PPX_LOG(LS_ERROR) << "Md5 error, " << file_md5_.GetDataA().c_str() << " != " << md5.GetDataA().c_str();
 							SetStatus(FileTransferBase::Failed);
                             reason = "md5 error";
                         }
@@ -717,7 +717,7 @@ namespace ppx {
                     }
                 }
                 else {
-                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).ToDataA().c_str() << "] failed (copy data from temp file failed)";
+                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).GetDataA().c_str() << "] failed (copy data from temp file failed)";
 					SetStatus(FileTransferBase::Failed);
                     reason = "copy file failed";
                 }
@@ -909,7 +909,7 @@ namespace ppx {
             int index = 1;
             base::String name = file_name_;
 
-            while (_access((file_dir_ + name + file_ext_).ToDataA().c_str(), 0) == 0) {
+            while (_access((file_dir_ + name + file_ext_).GetDataA().c_str(), 0) == 0) {
                 name = file_name_ + "(" + std::to_string((_Longlong)index++) + ")";
             }
 

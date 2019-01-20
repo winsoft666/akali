@@ -24,15 +24,10 @@ namespace ppx {
 			String();
 			String(const TCHAR ch);
 			String(const String &src);
-			String(const tstring &src);
-#ifdef _UNICODE
 			String(const std::string &src);
-			String(const char* lpsz, int nLen = -1);
-#else
 			String(const std::wstring &src);
+			String(const char* lpsz, int nLen = -1);
 			String(const wchar_t* lpsz, int nLen = -1);
-#endif
-			String(LPCTSTR lpsz, int nLen = -1);
 			virtual ~String();
 
 			void Empty();
@@ -40,36 +35,32 @@ namespace ppx {
 			bool IsEmpty() const;
 			TCHAR GetAt(int nIndex) const;
 			void Append(const String & str);
-			void Append(LPCTSTR str, int nLen = -1);
+			void Append(const char* str, int nLen = -1);
+			void Append(const wchar_t* str, int nLen = -1);
 			void Assign(LPCTSTR pstr, int nLength = -1);
 			void Assign(const String & str);
 			void TrimLeft();
 			void TrimRight();
 			void Trim();
 			LPCTSTR GetDataPointer() const;
-			std::string ToDataA() const;
-			std::wstring ToDataW() const;
+			std::string GetDataA() const;
+			std::wstring GetDataW() const;
 			tstring GetData() const;
 
 			void SetAt(int nIndex, TCHAR ch);
 			operator tstring() const;
 
 			TCHAR operator[] (int nIndex) const;
+
 			const String &operator=(const String &src);
-			const String &operator=(const TCHAR ch);
-			const String &operator=(LPCTSTR pstr);
-#ifdef _UNICODE
-			const String &operator=(LPCSTR lpStr);
-			const String &operator+=(LPCSTR lpStr);
-#else
-			const String &operator=(LPCWSTR lpwStr);
-			const String &operator+=(LPCWSTR lpwStr);
-#endif
+
 			String operator+(const String &src) const;
-			String operator+(LPCTSTR pstr) const;
+
 			const String &operator+=(const String &src);
-			const String &operator+=(LPCTSTR pstr);
-			const String &operator+=(const TCHAR ch);
+			const String &operator+=(const std::string &src);
+			const String &operator+=(const std::wstring &src);
+			const String &operator+=(const char* src);
+			const String &operator+=(const wchar_t* src);
 
 			bool operator == (const String &str) const;
 			bool operator != (const String &str) const;

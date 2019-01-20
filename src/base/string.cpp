@@ -84,28 +84,23 @@ namespace ppx {
 			m_pImpl->m_str = ch;
 		}
 
-		String::String(LPCTSTR lpsz, int nLen) {
-			m_pImpl = new StringImpl();
-			m_pImpl->m_str.clear();
-			if (!lpsz)
-				return;
-			if (nLen != -1)
-				m_pImpl->m_str.assign(lpsz, nLen);
-			else
-				m_pImpl->m_str = lpsz;
-		}
-
 		String::String(const String &src) {
 			m_pImpl = new StringImpl();
 			m_pImpl->m_str = src.m_pImpl->m_str;
 		}
 
-		String::String(const tstring &src) {
+		String::String(const std::wstring &src) {
 			m_pImpl = new StringImpl();
-			m_pImpl->m_str = src;
+
+			m_pImpl->m_str = UnicodeToTCHAR(src);
 		}
 
-#ifdef _UNICODE
+		String::String(const std::string &src) {
+			m_pImpl = new StringImpl();
+
+			m_pImpl->m_str = AnsiToTCHAR(src);
+		}
+
 		String::String(const char* lpsz, int nLen /*= -1*/) {
 			m_pImpl = new StringImpl();
 
@@ -122,12 +117,6 @@ namespace ppx {
 			m_pImpl->m_str = AnsiToTCHAR(str);
 		}
 
-		String::String(const std::string &src) {
-			m_pImpl = new StringImpl();
-
-			m_pImpl->m_str = AnsiToTCHAR(src);
-		}
-#else
 		String::String(const wchar_t* lpsz, int nLen /*= -1*/) {
 			m_pImpl = new StringImpl();
 
@@ -143,13 +132,6 @@ namespace ppx {
 
 			m_pImpl->m_str = UnicodeToTCHAR(str);
 		}
-
-		String::String(const std::wstring &src) {
-			m_pImpl = new StringImpl();
-
-			m_pImpl->m_str = UnicodeToTCHAR(src);
-		}
-#endif
 
 		String::~String() {
 			m_pImpl->m_str.clear();
@@ -169,13 +151,45 @@ namespace ppx {
 			m_pImpl->m_str.append(str.m_pImpl->m_str);
 		}
 
-		void String::Append(LPCTSTR str, int nLen /*= -1*/) {
+		void String::Append(const char* str, int nLen /*= -1*/) {
+#ifdef _UNICODE
+			std::string s;
+			if (nLen == -1) {
+				s.assign(str);
+			}
+			else {
+				s.assign(str, nLen);
+			}
+			m_pImpl->m_str.append(AnsiToUnicode(s));
+#else
 			if (nLen == -1) {
 				m_pImpl->m_str.append(str);
 			}
 			else {
 				m_pImpl->m_str.append(str, nLen);
 			}
+#endif
+
+		}
+
+		void String::Append(const wchar_t* str, int nLen /*= -1*/) {
+#ifdef _UNICODE
+			if (nLen == -1) {
+				m_pImpl->m_str.append(str);
+			}
+			else {
+				m_pImpl->m_str.append(str, nLen);
+			}
+#else
+			std::wstring s;
+			if (nLen == -1) {
+				s.assign(str);
+			}
+			else {
+				s.assign(str, nLen);
+			}
+			m_pImpl->m_str.append(UnicodeToAnsi(s));
+#endif
 		}
 
 		void String::Assign(LPCTSTR pstr, int cchMax) {
@@ -218,7 +232,7 @@ namespace ppx {
 			return m_pImpl->m_str.c_str();
 		}
 
-		std::string String::ToDataA() const {
+		std::string String::GetDataA() const {
 #ifdef _UNICODE
 			std::string strA = UnicodeToAnsi(m_pImpl->m_str);
 			return strA;
@@ -227,7 +241,7 @@ namespace ppx {
 #endif
 		}
 
-		std::wstring String::ToDataW() const {
+		std::wstring String::GetDataW() const {
 #ifdef _UNICODE
 			return m_pImpl->m_str;
 #else
@@ -255,67 +269,6 @@ namespace ppx {
 			return *this;
 		}
 
-		const String &String::operator=(LPCTSTR lpStr) {
-			if (lpStr) {
-				m_pImpl->m_str.clear();
-				m_pImpl->m_str = lpStr;
-			}
-			else {
-				Empty();
-			}
-
-			return *this;
-		}
-
-#ifdef _UNICODE
-
-		const String &String::operator=(LPCSTR lpStr) {
-			if (lpStr) {
-				m_pImpl->m_str = AnsiToUnicode(lpStr);
-			}
-			else {
-				Empty();
-			}
-
-			return *this;
-		}
-
-		const String &String::operator+=(LPCSTR lpStr) {
-			if (lpStr) {
-				m_pImpl->m_str += AnsiToUnicode(lpStr);
-			}
-
-			return *this;
-		}
-
-#else
-
-		const String &String::operator=(LPCWSTR lpwStr) {
-			if (lpwStr) {
-				m_pImpl->m_str = UnicodeToAnsi(lpStr);
-			}
-			else {
-				Empty();
-			}
-
-			return *this;
-		}
-
-		const String &String::operator+=(LPCWSTR lpwStr) {
-			if (lpwStr) {
-				m_pImpl->m_str += UnicodeToAnsi(lpStr);
-			}
-
-			return *this;
-		}
-
-#endif // _UNICODE
-
-		const String &String::operator=(const TCHAR ch) {
-			m_pImpl->m_str.clear();
-			m_pImpl->m_str = ch;
-			return *this;
-		}
 
 		String String::operator+(const String &src) const {
 			String sTemp = *this;
@@ -323,32 +276,29 @@ namespace ppx {
 			return sTemp;
 		}
 
-		String String::operator+(LPCTSTR lpStr) const {
-			if (lpStr) {
-				String sTemp = *this;
-				sTemp.Append(lpStr);
-				return sTemp;
-			}
-
-			return *this;
-		}
 
 		const String &String::operator+=(const String &src) {
 			Append(src);
 			return *this;
 		}
 
-		const String &String::operator+=(LPCTSTR lpStr) {
-			if (lpStr) {
-				Append(lpStr);
-			}
-
+		const String &String::operator+=(const std::string &src) {
+			Append(src);
 			return *this;
 		}
 
-		const String &String::operator+=(const TCHAR ch) {
-			TCHAR str[] = { ch, '\0' };
-			Append(str);
+		const String &String::operator+=(const std::wstring &src) {
+			Append(src);
+			return *this;
+		}
+
+		const String &String::operator+=(const char* src) {
+			Append(src);
+			return *this;
+		}
+
+		const String &String::operator+=(const wchar_t* src) {
+			Append(src);
 			return *this;
 		}
 

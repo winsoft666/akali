@@ -80,7 +80,7 @@ namespace ppx {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.ToDataA().c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.GetDataA().c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_READFUNCTION, NULL);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, WriteCB);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, (void*)&response);
@@ -105,9 +105,9 @@ namespace ppx {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.ToDataA().c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.GetDataA().c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_POST, 1);
-            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data.ToDataA().c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data.GetDataA().c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_READFUNCTION, NULL);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, WriteCB);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, (void*)&response);

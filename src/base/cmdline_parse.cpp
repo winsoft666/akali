@@ -65,7 +65,7 @@ namespace ppx {
 			impl_->value_map_.clear();
             cmdline_ = cmdline;
 
-			std::wstring strW = cmdline_.ToDataW();
+			std::wstring strW = cmdline_.GetDataW();
 			const wchar_t *sCurrent = strW.c_str();
 
             for (;;) {

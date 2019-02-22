@@ -55,8 +55,14 @@ ppx 依赖如下的第三方库:
 ## 2.11 内存池
 `base\memory_pool.hpp`
 
+参考：[C++内存池技术](https://blog.csdn.net/china_jeffery/article/details/80750042)
+
 ## 2.12 支持跨MT模块安全传递的std::string
 `base\module_safe_string.h`
+
+参考：
+[Windows内存体系（9） -- 跨MT模块的内存相互释放的问题](https://blog.csdn.net/china_jeffery/article/details/79656307)
+[Windows内存体系（10） -- 使用std::string跨MT模块传参](https://blog.csdn.net/china_jeffery/article/details/79725667)
 
 ## 2.13 操作系统版本获取和判断
 `base\os_ver.h`
@@ -97,6 +103,8 @@ ppx 依赖如下的第三方库:
 WINMAIN_BEGIN(TEXT("Test"))
 WINMAIN_END
 ```
+
+关于dump的其他生成方式可以参考：[如何生成转储(dmp)文件--工具篇](https://blog.csdn.net/china_jeffery/article/details/78412415)
 
 ## 2.23 Windows服务
 `base\win_service_base.h`
@@ -159,5 +167,7 @@ void DlgMain::OnNeedManualEnableAero() {
 
 目前ppx已经发布到了Nuget，见：[https://www.nuget.org/packages/ppx-1.0.0.1-winsoft666/](https://www.nuget.org/packages/ppx-1.0.0.1-winsoft666/)
 
+
+---------------------------------------------------------------
 
 **感谢您的使用，欢迎提交BUG！**

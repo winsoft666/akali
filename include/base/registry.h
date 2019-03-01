@@ -50,7 +50,7 @@ namespace ppx {
 			void Close(void);
 			HRESULT WatchForChange(DWORD dwChangeFilter, bool bWatchSubtree);
 			HRESULT WaitForChange(DWORD dwChangeFilter, bool bWatchSubtree);
-			bool DeleteKey(HKEY hKey, LPCWSTR pszSubKey, LPCWSTR pszValName, bool bPrefer64View);
+			static bool DeleteKey(HKEY hKey, LPCWSTR pszSubKey, LPCWSTR pszValName, bool bPrefer64View);
 			HRESULT GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const;
 			HRESULT GetBINARYValue(LPCWSTR pszValueName, LPBYTE pbDataOut, int cbDataOut) const;
 			HRESULT GetSZValue(LPCWSTR pszValueName, OUT std::wstring &strValue) const;

@@ -122,8 +122,7 @@ namespace ppx {
 				return ret;
 			}
 		protected:
-			class StringImpl;
-			StringImpl* m_pImpl;
+            tstring m_str;
 		};
 
         PPX_API String MakeString(LPCTSTR pstrFormat, ...);

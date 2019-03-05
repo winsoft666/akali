@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -72,6 +72,8 @@
 #include "net/overlappedsocket.h"
 #include "net/iocp.h"
 #include "net/iocpserver.h"
+#include "net/ipc.h"
+#include "net/msgpack_helper.hpp"
 
 #include "encrypt/encrypt_helper.h"
 

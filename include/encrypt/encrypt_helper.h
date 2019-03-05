@@ -15,7 +15,11 @@
 
 #ifndef PPX_ENCRYPT_H__
 #define PPX_ENCRYPT_H__
+#pragma once
 
+#include "ppx_config.h"
+
+#ifndef PPX_NO_ENCRYPT
 #include <string>
 
 namespace ppx {
@@ -28,5 +32,6 @@ namespace ppx {
         std::string RSADecryptStr(const char* priv_filename, const char* ciphertext);
     }
 }
+#endif // !PPX_NO_ENCRYPT
 
 #endif // !PPX_ENCRYPT_H__

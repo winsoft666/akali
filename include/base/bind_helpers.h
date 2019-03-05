@@ -1,4 +1,4 @@
-// This defines a set of argument wrappers and related factory methods that
+﻿// This defines a set of argument wrappers and related factory methods that
 // can be used specify the refcounting and reference semantics of arguments
 // that are bound by the Bind() function in base/bind.h.
 //

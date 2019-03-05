@@ -15,7 +15,9 @@
 #ifndef PPX_NET_HTTP_REQUEST_H_
 #define PPX_NET_HTTP_REQUEST_H_
 #pragma once
+#include "ppx_config.h"
 
+#ifndef PPX_NO_HTTP
 #include <string>
 #include "ppx_export.h"
 #include "base/string.h"
@@ -50,5 +52,7 @@ namespace ppx {
         };
     }
 }
+
+#endif //!PPX_NO_HTTP
 
 #endif // !PPX_NET_HTTP_REQUEST_H_

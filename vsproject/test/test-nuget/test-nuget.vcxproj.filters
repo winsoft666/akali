@@ -29,6 +29,12 @@
     <ClCompile Include="..\test-01\test-01.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\test-01\IPCTest.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test-01\StringTest.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

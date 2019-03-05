@@ -317,12 +317,14 @@
     <ClInclude Include="..\test-01\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\test-01\IPCTest.cpp" />
     <ClCompile Include="..\test-01\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\test-01\StringTest.cpp" />
     <ClCompile Include="..\test-01\test-01.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -338,10 +340,12 @@
     <Error Condition="!Exists('..\..\packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets'))" />
     <Error Condition="!Exists('..\..\packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets'))" />
     <Error Condition="!Exists('..\..\packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets'))" />
-    <Error Condition="!Exists('..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.6\build\native\ppx-1.0.0.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.6\build\native\ppx-1.0.0.1-winsoft666.targets'))" />
+    <Error Condition="!Exists('..\..\packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets'))" />
+    <Error Condition="!Exists('..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.9\build\native\ppx-1.0.0.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.9\build\native\ppx-1.0.0.1-winsoft666.targets'))" />
   </Target>
   <Import Project="..\..\packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets" Condition="Exists('..\..\packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets')" />
   <Import Project="..\..\packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets" Condition="Exists('..\..\packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets')" />
   <Import Project="..\..\packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets" Condition="Exists('..\..\packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets')" />
-  <Import Project="..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.6\build\native\ppx-1.0.0.1-winsoft666.targets" Condition="Exists('..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.6\build\native\ppx-1.0.0.1-winsoft666.targets')" />
+  <Import Project="..\..\packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets" Condition="Exists('..\..\packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets')" />
+  <Import Project="..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.9\build\native\ppx-1.0.0.1-winsoft666.targets" Condition="Exists('..\..\packages\ppx-1.0.0.1-winsoft666.1.0.0.9\build\native\ppx-1.0.0.1-winsoft666.targets')" />
 </Project>

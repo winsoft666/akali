@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -116,8 +116,8 @@ namespace ppx {
         }
 
         void Ping::DoPing(const IPAddress &ip, unsigned short times, std::function<void(const std::vector<PingRsp>&)> callback) {
-            // socketº¯ÊıĞèÒª¹ÜÀíÔ±È¨ÏŞ
-            // ĞèÒªÈÆ¿ª¹ÜÀíÔ±È¨ÏŞ£¬¿ÉÒÔÊ¹ÓÃIcmpSendEchoÏµÁĞº¯Êı
+            // socketå‡½æ•°éœ€è¦ç®¡ç†å‘˜æƒé™
+            // éœ€è¦ç»•å¼€ç®¡ç†å‘˜æƒé™ï¼Œå¯ä»¥ä½¿ç”¨IcmpSendEchoç³»åˆ—å‡½æ•°
             //
             SOCKET s = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
             if (s == INVALID_SOCKET) {

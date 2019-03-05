@@ -82,6 +82,8 @@
     <ClInclude Include="..\include\base\timer.h" />
     <ClInclude Include="..\include\base\win_service_base.h" />
     <ClInclude Include="..\include\base\win_service_installer.h" />
+    <ClInclude Include="..\include\net\msgpack_helper.hpp" />
+    <ClInclude Include="..\include\ppx_config.h" />
     <ClInclude Include="..\include\encrypt\encrypt_helper.h" />
     <ClInclude Include="..\include\net\file_download.h" />
     <ClInclude Include="..\include\net\file_transfer_base.h" />
@@ -91,6 +93,7 @@
     <ClInclude Include="..\include\net\iocp.h" />
     <ClInclude Include="..\include\net\iocpserver.h" />
     <ClInclude Include="..\include\net\ipaddress.h" />
+    <ClInclude Include="..\include\net\ipc.h" />
     <ClInclude Include="..\include\net\networkprotocoldef.h" />
     <ClInclude Include="..\include\net\overlappedsocket.h" />
     <ClInclude Include="..\include\net\ping.h" />
@@ -146,6 +149,7 @@
     <ClCompile Include="..\src\net\iocp.cpp" />
     <ClCompile Include="..\src\net\iocpserver.cpp" />
     <ClCompile Include="..\src\net\ipaddress.cpp" />
+    <ClCompile Include="..\src\net\ipc.cpp" />
     <ClCompile Include="..\src\net\networkprotocoldef.cpp" />
     <ClCompile Include="..\src\net\overlappedsocket.cpp" />
     <ClCompile Include="..\src\net\ping.cpp" />
@@ -490,8 +494,10 @@ xcopy "$(OutDir)$(TargetName).pdb" "..\ppx_nuget\build\native\bin\vc140_x86_dyna
     <Error Condition="!Exists('packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets'))" />
     <Error Condition="!Exists('packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets'))" />
     <Error Condition="!Exists('packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets'))" />
+    <Error Condition="!Exists('packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets'))" />
   </Target>
   <Import Project="packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets" Condition="Exists('packages\zlib-1.2.11-winsoft666.1.0.0.3\build\native\zlib-1.2.11-winsoft666.targets')" />
   <Import Project="packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets" Condition="Exists('packages\openssl-1.1.1-winsoft666.1.0.0.4\build\native\openssl-1.1.1-winsoft666.targets')" />
   <Import Project="packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets" Condition="Exists('packages\curl-7.63.0-winsoft666.1.0.0.4\build\native\curl-7.63.0-winsoft666.targets')" />
+  <Import Project="packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets" Condition="Exists('packages\msgpack-c-cpp-3.1.1-winsoft666.1.0.0.2\build\native\msgpack-c-cpp-3.1.1-winsoft666.targets')" />
 </Project>

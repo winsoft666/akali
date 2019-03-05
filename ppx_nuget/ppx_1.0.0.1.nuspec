@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
     <metadata>
         <id>ppx-1.0.0.1-winsoft666</id>
-        <version>1.0.0.8</version>
+        <version>1.0.0.9</version>
         <title>ppx-1.0.0.1</title>
         <authors>winsoft666</authors>
         <owners>winsoft666</owners>
@@ -16,6 +16,7 @@
 			<group targetFramework="native0.0">
 				<dependency id="curl-7.63.0-winsoft666" version="1.0.0.4" />
 				<dependency id="cryptopp-7.0-winsoft666" version="1.0.0.2" />
+				<dependency id="msgpack-c-cpp-3.1.1-winsoft666" version="1.0.0.2" />
 			</group>
 		</dependencies>
     </metadata>

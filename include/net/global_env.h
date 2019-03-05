@@ -15,6 +15,11 @@
 #ifndef PPX_NET_GLOBAL_ENV_H_
 #define PPX_NET_GLOBAL_ENV_H_
 #pragma once
+
+#include "ppx_config.h"
+
+#ifndef PPX_NO_HTTP
+
 #include "ppx_export.h"
 
 namespace ppx {
@@ -23,5 +28,7 @@ namespace ppx {
         PPX_API void GlobalUnInit();
     }
 }
+
+#endif // !PPX_NO_HTTP
 
 #endif // !PPX_NET_GLOBAL_ENV_H_

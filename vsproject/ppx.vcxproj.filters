@@ -221,6 +221,15 @@
     <ClInclude Include="..\include\encrypt\encrypt_helper.h">
       <Filter>include\encrypt</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\net\ipc.h">
+      <Filter>include\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ppx_config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\net\msgpack_helper.hpp">
+      <Filter>include\net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\.gitignore">
@@ -369,6 +378,9 @@
     </ClCompile>
     <ClCompile Include="..\src\ppx.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\ipc.cpp">
+      <Filter>source\net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

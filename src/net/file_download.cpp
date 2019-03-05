@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "net/file_download.h"
+#ifndef PPX_NO_HTTP
 #include <algorithm>
 #include <atomic>
 #include <io.h>
@@ -981,3 +982,5 @@ namespace ppx {
 
     }
 }
+
+#endif //!PPX_NO_HTTP

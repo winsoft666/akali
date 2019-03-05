@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "net/http_request.h"
+#ifndef PPX_NO_HTTP
 #include <assert.h>
 #include "curl/curl.h"
 #include "base/safe_release_macro.h"
@@ -140,3 +141,4 @@ namespace ppx {
 
     }
 }
+#endif //!PPX_NO_HTTP

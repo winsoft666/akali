@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "net/global_env.h"
+#ifndef PPX_NO_HTTP
 #include "curl/curl.h"
 
 namespace ppx {
@@ -25,6 +26,6 @@ namespace ppx {
         void GlobalUnInit() {
             curl_global_cleanup();
         }
-
     }
 }
+#endif //!PPX_NO_HTTP

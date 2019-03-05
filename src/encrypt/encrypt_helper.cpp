@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "encrypt/encrypt_helper.h"
+#ifndef PPX_NO_ENCRYPT
 #include "hex.h"
 #include "modes.h"
 #include "aes.h"
@@ -108,3 +109,4 @@ namespace ppx {
 		}
 	}
 }
+#endif // !PPX_NO_ENCRYPT

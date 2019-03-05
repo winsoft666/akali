@@ -162,6 +162,9 @@ void DlgMain::OnNeedManualEnableAero() {
 ## 2.34 时间获取转换等操作
 `base\timeutil.h`
 
+## 2.35 进程间通信
+`net\ipc.h`
+
 # 3. 发布ppx到Nuget
 在编译完成以后，Visual Studio会通过生成后事件自动将头文件、库文件拷贝到`ppx_nuget`目录，通过该目录中的文件生成nupkg文件之后就可以发布到Nuget平台了。
 

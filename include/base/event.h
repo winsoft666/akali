@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -24,7 +24,7 @@
 #elif defined(POSIX)
 #include <pthread.h>
 #else
-#error "Must define either WEBRTC_WIN or WEBRTC_POSIX."
+#error "Must define either WIN or POSIX."
 #endif
 
 namespace ppx {

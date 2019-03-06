@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -66,11 +66,13 @@ namespace ppx {
 
         PPX_API BOOL MakesureProcessSingleInstance(LPCTSTR pszUniqueName);
 
-        // Èç¹ûÂ·¾¶ÖĞº¬ÓĞ¿Õ¸ñ£¬±ØĞëÊ¹ÓÃË«ÒıºÅÒıÓÃ
+        // å¦‚æœè·¯å¾„ä¸­å«æœ‰ç©ºæ ¼ï¼Œå¿…é¡»ä½¿ç”¨åŒå¼•å·å¼•ç”¨
         //
         PPX_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
 
         PPX_API BOOL CreateProcessInCurrentSession(PCTSTR pszFilePath);
+
+        PPX_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
     }
 }
 

@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -295,7 +295,7 @@ namespace ppx {
 
             DWORD active_session_id = WTSGetActiveConsoleSessionId();
 
-            // ²éÕÒwinlogon.exe½ø³Ì£¬ÅÐ¶ÏÆäÊÇ·ñÔÚµ±Ç°»á»°
+            // æŸ¥æ‰¾winlogon.exeè¿›ç¨‹ï¼Œåˆ¤æ–­å…¶æ˜¯å¦åœ¨å½“å‰ä¼šè¯
             ProcessFinder ph(TH32CS_SNAPPROCESS);
             PROCESSENTRY32 pe = { sizeof(pe) };
 
@@ -397,6 +397,49 @@ namespace ppx {
             SAFE_CLOSE(pi.hProcess);
 
             return (ret == TRUE);
+        }
+
+        PPX_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
+            OSVERSIONINFO VersionTmp;
+            VersionTmp.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+            GetVersionEx(&VersionTmp);
+            BOOL res = FALSE;
+
+            if (VersionTmp.dwMajorVersion >= 6) { // vista above.
+                BOOL(WINAPI * pfnChangeMessageFilterEx)(HWND, UINT, DWORD, PCHANGEFILTERSTRUCT);
+                BOOL(WINAPI * pfnChangeMessageFilter)(UINT, DWORD);
+
+                CHANGEFILTERSTRUCT filterStatus;
+                filterStatus.cbSize = sizeof(CHANGEFILTERSTRUCT);
+
+                HINSTANCE hlib = LoadLibrary(_T("user32.dll"));
+
+                if (hlib != NULL) {
+                    (FARPROC &)pfnChangeMessageFilterEx = GetProcAddress(hlib, "ChangeWindowMessageFilterEx");
+
+                    if (pfnChangeMessageFilterEx != NULL && hWnd != NULL) {
+                        res = pfnChangeMessageFilterEx(hWnd, uMessageID, (bAllow ? MSGFLT_ADD : MSGFLT_REMOVE), &filterStatus);
+                    }
+
+                    // If failed, try again.
+                    if (!res) {
+                        (FARPROC &)pfnChangeMessageFilter = GetProcAddress(hlib, "ChangeWindowMessageFilter");
+
+                        if (pfnChangeMessageFilter != NULL) {
+                            res = pfnChangeMessageFilter(uMessageID, (bAllow ? MSGFLT_ADD : MSGFLT_REMOVE));
+                        }
+                    }
+                }
+
+                if (hlib != NULL) {
+                    FreeLibrary(hlib);
+                }
+            }
+            else {
+                res = TRUE;
+            }
+
+            return res;
         }
 
         void RecursiveTerminateProcess(LPCTSTR szAppDir, bool exclude_self) {

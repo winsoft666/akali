@@ -230,6 +230,9 @@
     <ClInclude Include="..\include\net\msgpack_helper.hpp">
       <Filter>include\net</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\base\display_monitors.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\.gitignore">
@@ -381,6 +384,9 @@
     </ClCompile>
     <ClCompile Include="..\src\net\ipc.cpp">
       <Filter>source\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\display_monitors.cpp">
+      <Filter>source\base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

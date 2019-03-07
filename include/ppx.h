@@ -56,7 +56,7 @@
 #include "base/win_main.h"
 #include "base/win_service_base.h"
 #include "base/win_service_installer.h"
-
+#include "base/display_monitors.h"
 
 
 #include "net/global_env.h"

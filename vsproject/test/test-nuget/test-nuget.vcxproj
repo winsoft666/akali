@@ -317,6 +317,7 @@
     <ClInclude Include="..\test-01\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\test-01\DisplayMonitorTest.cpp" />
     <ClCompile Include="..\test-01\IPCTest.cpp" />
     <ClCompile Include="..\test-01\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

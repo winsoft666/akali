@@ -50,6 +50,7 @@
     <ClInclude Include="..\include\base\constructormagic.h" />
     <ClInclude Include="..\include\base\criticalsection.h" />
     <ClInclude Include="..\include\base\deprecation.h" />
+    <ClInclude Include="..\include\base\display_monitors.h" />
     <ClInclude Include="..\include\base\driver_info.h" />
     <ClInclude Include="..\include\base\endianess_detect.h" />
     <ClInclude Include="..\include\base\event.h" />
@@ -116,6 +117,7 @@
     <ClCompile Include="..\src\base\callback_internal.cpp" />
     <ClCompile Include="..\src\base\cmdline_parse.cpp" />
     <ClCompile Include="..\src\base\criticalsection.cpp" />
+    <ClCompile Include="..\src\base\display_monitors.cpp" />
     <ClCompile Include="..\src\base\driver_info.cpp" />
     <ClCompile Include="..\src\base\endianess_detect.cpp" />
     <ClCompile Include="..\src\base\event.cpp" />

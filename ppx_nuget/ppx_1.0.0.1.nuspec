@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
     <metadata>
         <id>ppx-1.0.0.1-winsoft666</id>
-        <version>1.0.0.11</version>
+        <version>1.0.0.12</version>
         <title>ppx-1.0.0.1</title>
         <authors>winsoft666</authors>
         <owners>winsoft666</owners>

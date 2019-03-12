@@ -17,6 +17,7 @@
 #include <assert.h>
 #include "curl/curl.h"
 #include "base/safe_release_macro.h"
+#include "base/stringencode.h"
 
 namespace ppx {
     namespace net {
@@ -77,7 +78,7 @@ namespace ppx {
             return resSize;
         }
 
-        int HttpRequest::Get(const base::String &url, base::BufferQueue &response) {
+        int HttpRequest::Get(const base::String &url, base::BufferQueue &response, const std::vector<base::String>* const headers /*= NULL*/) {
             assert(impl_);
             assert(impl_->curl_);
 
@@ -95,20 +96,33 @@ namespace ppx {
             else {
                 curl_easy_setopt(impl_->curl_, CURLOPT_SSL_VERIFYPEER, true);
                 curl_easy_setopt(impl_->curl_, CURLOPT_CAINFO, ca_path_);
+            }
+
+            struct curl_slist *chunk = NULL;
+
+            if (headers) {
+                for (size_t i = 0; i < headers->size(); i++) {
+                    chunk = curl_slist_append(chunk, TCHARToUtf8(headers->at(i)).c_str());
+                }
+                curl_easy_setopt(impl_->curl_, CURLOPT_HTTPHEADER, chunk);
             }
 
             CURLcode code = curl_easy_perform(impl_->curl_);
 
+            if(chunk)
+                curl_slist_free_all(chunk);
+
             return (int)code;
         }
 
-        int HttpRequest::Post(const base::String &url, const base::String &post_data, base::BufferQueue &response) {
+        int HttpRequest::Post(const base::String &url, const char* post_data, int post_data_len, base::BufferQueue &response, const std::vector<base::String>* const headers /*= NULL*/) {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.GetDataA().c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, TCHARToUtf8(url).c_str());
             curl_easy_setopt(impl_->curl_, CURLOPT_POST, 1);
-            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data.GetDataA().c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data);
+            curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDSIZE, post_data_len);
             curl_easy_setopt(impl_->curl_, CURLOPT_READFUNCTION, NULL);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, WriteCB);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, (void*)&response);
@@ -122,6 +136,14 @@ namespace ppx {
             else {
                 curl_easy_setopt(impl_->curl_, CURLOPT_SSL_VERIFYPEER, true);
                 curl_easy_setopt(impl_->curl_, CURLOPT_CAINFO, ca_path_);
+            }
+
+            struct curl_slist *chunk = NULL;
+            if (headers) {
+                for (size_t i = 0; i < headers->size(); i++) {
+                    chunk = curl_slist_append(chunk, TCHARToUtf8(headers->at(i)).c_str());
+                }
+                curl_easy_setopt(impl_->curl_, CURLOPT_HTTPHEADER, chunk);
             }
 
             CURLcode code = curl_easy_perform(impl_->curl_);

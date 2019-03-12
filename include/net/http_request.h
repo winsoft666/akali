@@ -36,8 +36,22 @@ namespace ppx {
             void SetReadTimeoutMS(int ms);
             int GetReadTimeoutMS() const;
 
-            int Get(const base::String &url, base::BufferQueue &response);
-            int Post(const base::String &url, const base::String &post_data, base::BufferQueue &response);
+            // headers string sample:
+            //
+            // Remove a header curl would otherwise add by itself
+            //  "Accept:"
+            //
+            // Add a custom header 
+            // "Another: yes"
+            //
+            // Modify a header curl otherwise adds differently
+            // "Host: example.com"
+            //
+            // Add a header with "blank" contents to the right of the colon. Note that we're then using a semicolon in the string we pass to curl! */
+            // "X-silly-header;"
+            //
+            int Get(const base::String &url, base::BufferQueue &response, const std::vector<base::String>* const headers = NULL);
+            int Post(const base::String &url, const char* post_data, int post_data_len, base::BufferQueue &response, const std::vector<base::String>* const headers = NULL);
             
             bool IsHttps(const base::String &url);
             void SetCAPath(const base::String &ca_path);

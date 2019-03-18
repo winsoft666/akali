@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include "base/string.h"
 #include "ppx_export.h"
 
 namespace ppx {
@@ -63,15 +64,15 @@ namespace ppx {
 #ifdef _WIN32
         // About code_page, see https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
         //
-        PPX_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
-        PPX_API std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
-        PPX_API std::string UnicodeToUtf8(const std::wstring &str);
-        PPX_API std::wstring Utf8ToUnicode(const std::string &str);
-        PPX_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
-        PPX_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
+        PPX_API StringANSI UnicodeToAnsi(const StringUnicode &str, unsigned int code_page = 0);
+        PPX_API StringUnicode AnsiToUnicode(const StringANSI &str, unsigned int code_page = 0);
+        PPX_API StringUTF8 UnicodeToUtf8(const StringUnicode &str);
+        PPX_API StringUnicode Utf8ToUnicode(const StringUTF8 &str);
+        PPX_API StringUTF8 AnsiToUtf8(const StringANSI &str, unsigned int code_page = 0);
+        PPX_API StringANSI Utf8ToAnsi(const StringUTF8 &str, unsigned int code_page = 0);
 
-        PPX_API std::string UnicodeToUtf8BOM(const std::wstring &str);
-        PPX_API std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_page = 0);
+        PPX_API StringUTF8 UnicodeToUtf8BOM(const StringUnicode &str);
+        PPX_API StringUTF8 AnsiToUtf8BOM(const StringANSI &str, unsigned int code_page = 0);
 
 
 #ifdef UNICODE

@@ -233,6 +233,9 @@
     <ClInclude Include="..\include\base\display_monitors.h">
       <Filter>include\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\base\scoped_ref_ptr.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\.gitignore">

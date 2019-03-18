@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <tchar.h>
 #include <map>
+#include "base/stringencode.h"
 
 namespace ppx {
     namespace base {
@@ -32,8 +33,8 @@ namespace ppx {
 				value_map_.clear();
 			}
 
-			ITERPOS findKey(const String &key) const {
-				String s = key;
+			ITERPOS findKey(const StringUnicode &key) const {
+				StringUnicode s = key;
 				s.MakeLower();
 				return value_map_.find(s);
 			}
@@ -46,7 +47,7 @@ namespace ppx {
         const wchar_t value_sep[] = L" :"; // don't forget space!!
 
 
-        CmdLineParser::CmdLineParser(const String &cmdline) {
+        CmdLineParser::CmdLineParser(const StringUnicode &cmdline) {
 			impl_ = new Impl();
 
             if (cmdline.GetLength() > 0) {
@@ -58,14 +59,14 @@ namespace ppx {
 			SAFE_DELETE(impl_);
         }
 
-        bool CmdLineParser::Parse(const String &cmdline) {
-            const String sEmpty = L"";
+        bool CmdLineParser::Parse(const StringUnicode &cmdline) {
+            const StringUnicode sEmpty = L"";
             int nArgs = 0;
 
 			impl_->value_map_.clear();
             cmdline_ = cmdline;
 
-			std::wstring strW = cmdline_.GetDataW();
+			std::wstring strW = TCHARToUnicode(cmdline_.GetData());
 			const wchar_t *sCurrent = strW.c_str();
 
             for (;;) {
@@ -86,13 +87,13 @@ namespace ppx {
                 const wchar_t *sVal = wcspbrk(sArg, value_sep);
 
                 if (sVal == NULL) {
-                    String Key(sArg);
+                    StringUnicode Key(sArg);
 					Key.MakeLower();
 					impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, sEmpty));
                     break;
                 } else if (sVal[0] == L' ' || wcslen(sVal) == 1) {
                     // cmdline ends with /Key: or a key with no value
-                    String Key(sArg, (int)(sVal - sArg));
+                    StringUnicode Key(sArg, (int)(sVal - sArg));
 
                     if (!Key.IsEmpty()) {
 						Key.MakeLower();
@@ -103,7 +104,7 @@ namespace ppx {
                     continue;
                 } else {
                     // key has value
-                    String Key(sArg, (int)(sVal - sArg));
+                    StringUnicode Key(sArg, (int)(sVal - sArg));
 					Key.MakeLower();
 
                     sVal = _wcsinc(sVal);
@@ -122,7 +123,7 @@ namespace ppx {
 
                     if (sEndQuote == NULL) {
                         // no end quotes or terminating space, take the rest of the string to its end
-                        String csVal(sQuote);
+                        StringUnicode csVal(sQuote);
 
                         if (!Key.IsEmpty()) {
                             impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
@@ -132,7 +133,7 @@ namespace ppx {
                     } else {
                         // end quote
                         if (!Key.IsEmpty()) {
-                            String csVal(sQuote, (int)(sEndQuote - sQuote));
+                            StringUnicode csVal(sQuote, (int)(sEndQuote - sQuote));
 							impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
                         }
 
@@ -147,7 +148,7 @@ namespace ppx {
 
 
 
-        bool CmdLineParser::HasKey(const String &key) const {
+        bool CmdLineParser::HasKey(const StringUnicode &key) const {
 			ITERPOS it = impl_->findKey(key);
 
             if (it == impl_->value_map_.end())
@@ -157,7 +158,7 @@ namespace ppx {
         }
 
 
-        bool CmdLineParser::HasVal(const String &key) const {
+        bool CmdLineParser::HasVal(const StringUnicode &key) const {
 			ITERPOS it = impl_->findKey(key);
 
             if (it == impl_->value_map_.end())
@@ -169,11 +170,11 @@ namespace ppx {
             return true;
         }
 
-        String CmdLineParser::GetVal(const String &key) const {
+        StringUnicode CmdLineParser::GetVal(const StringUnicode &key) const {
 			ITERPOS it = impl_->findKey(key);
 
             if (it == impl_->value_map_.end())
-                return String();
+                return StringUnicode();
 
             return it->second;
         }

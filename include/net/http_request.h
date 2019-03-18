@@ -50,16 +50,16 @@ namespace ppx {
             // Add a header with "blank" contents to the right of the colon. Note that we're then using a semicolon in the string we pass to curl! */
             // "X-silly-header;"
             //
-            int Get(const base::String &url, base::BufferQueue &response, const std::vector<base::String>* const headers = NULL);
-            int Post(const base::String &url, const char* post_data, int post_data_len, base::BufferQueue &response, const std::vector<base::String>* const headers = NULL);
+            int Get(const base::StringUTF8 &url, base::BufferQueue &response, const std::vector<base::StringUTF8>* const headers = NULL);
+            int Post(const base::StringUTF8 &url, const char* post_data, int post_data_len, base::BufferQueue &response, const std::vector<base::StringUTF8>* const headers = NULL);
             
-            bool IsHttps(const base::String &url);
-            void SetCAPath(const base::String &ca_path);
+            bool IsHttps(const base::StringUTF8 &url);
+            void SetCAPath(const base::StringUTF8 &ca_path);
 
         private:
             int connect_timeout_ms_; // default 1000ms
             int read_timeout_ms_;    // default 1000ms
-            base::String ca_path_;
+            base::StringUTF8 ca_path_;
 
             class HttpRequestImpl;
             HttpRequestImpl* impl_;

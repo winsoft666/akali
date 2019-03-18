@@ -23,6 +23,7 @@
 #include <windows.h>
 #include <TlHelp32.h>
 #include <string>
+#include "base/string.h"
 #include "ppx_export.h"
 
 namespace ppx {
@@ -56,8 +57,8 @@ namespace ppx {
         // terminate all process that EXE file in szAppDir directory.
         PPX_API void RecursiveTerminateProcess(LPCTSTR szAppDir, bool exclude_self);
 
-        PPX_API std::wstring GetCurrentProcessDirectoryW();
-        PPX_API std::string GetCurrentProcessDirectoryA();
+        PPX_API base::StringUnicode GetCurrentProcessDirectoryW();
+        PPX_API base::StringANSI GetCurrentProcessDirectoryA();
 #if defined(UNICODE) || defined(_UNICODE)
 #define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryW
 #else
@@ -69,6 +70,7 @@ namespace ppx {
         // 如果路径中含有空格，必须使用双引号引用
         //
         PPX_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
+        PPX_API BOOL EasyCreateProcess(const base::StringUnicode &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
 
         PPX_API BOOL CreateProcessInCurrentSession(PCTSTR pszFilePath);
 

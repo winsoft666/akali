@@ -26,25 +26,25 @@ namespace ppx
 
         class PPX_API CmdLineParser {
         public:
-			typedef std::map<String, String> ValsMap;
+			typedef std::map<StringUnicode, StringUnicode> ValsMap;
 			typedef ValsMap::const_iterator ITERPOS;
 
-            explicit CmdLineParser(const String &cmdline);
+            explicit CmdLineParser(const StringUnicode &cmdline);
             ~CmdLineParser();
 
             ITERPOS Begin() const;
             ITERPOS End() const;
 
-            bool HasKey(const String &key) const;
+            bool HasKey(const StringUnicode &key) const;
 
-            bool HasVal(const String &key) const;
+            bool HasVal(const StringUnicode &key) const;
 
-            String GetVal(const String &key) const;
+            StringUnicode GetVal(const StringUnicode &key) const;
 
         private:
-            bool Parse(const String &cmdline);
+            bool Parse(const StringUnicode &cmdline);
 
-            String         cmdline_;
+            StringUnicode         cmdline_;
 			class Impl;
 			Impl*		   impl_;
         };

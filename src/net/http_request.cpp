@@ -78,11 +78,11 @@ namespace ppx {
             return resSize;
         }
 
-        int HttpRequest::Get(const base::String &url, base::BufferQueue &response, const std::vector<base::String>* const headers /*= NULL*/) {
+        int HttpRequest::Get(const base::StringUTF8 &url, base::BufferQueue &response, const std::vector<base::StringUTF8>* const headers /*= NULL*/) {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.GetDataA().c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.GetDataPointer());
             curl_easy_setopt(impl_->curl_, CURLOPT_READFUNCTION, NULL);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, WriteCB);
             curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, (void*)&response);
@@ -102,7 +102,7 @@ namespace ppx {
 
             if (headers) {
                 for (size_t i = 0; i < headers->size(); i++) {
-                    chunk = curl_slist_append(chunk, TCHARToUtf8(headers->at(i)).c_str());
+                    chunk = curl_slist_append(chunk,headers->at(i).GetDataPointer());
                 }
                 curl_easy_setopt(impl_->curl_, CURLOPT_HTTPHEADER, chunk);
             }
@@ -115,11 +115,11 @@ namespace ppx {
             return (int)code;
         }
 
-        int HttpRequest::Post(const base::String &url, const char* post_data, int post_data_len, base::BufferQueue &response, const std::vector<base::String>* const headers /*= NULL*/) {
+        int HttpRequest::Post(const base::StringUTF8 &url, const char* post_data, int post_data_len, base::BufferQueue &response, const std::vector<base::StringUTF8>* const headers /*= NULL*/) {
             assert(impl_);
             assert(impl_->curl_);
 
-            curl_easy_setopt(impl_->curl_, CURLOPT_URL, TCHARToUtf8(url).c_str());
+            curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.GetDataPointer());
             curl_easy_setopt(impl_->curl_, CURLOPT_POST, 1);
             curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, post_data);
             curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDSIZE, post_data_len);
@@ -141,7 +141,7 @@ namespace ppx {
             struct curl_slist *chunk = NULL;
             if (headers) {
                 for (size_t i = 0; i < headers->size(); i++) {
-                    chunk = curl_slist_append(chunk, TCHARToUtf8(headers->at(i)).c_str());
+                    chunk = curl_slist_append(chunk, headers->at(i).GetDataPointer());
                 }
                 curl_easy_setopt(impl_->curl_, CURLOPT_HTTPHEADER, chunk);
             }
@@ -151,13 +151,13 @@ namespace ppx {
             return (int)code;
         }
 
-        bool HttpRequest::IsHttps(const base::String &url) {
-            if (url.Find(TEXT("https")) == 0)
+        bool HttpRequest::IsHttps(const base::StringUTF8 &url) {
+            if (url.Find("https") == 0)
                 return true;
             return false;
         }
 
-        void HttpRequest::SetCAPath(const base::String &ca_path) {
+        void HttpRequest::SetCAPath(const base::StringUTF8 &ca_path) {
             ca_path_ = ca_path;
         }
 

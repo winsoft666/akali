@@ -279,11 +279,11 @@ namespace ppx {
 				return 0;
 
 			int64_t ret = 0L;
-			std::vector<base::String> mac_values;
-			base::StringSplit(strMac.c_str(), TEXT("-"), mac_values);
+			std::vector<base::StringA> mac_values;
+			base::StringSplitA(strMac.c_str(), "-", mac_values);
 
 			for (size_t i = 0; i < mac_values.size(); i++) {
-				int64_t l = wcstol(mac_values[i].GetDataPointer(), NULL, 16) * pow(10, i * 3);
+				int64_t l = strtol(mac_values[i].GetDataPointer(), NULL, 16) * pow(10, i * 3);
 				ret += l;
 			}
 

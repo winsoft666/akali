@@ -219,21 +219,22 @@ namespace ppx {
         }
 
 #ifdef _WIN32
-        std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page /* = 0*/) {
-            std::string strRes;
-            int iSize = ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
 
-            if (iSize == 0)
+        StringANSI UnicodeToAnsi(const StringUnicode &str, unsigned int code_page /*= 0*/) {
+            StringANSI strRes;
+            int iSize = ::WideCharToMultiByte(code_page, 0, str.GetDataPointer(), -1, NULL, 0, NULL, NULL);
+
+            if ( iSize == 0 )
                 return strRes;
 
             char *szBuf = new (std::nothrow) char[iSize];
 
-            if (!szBuf)
+            if ( !szBuf )
                 return strRes;
 
             memset(szBuf, 0, iSize);
 
-            ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, szBuf, iSize, NULL, NULL);
+            ::WideCharToMultiByte(code_page, 0, str.GetDataPointer(), -1, szBuf, iSize, NULL, NULL);
 
             strRes = szBuf;
             delete[] szBuf;
@@ -241,22 +242,22 @@ namespace ppx {
             return strRes;
         }
 
-        std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page /* = 0*/) {
-            std::wstring strRes;
+        StringUnicode AnsiToUnicode(const StringANSI &str, unsigned int code_page /*= 0*/) {
+            StringUnicode strRes;
 
-            int iSize = ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, NULL, 0);
+            int iSize = ::MultiByteToWideChar(code_page, 0, str.GetDataPointer(), -1, NULL, 0);
 
-            if (iSize == 0)
+            if ( iSize == 0 )
                 return strRes;
 
             wchar_t *szBuf = new (std::nothrow) wchar_t[iSize];
 
-            if (!szBuf)
+            if ( !szBuf )
                 return strRes;
 
             memset(szBuf, 0, iSize * sizeof(wchar_t));
 
-            ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, szBuf, iSize);
+            ::MultiByteToWideChar(code_page, 0, str.GetDataPointer(), -1, szBuf, iSize);
 
             strRes = szBuf;
             delete[] szBuf;
@@ -264,22 +265,22 @@ namespace ppx {
             return strRes;
         }
 
-        std::string UnicodeToUtf8(const std::wstring &str) {
-            std::string strRes;
+        StringUTF8 UnicodeToUtf8(const StringUnicode &str) {
+            StringUTF8 strRes;
 
-            int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+            int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.GetDataPointer(), -1, NULL, 0, NULL, NULL);
 
-            if (iSize == 0)
+            if ( iSize == 0 )
                 return strRes;
 
             char *szBuf = new (std::nothrow) char[iSize];
 
-            if (!szBuf)
+            if ( !szBuf )
                 return strRes;
 
             memset(szBuf, 0, iSize);
 
-            ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, szBuf, iSize, NULL, NULL);
+            ::WideCharToMultiByte(CP_UTF8, 0, str.GetDataPointer(), -1, szBuf, iSize, NULL, NULL);
 
             strRes = szBuf;
             delete[] szBuf;
@@ -287,10 +288,10 @@ namespace ppx {
             return strRes;
         }
 
-        std::string UnicodeToUtf8BOM(const std::wstring &str) {
+        StringUTF8 UnicodeToUtf8BOM(const StringUnicode &str) {
             std::string strRes;
 
-            int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+            int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.GetDataPointer(), -1, NULL, 0, NULL, NULL);
 
             if (iSize == 0)
                 return strRes;
@@ -302,7 +303,7 @@ namespace ppx {
 
             memset(szBuf, 0, iSize + 3);
 
-            ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, &szBuf[3], iSize, NULL, NULL);
+            ::WideCharToMultiByte(CP_UTF8, 0, str.GetDataPointer(), -1, &szBuf[3], iSize, NULL, NULL);
             szBuf[0] = 0xef;
             szBuf[1] = 0xbb;
             szBuf[2] = 0xbf;
@@ -313,20 +314,21 @@ namespace ppx {
             return strRes;
         }
 
-        std::wstring Utf8ToUnicode(const std::string &str) {
-            std::wstring strRes;
-            int iSize = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
 
-            if (iSize == 0)
+        StringUnicode Utf8ToUnicode(const StringUTF8 &str) {
+            StringUnicode strRes;
+            int iSize = ::MultiByteToWideChar(CP_UTF8, 0, str.GetDataPointer(), -1, NULL, 0);
+
+            if ( iSize == 0 )
                 return strRes;
 
             wchar_t *szBuf = new (std::nothrow) wchar_t[iSize];
 
-            if (!szBuf)
+            if ( !szBuf )
                 return strRes;
 
             memset(szBuf, 0, iSize * sizeof(wchar_t));
-            ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, szBuf, iSize);
+            ::MultiByteToWideChar(CP_UTF8, 0, str.GetDataPointer(), -1, szBuf, iSize);
 
             strRes = szBuf;
             delete[] szBuf;
@@ -334,17 +336,18 @@ namespace ppx {
             return strRes;
         }
 
-        std::string AnsiToUtf8(const std::string &str, unsigned int code_page /* = 0*/) {
+        StringUTF8 AnsiToUtf8(const StringANSI &str, unsigned int code_page /*= 0*/) {
             return UnicodeToUtf8(AnsiToUnicode(str, code_page));
         }
 
-        std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_page /* = 0*/) {
+        StringUTF8 AnsiToUtf8BOM(const StringANSI &str, unsigned int code_page /* = 0*/) {
             return UnicodeToUtf8BOM(AnsiToUnicode(str, code_page));
         }
 
-        std::string Utf8ToAnsi(const std::string &str, unsigned int code_page /* = 0*/) {
+        StringANSI Utf8ToAnsi(const StringUTF8 &str, unsigned int code_page /*= 0*/) {
             return UnicodeToAnsi(Utf8ToUnicode(str), code_page);
         }
+
 #endif
     }
 }  // namespace ppx

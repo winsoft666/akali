@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <atomic>
 #include <io.h>
+#include <tchar.h>
 #include "base/safe_release_macro.h"
 #include "base/logging.h"
 #include "base/timeutils.h"
@@ -274,9 +275,9 @@ namespace ppx {
             // If can't interruption resuming, need choose a temp file that not exist.
             if (!data_->actual_interruption_resuming_) {
                 int index = 1;
-                base::String name = tmp_filename_;
+                base::StringUTF8 name = tmp_filename_;
 
-                while (_access((file_dir_ + name + tmp_fileext_).GetDataA().c_str(), 0) == 0) {
+                while ( _taccess(Utf8ToUnicode(file_dir_ + name + tmp_fileext_).GetDataPointer(), 0) == 0) {
                     name = tmp_filename_ + "(" + std::to_string((_Longlong)index++) + ")";
                 }
 
@@ -285,7 +286,7 @@ namespace ppx {
 
 #ifdef _WIN32
             // generate temp file
-			data_->file_ = CreateFile((file_dir_ + tmp_filename_ + tmp_fileext_).GetDataPointer(),
+			data_->file_ = CreateFile(Utf8ToUnicode(file_dir_ + tmp_filename_ + tmp_fileext_).GetDataPointer(),
                 GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
                 NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -373,7 +374,7 @@ namespace ppx {
             curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
 #endif
             curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
-            curl_easy_setopt(curl, CURLOPT_URL, url_.GetDataA().c_str());
+            curl_easy_setopt(curl, CURLOPT_URL, url_.GetDataPointer());
             curl_easy_setopt(curl, CURLOPT_HEADER, 1);
             curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -383,14 +384,14 @@ namespace ppx {
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, 2); // Time-out the read operation after this amount of seconds
 
             if (ca_path_.GetLength() > 0)
-                curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.GetDataA().c_str());
+                curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.GetDataPointer());
 
             // avoid libcurl failed with "Failed writing body".
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_4_query_file_size);
 
             CURLcode ret_code = curl_easy_perform(curl);
             if (ret_code != CURLE_OK) {
-                PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << Utf8ToAnsi(url_).GetData() << "] get file size failed, ret_code=" << ret_code;
                 return false;
             }
 
@@ -399,25 +400,25 @@ namespace ppx {
 
             if (ret_code == CURLE_OK) {
                 if (http_code != 200) {
-                    PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, http_code=" << http_code;
+                    PPX_LOG(LS_ERROR) << "[" << Utf8ToAnsi(url_).GetData() << "] get file size failed, http_code=" << http_code;
                     return false;
                 }
             }
             else {
-                PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, and get http code failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << Utf8ToAnsi(url_).GetData() << "] get file size failed, and get http code failed, ret_code=" << ret_code;
                 return false;
             }
 
             int64_t filesize = 0L;
             ret_code = curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &filesize);
             if (ret_code != CURLE_OK) {
-                PPX_LOG(LS_ERROR) << "[" << url_.GetDataA().c_str() << "] get file size failed, ret_code=" << ret_code;
+                PPX_LOG(LS_ERROR) << "[" << Utf8ToAnsi(url_).GetData() << "] get file size failed, ret_code=" << ret_code;
                 return false;
             }
 
 			data_->file_size_ = filesize;
 
-            PPX_LOG(LS_INFO) << "[" << url_.GetDataA().c_str() << "] size: " << data_->file_size_;
+            PPX_LOG(LS_INFO) << "[" << Utf8ToAnsi(url_).GetData() << "] size: " << data_->file_size_;
             return true;
         }
 
@@ -483,13 +484,13 @@ namespace ppx {
 #else
                 curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
 #endif
-                curl_easy_setopt(curl, CURLOPT_URL, url_.GetDataA().c_str());
+                curl_easy_setopt(curl, CURLOPT_URL, url_.GetDataPointer());
                 curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
                 curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, ca_path_.GetLength() > 0);
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, ca_path_.GetLength() > 0);
                 if (ca_path_.GetLength() > 0)
-                    curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.GetDataA().c_str());
+                    curl_easy_setopt(curl, CURLOPT_CAINFO, ca_path_.GetDataPointer());
                 curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 10L);
                 curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 30L);
 
@@ -699,13 +700,13 @@ namespace ppx {
                 if (copy_ret) {
                     bool del_ret = DeleteTmpFile();
                     
-                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).GetDataA().c_str() << "] successful, used " << used << " ms";
+                    PPX_LOG(LS_INFO) << "Download [" << Utf8ToAnsi(file_name_ + file_ext_).GetData() << "] successful, used " << used << " ms";
 
                     if (file_md5_.GetLength() > 0) {
-                        base::String md5 = ppx::base::GetFileMd5((file_dir_ + file_name_ + file_ext_).GetDataA().c_str());
+                        base::StringA md5 = ppx::base::GetFileMd5(Utf8ToAnsi(file_dir_ + file_name_ + file_ext_));
 						md5.MakeLower();
                         if (md5 != file_md5_) {
-                            PPX_LOG(LS_ERROR) << "Md5 error, " << file_md5_.GetDataA().c_str() << " != " << md5.GetDataA().c_str();
+                            PPX_LOG(LS_ERROR) << "Md5 error, " << Utf8ToAnsi(file_md5_).GetData() << " != " << Utf8ToAnsi(md5).GetData();
 							SetStatus(FileTransferBase::Failed);
                             reason = "md5 error";
                         }
@@ -718,7 +719,7 @@ namespace ppx {
                     }
                 }
                 else {
-                    PPX_LOG(LS_INFO) << "Download [" << (file_name_ + file_ext_).GetDataA().c_str() << "] failed (copy data from temp file failed)";
+                    PPX_LOG(LS_INFO) << "Download [" << Utf8ToAnsi(file_name_ + file_ext_).GetData() << "] failed (copy data from temp file failed)";
 					SetStatus(FileTransferBase::Failed);
                     reason = "copy file failed";
                 }
@@ -908,15 +909,15 @@ namespace ppx {
                 return false;
 
             int index = 1;
-            base::String name = file_name_;
+            base::StringUTF8 name = file_name_;
 
-            while (_access((file_dir_ + name + file_ext_).GetDataA().c_str(), 0) == 0) {
+            while ( _taccess(Utf8ToUnicode(file_dir_ + name + file_ext_).GetDataPointer(), 0) == 0) {
                 name = file_name_ + "(" + std::to_string((_Longlong)index++) + ")";
             }
 
             file_name_ = name;
 
-            HANDLE f = CreateFile((file_dir_ + file_name_ + file_ext_).GetDataPointer(),
+            HANDLE f = CreateFile(Utf8ToUnicode(file_dir_ + file_name_ + file_ext_).GetDataPointer(),
                 GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
 
             if (f == INVALID_HANDLE_VALUE) {
@@ -957,7 +958,7 @@ namespace ppx {
         bool FileDownload::DeleteTmpFile() {
 #ifdef _WIN32
             SAFE_CLOSE_ON_VALID_HANDLE(data_->file_);
-            return DeleteFile((file_dir_ + tmp_filename_ + tmp_fileext_).GetDataPointer()) == TRUE;
+            return DeleteFile(Utf8ToUnicode(file_dir_ + tmp_filename_ + tmp_fileext_).GetDataPointer()) == TRUE;
 #endif
         }
 

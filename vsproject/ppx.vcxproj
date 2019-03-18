@@ -68,6 +68,7 @@
     <ClInclude Include="..\include\base\safe_compare.h" />
     <ClInclude Include="..\include\base\safe_conversions.h" />
     <ClInclude Include="..\include\base\safe_conversions_impl.h" />
+    <ClInclude Include="..\include\base\scoped_ref_ptr.h" />
     <ClInclude Include="..\include\base\string.h" />
     <ClInclude Include="..\include\base\template_util.h" />
     <ClInclude Include="..\include\base\thread_util.h" />

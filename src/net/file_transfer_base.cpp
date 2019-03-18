@@ -61,16 +61,16 @@ namespace ppx {
             return thread_num_;
         }
 
-        void FileTransferBase::SetUrl(const base::String &url) {
+        void FileTransferBase::SetUrl(const base::StringUTF8 &url) {
             if (base_impl_->status_ != Progress)
 				url_ = url;
         }
 
-        base::String FileTransferBase::GetUrl() const {
+        base::StringUTF8 FileTransferBase::GetUrl() const {
             return url_;
         }
 
-        void FileTransferBase::SetFileDir(const base::String &filedir) {
+        void FileTransferBase::SetFileDir(const base::StringUTF8 &filedir) {
             if (base_impl_->status_ == Progress)
                 return;
 
@@ -87,37 +87,37 @@ namespace ppx {
             }
         }
 
-        base::String FileTransferBase::GetFileDir() const {
+        base::StringUTF8 FileTransferBase::GetFileDir() const {
             return file_dir_;
         }
 
-        void FileTransferBase::SetFileName(const base::String &filename) {
+        void FileTransferBase::SetFileName(const base::StringUTF8 &filename) {
             if (base_impl_->status_ == Progress)
                 return;
 
 			file_name_ = filename;
         }
 
-        base::String FileTransferBase::GetFileName() const {
+        base::StringUTF8 FileTransferBase::GetFileName() const {
             return file_name_;
         }
 
-        void FileTransferBase::SetFileExt(const base::String &ext) {
+        void FileTransferBase::SetFileExt(const base::StringUTF8 &ext) {
 			file_ext_ = ext;
         }
 
-        base::String FileTransferBase::GetFileExt() const {
+        base::StringUTF8 FileTransferBase::GetFileExt() const {
             return file_ext_;
         }
 
-        void FileTransferBase::SetFileMd5(const base::String &md5) {
+        void FileTransferBase::SetFileMd5(const base::StringUTF8 &md5) {
             if (base_impl_->status_ == Progress)
                 return;
 			file_md5_ = md5;
 			file_md5_.MakeLower();
         }
 
-        base::String FileTransferBase::GetFileMd5() const {
+        base::StringUTF8 FileTransferBase::GetFileMd5() const {
             return file_md5_;
         }
 
@@ -130,28 +130,28 @@ namespace ppx {
             if (file_md5_.GetLength() == 0) {
                 char buf[50] = { 0 };
                 sprintf_s(buf, "%" PRId64 "", filesize);
-				tmp_filename_ = file_name_ + "_" + base::String(buf);
+				tmp_filename_ = file_name_ + "_" + base::StringUTF8(buf);
             }
             else {
 				tmp_filename_ = file_name_ + "_" + file_md5_;
             }
         }
 
-        base::String FileTransferBase::GetTmpFileName() const {
+        base::StringUTF8 FileTransferBase::GetTmpFileName() const {
             return tmp_filename_;
         }
 
-        base::String FileTransferBase::GetTmpFileExt() const {
+        base::StringUTF8 FileTransferBase::GetTmpFileExt() const {
             return tmp_fileext_;
         }
 
-        void FileTransferBase::SetCAPath(const base::String &caPath) {
+        void FileTransferBase::SetCAPath(const base::StringUTF8 &caPath) {
             if (base_impl_->status_ != Progress) {
 				ca_path_ = caPath;
             }
         }
 
-        base::String FileTransferBase::GetCAPath() const {
+        base::StringUTF8 FileTransferBase::GetCAPath() const {
             return ca_path_;
         }
 

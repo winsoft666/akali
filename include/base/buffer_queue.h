@@ -33,7 +33,7 @@ namespace ppx {
 
         class PPX_API BufferQueue {
         public:
-            explicit BufferQueue(const String& queue_name = TEXT(""));
+            explicit BufferQueue(const StringANSI& queue_name = "");
             ~BufferQueue();
 
             bool AddToFront(void *pSrcData, unsigned int nSrcDataSize);

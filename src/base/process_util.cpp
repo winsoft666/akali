@@ -236,7 +236,7 @@ namespace ppx {
             return bResult;
         }
 
-        std::wstring GetCurrentProcessDirectoryW() {
+        base::StringUnicode GetCurrentProcessDirectoryW() {
             wchar_t szPath[MAX_PATH] = { 0 };
             GetModuleFileNameW(NULL, szPath, MAX_PATH);
             PathRemoveFileSpecW(szPath);
@@ -244,7 +244,7 @@ namespace ppx {
             return szPath;
         }
 
-        std::string GetCurrentProcessDirectoryA() {
+        base::StringANSI GetCurrentProcessDirectoryA() {
             char szPath[MAX_PATH] = { 0 };
             GetModuleFileNameA(NULL, szPath, MAX_PATH);
             PathRemoveFileSpecA(szPath);
@@ -284,6 +284,10 @@ namespace ppx {
             PathRemoveFileSpec(szDir);
             STARTUPINFO si = { sizeof(si) };
             return CreateProcess(NULL, szCL, NULL, NULL, bInheritHandles, 0, NULL, szDir, &si, lpProcessInfo);
+        }
+
+        PPX_API BOOL EasyCreateProcess(const base::StringUnicode &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles /*= FALSE*/) {
+            return EasyCreateProcess(strCmdLine.GetDataPointer(), lpProcessInfo, bInheritHandles);
         }
 
         BOOL CreateProcessInCurrentSession(PCTSTR pszFilePath) {

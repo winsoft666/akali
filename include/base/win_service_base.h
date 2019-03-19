@@ -128,6 +128,15 @@ namespace ppx {
             // The service status handle
             SERVICE_STATUS_HANDLE m_statusHandle;
         };
+
+        // Log a message to the Application event log.
+        // EVENTLOG_ERROR_TYPE 
+        // EVENTLOG_WARNING_TYPE 
+        // EVENTLOG_INFORMATION_TYPE  
+        //
+        void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...);
+
+        void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...);
     }
 }
 #endif

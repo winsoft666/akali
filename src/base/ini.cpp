@@ -37,19 +37,12 @@ namespace ppx {
             return m_szIniFile;
         }
 
-        UINT Ini::ReadInt(LPCTSTR pszItem, LPCTSTR pszSubItem, INT nDefault) {
-            assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
-                return false;
-            UINT uReadData = GetPrivateProfileInt(pszItem, pszSubItem, nDefault, m_szIniFile);
-            return uReadData;
-        }
-
         bool Ini::ReadInt(LPCTSTR pszItem, LPCTSTR pszSubItem, UINT &ValueInt) {
             assert(m_szIniFile[0] != 0);
             if (_tcslen(m_szIniFile) == 0)
                 return false;
             INT iDefault = 0;
+            SetLastError(0);
             ValueInt = GetPrivateProfileInt(pszItem, pszSubItem, iDefault, m_szIniFile);
             DWORD dwGLE = GetLastError();
 

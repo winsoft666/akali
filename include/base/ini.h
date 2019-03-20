@@ -42,7 +42,6 @@ namespace ppx {
             bool ReadSize(LPCTSTR pszItem, LPCTSTR pszSubItem, SIZE &ValueSize);
             bool ReadPoint(LPCTSTR pszItem, LPCTSTR pszSubItem, POINT &ValuePoint);
             bool ReadColor(LPCTSTR pszItem, LPCTSTR pszSubItem, COLORREF &ValueColor);
-            UINT ReadInt(LPCTSTR pszItem, LPCTSTR pszSubItem, INT nDefault);
             bool ReadInt(LPCTSTR pszItem, LPCTSTR pszSubItem, UINT &ValueInt);
             LPCTSTR ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, LPCTSTR pszDefault, LPTSTR pszString, WORD wMaxCount);
 			bool ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, String &strString);

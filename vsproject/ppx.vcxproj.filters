@@ -236,6 +236,9 @@
     <ClInclude Include="..\include\base\scoped_ref_ptr.h">
       <Filter>include\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\base\schedule_task.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\.gitignore">
@@ -389,6 +392,9 @@
       <Filter>source\net</Filter>
     </ClCompile>
     <ClCompile Include="..\src\base\display_monitors.cpp">
+      <Filter>source\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\base\schedule_task.cpp">
       <Filter>source\base</Filter>
     </ClCompile>
   </ItemGroup>

@@ -30,6 +30,9 @@
     <ClInclude Include="DisplayMonitorTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ScheduleTaskTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,6 +48,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DisplayMonitorTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ScheduleTaskTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

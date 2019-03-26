@@ -24,6 +24,7 @@
 #include <Psapi.h>
 #include <shellapi.h>
 #include "base/safe_release_macro.h"
+#include "base/logging.h"
 
 namespace ppx {
     namespace base {
@@ -290,8 +291,7 @@ namespace ppx {
             return EasyCreateProcess(strCmdLine.GetDataPointer(), lpProcessInfo, bInheritHandles);
         }
 
-        BOOL CreateProcessInCurrentSession(PCTSTR pszFilePath) {
-            HANDLE hUserToken = NULL;
+        BOOL CreateUserProcess(PCTSTR pszFilePath) {
             HANDLE hUserTokenDup = NULL;
             HANDLE hPToken = NULL;
             HANDLE hProcess = NULL;
@@ -304,6 +304,7 @@ namespace ppx {
             PROCESSENTRY32 pe = { sizeof(pe) };
 
             if (!ph.ProcessFind(TEXT("winlogon.exe"), &pe)) {
+                base::TraceMsgA("CreateUserProcess: not find winlogon.exe \n");
                 return FALSE;
             }
 
@@ -315,38 +316,50 @@ namespace ppx {
             DWORD winlogon_session_id = 0;
             ProcessIdToSessionId(winlogon_process_id, &winlogon_session_id);
 
-            if (winlogon_session_id != active_session_id)
+            if ( winlogon_session_id != active_session_id ) {
+                base::TraceMsgA("CreateUserProcess: winlogon_session_id != active_session_id\n");
                 return FALSE;
-
-
-            WTSQueryUserToken(active_session_id, &hUserToken);
+            }
 
 
             TOKEN_PRIVILEGES tp;
             LUID luid;
             hProcess = OpenProcess(MAXIMUM_ALLOWED, FALSE, winlogon_process_id);
 
-            if (!::OpenProcessToken(hProcess, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY
-                                    | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY | TOKEN_ADJUST_SESSIONID
-                                    | TOKEN_READ | TOKEN_WRITE, &hPToken))
+            if ( !::OpenProcessToken(hProcess, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY
+                                     | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY | TOKEN_ADJUST_SESSIONID
+                                     | TOKEN_READ | TOKEN_WRITE, &hPToken) ) {
+                base::TraceMsgA("CreateUserProcess: OpenProcessToken failed, gle=%ld\n", GetLastError());
                 return FALSE;
+            }
 
-            if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid))
+            if ( !LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid) ) {
+                base::TraceMsgA("CreateUserProcess: LookupPrivilegeValue failed, gle=%ld\n", GetLastError());
                 return FALSE;
+            }
 
             tp.PrivilegeCount = 1;
             tp.Privileges[0].Luid = luid;
             tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
 
-            DuplicateTokenEx(hPToken, MAXIMUM_ALLOWED, NULL, SecurityIdentification, TokenPrimary, &hUserTokenDup);
+            if ( !DuplicateTokenEx(hPToken, MAXIMUM_ALLOWED, NULL, SecurityIdentification, TokenPrimary, &hUserTokenDup) ) {
+                base::TraceMsgA("CreateUserProcess: DuplicateTokenEx failed, gle=%ld\n", GetLastError());
+                return FALSE;
+            }
 
             //Adjust Token privilege
-            SetTokenInformation(hUserTokenDup, TokenSessionId, (LPVOID)active_session_id, sizeof(DWORD));
-
-            if (!AdjustTokenPrivileges(hUserTokenDup, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), (PTOKEN_PRIVILEGES)NULL, NULL))
+            if ( !SetTokenInformation(hUserTokenDup, TokenSessionId, (LPVOID)active_session_id, sizeof(DWORD)) ) {
+                base::TraceMsgA("CreateUserProcess: SetTokenInformation failed, gle=%ld\n", GetLastError());
                 return FALSE;
+            }
+
+            if ( !AdjustTokenPrivileges(hUserTokenDup, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), (PTOKEN_PRIVILEGES)NULL, NULL) ) {
+                base::TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=%ld\n", GetLastError());
+                return FALSE;
+            }
 
             if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) {
+                base::TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=1300\n");
                 return FALSE;
             }
 
@@ -383,13 +396,8 @@ namespace ppx {
                            &pi                // receives information about new process
                        );
 
-            DWORD dwGLE = GetLastError();
-
             if (hProcess)
                 CloseHandle(hProcess);
-
-            if (hUserToken)
-                CloseHandle(hUserToken);
 
             if (hUserTokenDup)
                 CloseHandle(hUserTokenDup);
@@ -400,7 +408,7 @@ namespace ppx {
             SAFE_CLOSE(pi.hThread);
             SAFE_CLOSE(pi.hProcess);
 
-            return (ret == TRUE);
+            return (TRUE);
         }
 
         PPX_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {

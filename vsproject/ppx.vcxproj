@@ -68,6 +68,7 @@
     <ClInclude Include="..\include\base\safe_compare.h" />
     <ClInclude Include="..\include\base\safe_conversions.h" />
     <ClInclude Include="..\include\base\safe_conversions_impl.h" />
+    <ClInclude Include="..\include\base\schedule_task.h" />
     <ClInclude Include="..\include\base\scoped_ref_ptr.h" />
     <ClInclude Include="..\include\base\string.h" />
     <ClInclude Include="..\include\base\template_util.h" />
@@ -134,6 +135,7 @@
     <ClCompile Include="..\src\base\process_util.cpp" />
     <ClCompile Include="..\src\base\random.cpp" />
     <ClCompile Include="..\src\base\registry.cpp" />
+    <ClCompile Include="..\src\base\schedule_task.cpp" />
     <ClCompile Include="..\src\base\string.cpp" />
     <ClCompile Include="..\src\base\stringencode.cpp" />
     <ClCompile Include="..\src\base\thread_util.cpp" />
@@ -309,7 +311,7 @@
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;taskschd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy "..\include\*.*" "..\ppx_nuget\build\native\include\" /E /Y
@@ -334,7 +336,7 @@ xcopy "$(TargetDir)$(TargetFileName)" "..\ppx_nuget\build\native\lib\vc140_x86_s
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;taskschd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>
@@ -410,7 +412,7 @@ xcopy "$(OutDir)$(TargetName).pdb" "..\ppx_nuget\build\native\bin\vc140_x86_dyna
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;taskschd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Lib>
@@ -437,7 +439,7 @@ xcopy "$(TargetDir)$(TargetFileName)" "..\ppx_nuget\build\native\lib\vc140_x86_s
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;taskschd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <AdditionalDependencies>Dbghelp.lib;UserEnv.lib;WtsApi32.lib;shlwapi.lib;Winmm.lib;Iphlpapi.lib;Ws2_32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>

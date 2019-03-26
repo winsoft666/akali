@@ -72,7 +72,7 @@ namespace ppx {
         PPX_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
         PPX_API BOOL EasyCreateProcess(const base::StringUnicode &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
 
-        PPX_API BOOL CreateProcessInCurrentSession(PCTSTR pszFilePath);
+        PPX_API BOOL CreateUserProcess(PCTSTR pszFilePath);
 
         PPX_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
     }

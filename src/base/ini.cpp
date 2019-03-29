@@ -43,10 +43,13 @@ namespace ppx {
                 return false;
             INT iDefault = 0;
             SetLastError(0);
-            ValueInt = GetPrivateProfileInt(pszItem, pszSubItem, iDefault, m_szIniFile);
+            UINT ret = GetPrivateProfileInt(pszItem, pszSubItem, iDefault, m_szIniFile);
             DWORD dwGLE = GetLastError();
-
-            return (dwGLE == 0);
+			if (dwGLE == 0) {
+				ValueInt = ret;
+				return true;
+			}
+			return false;
         }
 
         LPCTSTR Ini::ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, LPCTSTR pszDefault, LPTSTR pszString, WORD wMaxCount) {
@@ -67,6 +70,7 @@ namespace ppx {
             do 
             {
                 pBuf = (TCHAR*)malloc(iBufSize * sizeof(TCHAR));
+				SetLastError(0);
                 DWORD dwRet = GetPrivateProfileString(pszItem, pszSubItem, TEXT("") ,pBuf, iBufSize, m_szIniFile);
                 DWORD dwGLE = GetLastError();
                 if (dwRet == 0) {
@@ -83,8 +87,10 @@ namespace ppx {
                     break;
                 }
             } while (true);
-           
-            strString = pBuf;
+
+			if (ret) {
+				strString = pBuf;
+			}
             free(pBuf);
 
             return ret;

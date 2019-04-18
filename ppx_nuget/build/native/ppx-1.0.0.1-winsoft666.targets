@@ -26,6 +26,26 @@
     </Link>
   </ItemDefinitionGroup>
   
+    <!-- v140 Win32 StaticLibrary MT Debug [MIN] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And '$(Component)' == 'Min' And $(Configuration.IndexOf('Debug')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_STATIC;PPX_NO_IPC;PPX_NO_HTTP;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_debug\min\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+    <!-- v140 Win32 StaticLibrary MT Debug [HTTP] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And '$(Component)' == 'HTTP' And $(Configuration.IndexOf('Debug')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_STATIC;PPX_NO_IPC;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_debug\http\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
   <!-- v140 Win32 StaticLibrary MT Release -->
   <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And $(Configuration.IndexOf('Release')) != -1 ">
     <ClCompile>
@@ -35,6 +55,27 @@
 		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_release\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  
+  <!-- v140 Win32 StaticLibrary MT Release [MIN] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And '$(Component)' == 'Min' And $(Configuration.IndexOf('Release')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_STATIC;PPX_NO_IPC;PPX_NO_HTTP;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_release\min\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+    <!-- v140 Win32 StaticLibrary MT Release [HTTP] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'StaticLibrary_MT' And '$(Component)' == 'HTTP' And $(Configuration.IndexOf('Release')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_STATIC;PPX_NO_IPC;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_static_mt_release\http\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
   
   <!-- v140 Win32 DynamicLibrary MD Debug -->
   <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Debug')) != -1 ">
@@ -46,6 +87,28 @@
     </Link>
   </ItemDefinitionGroup>
   
+    <!-- v140 Win32 DynamicLibrary MD Debug [MIN] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'Min' And $(Configuration.IndexOf('Debug')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_NO_IPC;PPX_NO_HTTP;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_dynamic_md_debug\min\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+    <!-- v140 Win32 DynamicLibrary MD Debug [HTTP] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'HTTP' And $(Configuration.IndexOf('Debug')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_NO_IPC;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_dynamic_md_debug\http\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  
+  
   <!-- v140 Win32 DynamicLibrary MD Release -->
   <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Release')) != -1 ">
     <ClCompile>
@@ -56,17 +119,62 @@
     </Link>
   </ItemDefinitionGroup>
   
+    <!-- v140 Win32 DynamicLibrary MD Release [MIN] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'Min' And $(Configuration.IndexOf('Release')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_NO_IPC;PPX_NO_HTTP;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_dynamic_md_release\min\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
+    <!-- v140 Win32 DynamicLibrary MD Release [HTTP] -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'HTTP' And $(Configuration.IndexOf('Release')) != -1 ">
+    <ClCompile>
+		<PreprocessorDefinitions>PPX_NO_IPC;PPX_NO_ENCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+		<AdditionalDependencies>$(MSBuildThisFileDirectory)lib\vc140_x86_dynamic_md_release\http\ppx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  
   <Target Name="ppx_1_0_0_1_AfterBuild" AfterTargets="AfterBuild" />
+  
   <Target Name="ppx_1_0_0_1_afterbuild_cmd1"
           Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Debug')) != -1"
           AfterTargets="ppx_1_0_0_1_AfterBuild">
     <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_debug\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
   </Target>
   
-  <Target Name="ppx_1_0_0_1_afterbuild_cmd2"
+    <Target Name="ppx_1_0_0_1_afterbuild_cmd2"
+          Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'Min' And $(Configuration.IndexOf('Debug')) != -1"
+          AfterTargets="ppx_1_0_0_1_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_debug\min\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="ppx_1_0_0_1_afterbuild_cmd3"
+          Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'HTTP' And $(Configuration.IndexOf('Debug')) != -1"
+          AfterTargets="ppx_1_0_0_1_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_debug\http\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="ppx_1_0_0_1_afterbuild_cmd4"
           Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Release')) != -1"
           AfterTargets="ppx_1_0_0_1_AfterBuild">
     <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_release\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="ppx_1_0_0_1_afterbuild_cmd5"
+          Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'Min' And $(Configuration.IndexOf('Release')) != -1"
+          AfterTargets="ppx_1_0_0_1_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_release\min\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="ppx_1_0_0_1_afterbuild_cmd6"
+          Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And '$(Component)' == 'HTTP' And $(Configuration.IndexOf('Release')) != -1"
+          AfterTargets="ppx_1_0_0_1_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_release\http\ppx.dll" DestinationFiles="$(TargetDir)ppx.dll" SkipUnchangedFiles="true" />
   </Target>
   
 </Project>

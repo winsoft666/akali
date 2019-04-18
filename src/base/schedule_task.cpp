@@ -4,6 +4,7 @@
 #include <taskschd.h>
 #include "base/safe_release_macro.h"
 
+#pragma comment(lib, "taskschd.lib")
 
 namespace ppx {
     namespace base {

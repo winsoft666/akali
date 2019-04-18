@@ -62,6 +62,9 @@ namespace ppx {
                 delete this_;
             }
         }
+
+#define SINLETON_CLASS_DECLARE(class_name)	\
+	friend class ::ppx::base::Singleton<##class_name>;
     }
 }
 

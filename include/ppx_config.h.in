@@ -3,12 +3,12 @@
 #pragma once
 
 // don't reference msgpack library.
-//#define PPX_NO_IPC
+#cmakedefine PPX_NO_IPC
 
 // don't reference cryptocpp library.
-//#define PPX_NO_ENCRYPT
+#cmakedefine PPX_NO_ENCRYPT
 
 // don't reference libcurl, openssl, zlib library.
-//#define PPX_NO_HTTP
+#cmakedefine PPX_NO_HTTP
 
 #endif //!_PPX_CONFIG_H__

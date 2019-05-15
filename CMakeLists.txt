@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+#set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
+
 project(ppx CXX)
 
 configure_file (
@@ -22,6 +24,9 @@ if(WIN32)
 	endif()
 endif()
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Debug Output
 message(STATUS "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}")
@@ -35,9 +40,6 @@ message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
 
 set(STATIC_LIBNAME_SUFFIX "-static" 
 	CACHE STRING "Optional suffix to append to the library name for a static build")
-	
-set(DEBUG_LIBNAME_SUFFIX "-d" 
-	CACHE STRING "Optional suffix to append to the library name for a debug build")
 
 
 # Unicode Support

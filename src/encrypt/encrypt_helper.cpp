@@ -14,12 +14,12 @@
 
 #include "encrypt/encrypt_helper.h"
 #ifndef PPX_NO_ENCRYPT
-#include "hex.h"
-#include "modes.h"
-#include "aes.h"
-#include "rsa.h"
-#include "randpool.h"
-#include "files.h"
+#include "cryptopp/hex.h"
+#include "cryptopp/modes.h"
+#include "cryptopp/aes.h"
+#include "cryptopp/rsa.h"
+#include "cryptopp/randpool.h"
+#include "cryptopp/files.h"
 using namespace CryptoPP;
 
 namespace ppx {

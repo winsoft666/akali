@@ -17,10 +17,10 @@ endif()
 
 
 
-file(GLOB ROOT_HEADER_FILES 			../include/*.h)
-file(GLOB BASE_HEADER_FILES 			../include/base/*.h)
-file(GLOB ENCRYPT_HEADER_FILES 			../include/encrypt/*.h)
-file(GLOB NET_HEADER_FILES 				../include/net/*.h)
+file(GLOB ROOT_HEADER_FILES 			../include/*.h ../include/*.hpp)
+file(GLOB BASE_HEADER_FILES 			../include/base/*.h ../include/base/*.h)
+file(GLOB ENCRYPT_HEADER_FILES 			../include/encrypt/*.h ../include/encrypt/*.hpp)
+file(GLOB NET_HEADER_FILES 				../include/net/*.h ../include/net/*.hpp)
 
 file(GLOB ROOT_SOURCE_FILES 			./*.cpp)
 file(GLOB BASE_SOURCE_FILES 			./base/*.cpp)
@@ -56,8 +56,9 @@ if(BUILD_SHARED_LIBS)
 		${ENCRYPT_HEADER_FILES}
 	)
 	
-	set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME}
-											 DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
+	# set output name prefix/suffix
+	set_target_properties(${LIB_NAME} PROPERTIES 
+						OUTPUT_NAME ${LIB_NAME} )
 	
 	if(NOT PPX_NO_HTTP)
 		find_package(CURL REQUIRED)
@@ -69,9 +70,8 @@ if(BUILD_SHARED_LIBS)
 
 	if(NOT PPX_NO_ENCRYPT)
 		find_package(cryptopp CONFIG REQUIRED)
-		target_link_libraries(${LIB_NAME} PRIVATE cryptopp)
+		target_link_libraries(${LIB_NAME} PRIVATE cryptopp-static)
 	endif()
-
 
 	if(NOT PPX_NO_IPC)
 		find_package(msgpack CONFIG REQUIRED)
@@ -93,8 +93,9 @@ else()
 		${ENCRYPT_HEADER_FILES}
 	)
 	
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME}${STATIC_LIBNAME_SUFFIX}
-												 DEBUG_OUTPUT_NAME ${LIB_NAME}${STATIC_LIBNAME_SUFFIX}${DEBUG_LIBNAME_SUFFIX})
+	# set output name prefix/suffix
+    set_target_properties(${LIB_NAME} PROPERTIES 
+		OUTPUT_NAME ${LIB_NAME}${STATIC_LIBNAME_SUFFIX})
 	
 	
 	if(NOT PPX_NO_HTTP)
@@ -116,8 +117,17 @@ else()
 	endif()
 endif()
 
+# Set output directory
+set_target_properties(${LIB_NAME}
+	PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" )
 
-target_link_libraries(${LIB_NAME} PRIVATE Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
+
+
+target_link_libraries(${LIB_NAME} PRIVATE 
+	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
 
 
 install(TARGETS ${LIB_NAME}
@@ -129,8 +139,4 @@ install(FILES ${ROOT_HEADER_FILES} 			DESTINATION include)
 install(FILES ${BASE_HEADER_FILES} 			DESTINATION include/base)
 install(FILES ${ENCRYPT_HEADER_FILES} 		DESTINATION include/encrypt)
 install(FILES ${NET_HEADER_FILES} 			DESTINATION include/net)
-
-
-
-
 

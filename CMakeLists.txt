@@ -10,20 +10,47 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(PPX_NO_IPC "Without IPC module" ON)
 option(PPX_NO_ENCRYPT "Without ENCRYPT module" ON)
 option(PPX_NO_HTTP "Without HTTP module" ON)
+option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
+
 
 if(WIN32)
-	option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." ON)
+	# Dll default use MD(d), Lib default use MT(d)
+	if(BUILD_SHARED_LIBS)
+		set(USE_STATIC_CRT OFF)
+	else()
+		set(USE_STATIC_CRT ON)
+	endif()
 endif()
 
+
+# Debug Output
+message(STATUS "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}")
+message(STATUS "USE_STATIC_CRT=${USE_STATIC_CRT}")
+message(STATUS "PPX_NO_IPC=${PPX_NO_IPC}")
+message(STATUS "PPX_NO_ENCRYPT=${PPX_NO_ENCRYPT}")
+message(STATUS "PPX_NO_HTTP=${PPX_NO_HTTP}")
+message(STATUS "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
+
+
+set(STATIC_LIBNAME_SUFFIX "-static" 
+	CACHE STRING "Optional suffix to append to the library name for a static build")
+	
+set(DEBUG_LIBNAME_SUFFIX "-d" 
+	CACHE STRING "Optional suffix to append to the library name for a debug build")
+
+
+# Unicode Support
 add_definitions(-DUNICODE -D_UNICODE -DNOMINMAX)
 
-if(BUILD_SHARED_LIBS)
-	add_definitions(-DPPX_EXPORTS)
-else()
-	add_definitions(-DPPX_STATIC)
-endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+
+include_directories(./include)
+
+
+
 add_subdirectory(src)
 
+add_subdirectory(tests)

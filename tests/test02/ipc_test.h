@@ -6,7 +6,7 @@ public:
     void StartIPCServer(const std::string &ipc_name);
     void StopIPCServer();
 
-    void OnMsgRec(const ppx::net::IPCMsg &msg);
+    void OnMsgRec(const void* data, unsigned int data_size);
     void BatchSend(const std::string &ipc_name);
 private:
     ppx::net::IPC ipc_;

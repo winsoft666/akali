@@ -16,35 +16,21 @@
 #define PPX_IPC_H_
 #pragma once
 #include "ppx_config.h"
-
-#ifndef PPX_NO_IPC
-
 #include "ppx_export.h"
 #include <functional>
 #include "base/constructormagic.h"
 
 namespace ppx {
     namespace net {
-        typedef struct tagIPCMsg {
-            int MsgType;
-
-            unsigned int BinDataSize;
-            unsigned char *BinData;
-
-            long long IntegerData;
-
-            char SourceIPC[256];
-        }IPCMsg;
-
         class PPX_API IPC {
         public:
             IPC();
             virtual ~IPC();
 
-            bool StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const IPCMsg&)> cb);
+            bool StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const void* data, unsigned int data_size)> cb);
             void StopListen();
 
-            bool SyncSend(const char* ipc_name, unsigned int ipc_name_len, const IPCMsg& t);
+            bool SyncSend(const char* ipc_name, unsigned int ipc_name_len, const void* data, unsigned int data_size);
 
         private:
             class IPCImpl;
@@ -55,7 +41,5 @@ namespace ppx {
         };
     }
 }
-
-#endif // PPX_NO_IPC
 
 #endif // !PPX_IPC_H_

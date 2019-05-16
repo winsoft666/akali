@@ -16,7 +16,7 @@ if (MSVC AND USE_STATIC_CRT)
     endforeach()
 endif()
 
-if (BUILD_SHARED_LIBS)
+if (NOT BUILD_SHARED_LIBS)
 	# Use ppx static library
 	add_definitions(-DPPX_STATIC)
 endif()

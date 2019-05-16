@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
-#set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 
 project(ppx CXX)
 
@@ -9,7 +9,7 @@ configure_file (
   )
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
-option(PPX_NO_IPC "Without IPC module" ON)
+option(BUILD_TESTS "Build tests project" ON)
 option(PPX_NO_ENCRYPT "Without ENCRYPT module" ON)
 option(PPX_NO_HTTP "Without HTTP module" ON)
 option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
@@ -41,7 +41,6 @@ message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
 set(STATIC_LIBNAME_SUFFIX "-static" 
 	CACHE STRING "Optional suffix to append to the library name for a static build")
 
-
 # Unicode Support
 add_definitions(-DUNICODE -D_UNICODE -DNOMINMAX)
 
@@ -51,8 +50,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include_directories(./include)
 
-
-
 add_subdirectory(src)
 
-add_subdirectory(tests)
+if(BUILD_TESTS)
+	add_subdirectory(tests)
+endif()

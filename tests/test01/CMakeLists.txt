@@ -15,7 +15,7 @@ if (MSVC AND USE_STATIC_CRT)
     endforeach()
 endif()
 
-if (BUILD_SHARED_LIBS)
+if (NOT BUILD_SHARED_LIBS)
 	# Use ppx static library
 	add_definitions(-DPPX_STATIC)
 endif()
@@ -35,8 +35,11 @@ if(BUILD_SHARED_LIBS)
 	target_link_libraries(${EXE_NAME} 
 		$<TARGET_LINKER_FILE:ppx> )
 else()
-	target_link_libraries(${EXE_NAME} 
-		$<TARGET_LINKER_FILE:ppx> )
+	get_property(PPX_LINK_LIBRARYS GLOBAL PROPERTY "PPX_LINK_LIBRARYS" ) 
 
+	target_link_libraries(${EXE_NAME} 
+		$<TARGET_LINKER_FILE:ppx> ${PPX_LINK_LIBRARYS})
+
+	# target_link_directories(${EXE_NAME} PRIVATE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib)
 endif()
 

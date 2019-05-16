@@ -2,9 +2,6 @@
 #define _PPX_CONFIG_H__
 #pragma once
 
-// don't reference msgpack library.
-#cmakedefine PPX_NO_IPC
-
 // don't reference cryptocpp library.
 #cmakedefine PPX_NO_ENCRYPT
 

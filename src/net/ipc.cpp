@@ -13,7 +13,6 @@
 *******************************************************************************/
 
 #include "net\ipc.h"
-#ifndef PPX_NO_IPC
 #include <winsock2.h>
 #include <future>
 #include <thread>
@@ -25,111 +24,9 @@
 #include "base/timeutils.h"
 #include "base/logging.h"
 #include "base/stringencode.h"
-#include "msgpack.h"
 
 namespace ppx {
     namespace net {
-
-        static char* PackIPCMsg(const IPCMsg& msg, unsigned int &out_size) {
-            msgpack_sbuffer sbuf;
-            msgpack_sbuffer_init(&sbuf);
-
-            msgpack_packer pk;
-            msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
-
-            msgpack_pack_int32(&pk, msg.MsgType);
-
-            msgpack_pack_uint32(&pk, msg.BinDataSize);
-            msgpack_pack_bin(&pk, msg.BinDataSize);
-
-            msgpack_pack_bin_body(&pk, msg.BinData, msg.BinDataSize);
-
-            msgpack_pack_int64(&pk, msg.IntegerData);
-
-            msgpack_pack_str(&pk, strlen(msg.SourceIPC));
-            msgpack_pack_str_body(&pk, msg.SourceIPC, strlen(msg.SourceIPC));
-
-
-            char *buf = (char*)malloc(sbuf.size + 1);
-            memcpy(buf, sbuf.data, sbuf.size);
-            buf[sbuf.size] = 0;
-
-            msgpack_sbuffer_destroy(&sbuf);
-
-            out_size = sbuf.size;
-            return buf;
-        }
-
-        static bool UnPackIPCMsg(const void* data, unsigned int data_size, IPCMsg &msg) {
-            msgpack_unpacker* unp = msgpack_unpacker_new(data_size);
-            if (msgpack_unpacker_buffer_capacity(unp) < data_size) {
-                bool result = msgpack_unpacker_reserve_buffer(unp, data_size);
-
-                if (msgpack_unpacker_buffer_capacity(unp) < data_size) {
-                    msgpack_unpacker_free(unp);
-                    return false;
-                }
-            }
-            memcpy(msgpack_unpacker_buffer(unp), data, data_size);
-
-            msgpack_unpacker_buffer_consumed(unp, data_size);
-
-            msgpack_unpack_return ret;
-
-            int i = 0;
-
-            do {
-                msgpack_unpacked und;
-                msgpack_unpacked_init(&und);
-                ret = msgpack_unpacker_next(unp, &und);
-
-                if (ret == MSGPACK_UNPACK_SUCCESS)
-                {
-                    msgpack_object obj = und.data;
-
-                    i++;
-                    /* Extract msgpack_object and use it. */
-                    if (i == 1) {
-                        msg.MsgType = (int)obj.via.u64;
-                    }
-                    else if (i == 2) {
-                        msg.BinDataSize = (unsigned int)obj.via.u64;
-                    }
-                    else if (i == 3) {
-                        assert(obj.type == MSGPACK_OBJECT_BIN);
-                        assert(obj.via.bin.size == msg.BinDataSize);
-                        msg.BinData = (unsigned char*)malloc(obj.via.bin.size);
-                        memcpy(msg.BinData, obj.via.bin.ptr, msg.BinDataSize);
-                    }
-                    else if (i == 4) {
-                        msg.IntegerData = obj.via.i64;
-                    }
-                    else if (i == 5) {
-                        assert(obj.type == MSGPACK_OBJECT_STR);
-                        memset(msg.SourceIPC, 0, 256);
-                        memcpy(msg.SourceIPC, obj.via.str.ptr, obj.via.str.size);
-                    }
-
-                    msgpack_unpacked_destroy(&und);
-                }
-                if (ret == MSGPACK_UNPACK_CONTINUE) {
-                    msgpack_unpacked_destroy(&und);
-                    /* cheking capacity, reserve buffer, copy additional data to the buffer, */
-                    /* notify consumed buffer size, then call msgpack_unpacker_next(&unp, &upd) again */
-                    break;
-                }
-                if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
-                    msgpack_unpacked_destroy(&und);
-                    /* Error process */
-                    break;
-                }
-            } while (true);
-
-            msgpack_unpacker_free(unp);
-
-            return true;
-        }
-
         class IPC::IPCImpl {
         public:
             IPCImpl() :
@@ -256,13 +153,7 @@ namespace ppx {
 
             void OnRecvMsg(const void * buffer, unsigned int buffer_size) {
                 if (cb_) {
-                    IPCMsg msg;
-
-                    UnPackIPCMsg(buffer, buffer_size, msg);
-
-                    cb_(msg);
-
-                    SAFE_FREE(msg.BinData);
+                    cb_(buffer, buffer_size);
                 }
             }
 
@@ -320,7 +211,7 @@ namespace ppx {
                 return;
             }
 
-            bool StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const IPCMsg&)> cb) {
+            bool StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const void* data, unsigned int data_size)> cb) {
                 ipc_name_.clear();
                 ipc_name_.assign(ipc_name, ipc_name_len);
 
@@ -347,7 +238,7 @@ namespace ppx {
 
         public:
             std::string ipc_name_;
-            std::function<void(const IPCMsg&)> cb_;
+            std::function<void(const void* data, unsigned int data_size)> cb_;
             std::thread listen_thr_;
             std::vector<std::future<void>> instance_thrs_;
             std::atomic_bool exit_;
@@ -362,7 +253,7 @@ namespace ppx {
             SAFE_DELETE(impl_);
         }
 
-        bool IPC::StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const IPCMsg&)> cb) {
+        bool IPC::StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const void* data, unsigned int data_size)> cb) {
             return impl_->StartListen(ipc_name, ipc_name_len, cb);
         }
 
@@ -370,18 +261,11 @@ namespace ppx {
             impl_->StopListen();
         }
 
-        bool IPC::SyncSend(const char* ipc_name, unsigned int ipc_name_len, const IPCMsg& t) {
-            unsigned int out_size = 0;
+        bool IPC::SyncSend(const char* ipc_name, unsigned int ipc_name_len, const void* data, unsigned int data_size) {
 
-            char * buf = PackIPCMsg(t, out_size);
-
-            bool ret = impl_->SyncSend(ipc_name, ipc_name_len, buf, out_size, 30000);
-
-            free(buf);
+            bool ret = impl_->SyncSend(ipc_name, ipc_name_len, data, data_size, 30000);
 
             return ret;
         }
     }
 }
-
-#endif

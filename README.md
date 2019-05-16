@@ -2,16 +2,25 @@
 [ppx](https://github.com/winsoft666/ppx) 是一个C++的基础组件库，其提供了在Windows平台进行应用层开发所需要的大多数功能，其提供的大部分功能在Windows平台下通过了产品的验证和测试。
 
 # 如何编译
-只需要2步：使用Visual Stuido 2015打开`vsproject\ppx.sln`，然后选择对应的编译选项进行编译即可。
+1. ppx 依赖如下的第三方库:
+* cryptopp
+* curl
+* openssl
+* zlib
 
+使用[vcpkg](https://github.com/microsoft/vcpkg)对依赖库进行安装，如：
+```
+vcpkg install zlib:x86-windows
+vcpkg install zlib:x86-windows-static
+```
 
-ppx 依赖如下的第三方库:
-* cryptopp-7.0
-* curl-7.63
-* openssl-1.1.1
-* zlib-1.2.11
+2. 修改`run_cmake.bat`文件
+CMAKE_TOOLCHAIN_FILE: `***\scripts\buildsystems\vcpkg.cmake`文件路径.
+VCPKG_TARGET_TRIPLET: 静态库`x86-windows-static`，动态库`x86-windows`.
+BUILD_SHARED_LIBS: 是否编译动态库，`ON`或`OFF`.
+PPX_NO_HTTP: `ON`或`OFF`，是否集成HTTP下载和请求等功能，依赖libcurl.
+PPX_NO_ENCRYPT: `ON`或`OFF`，是否集成AES, DES, RAS加解密等功能，依赖encryptpp库.
 
-但是，这些库并不需要你手动去下载配置。ppx使用了Visual Studio提供的Nuget包管理器，在`packages.config`文件中配置了这些库的版本号，Nuget包管理器在编译的时候会自动下载配置这些依赖库。
 
 # 2. ppx包含哪些功能
 ## 2.1 断言
@@ -164,11 +173,6 @@ void DlgMain::OnNeedManualEnableAero() {
 
 ## 2.35 进程间通信
 `net\ipc.h`
-
-# 3. 发布ppx到Nuget
-在编译完成以后，Visual Studio会通过生成后事件自动将头文件、库文件拷贝到`ppx_nuget`目录，通过该目录中的文件生成nupkg文件之后就可以发布到Nuget平台了。
-
-目前ppx已经发布到了Nuget，见：[https://www.nuget.org/packages/ppx-1.0.0.1-winsoft666/](https://www.nuget.org/packages/ppx-1.0.0.1-winsoft666/)
 
 
 ---------------------------------------------------------------

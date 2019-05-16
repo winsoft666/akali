@@ -18,7 +18,7 @@ endif()
 
 
 file(GLOB ROOT_HEADER_FILES 			../include/*.h ../include/*.hpp)
-file(GLOB BASE_HEADER_FILES 			../include/base/*.h ../include/base/*.h)
+file(GLOB BASE_HEADER_FILES 			../include/base/*.h ../include/base/*.hpp)
 file(GLOB ENCRYPT_HEADER_FILES 			../include/encrypt/*.h ../include/encrypt/*.hpp)
 file(GLOB NET_HEADER_FILES 				../include/net/*.h ../include/net/*.hpp)
 
@@ -38,7 +38,7 @@ source_group("Header Files\\base"   	FILES ${BASE_HEADER_FILES})
 source_group("Header Files\\net"     	FILES ${NET_HEADER_FILES})
 source_group("Header Files\\encrypt" 	FILES ${ENCRYPT_HEADER_FILES})
 
-
+set(_LINK_LIBRARYS "")
 
 if(BUILD_SHARED_LIBS)
 	add_definitions(-DPPX_EXPORTS)
@@ -65,17 +65,20 @@ if(BUILD_SHARED_LIBS)
 
 		target_link_libraries(${LIB_NAME} PRIVATE ${CURL_LIBRARIES})
 		target_include_directories(${LIB_NAME} PRIVATE ${CURL_INCLUDE_DIRS})
+		list(APPEND _LINK_LIBRARYS ${CURL_LIBRARIES})
 	endif()
 
 
 	if(NOT PPX_NO_ENCRYPT)
 		find_package(cryptopp CONFIG REQUIRED)
 		target_link_libraries(${LIB_NAME} PRIVATE cryptopp-static)
+		list(APPEND _LINK_LIBRARYS cryptopp-static)
 	endif()
 
 	if(NOT PPX_NO_IPC)
 		find_package(msgpack CONFIG REQUIRED)
-		target_link_libraries(${LIB_NAME} PRIVATE msgpackc msgpackc msgpackc-cxx)
+		target_link_libraries(${LIB_NAME} PRIVATE msgpackc msgpackc-cxx)
+		list(APPEND _LINK_LIBRARYS msgpackc msgpackc-cxx)
 	endif()
 else()
 	add_definitions(-DPPX_STATIC -DCURL_STATICLIB)
@@ -97,25 +100,29 @@ else()
     set_target_properties(${LIB_NAME} PROPERTIES 
 		OUTPUT_NAME ${LIB_NAME}${STATIC_LIBNAME_SUFFIX})
 	
-	
 	if(NOT PPX_NO_HTTP)
 		find_package(CURL REQUIRED)
 		target_link_libraries(${LIB_NAME} PRIVATE ${CURL_LIBRARIES})
 		target_include_directories(${LIB_NAME} PRIVATE ${CURL_INCLUDE_DIRS})
+		list(APPEND _LINK_LIBRARYS ${CURL_LIBRARIES})
 	endif()
-	
 
 	if(NOT PPX_NO_ENCRYPT)
 		find_package(cryptopp CONFIG REQUIRED)
 		target_link_libraries(${LIB_NAME} PRIVATE cryptopp-static)
+		list(APPEND _LINK_LIBRARYS cryptopp-static)
 	endif()
-
 
 	if(NOT PPX_NO_IPC)
 		find_package(msgpack CONFIG REQUIRED)
-		target_link_libraries(${LIB_NAME} PRIVATE msgpackc msgpackc-cxx msgpackc-static)
+		target_link_libraries(${LIB_NAME} PRIVATE msgpackc-static)
+		list(APPEND _LINK_LIBRARYS msgpackc-static)
 	endif()
 endif()
+
+target_link_libraries(${LIB_NAME} PRIVATE 
+	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
+list(APPEND _LINK_LIBRARYS Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
 
 # Set output directory
 set_target_properties(${LIB_NAME}
@@ -124,10 +131,7 @@ set_target_properties(${LIB_NAME}
 	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
 	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" )
 
-
-
-target_link_libraries(${LIB_NAME} PRIVATE 
-	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
+set_property(GLOBAL PROPERTY PPX_LINK_LIBRARYS "${_LINK_LIBRARYS}" )
 
 
 install(TARGETS ${LIB_NAME}

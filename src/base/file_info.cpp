@@ -53,23 +53,21 @@ namespace ppx {
         }
 
         bool FileInfo::Create(HMODULE hModule) {
-            TCHAR szBuf[MAX_PATH + 1] = { 0 };
-            GetModuleFileName(hModule, szBuf, MAX_PATH);
+            WCHAR szBuf[MAX_PATH + 1] = { 0 };
+            GetModuleFileNameW(hModule, szBuf, MAX_PATH);
 
             return Create(szBuf);
         }
 
-        bool FileInfo::Create(const String &strFileName) {
+        bool FileInfo::Create(const std::wstring &strFileName) {
             Reset();
 
-            HANDLE hFile = CreateFile(strFileName.GetDataPointer(), GENERIC_READ, 
+            HANDLE hFile = CreateFileW(strFileName.c_str(), GENERIC_READ, 
                 FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
             if (hFile == INVALID_HANDLE_VALUE) {
                 return false;
             }
 
-
-            printf("\n文件上次写入时间\n");
             BOOL bRet = GetFileTime(hFile, &m_ftCreationTime, &m_ftLastAccessTime, &m_ftLastWriteTime);
             if (!bRet) {
                 CloseHandle(hFile);
@@ -79,7 +77,7 @@ namespace ppx {
             hFile = INVALID_HANDLE_VALUE;
 
             DWORD   dwHandle;
-            DWORD   dwFileVersionInfoSize = GetFileVersionInfoSize(strFileName.GetDataPointer(), &dwHandle);
+            DWORD   dwFileVersionInfoSize = GetFileVersionInfoSizeW(strFileName.c_str(), &dwHandle);
 
             if (!dwFileVersionInfoSize)
                 return false;
@@ -90,18 +88,18 @@ namespace ppx {
                 return false;
 
             try {
-                if (!GetFileVersionInfo((LPTSTR)strFileName.GetDataPointer(), dwHandle, dwFileVersionInfoSize, lpData))
+                if (!GetFileVersionInfoW((LPTSTR)strFileName.c_str(), dwHandle, dwFileVersionInfoSize, lpData))
                     return false;
 
                 LPVOID  lpInfo;
                 UINT    unInfoLen;
 
-                if (VerQueryValue(lpData, _T("\\"), &lpInfo, &unInfoLen)) {
+                if (VerQueryValueW(lpData, L"\\", &lpInfo, &unInfoLen)) {
                     if (unInfoLen == sizeof(m_FileInfo))
                         memcpy(&m_FileInfo, lpInfo, unInfoLen);
                 }
 
-                VerQueryValue(lpData, _T("\\VarFileInfo\\Translation"), &lpInfo, &unInfoLen);
+                VerQueryValueW(lpData, L"\\VarFileInfo\\Translation", &lpInfo, &unInfoLen);
 
                 DWORD   dwLangCode = 0;
 
@@ -115,71 +113,71 @@ namespace ppx {
                     }
                 }
 
-                TCHAR strSubBlock[MAX_PATH * 2] = { 0 };
-                ZeroMemory(strSubBlock, MAX_PATH * 2 * sizeof(TCHAR));
-                _stprintf_s(strSubBlock, _T("\\StringFileInfo\\%04X%04X\\"), dwLangCode & 0x0000FFFF, (dwLangCode & 0xFFFF0000) >> 16);
+                WCHAR strSubBlock[MAX_PATH * 2] = { 0 };
+                ZeroMemory(strSubBlock, MAX_PATH * 2 * sizeof(WCHAR));
+                swprintf_s(strSubBlock, L"\\StringFileInfo\\%04X%04X\\", dwLangCode & 0x0000FFFF, (dwLangCode & 0xFFFF0000) >> 16);
 
-                TCHAR strTmp[MAX_PATH * 2] = { 0 };
-                ZeroMemory(strTmp, MAX_PATH * 2 * sizeof(TCHAR));
+				WCHAR strTmp[MAX_PATH * 2] = { 0 };
+                ZeroMemory(strTmp, MAX_PATH * 2 * sizeof(WCHAR));
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("CompanyName"));
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"CompanyName");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strCompanyName = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("FileDescription"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"FileDescription");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strFileDescription = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("FileVersion"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"FileVersion");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strFileVersion = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("InternalName"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"InternalName");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strInternalName = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("LegalCopyright"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"LegalCopyright");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strLegalCopyright = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("OriginalFileName"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"OriginalFileName");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strOriginalFileName = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("ProductName"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"ProductName");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strProductName = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("ProductVersion"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"ProductVersion");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strProductVersion = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("Comments"));
+				swprintf_s(strTmp, L"%s%s", strSubBlock, L"Comments");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strComments = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("LegalTrademarks"));
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"LegalTrademarks");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strLegalTrademarks = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("PrivateBuild"));
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"PrivateBuild");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strPrivateBuild = (LPCTSTR)lpInfo;
 
-                _stprintf_s(strTmp, _T("%s%s"), strSubBlock, _T("SpecialBuild"));
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"SpecialBuild");
 
-                if (VerQueryValue(lpData, strTmp, &lpInfo, &unInfoLen))
+                if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strSpecialBuild = (LPCTSTR)lpInfo;
 
                 delete[] lpData;
@@ -250,19 +248,19 @@ namespace ppx {
             return m_FileInfo.dwFileSubtype;
         }
 
-        String FileInfo::GetCompanyName() {
+        std::wstring FileInfo::GetCompanyName() {
             return m_strCompanyName;
         }
 
-        String FileInfo::GetFileDescription() {
+        std::wstring FileInfo::GetFileDescription() {
             return m_strFileDescription;
         }
 
-        String FileInfo::GetFileVersion() {
+        std::wstring FileInfo::GetFileVersion() {
             return m_strFileVersion;
         }
 
-        String FileInfo::GetFileVersionEx() {
+        std::wstring FileInfo::GetFileVersionEx() {
             wchar_t strTemp[MAX_PATH * 2] = { 0 };
 
             StringCchPrintfW(strTemp, MAX_PATH * 2, L"%d.%d.%d.%d", (m_FileInfo.dwFileVersionMS & 0xFFFF0000) >> 16,
@@ -273,39 +271,39 @@ namespace ppx {
             return strTemp;
         }
 
-        String FileInfo::GetInternalName() {
+        std::wstring FileInfo::GetInternalName() {
             return m_strInternalName;
         }
 
-        String FileInfo::GetLegalCopyright() {
+        std::wstring FileInfo::GetLegalCopyright() {
             return m_strLegalCopyright;
         }
 
-        String FileInfo::GetOriginalFileName() {
+        std::wstring FileInfo::GetOriginalFileName() {
             return m_strOriginalFileName;
         }
 
-        String FileInfo::GetProductName() {
+        std::wstring FileInfo::GetProductName() {
             return m_strProductName;
         }
 
-        String FileInfo::GetProductVersion() {
+        std::wstring FileInfo::GetProductVersion() {
             return m_strProductVersion;
         }
 
-        String FileInfo::GetComments() {
+        std::wstring FileInfo::GetComments() {
             return m_strComments;
         }
 
-        String FileInfo::GetLegalTrademarks() {
+        std::wstring FileInfo::GetLegalTrademarks() {
             return m_strLegalTrademarks;
         }
 
-        String FileInfo::GetPrivateBuild() {
+        std::wstring FileInfo::GetPrivateBuild() {
             return m_strPrivateBuild;
         }
 
-        String FileInfo::GetSpecialBuild() {
+        std::wstring FileInfo::GetSpecialBuild() {
             return m_strSpecialBuild;
         }
 
@@ -323,18 +321,18 @@ namespace ppx {
 
         void FileInfo::Reset() {
             ZeroMemory(&m_FileInfo, sizeof(m_FileInfo));
-            m_strCompanyName.Empty();
-            m_strFileDescription.Empty();
-            m_strFileVersion.Empty();
-            m_strInternalName.Empty();
-            m_strLegalCopyright.Empty();
-            m_strOriginalFileName.Empty();
-            m_strProductName.Empty();
-            m_strProductVersion.Empty();
-            m_strComments.Empty();
-            m_strLegalTrademarks.Empty();
-            m_strPrivateBuild.Empty();
-            m_strSpecialBuild.Empty();
+            m_strCompanyName.clear();
+            m_strFileDescription.clear();
+            m_strFileVersion.clear();
+            m_strInternalName.clear();
+            m_strLegalCopyright.clear();
+            m_strOriginalFileName.clear();
+            m_strProductName.clear();
+            m_strProductVersion.clear();
+            m_strComments.clear();
+            m_strLegalTrademarks.clear();
+            m_strPrivateBuild.clear();
+            m_strSpecialBuild.clear();
 
             m_ftCreationTime.dwHighDateTime = m_ftCreationTime.dwLowDateTime = 0;
             m_ftLastAccessTime.dwHighDateTime = m_ftLastAccessTime.dwLowDateTime = 0;

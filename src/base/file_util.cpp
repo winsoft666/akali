@@ -229,7 +229,7 @@ namespace ppx {
 
         bool CreateDir(const char* pszDir) {
             if (!pszDir) return false;
-            return CreateDir(base::AnsiToUnicode(pszDir).GetDataPointer());
+            return CreateDir(base::AnsiToUnicode(pszDir).c_str());
         }
     }
 }

@@ -44,7 +44,7 @@ namespace ppx {
             if (bCreate) {
                 DWORD dwDisposition;
                 dwResult = RegCreateKeyEx(m_hkeyRoot,
-                                          m_strSubKey.GetDataPointer(),
+                                          m_strSubKey.c_str(),
                                           0,
                                           NULL,
                                           0,
@@ -54,7 +54,7 @@ namespace ppx {
                                           &dwDisposition);
             } else {
                 dwResult = RegOpenKeyEx(m_hkeyRoot,
-                                        m_strSubKey.GetDataPointer(),
+                                        m_strSubKey.c_str(),
                                         0,
                                         samDesired,
                                         &m_hkey);
@@ -73,7 +73,7 @@ namespace ppx {
 
         void RegKey::Attach(HKEY hkey) {
             Close();
-            m_strSubKey.Empty();
+            m_strSubKey.clear();
 
             m_hkeyRoot = NULL;
             m_hkey = hkey;
@@ -217,7 +217,7 @@ namespace ppx {
             return hr;
         }
 
-        HRESULT RegKey::GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<String> &vStrValues) const {
+        HRESULT RegKey::GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<std::wstring> &vStrValues) const {
             HRESULT hr = E_FAIL;
             int cb = GetValueBufferSize(pszValueName);
             WCHAR *szTemp = new WCHAR[cb / sizeof(WCHAR)];
@@ -263,13 +263,13 @@ namespace ppx {
             return SetValue(pszValueName, REG_SZ, (const LPBYTE)strData.c_str(), (strData.length()) * sizeof(WCHAR));
         }
 
-        HRESULT RegKey::SetMultiSZValue(LPCWSTR pszValueName, const std::vector<String> &vStrValues) {
+        HRESULT RegKey::SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring> &vStrValues) {
             WCHAR *ptrValues = CreateDoubleNulTermList(vStrValues);
             int cch = 1;
             int n = vStrValues.size();
 
             for (int i = 0; i < n; i++)
-                cch += vStrValues[i].GetLength() + 1;
+                cch += vStrValues[i].length() + 1;
 
             HRESULT hr = SetValue(pszValueName, REG_MULTI_SZ, (const LPBYTE)ptrValues, cch * sizeof(TCHAR));
 
@@ -314,20 +314,20 @@ namespace ppx {
             return hr;
         }
 
-        LPTSTR RegKey::CreateDoubleNulTermList(const std::vector<String> &vStrValues) const {
+        LPWSTR RegKey::CreateDoubleNulTermList(const std::vector<std::wstring> &vStrValues) const {
             size_t cEntries = vStrValues.size();
             size_t cch = 1; // Account for 2nd null terminate.
 
             for (size_t i = 0; i < cEntries; i++)
-                cch += vStrValues[i].GetLength() + 1;
+                cch += vStrValues[i].length() + 1;
 
-            LPTSTR pszBuf = new TCHAR[cch];
-			LPTSTR pszWrite = pszBuf;
+            LPWSTR pszBuf = new WCHAR[cch];
+			LPWSTR pszWrite = pszBuf;
 
             for (size_t i = 0; i < cEntries; i++) {
-                const String &s = vStrValues[i];
-                StringCchCopy(pszWrite, cch, s.GetDataPointer());
-                pszWrite += s.GetLength() + 1;
+                const std::wstring &s = vStrValues[i];
+                StringCchCopyW(pszWrite, cch, s.c_str());
+                pszWrite += s.length() + 1;
             }
 
             *pszWrite = L'\0'; // Double null terminate.

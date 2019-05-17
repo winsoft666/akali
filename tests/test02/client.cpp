@@ -4,8 +4,8 @@
 int main() {
 	ppx::base::CmdLineParser cml(GetCommandLine());
 	IPCTester test_c;
-	test_c.StartIPCServer(UnicodeToAnsi(cml.GetVal(L"ipc_c")).GetData());
-	test_c.BatchSend(UnicodeToAnsi(cml.GetVal(L"target")).GetData());
+	test_c.StartIPCServer(ppx::base::UnicodeToAnsi(cml.GetVal(L"ipc_c")).c_str());
+	test_c.BatchSend(ppx::base::UnicodeToAnsi(cml.GetVal(L"target")).c_str());
 
 	getchar();
 	test_c.StopIPCServer();

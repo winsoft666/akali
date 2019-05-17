@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <tchar.h>
 #include <map>
+#include "base/string_helper.h"
 #include "base/stringencode.h"
 
 namespace ppx {
@@ -33,9 +34,8 @@ namespace ppx {
 				value_map_.clear();
 			}
 
-			ITERPOS findKey(const StringUnicode &key) const {
-				StringUnicode s = key;
-				s.MakeLower();
+			ITERPOS findKey(const std::wstring &key) const {
+				std::wstring s = StringToLower(key);
 				return value_map_.find(s);
 			}
 
@@ -47,10 +47,10 @@ namespace ppx {
         const wchar_t value_sep[] = L" :"; // don't forget space!!
 
 
-        CmdLineParser::CmdLineParser(const StringUnicode &cmdline) {
+        CmdLineParser::CmdLineParser(const std::wstring &cmdline) {
 			impl_ = new Impl();
 
-            if (cmdline.GetLength() > 0) {
+            if (cmdline.length() > 0) {
                 Parse(cmdline);
             }
         }
@@ -59,14 +59,14 @@ namespace ppx {
 			SAFE_DELETE(impl_);
         }
 
-        bool CmdLineParser::Parse(const StringUnicode &cmdline) {
-            const StringUnicode sEmpty = L"";
+        bool CmdLineParser::Parse(const std::wstring &cmdline) {
+            const std::wstring sEmpty = L"";
             int nArgs = 0;
 
 			impl_->value_map_.clear();
             cmdline_ = cmdline;
 
-			std::wstring strW = TCHARToUnicode(cmdline_.GetData());
+			std::wstring strW = TCHARToUnicode(cmdline_);
 			const wchar_t *sCurrent = strW.c_str();
 
             for (;;) {
@@ -87,16 +87,16 @@ namespace ppx {
                 const wchar_t *sVal = wcspbrk(sArg, value_sep);
 
                 if (sVal == NULL) {
-                    StringUnicode Key(sArg);
-					Key.MakeLower();
+                    std::wstring Key(sArg);
+					Key = StringToLower(Key);
 					impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, sEmpty));
                     break;
                 } else if (sVal[0] == L' ' || wcslen(sVal) == 1) {
                     // cmdline ends with /Key: or a key with no value
-                    StringUnicode Key(sArg, (int)(sVal - sArg));
+                    std::wstring Key(sArg, (int)(sVal - sArg));
 
-                    if (!Key.IsEmpty()) {
-						Key.MakeLower();
+                    if (Key.length() > 0) {
+						Key = StringToLower(Key);
 						impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, sEmpty));
                     }
 
@@ -104,8 +104,8 @@ namespace ppx {
                     continue;
                 } else {
                     // key has value
-                    StringUnicode Key(sArg, (int)(sVal - sArg));
-					Key.MakeLower();
+                    std::wstring Key(sArg, (int)(sVal - sArg));
+					Key = StringToLower(Key);
 
                     sVal = _wcsinc(sVal);
 
@@ -123,17 +123,17 @@ namespace ppx {
 
                     if (sEndQuote == NULL) {
                         // no end quotes or terminating space, take the rest of the string to its end
-                        StringUnicode csVal(sQuote);
+                        std::wstring csVal(sQuote);
 
-                        if (!Key.IsEmpty()) {
+                        if (Key.length() > 0) {
                             impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
                         }
 
                         break;
                     } else {
                         // end quote
-                        if (!Key.IsEmpty()) {
-                            StringUnicode csVal(sQuote, (int)(sEndQuote - sQuote));
+                        if (Key.length() > 0) {
+                            std::wstring csVal(sQuote, (int)(sEndQuote - sQuote));
 							impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
                         }
 
@@ -148,7 +148,7 @@ namespace ppx {
 
 
 
-        bool CmdLineParser::HasKey(const StringUnicode &key) const {
+        bool CmdLineParser::HasKey(const std::wstring &key) const {
 			ITERPOS it = impl_->findKey(key);
 
             if (it == impl_->value_map_.end())
@@ -158,23 +158,23 @@ namespace ppx {
         }
 
 
-        bool CmdLineParser::HasVal(const StringUnicode &key) const {
+        bool CmdLineParser::HasVal(const std::wstring &key) const {
 			ITERPOS it = impl_->findKey(key);
 
             if (it == impl_->value_map_.end())
                 return false;
 
-            if (it->second.IsEmpty())
+            if (it->second.length() == 0)
                 return false;
 
             return true;
         }
 
-        StringUnicode CmdLineParser::GetVal(const StringUnicode &key) const {
+        std::wstring CmdLineParser::GetVal(const std::wstring &key) const {
 			ITERPOS it = impl_->findKey(key);
 
             if (it == impl_->value_map_.end())
-                return StringUnicode();
+                return std::wstring();
 
             return it->second;
         }

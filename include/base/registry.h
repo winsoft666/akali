@@ -22,8 +22,8 @@
 #endif
 #include <windows.h>
 #include <vector>
+#include <string>
 #include "ppx_export.h"
-#include "base/string.h"
 
 namespace ppx {
 	namespace base {
@@ -54,12 +54,12 @@ namespace ppx {
 			HRESULT GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const;
 			HRESULT GetBINARYValue(LPCWSTR pszValueName, LPBYTE pbDataOut, int cbDataOut) const;
 			HRESULT GetSZValue(LPCWSTR pszValueName, OUT std::wstring &strValue) const;
-			HRESULT GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<String> &vStrValues) const;
+			HRESULT GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<std::wstring> &vStrValues) const;
 			int GetValueBufferSize(LPCWSTR pszValueName) const;
 			HRESULT SetDWORDValue(LPCWSTR pszValueName, DWORD dwData);
 			HRESULT SetBINARYValue(LPCWSTR pszValueName, const LPBYTE pbData, int cbData);
 			HRESULT SetSZValue(LPCWSTR pszValueName, const std::wstring &strData);
-			HRESULT SetMultiSZValue(LPCWSTR pszValueName, const std::vector<String> &vStrValues);
+			HRESULT SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring> &vStrValues);
 
 		protected:
 			void OnChange(HKEY hkey);
@@ -71,12 +71,12 @@ namespace ppx {
 			HANDLE       m_hChangeEvent;
 			HANDLE       m_hNotifyThr;
 			DWORD        m_dwChangeFilter;
-			String       m_strSubKey;
+			std::wstring m_strSubKey;
 			bool         m_bWatchSubtree;
 
 			HRESULT GetValue(LPCWSTR pszValueName, DWORD dwTypeExpected, LPBYTE pbData, DWORD cbData) const;
 			HRESULT SetValue(LPCWSTR pszValueName, DWORD dwValueType, const LPBYTE pbData, int cbData);
-			LPTSTR CreateDoubleNulTermList(const std::vector<String> &vStrValues) const;
+			LPWSTR CreateDoubleNulTermList(const std::vector<std::wstring> &vStrValues) const;
 			static unsigned int _stdcall NotifyWaitThreadProc(LPVOID pvParam);
 			static bool RegDeleteKey32_64(HKEY hKey, LPCWSTR pszSubKey, bool bPrefer64View);
 			static bool RegDeleteSubKeys(HKEY hKey, bool bPrefer64View);

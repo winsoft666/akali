@@ -42,7 +42,7 @@
 #include "base/process_util.h"
 #include "base/random.h"
 #include "base/registry.h"
-#include "base/string.h"
+#include "base/string_helper.h"
 #include "base/safe_release_macro.h"
 #include "base/safe_compare.h"
 #include "base/safe_conversions.h"

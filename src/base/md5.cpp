@@ -336,10 +336,10 @@ namespace ppx
             return szMd5;
         }
 
-        std::string GetFileMd5(const StringANSI &file_path) {
+        std::string GetFileMd5(const std::string &file_path) {
             FILE *f = NULL;
 
-            if (fopen_s(&f, file_path.GetDataPointer(), "rb"))
+            if (fopen_s(&f, file_path.c_str(), "rb"))
                 return "";
 
             unsigned char szMd5Sig[16] = { 0 };

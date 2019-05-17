@@ -24,7 +24,6 @@
 #endif
 #include <windows.h>
 #include "base/stringencode.h"
-#include "base/string.h"
 #include "ppx_export.h"
 
 namespace ppx {
@@ -35,27 +34,27 @@ namespace ppx {
             virtual ~Ini();
 
           public:
-            void SetIniFilePath(LPCTSTR pszIniFile);
-            LPCTSTR GetIniFilePath();
+            void SetIniFilePath(LPCWSTR pszIniFile);
+            LPCWSTR GetIniFilePath();
           public:
-            bool ReadRect(LPCTSTR pszItem, LPCTSTR pszSubItem, RECT &ValueRect);
-            bool ReadSize(LPCTSTR pszItem, LPCTSTR pszSubItem, SIZE &ValueSize);
-            bool ReadPoint(LPCTSTR pszItem, LPCTSTR pszSubItem, POINT &ValuePoint);
-            bool ReadColor(LPCTSTR pszItem, LPCTSTR pszSubItem, COLORREF &ValueColor);
-            bool ReadInt(LPCTSTR pszItem, LPCTSTR pszSubItem, UINT &ValueInt);
-            LPCTSTR ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, LPCTSTR pszDefault, LPTSTR pszString, WORD wMaxCount);
-			bool ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, String &strString);
-            bool WriteString(LPCTSTR pszItem, LPCTSTR pszSubItem, LPCTSTR ValueString);
-			bool WriteString(LPCTSTR pszItem, LPCTSTR pszSubItem, const String& ValueString);
-            bool WriteInt(LPCTSTR pszItem, LPCTSTR pszSubItem, LONG ValueInt);
-            bool WriteRGBColor(LPCTSTR pszItem, LPCTSTR pszSubItem, COLORREF ValueColor);
-            bool WritePoint(LPCTSTR pszItem, LPCTSTR pszSubItem, POINT ValuePoint);
-            bool WriteSize(LPCTSTR pszItem, LPCTSTR pszSubItem, SIZE ValueSize);
-            bool WriteRect(LPCTSTR pszItem, LPCTSTR pszSubItem, RECT ValueRect);
+            bool ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT &ValueRect);
+            bool ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE &ValueSize);
+            bool ReadPoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT &ValuePoint);
+            bool ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF &ValueColor);
+            bool ReadInt(LPCWSTR pszItem, LPCWSTR pszSubItem, UINT &ValueInt);
+            LPCWSTR ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR pszDefault, LPTSTR pszString, WORD wMaxCount);
+			bool ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strString);
+            bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR ValueString);
+			bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring& ValueString);
+            bool WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt);
+            bool WriteRGBColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF ValueColor);
+            bool WritePoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT ValuePoint);
+            bool WriteSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE ValueSize);
+            bool WriteRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT ValueRect);
           protected:
-            LONG SwitchStringToValue(LPCTSTR &pszSring);
+            LONG SwitchStringToValue(LPCWSTR &pszSring);
           protected:
-            TCHAR m_szIniFile[MAX_PATH];
+            WCHAR m_szIniFile[MAX_PATH];
         };
     }
 }

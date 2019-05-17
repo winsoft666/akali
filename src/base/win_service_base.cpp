@@ -513,8 +513,8 @@ namespace ppx {
         }
 
         void WinServiceBase::WriteEventLogEntryA(PSTR pszMessage, WORD wType) {
-            base::StringUnicode strMessageW = AnsiToUnicode(pszMessage);
-            WriteEventLogEntry((PWSTR)strMessageW.GetDataPointer(), wType);
+            std::wstring strMessageW = AnsiToUnicode(pszMessage);
+            WriteEventLogEntry((PWSTR)strMessageW.c_str(), wType);
         }
 
 

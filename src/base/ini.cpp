@@ -29,21 +29,21 @@ namespace ppx {
         Ini::~Ini() {
         }
 
-        void Ini::SetIniFilePath(LPCTSTR pszIniFile) {
-            StringCchCopy(m_szIniFile, MAX_PATH, pszIniFile);
+        void Ini::SetIniFilePath(LPCWSTR pszIniFile) {
+            StringCchCopyW(m_szIniFile, MAX_PATH, pszIniFile);
         }
 
-        LPCTSTR Ini::GetIniFilePath() {
+        LPCWSTR Ini::GetIniFilePath() {
             return m_szIniFile;
         }
 
-        bool Ini::ReadInt(LPCTSTR pszItem, LPCTSTR pszSubItem, UINT &ValueInt) {
+        bool Ini::ReadInt(LPCWSTR pszItem, LPCWSTR pszSubItem, UINT &ValueInt) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
             INT iDefault = 0;
             SetLastError(0);
-            UINT ret = GetPrivateProfileInt(pszItem, pszSubItem, iDefault, m_szIniFile);
+            UINT ret = GetPrivateProfileIntW(pszItem, pszSubItem, iDefault, m_szIniFile);
             DWORD dwGLE = GetLastError();
 			if (dwGLE == 0) {
 				ValueInt = ret;
@@ -52,26 +52,26 @@ namespace ppx {
 			return false;
         }
 
-        LPCTSTR Ini::ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, LPCTSTR pszDefault, LPTSTR pszString, WORD wMaxCount) {
+        LPCWSTR Ini::ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR pszDefault, LPTSTR pszString, WORD wMaxCount) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
-            GetPrivateProfileString(pszItem, pszSubItem, pszDefault, pszString, wMaxCount, m_szIniFile);
+            GetPrivateProfileStringW(pszItem, pszSubItem, pszDefault, pszString, wMaxCount, m_szIniFile);
             return pszString;
         }
 
-        bool Ini::ReadString(LPCTSTR pszItem, LPCTSTR pszSubItem, String &strString) {
+        bool Ini::ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strString) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
             bool ret = false;
             int iBufSize = 255;
-            TCHAR *pBuf = NULL;
+            WCHAR *pBuf = NULL;
             do 
             {
-                pBuf = (TCHAR*)malloc(iBufSize * sizeof(TCHAR));
+                pBuf = (WCHAR*)malloc(iBufSize * sizeof(WCHAR));
 				SetLastError(0);
-                DWORD dwRet = GetPrivateProfileString(pszItem, pszSubItem, TEXT("") ,pBuf, iBufSize, m_szIniFile);
+                DWORD dwRet = GetPrivateProfileStringW(pszItem, pszSubItem, L"" ,pBuf, iBufSize, m_szIniFile);
                 DWORD dwGLE = GetLastError();
                 if (dwRet == 0) {
                     ret = (dwGLE == 0);
@@ -96,66 +96,66 @@ namespace ppx {
             return ret;
         }
 
-		bool Ini::WriteInt(LPCTSTR pszItem, LPCTSTR pszSubItem, LONG ValueInt) {
+		bool Ini::WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0 || !pszItem || !pszSubItem)
+            if (wcslen(m_szIniFile) == 0 || !pszItem || !pszSubItem)
                 return false;
-            TCHAR szValue[50];
-            StringCchPrintf(szValue, 50, TEXT("%ld"), ValueInt);
+            WCHAR szValue[50];
+            StringCchPrintfW(szValue, 50, L"%ld", ValueInt);
             return WriteString(pszItem, pszSubItem, szValue);
         }
 
-        bool Ini::WriteRGBColor(LPCTSTR pszItem, LPCTSTR pszSubItem, COLORREF ValueColor) {
-            TCHAR szValue[50];
-            StringCchPrintf(szValue, 50, TEXT("%d,%d,%d"), GetRValue(ValueColor), GetGValue(ValueColor), GetBValue(ValueColor));
-
-            return WriteString(pszItem, pszSubItem, szValue);
-        }
-
-        bool Ini::WritePoint(LPCTSTR pszItem, LPCTSTR pszSubItem, POINT ValuePoint) {
-            TCHAR szValue[50];
-            StringCchPrintf(szValue, 50, TEXT("%d,%d"), ValuePoint.x, ValuePoint.y);
+        bool Ini::WriteRGBColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF ValueColor) {
+            WCHAR szValue[50];
+            StringCchPrintfW(szValue, 50, L"%d,%d,%d", GetRValue(ValueColor), GetGValue(ValueColor), GetBValue(ValueColor));
 
             return WriteString(pszItem, pszSubItem, szValue);
         }
 
-        bool Ini::WriteSize(LPCTSTR pszItem, LPCTSTR pszSubItem, SIZE ValueSize) {
-            TCHAR szValue[50];
-            StringCchPrintf(szValue, 50, TEXT("%d,%d"), ValueSize.cx, ValueSize.cy);
+        bool Ini::WritePoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT ValuePoint) {
+            WCHAR szValue[50];
+            StringCchPrintfW(szValue, 50, L"%d,%d", ValuePoint.x, ValuePoint.y);
 
             return WriteString(pszItem, pszSubItem, szValue);
         }
 
-        bool Ini::WriteRect(LPCTSTR pszItem, LPCTSTR pszSubItem, RECT ValueRect) {
-            TCHAR szValue[50];
-            StringCchPrintf(szValue, 50, TEXT("%d,%d,%d,%d"), ValueRect.left, ValueRect.top, ValueRect.right, ValueRect.bottom);
+        bool Ini::WriteSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE ValueSize) {
+            WCHAR szValue[50];
+            StringCchPrintfW(szValue, 50, L"%d,%d", ValueSize.cx, ValueSize.cy);
 
             return WriteString(pszItem, pszSubItem, szValue);
         }
 
-        bool Ini::WriteString(LPCTSTR pszItem, LPCTSTR pszSubItem, LPCTSTR ValueString) {
+        bool Ini::WriteRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT ValueRect) {
+            WCHAR szValue[50];
+            StringCchPrintfW(szValue, 50, L"%d,%d,%d,%d", ValueRect.left, ValueRect.top, ValueRect.right, ValueRect.bottom);
+
+            return WriteString(pszItem, pszSubItem, szValue);
+        }
+
+        bool Ini::WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR ValueString) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0 || ValueString == NULL || !pszItem || !pszSubItem)
+            if (wcslen(m_szIniFile) == 0 || ValueString == NULL || !pszItem || !pszSubItem)
                 return false;
 
             return WritePrivateProfileString(pszItem, pszSubItem, ValueString, m_szIniFile) == TRUE;
         }
 
-		bool Ini::WriteString(LPCTSTR pszItem, LPCTSTR pszSubItem, const String& ValueString) {
-			return WriteString(pszItem, pszSubItem, ValueString.GetDataPointer());
+		bool Ini::WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring& ValueString) {
+			return WriteString(pszItem, pszSubItem, ValueString.c_str());
 		}
 
-		bool Ini::ReadRect(LPCTSTR pszItem, LPCTSTR pszSubItem, RECT & ValueRect) {
+		bool Ini::ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT & ValueRect) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
-            TCHAR szReadData[64] = TEXT("");
+            WCHAR szReadData[64] = L"";
             ZeroMemory(&ValueRect, sizeof(ValueRect));
 
-            GetPrivateProfileString(pszItem, pszSubItem, TEXT(""), szReadData, 64, m_szIniFile);
+            GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
 
             if (szReadData[0] != 0) {
-                LPCTSTR pszString = szReadData;
+                LPCWSTR pszString = szReadData;
                 ValueRect.left = SwitchStringToValue(pszString);
                 ValueRect.top = SwitchStringToValue(pszString);
                 ValueRect.right = SwitchStringToValue(pszString);
@@ -167,17 +167,17 @@ namespace ppx {
             return false;
         }
 
-        bool Ini::ReadSize(LPCTSTR pszItem, LPCTSTR pszSubItem, SIZE & ValueSize) {
+        bool Ini::ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE & ValueSize) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
-            TCHAR szReadData[64] = TEXT("");
+            WCHAR szReadData[64] = L"";
             ZeroMemory(&ValueSize, sizeof(ValueSize));
 
-            GetPrivateProfileString(pszItem, pszSubItem, TEXT(""), szReadData, 64, m_szIniFile);
+            GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
 
             if (szReadData[0] != 0) {
-                LPCTSTR pszString = szReadData;
+                LPCWSTR pszString = szReadData;
                 ValueSize.cx = SwitchStringToValue(pszString);
                 ValueSize.cy = SwitchStringToValue(pszString);
 
@@ -187,17 +187,17 @@ namespace ppx {
             return false;
         }
 
-        bool Ini::ReadPoint(LPCTSTR pszItem, LPCTSTR pszSubItem, POINT & ValuePoint) {
+        bool Ini::ReadPoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT & ValuePoint) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
-            TCHAR szReadData[64] = TEXT("");
+            WCHAR szReadData[64] = L"";
             ZeroMemory(&ValuePoint, sizeof(ValuePoint));
 
-            GetPrivateProfileString(pszItem, pszSubItem, TEXT(""), szReadData, 64, m_szIniFile);
+            GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
 
             if (szReadData[0] != 0) {
-                LPCTSTR pszString = szReadData;
+                LPCWSTR pszString = szReadData;
                 ValuePoint.x = SwitchStringToValue(pszString);
                 ValuePoint.y = SwitchStringToValue(pszString);
 
@@ -207,16 +207,16 @@ namespace ppx {
             return false;
         }
 
-        bool Ini::ReadColor(LPCTSTR pszItem, LPCTSTR pszSubItem, COLORREF & ValueColor) {
+        bool Ini::ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF & ValueColor) {
             assert(m_szIniFile[0] != 0);
-            if (_tcslen(m_szIniFile) == 0)
+            if (wcslen(m_szIniFile) == 0)
                 return false;
-            TCHAR szReadData[64] = TEXT("");
+            WCHAR szReadData[64] = L"";
             ZeroMemory(&ValueColor, sizeof(ValueColor));
-            GetPrivateProfileString(pszItem, pszSubItem, TEXT(""), szReadData, 64, m_szIniFile);
+            GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
 
             if (szReadData[0] != 0) {
-                LPCTSTR pszString = szReadData;
+                LPCWSTR pszString = szReadData;
                 ValueColor = RGB(SwitchStringToValue(pszString), SwitchStringToValue(pszString), SwitchStringToValue(pszString));
 
                 return true;
@@ -225,16 +225,16 @@ namespace ppx {
             return false;
         }
 
-        LONG Ini::SwitchStringToValue(LPCTSTR & pszSring) {
+        LONG Ini::SwitchStringToValue(LPCWSTR & pszSring) {
             assert((pszSring != NULL) && (pszSring[0] != 0));
             if ((pszSring == NULL) || (pszSring[0] == 0)) return 0L;
 
-            while (((pszSring[0] > 0) && (pszSring[0] < TEXT('0'))) || (pszSring[0] > TEXT('9'))) 
+            while (((pszSring[0] > 0) && (pszSring[0] < L'0')) || (pszSring[0] > L'9')) 
                 pszSring++;
 
             LONG lValue = 0L;
-            while ((pszSring[0] >= TEXT('0')) && (pszSring[0] <= TEXT('9'))) {
-                lValue = lValue * 10L + pszSring[0] - TEXT('0');
+            while ((pszSring[0] >= L'0') && (pszSring[0] <= L'9')) {
+                lValue = lValue * 10L + pszSring[0] - L'0';
                 ++pszSring;
             }
 

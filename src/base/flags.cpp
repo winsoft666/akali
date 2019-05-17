@@ -268,9 +268,9 @@ namespace ppx {
 
             // iterate over the returned wide strings;
             for (int i = 0; i < argc_; ++i) {
-                StringUTF8 s =  UnicodeToUtf8(wide_argv[i]);
-                char *buffer = new char[s.GetLength() + 1];
-                strcpy_s(buffer, s.GetLength() + 1, s.GetDataPointer());
+                std::string s =  UnicodeToUtf8(wide_argv[i]);
+                char *buffer = new char[s.length() + 1];
+                strcpy_s(buffer, s.length() + 1, s.c_str());
 
                 // make sure the argv array has the right string at this point.
                 argv_[i] = buffer;

@@ -17,8 +17,8 @@
 
 
 #include "ppx_export.h"
-#include "base/string.h"
 #include <map>
+#include <string>
 
 namespace ppx
 {
@@ -26,25 +26,25 @@ namespace ppx
 
         class PPX_API CmdLineParser {
         public:
-			typedef std::map<StringUnicode, StringUnicode> ValsMap;
+			typedef std::map<std::wstring, std::wstring> ValsMap;
 			typedef ValsMap::const_iterator ITERPOS;
 
-            explicit CmdLineParser(const StringUnicode &cmdline);
+            explicit CmdLineParser(const std::wstring &cmdline);
             ~CmdLineParser();
 
             ITERPOS Begin() const;
             ITERPOS End() const;
 
-            bool HasKey(const StringUnicode &key) const;
+            bool HasKey(const std::wstring &key) const;
 
-            bool HasVal(const StringUnicode &key) const;
+            bool HasVal(const std::wstring &key) const;
 
-            StringUnicode GetVal(const StringUnicode &key) const;
+            std::wstring GetVal(const std::wstring &key) const;
 
         private:
-            bool Parse(const StringUnicode &cmdline);
+            bool Parse(const std::wstring &cmdline);
 
-            StringUnicode         cmdline_;
+            std::wstring         cmdline_;
 			class Impl;
 			Impl*		   impl_;
         };

@@ -17,7 +17,6 @@
 #pragma once
 
 #include <string>
-#include "base/string.h"
 #include "ppx_export.h"
 
 namespace ppx
@@ -43,7 +42,7 @@ namespace ppx
 		// Helper function.
         PPX_API std::string GetStringMd5(const std::string &str);
         PPX_API std::string GetStringMd5(const void *buffer, unsigned int buffer_size);
-        PPX_API std::string GetFileMd5(const StringANSI &file_path);
+        PPX_API std::string GetFileMd5(const std::string &file_path);
     }
 }
 

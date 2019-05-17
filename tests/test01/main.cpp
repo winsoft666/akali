@@ -9,7 +9,7 @@ using namespace ppx;
 std::atomic<bool> over;
 std::atomic<ppx::net::FileTransferBase::Status> g_state;
 
-void StatusCB(base::StringUTF8 filePath, ppx::net::FileTransferBase::Status state, base::StringUTF8 reason, int64_t used_millsec) {
+void StatusCB(std::string filePath, ppx::net::FileTransferBase::Status state, std::string reason, int64_t used_millsec) {
     g_state = state;
 
     if (g_state == ppx::net::FileTransferBase::Status::Finished || g_state == ppx::net::FileTransferBase::Status::Failed) {
@@ -17,7 +17,7 @@ void StatusCB(base::StringUTF8 filePath, ppx::net::FileTransferBase::Status stat
     }
 }
 
-void ProgressCB(base::StringUTF8 filePath, int64_t total, int64_t transfered) {
+void ProgressCB(std::string filePath, int64_t total, int64_t transfered) {
     static double last_per = 0.f;
     if (total > 0) {
         double per = ((double)transfered / (double)total * 100.0);

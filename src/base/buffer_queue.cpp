@@ -40,11 +40,11 @@ namespace ppx {
 			QUEUE_ELEMENT *last_element_;
 			unsigned int element_num_;
 			unsigned int total_data_size_;
-            StringANSI queue_name_;
+            std::string queue_name_;
 			std::recursive_mutex queue_mutex_;
 		};
 
-        BufferQueue::BufferQueue(const StringANSI &queue_name) {
+        BufferQueue::BufferQueue(const std::string &queue_name) {
 			impl_ = new BufferQueueImpl();
 
 			impl_->queue_name_ = queue_name;
@@ -166,7 +166,7 @@ namespace ppx {
                 }
             }
 
-            TraceMsgA("Buffer Queue(%s): Add data to front element: data-size %d.\n", impl_->queue_name_.GetDataPointer(), nSrcDataSize);
+            TraceMsgA("Buffer Queue(%s): Add data to front element: data-size %d.\n", impl_->queue_name_.c_str(), nSrcDataSize);
 
             return true;
         }
@@ -215,7 +215,7 @@ namespace ppx {
                 }
             }
 
-			TraceMsgA("Buffer Queue(%s): Add data to last element: data-size %d.\n", impl_->queue_name_.GetDataPointer(), nSrcDataSize);
+			TraceMsgA("Buffer Queue(%s): Add data to last element: data-size %d.\n", impl_->queue_name_.c_str(), nSrcDataSize);
 
             return true;
         }
@@ -264,7 +264,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): pop data from front element: data-size %d.\n", impl_->queue_name_.GetDataPointer(), rvalue);
+			TraceMsgA("Buffer Queue(%s): pop data from front element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -311,7 +311,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): pop data from last element: data-size %d.\n", impl_->queue_name_.GetDataPointer(), rvalue);
+			TraceMsgA("Buffer Queue(%s): pop data from last element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -372,7 +372,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): pop data from %d element(s): data-size %d.\n", impl_->queue_name_.GetDataPointer(), nOutBufferNum, rvalue);
+			TraceMsgA("Buffer Queue(%s): pop data from %d element(s): data-size %d.\n", impl_->queue_name_.c_str(), nOutBufferNum, rvalue);
 
             return rvalue;
         }
@@ -396,7 +396,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): get data from front element: data-size %d.\n", impl_->queue_name_.GetDataPointer(), rvalue);
+			TraceMsgA("Buffer Queue(%s): get data from front element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -421,7 +421,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): get data from last element: data-size %d.\n", impl_->queue_name_.GetDataPointer(), rvalue);
+			TraceMsgA("Buffer Queue(%s): get data from last element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -455,7 +455,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): remove data from %d element(s): data-size %d.\n", impl_->queue_name_.GetDataPointer(), rvalue, nBytesToRemove - nByteNeed);
+			TraceMsgA("Buffer Queue(%s): remove data from %d element(s): data-size %d.\n", impl_->queue_name_.c_str(), rvalue, nBytesToRemove - nByteNeed);
 
             return rvalue;
         }
@@ -497,7 +497,7 @@ namespace ppx {
 			impl_->element_num_ = 0;
 			impl_->total_data_size_ = 0;
 
-			TraceMsgA("Buffer Queue(%s): clear all data\n", impl_->queue_name_.GetDataPointer());
+			TraceMsgA("Buffer Queue(%s): clear all data\n", impl_->queue_name_.c_str());
 
             return rvalue;
         }

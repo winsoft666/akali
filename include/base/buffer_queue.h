@@ -17,8 +17,8 @@
 #define PPX_BASE_BUFFER_QUEUE_H__
 
 #include <mutex>
+#include <string>
 #include "base/constructormagic.h"
-#include "base/string.h"
 #include "ppx_export.h"
 
 namespace ppx {
@@ -33,7 +33,7 @@ namespace ppx {
 
         class PPX_API BufferQueue {
         public:
-            explicit BufferQueue(const StringANSI& queue_name = "");
+            explicit BufferQueue(const std::string& queue_name = "");
             ~BufferQueue();
 
             bool AddToFront(void *pSrcData, unsigned int nSrcDataSize);

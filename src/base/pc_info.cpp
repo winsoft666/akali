@@ -14,10 +14,10 @@
 
 
 #include "base/pc_info.h"
-#include "base/string.h"
 #include <WinSock2.h>
 #include <Iphlpapi.h>
 #include <thread>
+#include "base/string_helper.h"
 
 namespace ppx {
     namespace base {
@@ -279,11 +279,11 @@ namespace ppx {
 				return 0;
 
 			int64_t ret = 0L;
-			std::vector<base::StringA> mac_values;
-			base::StringSplitA(strMac.c_str(), "-", mac_values);
+			std::vector<std::string> mac_values;
+			mac_values = StringSplit(strMac, "-");
 
 			for (size_t i = 0; i < mac_values.size(); i++) {
-				int64_t l = strtol(mac_values[i].GetDataPointer(), NULL, 16) * pow(10, i * 3);
+				int64_t l = strtol(mac_values[i].c_str(), NULL, 16) * pow(10, i * 3);
 				ret += l;
 			}
 

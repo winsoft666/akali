@@ -14,10 +14,11 @@
 
 #include "net/file_transfer_base.h"
 #include "base/timeutils.h"
-#include "base/string.h"
 #include "base/safe_release_macro.h"
+#include "base/string_helper.h"
 #include <inttypes.h>
 #include <algorithm>
+
 
 namespace ppx {
     namespace net {
@@ -61,23 +62,23 @@ namespace ppx {
             return thread_num_;
         }
 
-        void FileTransferBase::SetUrl(const base::StringUTF8 &url) {
+        void FileTransferBase::SetUrl(const std::string &url) {
             if (base_impl_->status_ != Progress)
 				url_ = url;
         }
 
-        base::StringUTF8 FileTransferBase::GetUrl() const {
+        std::string FileTransferBase::GetUrl() const {
             return url_;
         }
 
-        void FileTransferBase::SetFileDir(const base::StringUTF8 &filedir) {
+        void FileTransferBase::SetFileDir(const std::string &filedir) {
             if (base_impl_->status_ == Progress)
                 return;
 
 			file_dir_ = filedir;
 
-            if (file_dir_.GetLength() > 0) {
-                if (file_dir_[file_dir_.GetLength() - 1] != '\\' || file_dir_[file_dir_.GetLength() - 1] != '/') {
+            if (file_dir_.length() > 0) {
+                if (file_dir_[file_dir_.length() - 1] != '\\' || file_dir_[file_dir_.length() - 1] != '/') {
 #ifdef _WIN32
 					file_dir_ += "\\";
 #else
@@ -87,71 +88,70 @@ namespace ppx {
             }
         }
 
-        base::StringUTF8 FileTransferBase::GetFileDir() const {
+        std::string FileTransferBase::GetFileDir() const {
             return file_dir_;
         }
 
-        void FileTransferBase::SetFileName(const base::StringUTF8 &filename) {
+        void FileTransferBase::SetFileName(const std::string &filename) {
             if (base_impl_->status_ == Progress)
                 return;
 
 			file_name_ = filename;
         }
 
-        base::StringUTF8 FileTransferBase::GetFileName() const {
+        std::string FileTransferBase::GetFileName() const {
             return file_name_;
         }
 
-        void FileTransferBase::SetFileExt(const base::StringUTF8 &ext) {
+        void FileTransferBase::SetFileExt(const std::string &ext) {
 			file_ext_ = ext;
         }
 
-        base::StringUTF8 FileTransferBase::GetFileExt() const {
+        std::string FileTransferBase::GetFileExt() const {
             return file_ext_;
         }
 
-        void FileTransferBase::SetFileMd5(const base::StringUTF8 &md5) {
+        void FileTransferBase::SetFileMd5(const std::string &md5) {
             if (base_impl_->status_ == Progress)
                 return;
-			file_md5_ = md5;
-			file_md5_.MakeLower();
+			file_md5_ = base::StringToLower(md5);
         }
 
-        base::StringUTF8 FileTransferBase::GetFileMd5() const {
+        std::string FileTransferBase::GetFileMd5() const {
             return file_md5_;
         }
 
         void FileTransferBase::GenerateTmpFileName(int64_t filesize) {
-            if (file_name_.GetLength() == 0) {
+            if (file_name_.length() == 0) {
                 // "must first set file path"
                 return;
             }
 
-            if (file_md5_.GetLength() == 0) {
+            if (file_md5_.length() == 0) {
                 char buf[50] = { 0 };
                 sprintf_s(buf, "%" PRId64 "", filesize);
-				tmp_filename_ = file_name_ + "_" + base::StringUTF8(buf);
+				tmp_filename_ = file_name_ + "_" + std::string(buf);
             }
             else {
 				tmp_filename_ = file_name_ + "_" + file_md5_;
             }
         }
 
-        base::StringUTF8 FileTransferBase::GetTmpFileName() const {
+        std::string FileTransferBase::GetTmpFileName() const {
             return tmp_filename_;
         }
 
-        base::StringUTF8 FileTransferBase::GetTmpFileExt() const {
+        std::string FileTransferBase::GetTmpFileExt() const {
             return tmp_fileext_;
         }
 
-        void FileTransferBase::SetCAPath(const base::StringUTF8 &caPath) {
+        void FileTransferBase::SetCAPath(const std::string &caPath) {
             if (base_impl_->status_ != Progress) {
 				ca_path_ = caPath;
             }
         }
 
-        base::StringUTF8 FileTransferBase::GetCAPath() const {
+        std::string FileTransferBase::GetCAPath() const {
             return ca_path_;
         }
 

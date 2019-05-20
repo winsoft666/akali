@@ -18,30 +18,31 @@
 
 #include <string>
 #include <vector>
+#include "ppx_export.h"
 
 namespace ppx {
 	namespace base {
-		std::string StringToLower(const std::string &str);
-		std::wstring StringToLower(const std::wstring &str);
+		PPX_API std::string StringToLower(const std::string &str);
+		PPX_API std::wstring StringToLower(const std::wstring &str);
 
-		std::string StringToUpper(const std::string &str);
-		std::wstring StringToUpper(const std::wstring &str);
+		PPX_API std::string StringToUpper(const std::string &str);
+		PPX_API std::wstring StringToUpper(const std::wstring &str);
 
-		std::vector<std::wstring> StringSplit(const std::wstring &src, const std::wstring& delimiter);
-		std::vector<std::string> StringSplit(const std::string &src, const std::string& delimiter);
+		PPX_API std::vector<std::wstring> StringSplit(const std::wstring &src, const std::wstring& delimiter);
+		PPX_API std::vector<std::string> StringSplit(const std::string &src, const std::string& delimiter);
 
-		int StringFind(const std::string &src, char ch, int iOffset = 0);
-		int StringFind(const std::string &src, const std::string & search, int iOffset = 0);
-		int StringReverseFind(const std::string &src, char ch, int iOffset = 0);
-		int StringReverseFind(const std::string &src, const std::string &search, int iOffset = 0);
+		PPX_API int StringFind(const std::string &src, char ch, int iOffset = 0);
+		PPX_API int StringFind(const std::string &src, const std::string & search, int iOffset = 0);
+		PPX_API int StringReverseFind(const std::string &src, char ch, int iOffset = 0);
+		PPX_API int StringReverseFind(const std::string &src, const std::string &search, int iOffset = 0);
 
-		int StringFind(const std::wstring &src, wchar_t ch, int iOffset = 0);
-		int StringFind(const std::wstring &src, const std::wstring & search, int iOffset = 0);
-		int StringReverseFind(const std::wstring &src, wchar_t ch, int iOffset = 0);
-		int StringReverseFind(const std::wstring &src, const std::wstring &search, int iOffset = 0);
+		PPX_API int StringFind(const std::wstring &src, wchar_t ch, int iOffset = 0);
+		PPX_API int StringFind(const std::wstring &src, const std::wstring & search, int iOffset = 0);
+		PPX_API int StringReverseFind(const std::wstring &src, wchar_t ch, int iOffset = 0);
+		PPX_API int StringReverseFind(const std::wstring &src, const std::wstring &search, int iOffset = 0);
 
-		std::string MakeString(const char* pstrFormat, ...);
-		std::wstring MakeString(const wchar_t* pstrFormat, ...);
+		PPX_API std::string MakeString(const char* pstrFormat, ...);
+		PPX_API std::wstring MakeString(const wchar_t* pstrFormat, ...);
 	}
 }
 

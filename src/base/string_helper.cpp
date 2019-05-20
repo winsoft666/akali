@@ -127,7 +127,7 @@ namespace ppx {
 				pos = StringFind(src_copy, delimiter);
 			}
 
-			fields.push_back(src);
+			fields.push_back(src_copy);
 			return fields;
 		}
 
@@ -145,7 +145,7 @@ namespace ppx {
 				pos = StringFind(src_copy, delimiter);
 			}
 
-			fields.push_back(src);
+			fields.push_back(src_copy);
 			return fields;
 		}
 

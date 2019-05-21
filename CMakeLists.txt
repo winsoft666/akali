@@ -35,6 +35,9 @@ message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
 
 set(STATIC_LIBNAME_SUFFIX "-static" 
 	CACHE STRING "Optional suffix to append to the library name for a static build")
+	
+set(DEBUG_LIBNAME_SUFFIX "-d" 
+	CACHE STRING "Optional suffix to append to the library name for a debug build")
 
 # Unicode Support
 add_definitions(-DUNICODE -D_UNICODE -DNOMINMAX)

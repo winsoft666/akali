@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 
-project(ppx CXX)
+project(ppxbase CXX)
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/ppx_config.h.in"
@@ -10,8 +10,6 @@ configure_file (
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(BUILD_TESTS "Build tests project" ON)
-option(PPX_NO_ENCRYPT "Without ENCRYPT module" ON)
-option(PPX_NO_HTTP "Without HTTP module" ON)
 option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
 
 
@@ -31,9 +29,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Debug Output
 message(STATUS "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}")
 message(STATUS "USE_STATIC_CRT=${USE_STATIC_CRT}")
-message(STATUS "PPX_NO_IPC=${PPX_NO_IPC}")
-message(STATUS "PPX_NO_ENCRYPT=${PPX_NO_ENCRYPT}")
-message(STATUS "PPX_NO_HTTP=${PPX_NO_HTTP}")
 message(STATUS "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
 message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
 

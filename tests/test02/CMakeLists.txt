@@ -1,3 +1,7 @@
+set(EXE_NAME test02)
+
+
+
 if (MSVC AND USE_STATIC_CRT)
     set(CompilerFlags
         CMAKE_CXX_FLAGS
@@ -12,59 +16,28 @@ if (MSVC AND USE_STATIC_CRT)
     endforeach()
 endif()
 
-
 if (NOT BUILD_SHARED_LIBS)
 	# Use ppx static library
 	add_definitions(-DPPX_STATIC)
 endif()
 
-
 add_executable(
-	test02-server
+	${EXE_NAME}
 	WIN32
-	server.cpp
-	ipc_test.h
-	ipc_test.cpp
+	main.cpp
 	)
 	
-add_executable(
-	test02-client
-	WIN32
-	client.cpp
-	ipc_test.h
-	ipc_test.cpp
-	)
-
-
 # Win32 Console
-set_target_properties(test02-server PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
-set_target_properties(test02-server PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
-
-set_target_properties(test02-client PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
-set_target_properties(test02-client PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
-
-# Include vcpkg include directory, is any best way?
-target_include_directories(test02-server PRIVATE 
-	${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
-
-target_include_directories(test02-client PRIVATE 
-	${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
+set_target_properties(${EXE_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
+set_target_properties(${EXE_NAME} PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
 
 
 if(BUILD_SHARED_LIBS)
-
-	# link ppx.lib
-	target_link_libraries(test02-client 
-		$<TARGET_LINKER_FILE:ppx> )
-		
-	target_link_libraries(test02-server 
-		$<TARGET_LINKER_FILE:ppx> )
+	target_link_libraries(${EXE_NAME} 
+		$<TARGET_LINKER_FILE:ppxbase> )
 else()
-	# link ppx.lib
-	target_link_libraries(test02-client 
-		$<TARGET_LINKER_FILE:ppx> )
+	target_link_libraries(${EXE_NAME} 
+		$<TARGET_LINKER_FILE:ppxbase> )
 
-	target_link_libraries(test02-server 
-		$<TARGET_LINKER_FILE:ppx> )
 endif()
 

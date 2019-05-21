@@ -23,7 +23,7 @@
     #include <windows.h>
 #endif
 #include <string>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 #pragma warning(disable: 4996)
 
@@ -54,7 +54,7 @@ namespace ppx {
             WIN_LAST    // Indicates error condition.
         };
 
-        class PPX_API OSVersion {
+        class PPXBASE_API OSVersion {
           public:
             OSVersion();
 

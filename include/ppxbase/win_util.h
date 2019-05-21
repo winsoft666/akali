@@ -33,6 +33,7 @@
 #include <limits>
 #include <Shlwapi.h>
 #include <TlHelp32.h>
+#include "ppxbase_export.h"
 
 
 #ifdef _X86_
@@ -41,10 +42,10 @@
 
 namespace ppx {
     namespace base {
-        double RoundEx(double v, int digits);
+		PPXBASE_API double RoundEx(double v, int digits);
 
-        bool FloatEqual(const float &f1, const float &f2);
-        bool FloatNotEqual(const float &f1, const float &f2);
+		PPXBASE_API bool FloatEqual(const float &f1, const float &f2);
+		PPXBASE_API bool FloatNotEqual(const float &f1, const float &f2);
     }
 }
 

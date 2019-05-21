@@ -17,7 +17,7 @@
 #define PPX_BASE_WIN_SERVICE_INSTALLER_H_
 #pragma once
 
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
@@ -42,7 +42,7 @@ namespace ppx {
         //   NOTE: If the function fails to install the service, it prints the error 
         //   in the standard output stream for users to diagnose the problem.
         //
-        PPX_API void InstallService(PWSTR pszServiceName,
+        PPXBASE_API void InstallService(PWSTR pszServiceName,
             PWSTR pszDisplayName,
             PWSTR pszDecription,
             DWORD dwStartType,
@@ -63,12 +63,12 @@ namespace ppx {
         //   NOTE: If the function fails to uninstall the service, it prints the 
         //   error in the standard output stream for users to diagnose the problem.
         //
-        PPX_API void UninstallService(PWSTR pszServiceName);
+        PPXBASE_API void UninstallService(PWSTR pszServiceName);
 
 
-        PPX_API void StartService(PWSTR pszServiceName);
+        PPXBASE_API void StartService(PWSTR pszServiceName);
 
-        PPX_API void StopService(PWSTR pszServiceName);
+        PPXBASE_API void StopService(PWSTR pszServiceName);
     }
 }
 

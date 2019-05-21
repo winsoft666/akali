@@ -26,12 +26,12 @@
 #endif
 #include <string>
 #include "ppxbase/timeutils.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx
 {
     namespace base {
-        class PPX_API FileInfo {
+        class PPXBASE_API FileInfo {
         public:
             FileInfo();
             ~FileInfo();

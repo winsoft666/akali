@@ -17,7 +17,7 @@
 #pragma once
 
 #include <string>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -28,7 +28,7 @@ namespace ppx {
     namespace base {
 
         template <typename T>
-        class PPX_API vm_allocator : public std::allocator<T> {
+        class PPXBASE_API vm_allocator : public std::allocator<T> {
         public:
             typedef size_t size_type;
             typedef T* pointer;

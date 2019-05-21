@@ -24,7 +24,7 @@
 #include "constructormagic.h"
 #include "deprecation.h"
 #include "stringencode.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
@@ -45,7 +45,7 @@ namespace ppx {
         };
 
         // Virtual sink interface that can receive log messages.
-        class PPX_API LogSink {
+        class PPXBASE_API LogSink {
         public:
             LogSink() {}
             virtual ~LogSink() {}
@@ -53,7 +53,7 @@ namespace ppx {
         };
 
 
-        class PPX_API LogMessage {
+        class PPXBASE_API LogMessage {
         public:
             LogMessage(const char* file, int line, LoggingSeverity sev, LogErrorContext err_ctx = ERRCTX_NONE, int err = 0);
 
@@ -111,7 +111,7 @@ namespace ppx {
 
         // This class is used to explicitly ignore values in the conditional logging macros. 
 		// This avoids compiler warnings like "value computed is not used" and "statement has no effect".
-        class PPX_API LogMessageVoidify {
+        class PPXBASE_API LogMessageVoidify {
         public:
             LogMessageVoidify() {}
             // This has to be an operator with a precedence lower than << but higher than ?:
@@ -143,8 +143,8 @@ namespace ppx {
 
 
 #ifdef _WIN32
-		PPX_API void TraceMsgW(const wchar_t *lpFormat, ...);
-		PPX_API void TraceMsgA(const char *lpFormat, ...);
+		PPXBASE_API void TraceMsgW(const wchar_t *lpFormat, ...);
+		PPXBASE_API void TraceMsgA(const char *lpFormat, ...);
 
 #if (defined UNICODE) || (defined _UNICODE)
 #define TraceMsg ppx::base::TraceMsgW

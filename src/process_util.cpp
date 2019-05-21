@@ -287,7 +287,7 @@ namespace ppx {
             return CreateProcess(NULL, szCL, NULL, NULL, bInheritHandles, 0, NULL, szDir, &si, lpProcessInfo);
         }
 
-        PPX_API BOOL EasyCreateProcess(const std::wstring &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles /*= FALSE*/) {
+        PPXBASE_API BOOL EasyCreateProcess(const std::wstring &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles /*= FALSE*/) {
             return EasyCreateProcess(strCmdLine.c_str(), lpProcessInfo, bInheritHandles);
         }
 
@@ -411,7 +411,7 @@ namespace ppx {
             return (TRUE);
         }
 
-        PPX_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
+        PPXBASE_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
             OSVERSIONINFO VersionTmp;
             VersionTmp.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
             GetVersionEx(&VersionTmp);

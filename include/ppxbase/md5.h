@@ -17,7 +17,7 @@
 #pragma once
 
 #include <string>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx
 {
@@ -32,17 +32,17 @@ namespace ppx
                 UWORD32 in[16];
             };
 
-            PPX_API void MD5Init(struct MD5Context *context);
-            PPX_API void MD5Update(struct MD5Context *context, md5byte const *buf, unsigned len);
-            PPX_API void MD5Final(md5byte digest[16], struct MD5Context *context);
-            PPX_API void MD5Buffer(const unsigned char *buf, unsigned int len, unsigned char sig[16]);
-            PPX_API void MD5SigToString(unsigned char sig[16], char *str, int len);
+            PPXBASE_API void MD5Init(struct MD5Context *context);
+            PPXBASE_API void MD5Update(struct MD5Context *context, md5byte const *buf, unsigned len);
+            PPXBASE_API void MD5Final(md5byte digest[16], struct MD5Context *context);
+            PPXBASE_API void MD5Buffer(const unsigned char *buf, unsigned int len, unsigned char sig[16]);
+            PPXBASE_API void MD5SigToString(unsigned char sig[16], char *str, int len);
         }
 
 		// Helper function.
-        PPX_API std::string GetStringMd5(const std::string &str);
-        PPX_API std::string GetStringMd5(const void *buffer, unsigned int buffer_size);
-        PPX_API std::string GetFileMd5(const std::string &file_path);
+        PPXBASE_API std::string GetStringMd5(const std::string &str);
+        PPXBASE_API std::string GetStringMd5(const void *buffer, unsigned int buffer_size);
+        PPXBASE_API std::string GetFileMd5(const std::string &file_path);
     }
 }
 

@@ -1,17 +1,17 @@
 #pragma once
 
 #include <atomic>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API IRefObj {
+        class PPXBASE_API IRefObj {
         public:
             virtual void AddRef() const = 0;
             virtual void Release() const = 0;
         };
 
-        class PPX_API RefCountedBase : public IRefObj {
+        class PPXBASE_API RefCountedBase : public IRefObj {
         public:
             RefCountedBase() : ref_count_(0) {
             }
@@ -39,7 +39,7 @@ namespace ppx {
 
 
         template <class T>
-        class ScopedRefPtr {
+        class PPXBASE_API ScopedRefPtr {
         public:
             ScopedRefPtr() : m_Ptr(nullptr) {}
 

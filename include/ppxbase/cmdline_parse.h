@@ -16,7 +16,7 @@
 #define PPX_BASE_CMDLIBE_PARSE_H__
 
 
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 #include <map>
 #include <string>
 
@@ -24,7 +24,7 @@ namespace ppx
 {
     namespace base {
 
-        class PPX_API CmdLineParser {
+        class PPXBASE_API CmdLineParser {
         public:
 			typedef std::map<std::wstring, std::wstring> ValsMap;
 			typedef ValsMap::const_iterator ITERPOS;

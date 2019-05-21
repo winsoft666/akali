@@ -16,13 +16,13 @@
 #define PPX_BASE_H_
 #pragma once
 #include "ppx_config.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 #include <functional>
 #include "ppxbase/constructormagic.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API IPC {
+        class PPXBASE_API IPC {
         public:
             IPC();
             virtual ~IPC();

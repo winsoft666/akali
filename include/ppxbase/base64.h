@@ -17,11 +17,11 @@
 
 #include <string>
 #include <vector>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API Base64 {
+        class PPXBASE_API Base64 {
         public:
             enum DecodeOption {
                 DO_PARSE_STRICT = 1,  // Parse only base64 characters

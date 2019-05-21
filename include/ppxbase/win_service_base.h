@@ -24,11 +24,11 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API WinServiceBase {
+        class PPXBASE_API WinServiceBase {
         public:
 
             // Register the executable for a service with the Service Control Manager 

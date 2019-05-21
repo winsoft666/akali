@@ -273,7 +273,7 @@ namespace ppx {
             return mac_ret;
         }
 
-		PPX_API int64_t GetValidMacInteger() {
+		PPXBASE_API int64_t GetValidMacInteger() {
 			std::string strMac = GetValidMAC();
 			if (strMac.length() == 0)
 				return 0;

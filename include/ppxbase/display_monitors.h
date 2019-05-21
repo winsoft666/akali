@@ -17,6 +17,7 @@
 #pragma once
 
 #include <vector>
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
@@ -42,7 +43,7 @@ namespace ppx {
             int scale;
         } DSPMONITOR;
 
-        class DisplayMonitors {
+        class PPXBASE_API DisplayMonitors {
         public:
             DisplayMonitors();
             ~DisplayMonitors();

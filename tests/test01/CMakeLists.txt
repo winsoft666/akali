@@ -43,16 +43,8 @@ set_target_properties(test01-server PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
 set_target_properties(test01-client PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
 set_target_properties(test01-client PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
 
-# Include vcpkg include directory, is any best way?
-target_include_directories(test01-server PRIVATE 
-	${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
-
-target_include_directories(test01-client PRIVATE 
-	${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
-
 
 if(BUILD_SHARED_LIBS)
-
 	# link ppxbase.lib
 	target_link_libraries(test01-client 
 		$<TARGET_LINKER_FILE:ppxbase> )
@@ -60,7 +52,7 @@ if(BUILD_SHARED_LIBS)
 	target_link_libraries(test01-server 
 		$<TARGET_LINKER_FILE:ppxbase> )
 else()
-	# link libppxbase.lib
+	# link ppxbase-static.lib
 	target_link_libraries(test01-client 
 		$<TARGET_LINKER_FILE:ppxbase> )
 

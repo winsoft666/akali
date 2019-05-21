@@ -17,13 +17,13 @@
 #define PPX_BASE_RANDOM_H_
 #pragma once
 #include <limits>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 #include "ppxbase/assert.h"
 #include "ppxbase/constructormagic.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API Random {
+        class PPXBASE_API Random {
         public:
             Random();
 

@@ -17,18 +17,18 @@
 #ifndef PPX_BASE_FILE_UTIL_H_
 #define PPX_BASE_FILE_UTIL_H_
 #pragma once
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        PPX_API bool DeleteDir(const char* pszDir);
-        PPX_API bool CreateDir(const wchar_t* pszDir);
-        PPX_API bool CreateDir(const char* pszDir);
+        PPXBASE_API bool DeleteDir(const char* pszDir);
+        PPXBASE_API bool CreateDir(const wchar_t* pszDir);
+        PPXBASE_API bool CreateDir(const char* pszDir);
 
          // bCopySource: 
          // CopyDir(L"D:\\test", L"E:\\", true, &num); will create new folder named 'test' in E:\\
          //
-        PPX_API void CopyDir(const wchar_t* pszSource, const wchar_t* pszDest, bool bCopySource, int *pIgnoreNum);
+        PPXBASE_API void CopyDir(const wchar_t* pszSource, const wchar_t* pszDest, bool bCopySource, int *pIgnoreNum);
     }
 }
 

@@ -16,7 +16,7 @@
 #define PPX_BASE_ASSERT_H__
 #pragma once
 
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 #if !defined(PPX_ASSERT_ENABLED)
     #if !defined(NDEBUG) // if we are in debug mode
@@ -95,7 +95,7 @@ extern void __cdecl __debugbreak(void);
 namespace ppx {
     namespace Internal {
 
-        PPX_API void HandleAssert(const char *file, int line, const char *function, const char *expression, const char *message, ...);
+        PPXBASE_API void HandleAssert(const char *file, int line, const char *function, const char *expression, const char *message, ...);
 
         template< typename T>
         class AssertUsedWrapper {

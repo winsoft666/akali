@@ -16,7 +16,7 @@
 #define PPX_BASE_CRITICAL_SECTION_H__
 #pragma once
 #include "constructormagic.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -25,7 +25,7 @@
 
 namespace ppx {
     namespace base {
-        class PPX_API CriticalSection {
+        class PPXBASE_API CriticalSection {
           public:
             CriticalSection();
             ~CriticalSection();
@@ -38,7 +38,7 @@ namespace ppx {
             mutable CRITICAL_SECTION crit_;
         };
 
-        class PPX_API CritScope {
+        class PPXBASE_API CritScope {
           public:
             explicit CritScope(const CriticalSection *pCS);
             ~CritScope();

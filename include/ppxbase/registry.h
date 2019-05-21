@@ -23,11 +23,11 @@
 #include <windows.h>
 #include <vector>
 #include <string>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
 	namespace base {
-		class PPX_API RegKey {
+		class PPXBASE_API RegKey {
 		public:
 			// hkeyRoot can be one of :
 			// HKEY_CLASSES_ROOT 

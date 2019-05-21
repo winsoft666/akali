@@ -22,14 +22,14 @@
 #endif
 #include <windows.h>
 #include <tchar.h>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
         typedef struct _EXCEPTION_POINTERS EXCEPTION_POINTERS, *PEXCEPTION_POINTERS;
 
-        PPX_API int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR *szDumpNamePrefix);
-        PPX_API void DumpMiniDump(HANDLE hFile, PEXCEPTION_POINTERS excpInfo);
+        PPXBASE_API int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR *szDumpNamePrefix);
+        PPXBASE_API void DumpMiniDump(HANDLE hFile, PEXCEPTION_POINTERS excpInfo);
     }
 }
 

@@ -24,11 +24,11 @@
 #endif
 #include <windows.h>
 #include "ppxbase/stringencode.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API Ini {
+        class PPXBASE_API Ini {
           public:
             Ini();
             virtual ~Ini();

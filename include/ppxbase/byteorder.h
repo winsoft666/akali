@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <winsock2.h>
 #include "ppxbase/endianess_detect.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
@@ -53,41 +53,41 @@ namespace ppx {
     #endif  // defined(ARCH_CPU_LITTLE_ENDIAN)
 
         // Reading and writing of little and big-endian numbers from memory
-        PPX_API void Set8(void *memory, size_t offset, uint8_t v);
+        PPXBASE_API void Set8(void *memory, size_t offset, uint8_t v);
 
-        PPX_API uint8_t Get8(const void *memory, size_t offset);
+        PPXBASE_API uint8_t Get8(const void *memory, size_t offset);
 
-        PPX_API void SetBE16(void *memory, uint16_t v);
+        PPXBASE_API void SetBE16(void *memory, uint16_t v);
 
-        PPX_API void SetBE32(void *memory, uint32_t v);
+        PPXBASE_API void SetBE32(void *memory, uint32_t v);
 #if _WIN32_WINNT>=0x0602 || WINVER>=0x0602 // Win8
-        PPX_API void SetBE64(void *memory, uint64_t v);
-        PPX_API uint64_t GetBE64(const void *memory);
-        PPX_API uint64_t HostToNetwork64(uint64_t n);
-        PPX_API uint64_t NetworkToHost64(uint64_t n);
+        PPXBASE_API void SetBE64(void *memory, uint64_t v);
+        PPXBASE_API uint64_t GetBE64(const void *memory);
+        PPXBASE_API uint64_t HostToNetwork64(uint64_t n);
+        PPXBASE_API uint64_t NetworkToHost64(uint64_t n);
 #endif
-        PPX_API void SetLE64(void *memory, uint64_t v);
-        PPX_API uint16_t GetBE16(const void *memory);
+        PPXBASE_API void SetLE64(void *memory, uint64_t v);
+        PPXBASE_API uint16_t GetBE16(const void *memory);
 
-        PPX_API uint32_t GetBE32(const void *memory);
+        PPXBASE_API uint32_t GetBE32(const void *memory);
 
-        PPX_API void SetLE16(void *memory, uint16_t v);
+        PPXBASE_API void SetLE16(void *memory, uint16_t v);
 
-        PPX_API void SetLE32(void *memory, uint32_t v);
+        PPXBASE_API void SetLE32(void *memory, uint32_t v);
 
-        PPX_API uint16_t GetLE16(const void *memory);
+        PPXBASE_API uint16_t GetLE16(const void *memory);
 
-        PPX_API uint32_t GetLE32(const void *memory);
+        PPXBASE_API uint32_t GetLE32(const void *memory);
 
-        PPX_API uint64_t GetLE64(const void *memory);
+        PPXBASE_API uint64_t GetLE64(const void *memory);
 
-        PPX_API uint16_t HostToNetwork16(uint16_t n);
+        PPXBASE_API uint16_t HostToNetwork16(uint16_t n);
 
-        PPX_API uint32_t HostToNetwork32(uint32_t n);
+        PPXBASE_API uint32_t HostToNetwork32(uint32_t n);
 
-        PPX_API uint16_t NetworkToHost16(uint16_t n);
+        PPXBASE_API uint16_t NetworkToHost16(uint16_t n);
 
-        PPX_API uint32_t NetworkToHost32(uint32_t n);
+        PPXBASE_API uint32_t NetworkToHost32(uint32_t n);
 
     }
 }

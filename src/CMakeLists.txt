@@ -31,7 +31,7 @@ source_group("Header Files\\ppxbase"   	FILES ${BASE_HEADER_FILES})
 set(_LINK_LIBRARYS "")
 
 if(BUILD_SHARED_LIBS)
-	add_definitions(-DPPX_EXPORTS)
+	add_definitions(-DPPXBASE_EXPORTS)
 	
 	add_library(
 		${LIB_NAME}
@@ -46,7 +46,7 @@ if(BUILD_SHARED_LIBS)
 						OUTPUT_NAME ${LIB_NAME} )
 	
 else()
-	add_definitions(-DPPX_STATIC -DCURL_STATICLIB)
+	add_definitions(-DPPXBASE_STATIC)
 	
 	add_library(
 		${LIB_NAME}
@@ -76,10 +76,17 @@ set_property(GLOBAL PROPERTY PPX_LINK_LIBRARYS "${_LINK_LIBRARYS}" )
 
 
 install(TARGETS ${LIB_NAME}
-	 RUNTIME DESTINATION bin
-	 LIBRARY DESTINATION lib
-	 ARCHIVE DESTINATION lib)
+	CONFIGURATIONS Debug
+	RUNTIME DESTINATION bin/Debug
+	LIBRARY DESTINATION lib/Debug
+	ARCHIVE DESTINATION lib/Debug)
+	
+install(TARGETS ${LIB_NAME}
+	CONFIGURATIONS Release
+	RUNTIME DESTINATION bin/Release
+	LIBRARY DESTINATION lib/Release
+	ARCHIVE DESTINATION lib/Release)
 
-install(FILES ${ROOT_HEADER_FILES} 			DESTINATION include)
+install(FILES ../include/ppx_base.h 		DESTINATION include)
 install(FILES ${BASE_HEADER_FILES} 			DESTINATION include/ppxbase)
 

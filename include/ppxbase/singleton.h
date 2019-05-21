@@ -17,7 +17,7 @@
 #pragma once
 
 #include <mutex>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {

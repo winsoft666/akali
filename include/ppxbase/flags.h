@@ -69,7 +69,7 @@ namespace ppx {
 
 
         // Each flag can be accessed programmatically via a Flag object.
-        class Flag {
+        class PPXBASE_API Flag {
           public:
             enum Type { BOOL, INT, FLOAT, STRING };
 
@@ -197,7 +197,7 @@ namespace ppx {
 
 
         // The global list of all flags.
-        class FlagList {
+        class PPXBASE_API FlagList {
           public:
             FlagList();
 
@@ -261,7 +261,7 @@ namespace ppx {
         // This encapsulates all the work of getting the command line and translating
         // it to an array of 8-bit strings; all you have to do is create one of these,
         // and then call argc() and argv().
-        class WindowsCommandLineArguments {
+        class PPXBASE_API WindowsCommandLineArguments {
           public:
             WindowsCommandLineArguments();
             ~WindowsCommandLineArguments();

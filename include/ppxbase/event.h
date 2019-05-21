@@ -16,6 +16,7 @@
 #define PPX_BASE_EVENT_H_
 
 #include "ppxbase/constructormagic.h"
+#include "ppxbase_export.h"
 #if defined(WIN32)
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -29,7 +30,7 @@
 
 namespace ppx {
     namespace base {
-        class Event {
+        class PPXBASE_API Event {
         public:
             static const int kForever = -1;
 

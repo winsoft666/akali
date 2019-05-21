@@ -6,10 +6,11 @@
 #endif
 #include <windows.h>
 #include <tchar.h>
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class ScheduleTask {
+        class PPXBASE_API ScheduleTask {
         public:
             ScheduleTask();
             virtual ~ScheduleTask();

@@ -12,27 +12,27 @@
 * file.
 *******************************************************************************/
 
-#ifndef PPX_EXPORT_H_
-#define PPX_EXPORT_H_
+#ifndef PPXBASE_EXPORT_H_
+#define PPXBASE_EXPORT_H_
 #pragma once
 
 
-#ifdef PPX_STATIC
-#define PPX_API 
+#ifdef PPXBASE_STATIC
+#define PPXBASE_API 
 #else
-#if defined(PPX_EXPORTS)
+#if defined(PPXBASE_EXPORTS)
 #	if defined(_MSC_VER)
-#		define PPX_API __declspec(dllexport)
+#		define PPXBASE_API __declspec(dllexport)
 #	else
-#		define PPX_API 
+#		define PPXBASE_API 
 #	endif
 #else
 #	if defined(_MSC_VER)
-#		define PPX_API __declspec(dllimport)
+#		define PPXBASE_API __declspec(dllimport)
 #	else
-#		define PPX_API 
+#		define PPXBASE_API 
 #	endif
 #endif
 #endif
 
-#endif // !PPX_EXPORT_H_
+#endif // !PPXBASE_EXPORT_H_

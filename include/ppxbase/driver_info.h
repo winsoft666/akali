@@ -18,14 +18,14 @@
 #pragma once
 
 #include <string>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
 
         enum { DRIVE_HOST = 7 };
 
-        class PPX_API DriveInfo {
+        class PPXBASE_API DriveInfo {
           public:
             static float GetFreeMB(int nDrive); // in MB
             static float GetTotalMB(int nDrive); // in MB

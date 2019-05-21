@@ -19,11 +19,11 @@
 #include <tchar.h>
 #include <wtypes.h>
 #include "ppxbase/logging.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API LoggingFileSinkWin : public LogSink {
+        class PPXBASE_API LoggingFileSinkWin : public LogSink {
         public:
             static LoggingFileSinkWin *GetSink();
         protected:

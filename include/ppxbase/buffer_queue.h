@@ -19,7 +19,7 @@
 #include <mutex>
 #include <string>
 #include "ppxbase/constructormagic.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
@@ -31,7 +31,7 @@ namespace ppx {
             struct QueueElem *next;
         } QUEUE_ELEMENT;
 
-        class PPX_API BufferQueue {
+        class PPXBASE_API BufferQueue {
         public:
             explicit BufferQueue(const std::string& queue_name = "");
             ~BufferQueue();

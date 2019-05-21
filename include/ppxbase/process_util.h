@@ -23,11 +23,11 @@
 #include <windows.h>
 #include <TlHelp32.h>
 #include <string>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
-        class PPX_API ProcessFinder {
+        class PPXBASE_API ProcessFinder {
           public:
 			// If use default param, CreateToolhelp32Snapshot With dwFlags = TH32CS_SNAPALL, th32ProcessID = 0
 			//
@@ -47,33 +47,33 @@ namespace ppx {
             HANDLE m_hSnapShot;
         };
 
-        PPX_API BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, BOOL bWaitProcess);
-        PPX_API BOOL EnablePrivilege(LPCTSTR szPrivilege, BOOL fEnable);
-        PPX_API BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin);
-        PPX_API BOOL TerminateProcess(DWORD dwProcessId, DWORD dwExitCode);
-        PPX_API BOOL TerminateProcess(LPCTSTR pszExeName, DWORD dwExitCode);
+        PPXBASE_API BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, BOOL bWaitProcess);
+        PPXBASE_API BOOL EnablePrivilege(LPCTSTR szPrivilege, BOOL fEnable);
+        PPXBASE_API BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin);
+        PPXBASE_API BOOL TerminateProcess(DWORD dwProcessId, DWORD dwExitCode);
+        PPXBASE_API BOOL TerminateProcess(LPCTSTR pszExeName, DWORD dwExitCode);
 
         // terminate all process that EXE file in szAppDir directory.
-        PPX_API void RecursiveTerminateProcess(LPCTSTR szAppDir, bool exclude_self);
+        PPXBASE_API void RecursiveTerminateProcess(LPCTSTR szAppDir, bool exclude_self);
 
-        PPX_API std::wstring GetCurrentProcessDirectoryW();
-        PPX_API std::string GetCurrentProcessDirectoryA();
+        PPXBASE_API std::wstring GetCurrentProcessDirectoryW();
+        PPXBASE_API std::string GetCurrentProcessDirectoryA();
 #if defined(UNICODE) || defined(_UNICODE)
 #define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryW
 #else
 #define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryA
 #endif
 
-        PPX_API BOOL MakesureProcessSingleInstance(LPCTSTR pszUniqueName);
+        PPXBASE_API BOOL MakesureProcessSingleInstance(LPCTSTR pszUniqueName);
 
         // 如果路径中含有空格，必须使用双引号引用
         //
-        PPX_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
-        PPX_API BOOL EasyCreateProcess(const std::wstring &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
+        PPXBASE_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
+        PPXBASE_API BOOL EasyCreateProcess(const std::wstring &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
 
-        PPX_API BOOL CreateUserProcess(PCTSTR pszFilePath);
+        PPXBASE_API BOOL CreateUserProcess(PCTSTR pszFilePath);
 
-        PPX_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
+        PPXBASE_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
     }
 }
 

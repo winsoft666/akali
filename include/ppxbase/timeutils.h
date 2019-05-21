@@ -27,11 +27,11 @@
 #endif
 #include <windows.h>
 #endif
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
 	namespace base {
-        class PPX_API Time {
+        class PPXBASE_API Time {
         public:
             Time();
             std::string ToString(
@@ -61,19 +61,19 @@ namespace ppx {
 
         
         // Windows: precision is milliseconds
-        Time GetLocalTime();
+		PPXBASE_API Time GetLocalTime();
 
         // Windows: precision is milliseconds
-        Time GetUTCTime();
+		PPXBASE_API Time GetUTCTime();
 
         // 从1970-01-01 00:00:00到当前格林威治时间（UTC）所经过的微妙数
-        long long GetTimeStamp();
+		PPXBASE_API long long GetTimeStamp();
 #if defined(_WIN32)
-        Time FILETIMEToUTC(FILETIME ft);
+		PPXBASE_API Time FILETIMEToUTC(FILETIME ft);
 #endif
-        long long UTCToTimeStamp(Time t);
+		PPXBASE_API long long UTCToTimeStamp(Time t);
 
-		class TimerMeter {
+		class PPXBASE_API TimerMeter {
 		public:
 			TimerMeter() {
 				lStartTime_ = std::clock();

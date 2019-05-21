@@ -1,5 +1,5 @@
 #include "ppx_base.h"
-#include "ppx_export.h"
+#include "ppxbase\ppxbase_export.h"
 
 #ifndef PPX_STATIC
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {

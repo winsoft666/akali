@@ -6,7 +6,7 @@
 #include "ppxbase/macros.h"
 #include "ppxbase/constructormagic.h"
 #include "scoped_ref_ptr.h"
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
     namespace base {
@@ -54,7 +54,7 @@ namespace ppx {
             // Creating a vtable for every BindState template instantiation results in a lot
             // of bloat. Its only task is to call the destructor which can be done with a
             // function pointer.
-            class PPX_API BindStateBase
+            class PPXBASE_API BindStateBase
                 : public RefCountedBase {
             public:
                 using InvokeFuncStorage = void(*)();
@@ -99,7 +99,7 @@ namespace ppx {
             // template bloat.
             // CallbackBase<MoveOnly> is a direct base class of MoveOnly callbacks, and
             // CallbackBase<Copyable> uses CallbackBase<MoveOnly> for its implementation.
-            class PPX_API CallbackBase {
+            class PPXBASE_API CallbackBase {
             public:
                 CallbackBase(CallbackBase &&c);
                 CallbackBase &operator=(CallbackBase &&c);
@@ -148,7 +148,7 @@ namespace ppx {
             };
 
             // CallbackBase<Copyable> is a direct base class of Copyable Callbacks.
-            class PPX_API CallbackBaseCopyable : public CallbackBase {
+            class PPXBASE_API CallbackBaseCopyable : public CallbackBase {
             public:
                 CallbackBaseCopyable(const CallbackBaseCopyable &c);
                 CallbackBaseCopyable(CallbackBaseCopyable &&c);

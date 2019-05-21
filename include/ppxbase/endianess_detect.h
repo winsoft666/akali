@@ -16,7 +16,7 @@
 #ifndef PPX_BASE_ENDIANESS_DETECT_H_
 #define PPX_BASE_ENDIANESS_DETECT_H_
 #pragma once
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 #include <stddef.h>  // for NULL, size_t
 #include <stdint.h>  // for uintptr_t and (u)int_t types.
 
@@ -51,7 +51,7 @@
 
 namespace pxx {
     namespace base {
-        PPX_API bool IsHostBigEndian();
+        PPXBASE_API bool IsHostBigEndian();
     }
 }
 

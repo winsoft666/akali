@@ -23,11 +23,11 @@
 #include <windows.h>
 #endif
 
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
 	namespace base {
-        PPX_API void SetCurrentThreadName(const char* name);
+        PPXBASE_API void SetCurrentThreadName(const char* name);
 	}
 }
 

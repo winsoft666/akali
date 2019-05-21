@@ -18,7 +18,7 @@
 #include <climits>
 #include <cstddef>
 #include <mutex>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 /*
 MemoryPool is mostly compliant with the C++ Standard Library allocators.
 This means you can use it with `allocator_traits`

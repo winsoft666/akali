@@ -21,12 +21,12 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
 	namespace base {
 
-		class PPX_API TimerBase {
+		class PPXBASE_API TimerBase {
 		public:
 			TimerBase();
 			virtual ~TimerBase();
@@ -46,7 +46,7 @@ namespace ppx {
 		};
 
 		template <class T>
-		class PPX_API TTimer : public TimerBase {
+		class PPXBASE_API TTimer : public TimerBase {
 		public:
 			typedef private void (T::*POnTimer)(void);
 

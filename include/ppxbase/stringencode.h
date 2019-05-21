@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "ppx_export.h"
+#include "ppxbase_export.h"
 
 namespace ppx {
 
@@ -30,48 +30,48 @@ namespace ppx {
         typedef size_t(*Transform)(char * buffer, size_t buflen, const char * source, size_t srclen);
 
         // Return the result of applying transform t to source.
-        PPX_API std::string s_transform(const std::string& source, Transform t);
+        PPXBASE_API std::string s_transform(const std::string& source, Transform t);
 
 
-        PPX_API size_t UrlDecode(char * buffer, size_t buflen, const char * source, size_t srclen);
-        PPX_API std::string UrlDecode(const std::string& source);
-        PPX_API std::string UrlEncode(const std::string &str);
+        PPXBASE_API size_t UrlDecode(char * buffer, size_t buflen, const char * source, size_t srclen);
+        PPXBASE_API std::string UrlDecode(const std::string& source);
+        PPXBASE_API std::string UrlEncode(const std::string &str);
 
         // Convert an unsigned value from 0 to 15 to the hex character equivalent...
-        PPX_API char HexEncode(unsigned char val);
+        PPXBASE_API char HexEncode(unsigned char val);
         // ...and vice-versa.
-        PPX_API bool HexDecode(char ch, unsigned char* val);
+        PPXBASE_API bool HexDecode(char ch, unsigned char* val);
 
         // hex_encode, but separate each byte representation with a delimiter.
         // delimiter == 0 means no delimiter. If the buffer is too short, we return 0
-        PPX_API size_t HexEncodeWithDelimiter(char* buffer, size_t buflen, const char* source, size_t srclen, char delimiter);
+        PPXBASE_API size_t HexEncodeWithDelimiter(char* buffer, size_t buflen, const char* source, size_t srclen, char delimiter);
 
-        PPX_API std::string HexEncode(const std::string& str);
-        PPX_API std::string HexEncode(const char* source, size_t srclen);
-        PPX_API std::string HexEncodeWithDelimiter(const char* source, size_t srclen, char delimiter);
+        PPXBASE_API std::string HexEncode(const std::string& str);
+        PPXBASE_API std::string HexEncode(const char* source, size_t srclen);
+        PPXBASE_API std::string HexEncodeWithDelimiter(const char* source, size_t srclen, char delimiter);
 
 
 
         // hex_decode, assuming that there is a delimiter between every byte pair.
         // delimiter == 0 means no delimiter. If the buffer is too short or the data is invalid, we return 0.
-        PPX_API size_t HexDecodeWithDelimiter(char* buffer, size_t buflen, const char* source, size_t srclen, char delimiter);
+        PPXBASE_API size_t HexDecodeWithDelimiter(char* buffer, size_t buflen, const char* source, size_t srclen, char delimiter);
 
-        PPX_API size_t HexDecode(char* buffer, size_t buflen, const std::string& source);
-        PPX_API size_t HexDecodeWithDelimiter(char* buffer, size_t buflen, const std::string& source, char delimiter);
+        PPXBASE_API size_t HexDecode(char* buffer, size_t buflen, const std::string& source);
+        PPXBASE_API size_t HexDecodeWithDelimiter(char* buffer, size_t buflen, const std::string& source, char delimiter);
 
 
 #ifdef _WIN32
         // About code_page, see https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
         //
-        PPX_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
-        PPX_API std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
-        PPX_API std::string UnicodeToUtf8(const std::wstring &str);
-        PPX_API std::wstring Utf8ToUnicode(const std::string &str);
-        PPX_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
-        PPX_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
+        PPXBASE_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
+        PPXBASE_API std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
+        PPXBASE_API std::string UnicodeToUtf8(const std::wstring &str);
+        PPXBASE_API std::wstring Utf8ToUnicode(const std::string &str);
+        PPXBASE_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
+        PPXBASE_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
 
-        PPX_API std::string UnicodeToUtf8BOM(const std::wstring &str);
-        PPX_API std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_page = 0);
+        PPXBASE_API std::string UnicodeToUtf8BOM(const std::wstring &str);
+        PPXBASE_API std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_page = 0);
 
 
 #ifdef UNICODE

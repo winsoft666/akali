@@ -15,7 +15,7 @@
 #ifndef PPX_BASE_H_
 #define PPX_BASE_H_
 #pragma once
-#include "ppx_config.h"
+
 #include "ppxbase_export.h"
 #include <functional>
 #include "ppxbase/constructormagic.h"

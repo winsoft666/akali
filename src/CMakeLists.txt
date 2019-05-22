@@ -33,6 +33,7 @@ set(_LINK_LIBRARYS "")
 
 if(BUILD_SHARED_LIBS)
 	add_definitions(-DPPXBASE_EXPORTS)
+	set(PPXBASE_STATIC NO)
 	
 	add_library(
 		${LIB_NAME}
@@ -48,6 +49,7 @@ if(BUILD_SHARED_LIBS)
 	
 else()
 	add_definitions(-DPPXBASE_STATIC)
+	set(PPXBASE_STATIC YES)
 	
 	add_library(
 		${LIB_NAME}
@@ -60,6 +62,9 @@ else()
 	# set output name prefix/suffix
     set_target_properties(${LIB_NAME} PROPERTIES 
 		OUTPUT_NAME ${LIB_NAME}${STATIC_LIBNAME_SUFFIX})
+		
+	set_target_properties(${LIB_NAME} PROPERTIES 
+		INTERFACE_COMPILE_DEFINITIONS PPXBASE_STATIC)
 endif()
 
 set_target_properties (${LIB_NAME} PROPERTIES 
@@ -79,10 +84,25 @@ set_target_properties(${LIB_NAME}
 set_property(GLOBAL PROPERTY PPX_LINK_LIBRARYS "${_LINK_LIBRARYS}" )
 
 
+target_include_directories(${LIB_NAME} INTERFACE
+	$<INSTALL_INTERFACE:include>)
+
 install(TARGETS ${LIB_NAME}
+	EXPORT ppxbase-target
 	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib)
+	
+export(TARGETS ${LIB_NAME}
+       APPEND FILE ${PROJECT_BINARY_DIR}/ppxbase-target.cmake
+       NAMESPACE PPXBASE::
+)
+
+install(EXPORT ppxbase-target
+        FILE ppxbase-target.cmake
+        NAMESPACE PPXBASE::
+        DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR}
+)
 
 install(FILES ../include/ppx_base.h 		DESTINATION include)
 install(FILES ${BASE_HEADER_FILES} 			DESTINATION include/ppxbase)

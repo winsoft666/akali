@@ -8,6 +8,7 @@ else()
 	include(${SELF_DIR}/ppxbase-target-${CMAKE_BUILD_TYPE}.cmake)
 endif()
 
-
-get_target_property(PPXBASE_INCLUDE_DIRS ppxbase INTERFACE_INCLUDE_DIRECTORIES)
-get_target_property(PPXBASE_LIBRARIES ppxbase "LOCATION${CMAKE_BUILD_TYPE}")
+if(TARGET ppxbase)
+	get_target_property(PPXBASE_INCLUDE_DIRS ppxbase INTERFACE_INCLUDE_DIRECTORIES)
+	get_target_property(PPXBASE_LIBRARIES ppxbase "LOCATION${CMAKE_BUILD_TYPE}")
+endif()

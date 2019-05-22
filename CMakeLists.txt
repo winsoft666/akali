@@ -22,8 +22,9 @@ if(WIN32)
 	endif()
 endif()
 
-
-if(WIN32 AND NOT CYGWIN)
+if(MSVC)
+  set(CURL_INSTALL_CMAKE_DIR share/ppxbase)
+elseif(WIN32 AND NOT CYGWIN)
   set(PPXBASE_INSTALL_CMAKE_DIR CMake)
 else()
   set(PPXBASE_INSTALL_CMAKE_DIR lib/cmake/ppxbase)

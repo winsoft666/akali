@@ -26,9 +26,7 @@ file(GLOB BASE_SOURCE_FILES 			./*.cpp)
 source_group("Source Files" 		    FILES ${BASE_SOURCE_FILES})
 
 source_group("Header Files" 			FILES ${ROOT_HEADER_FILES})
-source_group("Header Files/ppxbase"   	FILES ${BASE_HEADER_FILES})
-
-set(_LINK_LIBRARYS "")
+source_group("Header Files\\ppxbase"   	FILES ${BASE_HEADER_FILES})
 
 
 if(BUILD_SHARED_LIBS)
@@ -72,7 +70,7 @@ set_target_properties (${LIB_NAME} PROPERTIES
 
 target_link_libraries(${LIB_NAME} PRIVATE 
 	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
-list(APPEND _LINK_LIBRARYS Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
+
 
 # Set output directory
 set_target_properties(${LIB_NAME}
@@ -80,8 +78,6 @@ set_target_properties(${LIB_NAME}
 	ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
 	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
 	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" )
-
-set_property(GLOBAL PROPERTY PPX_LINK_LIBRARYS "${_LINK_LIBRARYS}" )
 
 
 target_include_directories(${LIB_NAME} INTERFACE
@@ -108,6 +104,7 @@ install(EXPORT ppxbase-target
 
 install(FILES ../include/ppx_base.h 
 	DESTINATION include)
+
 install(FILES ${BASE_HEADER_FILES} 
 	DESTINATION include/ppxbase)
 

@@ -83,28 +83,30 @@ set_target_properties(${LIB_NAME}
 target_include_directories(${LIB_NAME} INTERFACE
 	$<INSTALL_INTERFACE:include>)
 
+
 install(TARGETS ${LIB_NAME}
-	EXPORT ppxbase-target
+	EXPORT ppxbase
 	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib)
 	
-export(TARGETS ${LIB_NAME}
-       APPEND FILE ${PROJECT_BINARY_DIR}/ppxbase-target.cmake
-       NAMESPACE PPXBASE::
-)
+
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/ppxbase-config.cmake 
 	DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR})
-
-install(EXPORT ppxbase-target
-        FILE ppxbase-target.cmake
-        DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR}
-)
 
 install(FILES ../include/ppx_base.h 
 	DESTINATION include)
 
 install(FILES ${BASE_HEADER_FILES} 
 	DESTINATION include/ppxbase)
+
+export(TARGETS ${LIB_NAME}
+       APPEND FILE ${PROJECT_BINARY_DIR}/ppxbase-target.cmake
+)
+
+install(EXPORT ppxbase
+        FILE ppxbase-target.cmake
+        DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR}
+)
 

@@ -98,12 +98,16 @@ export(TARGETS ${LIB_NAME}
        NAMESPACE PPXBASE::
 )
 
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/ppxbase-config.cmake 
+	DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR})
+
 install(EXPORT ppxbase-target
         FILE ppxbase-target.cmake
-        NAMESPACE PPXBASE::
         DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR}
 )
 
-install(FILES ../include/ppx_base.h 		DESTINATION include)
-install(FILES ${BASE_HEADER_FILES} 			DESTINATION include/ppxbase)
+install(FILES ../include/ppx_base.h 
+	DESTINATION include)
+install(FILES ${BASE_HEADER_FILES} 
+	DESTINATION include/ppxbase)
 

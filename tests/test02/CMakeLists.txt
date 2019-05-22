@@ -18,7 +18,7 @@ endif()
 
 if (NOT BUILD_SHARED_LIBS)
 	# Use ppx static library
-	add_definitions(-DPPX_STATIC)
+	add_definitions(-DPPXBASE_STATIC)
 endif()
 
 add_executable(

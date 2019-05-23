@@ -72,7 +72,7 @@ else()
 endif()
 
 
-target_link_libraries(${LIB_NAME} PRIVATE 
+target_link_libraries(${LIB_NAME} PUBLIC 
 	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
 
 

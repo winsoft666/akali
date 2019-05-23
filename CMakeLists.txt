@@ -41,10 +41,6 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
 message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
 
 
-set(STATIC_LIBNAME_SUFFIX "-static" 
-	CACHE STRING "Optional suffix to append to the library name for a static build")
-mark_as_advanced(STATIC_LIBNAME_SUFFIX)
-
 set(DEBUG_LIBNAME_SUFFIX "-d" 
 	CACHE STRING "Optional suffix to append to the library name for a debug build")
 mark_as_advanced(DEBUG_LIBNAME_SUFFIX)
@@ -54,6 +50,7 @@ add_definitions(-DUNICODE -D_UNICODE -DNOMINMAX)
 
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 
 
 include_directories(./include)

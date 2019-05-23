@@ -1,5 +1,8 @@
-set(LIB_NAME ppxbase)
-
+if(BUILD_SHARED_LIBS)
+	set(LIB_NAME ppxbase)
+else()
+	set(LIB_NAME ppxbase-static)
+endif()
 
 if (MSVC AND USE_STATIC_CRT)
     set(CompilerFlags
@@ -43,8 +46,9 @@ if(BUILD_SHARED_LIBS)
 	
 	# set output name prefix/suffix
 	set_target_properties(${LIB_NAME} PROPERTIES 
-		DEBUG_OUTPUT_NAME ${LIB_NAME})
-	
+		OUTPUT_NAME ${LIB_NAME}
+		DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
+		
 else()
 	add_definitions(-DPPXBASE_STATIC)
 	set(PPXBASE_STATIC YES)
@@ -59,14 +63,14 @@ else()
 	
 	# set output name prefix/suffix
     set_target_properties(${LIB_NAME} PROPERTIES 
-		OUTPUT_NAME ${LIB_NAME}${STATIC_LIBNAME_SUFFIX})
+		OUTPUT_NAME ${LIB_NAME}
+		DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
+		
 		
 	set_target_properties(${LIB_NAME} PROPERTIES 
 		INTERFACE_COMPILE_DEFINITIONS PPXBASE_STATIC)
 endif()
 
-set_target_properties (${LIB_NAME} PROPERTIES 
-	DEBUG_POSTFIX ${DEBUG_LIBNAME_SUFFIX})
 
 target_link_libraries(${LIB_NAME} PRIVATE 
 	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
@@ -79,13 +83,12 @@ set_target_properties(${LIB_NAME}
 	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
 	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" )
 
-
 target_include_directories(${LIB_NAME} INTERFACE
 	$<INSTALL_INTERFACE:include>)
 
 
 install(TARGETS ${LIB_NAME}
-	EXPORT ppxbase
+	EXPORT ${LIB_NAME}-target
 	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib)
@@ -102,11 +105,11 @@ install(FILES ${BASE_HEADER_FILES}
 	DESTINATION include/ppxbase)
 
 export(TARGETS ${LIB_NAME}
-       APPEND FILE ${PROJECT_BINARY_DIR}/ppxbase-target.cmake
+       APPEND FILE ${PROJECT_BINARY_DIR}/${LIB_NAME}-target.cmake
 )
 
-install(EXPORT ppxbase
-        FILE ppxbase-target.cmake
+install(EXPORT ${LIB_NAME}-target
+        FILE ${LIB_NAME}-target.cmake
         DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR}
 )
 

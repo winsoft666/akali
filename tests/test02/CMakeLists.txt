@@ -37,7 +37,7 @@ if(BUILD_SHARED_LIBS)
 		$<TARGET_LINKER_FILE:ppxbase> )
 else()
 	target_link_libraries(${EXE_NAME} 
-		$<TARGET_LINKER_FILE:ppxbase> )
+		$<TARGET_LINKER_FILE:ppxbase-static> )
 
 endif()
 

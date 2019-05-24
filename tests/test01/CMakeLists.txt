@@ -54,9 +54,9 @@ if(BUILD_SHARED_LIBS)
 else()
 	# link ppxbase-static.lib
 	target_link_libraries(test01-client 
-		$<TARGET_LINKER_FILE:ppxbase> )
+		$<TARGET_LINKER_FILE:ppxbase-static> )
 
 	target_link_libraries(test01-server 
-		$<TARGET_LINKER_FILE:ppxbase> )
+		$<TARGET_LINKER_FILE:ppxbase-static> )
 endif()
 

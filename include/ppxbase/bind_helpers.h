@@ -403,17 +403,17 @@ namespace ppx {
         }  // namespace Internal
 
         template <typename T>
-        static inline Internal::UnretainedWrapper<T> Unretained(T *o) {
+		static inline Internal::UnretainedWrapper<T> Unretained(T *o) {
             return Internal::UnretainedWrapper<T>(o);
         }
 
         template <typename T>
-        static inline Internal::RetainedRefWrapper<T> RetainedRef(T *o) {
+		static inline Internal::RetainedRefWrapper<T> RetainedRef(T *o) {
             return Internal::RetainedRefWrapper<T>(o);
         }
 
         template <typename T>
-        static inline Internal::RetainedRefWrapper<T> RetainedRef(ScopedRefPtr<T> o) {
+		static inline Internal::RetainedRefWrapper<T> RetainedRef(ScopedRefPtr<T> o) {
             return Internal::RetainedRefWrapper<T>(std::move(o));
         }
 
@@ -449,7 +449,7 @@ namespace ppx {
             return Internal::IgnoreResultHelper<T>(std::move(data));
         }
 
-        void DoNothing();
+		PPXBASE_API void DoNothing();
 
         template<typename T>
         void DeletePointer(T *obj) {

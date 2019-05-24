@@ -155,7 +155,7 @@ namespace ppx {
 
         // Bind as OnceCallback.
         template <typename Functor, typename... Args>
-        inline OnceCallback<MakeUnboundRunType<Functor, Args...>>
+		inline OnceCallback<MakeUnboundRunType<Functor, Args...>>
             BindOnce(Functor &&functor, Args &&... args) {
             static_assert(!Internal::IsOnceCallback<std::decay_t<Functor>>() ||
                 (std::is_rvalue_reference < Functor && >() &&
@@ -198,7 +198,7 @@ namespace ppx {
 
         // Bind as RepeatingCallback.
         template <typename Functor, typename... Args>
-        inline RepeatingCallback<MakeUnboundRunType<Functor, Args...>>
+		inline RepeatingCallback<MakeUnboundRunType<Functor, Args...>>
             BindRepeating(Functor &&functor, Args &&... args) {
             static_assert(
                 !Internal::IsOnceCallback<std::decay_t<Functor>>(),
@@ -241,7 +241,7 @@ namespace ppx {
         // TODO(tzik): Deprecate this and migrate to OnceCallback and
         // RepeatingCallback, once they get ready.
         template <typename Functor, typename... Args>
-        inline Callback<MakeUnboundRunType<Functor, Args...>>
+		inline Callback<MakeUnboundRunType<Functor, Args...>>
             Bind(Functor &&functor, Args &&... args) {
             return BindRepeating(std::forward<Functor>(functor),
                 std::forward<Args>(args)...);
@@ -249,28 +249,28 @@ namespace ppx {
 
         // Special cases for binding to a base::Callback without extra bound arguments.
         template <typename Signature>
-        OnceCallback<Signature> BindOnce(OnceCallback<Signature> closure) {
+		OnceCallback<Signature> BindOnce(OnceCallback<Signature> closure) {
             return closure;
         }
 
         template <typename Signature>
-        RepeatingCallback<Signature> BindRepeating(
+		RepeatingCallback<Signature> BindRepeating(
             RepeatingCallback<Signature> closure) {
             return closure;
         }
 
         template <typename Signature>
-        Callback<Signature> Bind(Callback<Signature> closure) {
+		Callback<Signature> Bind(Callback<Signature> closure) {
             return closure;
         }
 
         template<typename R>
-        auto InvokeLambda(const std::function<R()>& fn) -> R {
+		auto InvokeLambda(const std::function<R()>& fn) -> R {
             return fn();
         }
 
         template<typename F>
-        auto BindLambda(F&& lambda) -> Callback<typename std::result_of<F()>::type()> {
+		auto BindLambda(F&& lambda) -> Callback<typename std::result_of<F()>::type()> {
             using return_type = typename std::result_of<F()>::type;
 
             return Bind(InvokeLambda<return_type>, std::function<return_type()>(std::forward<F>(lambda)));

@@ -39,7 +39,7 @@ namespace ppx {
 
 
         template <class T>
-        class PPXBASE_API ScopedRefPtr {
+        class ScopedRefPtr {
         public:
             ScopedRefPtr() : m_Ptr(nullptr) {}
 

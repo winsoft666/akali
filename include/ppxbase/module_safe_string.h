@@ -28,7 +28,7 @@ namespace ppx {
     namespace base {
 
         template <typename T>
-        class PPXBASE_API vm_allocator : public std::allocator<T> {
+        class vm_allocator : public std::allocator<T> {
         public:
             typedef size_t size_type;
             typedef T* pointer;

@@ -24,6 +24,8 @@
 #include "ppxbase/stringencode.h"
 #pragma endregion
 
+#pragma warning(disable:4995)
+
 #ifdef _WIN32
 
 namespace ppx {

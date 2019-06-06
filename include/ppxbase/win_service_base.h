@@ -134,9 +134,9 @@ namespace ppx {
         // EVENTLOG_WARNING_TYPE 
         // EVENTLOG_INFORMATION_TYPE  
         //
-        void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...);
+		PPXBASE_API void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...);
 
-        void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...);
+		PPXBASE_API void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...);
     }
 }
 #endif

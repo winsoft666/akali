@@ -291,7 +291,7 @@ namespace ppx {
             return EasyCreateProcess(strCmdLine.c_str(), lpProcessInfo, bInheritHandles);
         }
 
-        BOOL CreateUserProcess(PCTSTR pszFilePath) {
+		BOOL CreateUserProcess(PCTSTR pszFilePath) {
             HANDLE hUserTokenDup = NULL;
             HANDLE hPToken = NULL;
             HANDLE hProcess = NULL;

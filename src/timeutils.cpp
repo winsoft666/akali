@@ -32,6 +32,8 @@
 #endif
 #include "ppxbase/timeutils.h"
 
+#pragma warning(disable:4995)
+
 namespace ppx {
 	namespace base {
 

@@ -22,6 +22,8 @@
     #include <windows.h>
 #endif
 
+#pragma warning(disable:4309)
+
 #define STACK_ARRAY(TYPE, LEN) static_cast<TYPE*>(::alloca((LEN)*sizeof(TYPE)))
 
 namespace ppx {

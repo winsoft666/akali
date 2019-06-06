@@ -59,5 +59,6 @@
 #include "ppxbase/display_monitors.h"
 #include "ppxbase/schedule_task.h"
 #include "ppxbase/ipc.h"
+#include "ppxbase/console_print.h"
 
 #endif // !PPX_BASE_H__

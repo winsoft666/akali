@@ -17,6 +17,8 @@
 #include "ppxbase/safe_conversions.h"
 #include "ppxbase/timeutils.h"
 
+#pragma warning(disable:4244)
+
 namespace ppx {
     namespace base {
 

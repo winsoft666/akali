@@ -39,6 +39,8 @@
 #include "ppxbase/timeutils.h"
 #include "ppxbase/safe_release_macro.h"
 
+#pragma warning(disable:4995)
+
 namespace ppx {
     namespace base {
         namespace {

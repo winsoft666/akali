@@ -106,7 +106,7 @@ namespace ppx {
                 char szMac[32] = { 0 };
                 DWORD dwRet = SendARP(DestIP, (ULONG)NULL, (PULONG)mac, (PULONG)&MacLen);
                 if (dwRet == NO_ERROR) {
-                    sprintf(szMac, "%02x-%02x-%02x-%02x-%02x-%02x",
+                    sprintf_s(szMac, 32, "%02x-%02x-%02x-%02x-%02x-%02x",
                         (unsigned int)mac[0],
                         (unsigned int)mac[1],
                         (unsigned int)mac[2],
@@ -283,7 +283,7 @@ namespace ppx {
 			mac_values = StringSplit(strMac, "-");
 
 			for (size_t i = 0; i < mac_values.size(); i++) {
-				int64_t l = strtol(mac_values[i].c_str(), NULL, 16) * pow(10, i * 3);
+				int64_t l = strtol(mac_values[i].c_str(), NULL, 16) * (long long)pow(10, i * 3);
 				ret += l;
 			}
 

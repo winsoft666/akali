@@ -2,6 +2,8 @@
 using namespace ppx;
 
 int main() {
+	base::LogMessage::AddLogToStream(base::LoggingFileSinkWin::GetSink(), base::LS_INFO);
+	PPX_LOG(LS_INFO) << "123";
 	do 
 	{
 		std::string str = "AAbbCCc²âÊÔ";
@@ -87,6 +89,9 @@ int main() {
 
 		v = base::StringSplit("123²âÊÔ456²âÊÔabc-²âÊÔ-897-df@#$", "²âÊÔ");
 	} while (false);
+
+
+
 
     return 0;
 }

@@ -48,7 +48,7 @@ if(BUILD_SHARED_LIBS)
 	set_target_properties(${LIB_NAME} PROPERTIES 
 		OUTPUT_NAME ${LIB_NAME}
 		DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
-		
+
 else()
 	add_definitions(-DPPXBASE_STATIC)
 	set(PPXBASE_STATIC YES)
@@ -71,9 +71,10 @@ else()
 		INTERFACE_COMPILE_DEFINITIONS PPXBASE_STATIC)
 endif()
 
+set_target_properties(${LIB_NAME} PROPERTIES COMPILE_FLAGS "/wd4251")
 
 target_link_libraries(${LIB_NAME} PUBLIC 
-	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib)
+	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib Psapi.lib)
 
 
 # Set output directory

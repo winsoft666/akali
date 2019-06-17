@@ -72,6 +72,8 @@ namespace ppx {
         PPXBASE_API BOOL EasyCreateProcess(const std::wstring &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
         PPXBASE_API BOOL CreateUserProcess(PCTSTR pszFilePath);
 
+		// Please see: https://blog.csdn.net/china_jeffery/article/details/88225810
+		//
         PPXBASE_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
     }
 }

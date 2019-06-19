@@ -21,6 +21,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include <functional>
 #include "ppxbase_export.h"
 
 namespace ppx {
@@ -70,6 +71,32 @@ namespace ppx {
 		private:
 			T * m_pClass;
 			POnTimer m_pfnOnTimer;
+		};
+
+		class PPXBASE_API Timer : public TimerBase {
+		public:
+			typedef std::function<void()> FN_CB;
+			Timer() {
+
+			}
+
+			Timer(FN_CB cb) {
+				SetTimedEvent(cb);
+			}
+
+			void SetTimedEvent(FN_CB cb) {
+				m_cb = cb;
+			}
+
+		protected:
+			void OnTimedEvent() override {
+				if (m_cb) {
+					m_cb();
+				}
+			}
+
+		private:
+			FN_CB m_cb;
 		};
 	}
 }

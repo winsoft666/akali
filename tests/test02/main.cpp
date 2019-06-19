@@ -27,6 +27,15 @@ TEST(ppxbase, shortcut)
 	EXPECT_EQ(args, L"this is arguments");
 }
 
+TEST(ppxbase, timer) 
+{
+	using namespace ppx::base;
+	Timer timer([]() {
+		std::cout << "timer tick\n";
+	});
+	EXPECT_TRUE(timer.Start(1000, FALSE, FALSE));
+}
+
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

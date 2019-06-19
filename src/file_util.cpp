@@ -106,7 +106,13 @@ namespace ppx {
             FileSearch(szSource, szDest, pIgnoreNum);
         }
 
-        bool DeleteDir(const char* pszDir) {
+		PPXBASE_API bool PathIsExists(const wchar_t *pszPath) {
+			if (pszPath && _waccess_s(pszPath, 0) == 0)
+				return true;
+			return false;
+		}
+
+		bool DeleteDir(const char* pszDir) {
             if (!pszDir)
                 return false;
             bool bRet = false;

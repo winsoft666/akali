@@ -58,6 +58,11 @@ set_target_properties(test01-client PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
 set_target_properties(test01-client PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
 
 
+find_package(GTest MODULE REQUIRED)
+target_link_libraries(test01-client GTest::GTest GTest::Main)
+target_link_libraries(test01-server GTest::GTest GTest::Main)
+
+
 if(BUILD_SHARED_LIBS)
 	# link ppxbase.lib
 	target_link_libraries(test01-client 

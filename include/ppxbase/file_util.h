@@ -29,6 +29,8 @@ namespace ppx {
          // CopyDir(L"D:\\test", L"E:\\", true, &num); will create new folder named 'test' in E:\\
          //
         PPXBASE_API void CopyDir(const wchar_t* pszSource, const wchar_t* pszDest, bool bCopySource, int *pIgnoreNum);
+
+		PPXBASE_API bool PathIsExists(const wchar_t *pszPath);
     }
 }
 

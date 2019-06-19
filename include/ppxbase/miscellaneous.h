@@ -12,29 +12,23 @@
 * file.
 *******************************************************************************/
 
-#ifndef PPX_BASE_WIN_UTIL_H_SAF234_
-#define PPX_BASE_WIN_UTIL_H_SAF234_
+#ifndef PPX_BASE_MISCELLANEOUS_SAF234_
+#define PPX_BASE_MISCELLANEOUS_SAF234_
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif
 
 #ifdef _WIN32
 
-#ifndef _INC_WINDOWS
-#include <Windows.h>
-#endif
-#include <tchar.h>
-#include <strsafe.h>
+
 #pragma warning ( disable : 4995 )
 #include <string>
-#include <vector>
-#include <ctime>
-#include <math.h>
-#include <limits>
-#include <Shlwapi.h>
-#include <TlHelp32.h>
 #include "ppxbase_export.h"
+#include <windows.h>
 
+struct IPropertyStore;
+struct _tagpropertykey;
+typedef _tagpropertykey PROPERTYKEY;
 
 #ifdef _X86_
 #define DebugBreak()    _asm { int 3 }
@@ -46,9 +40,12 @@ namespace ppx {
 
 		PPXBASE_API bool FloatEqual(const float &f1, const float &f2);
 		PPXBASE_API bool FloatNotEqual(const float &f1, const float &f2);
+
+		// version format XXXX.XXXX.XXXX.XXXX
+		PPXBASE_API int VersionCompare(const std::string &str_ver1, const std::string &str_ver2);
     }
 }
 
 #endif
 
-#endif // PPX_BASE_WIN_UTIL_H_SAF234_
+#endif // PPX_BASE_MISCELLANEOUS_SAF234_

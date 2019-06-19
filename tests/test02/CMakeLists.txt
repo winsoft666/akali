@@ -43,6 +43,8 @@ add_executable(
 set_target_properties(${EXE_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
 set_target_properties(${EXE_NAME} PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
 
+find_package(GTest MODULE REQUIRED)
+target_link_libraries(${EXE_NAME} GTest::GTest GTest::Main)
 
 if(BUILD_SHARED_LIBS)
 	target_link_libraries(${EXE_NAME} 

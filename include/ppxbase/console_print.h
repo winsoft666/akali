@@ -20,10 +20,11 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include "ppxbase_export.h"
 
 namespace ppx {
 	namespace base {
-		void PrintConsoleProcess(double percentage);
+		PPXBASE_API void PrintConsoleProcess(double percentage);
 	}
 }
 

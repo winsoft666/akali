@@ -18,6 +18,10 @@
 
 #include "ppxbase/assert.h"
 #include "ppxbase/base64.h"
+#include "ppxbase/scoped_ref_ptr.h"
+#include "ppxbase/scoped_variant.h"
+#include "ppxbase/scoped_propvariant.h"
+#include "ppxbase/scoped_com_initializer.h"
 #include "ppxbase/buffer_queue.h"
 #include "ppxbase/byteorder.h"
 #include "ppxbase/cmdline_parse.h"
@@ -60,5 +64,7 @@
 #include "ppxbase/schedule_task.h"
 #include "ppxbase/ipc.h"
 #include "ppxbase/console_print.h"
+#include "ppxbase/miscellaneous.h"
+#include "ppxbase/shortcut.h"
 
 #endif // !PPX_BASE_H__

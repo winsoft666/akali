@@ -64,6 +64,9 @@ target_link_libraries(test01-server GTest::GTest GTest::Main)
 
 
 if(BUILD_SHARED_LIBS)
+	add_dependencies(test01-client ppxbase)
+	add_dependencies(test01-server ppxbase)
+	
 	# link ppxbase.lib
 	target_link_libraries(test01-client 
 		$<TARGET_LINKER_FILE:ppxbase> )
@@ -71,6 +74,9 @@ if(BUILD_SHARED_LIBS)
 	target_link_libraries(test01-server 
 		$<TARGET_LINKER_FILE:ppxbase> )
 else()
+	add_dependencies(test01-client ppxbase-static)
+	add_dependencies(test01-server ppxbase-static)
+	
 	# link ppxbase-static.lib
 	target_link_libraries(test01-client 
 		$<TARGET_LINKER_FILE:ppxbase-static> )

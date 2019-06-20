@@ -47,9 +47,13 @@ find_package(GTest MODULE REQUIRED)
 target_link_libraries(${EXE_NAME} GTest::GTest GTest::Main)
 
 if(BUILD_SHARED_LIBS)
+	add_dependencies(${EXE_NAME} ppxbase)
+	
 	target_link_libraries(${EXE_NAME} 
 		$<TARGET_LINKER_FILE:ppxbase> )
 else()
+	add_dependencies(${EXE_NAME} ppxbase-static)
+	
 	target_link_libraries(${EXE_NAME} 
 		$<TARGET_LINKER_FILE:ppxbase-static> )
 

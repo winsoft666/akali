@@ -47,7 +47,7 @@ namespace ppx {
 		};
 
 		template <class T>
-		class PPXBASE_API TTimer : public TimerBase {
+		class TTimer : public TimerBase {
 		public:
 			typedef private void (T::*POnTimer)(void);
 

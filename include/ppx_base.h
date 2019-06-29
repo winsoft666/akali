@@ -50,6 +50,7 @@
 #include "ppxbase/safe_release_macro.h"
 #include "ppxbase/safe_compare.h"
 #include "ppxbase/safe_conversions.h"
+#include "ppxbase/noncopyable.h"
 #include "ppxbase/singleton.h"
 #include "ppxbase/stringencode.h"
 #include "ppxbase/callback.h"

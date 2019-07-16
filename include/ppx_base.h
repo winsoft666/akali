@@ -67,5 +67,6 @@
 #include "ppxbase/console_print.h"
 #include "ppxbase/miscellaneous.h"
 #include "ppxbase/shortcut.h"
+#include "ppxbase/screenshot.h"
 
 #endif // !PPX_BASE_H__

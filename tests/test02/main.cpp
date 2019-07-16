@@ -41,6 +41,12 @@ TEST(ppxbase, timer)
 	EXPECT_TRUE(timer.Start(100, FALSE, TRUE));
 }
 
+TEST(ppxbase, Screenshot) {
+	using namespace ppx::base;
+	EXPECT_TRUE(Screenshot::FullScreenToFile(L"D:\\fullscreen.bmp"));
+	EXPECT_TRUE(Screenshot::WindowToFile((HWND)0x00010120, L"D:\\taskbar.bmp"));
+}
+
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

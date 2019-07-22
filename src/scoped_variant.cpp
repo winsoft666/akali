@@ -1,4 +1,4 @@
-#include "ppxbase/scoped_variant.h"
+﻿#include "ppxbase/scoped_variant.h"
 #include "ppxbase/assert.h"
 
 namespace ppx {

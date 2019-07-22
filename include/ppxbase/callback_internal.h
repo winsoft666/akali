@@ -1,4 +1,4 @@
-#ifndef BASE_CALLBACK_INTERNAL_H_
+﻿#ifndef BASE_CALLBACK_INTERNAL_H_
 #define BASE_CALLBACK_INTERNAL_H_
 #pragma once
 

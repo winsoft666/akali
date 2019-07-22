@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -66,7 +66,7 @@ namespace ppx {
         // Windows: precision is milliseconds
 		PPXBASE_API Time GetUTCTime();
 
-        // ´Ó1970-01-01 00:00:00µ½µ±Ç°¸ñÁÖÍþÖÎÊ±¼ä£¨UTC£©Ëù¾­¹ýµÄÎ¢ÃîÊý
+        // ä»Ž1970-01-01 00:00:00åˆ°å½“å‰æ ¼æž—å¨æ²»æ—¶é—´ï¼ˆUTCï¼‰æ‰€ç»è¿‡çš„å¾®å¦™æ•°
 		PPXBASE_API long long GetTimeStamp();
 #if defined(_WIN32)
 		PPXBASE_API Time FILETIMEToUTC(FILETIME ft);

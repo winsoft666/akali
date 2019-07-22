@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -76,8 +76,8 @@ namespace ppx {
             } fileTime;
             GetSystemTimeAsFileTime(&fileTime.ft);
 
-            // lNowMicroMSÖĞ´æ´¢×Å´Ó1970-01-01 00:00:00µ½µ±Ç°¸ñÁÖÍşÖÎÊ±¼ä£¨UTC£©Ëù¾­¹ıµÄÎ¢ÃîÊı
-            // 116444736000000000ÊÇ´Ó1601Äê1ÔÂ1ÈÕ00:00:00:000µ½1970Äê1ÔÂ1ÈÕ00:00:00:000Ëù¾­¹ıµÄ100ÄÉÃëÊı
+            // lNowMicroMSä¸­å­˜å‚¨ç€ä»1970-01-01 00:00:00åˆ°å½“å‰æ ¼æ—å¨æ²»æ—¶é—´ï¼ˆUTCï¼‰æ‰€ç»è¿‡çš„å¾®å¦™æ•°
+            // 116444736000000000æ˜¯ä»1601å¹´1æœˆ1æ—¥00:00:00:000åˆ°1970å¹´1æœˆ1æ—¥00:00:00:000æ‰€ç»è¿‡çš„100çº³ç§’æ•°
             long long lNowMicroMS = (long long)((fileTime.ns100 - 116444736000000000LL) / 10LL);
 
             return lNowMicroMS;
@@ -104,8 +104,8 @@ namespace ppx {
         long long UTCToTimeStamp(Time t) {
 
             struct tm tmUTC;
-            tmUTC.tm_year = t.year - 1900; // ¼õÈ¥1900
-            tmUTC.tm_mon = t.month - 1; // ¼õÈ¥1
+            tmUTC.tm_year = t.year - 1900; // å‡å»1900
+            tmUTC.tm_mon = t.month - 1; // å‡å»1
             tmUTC.tm_mday = t.day;
             tmUTC.tm_hour = t.hour;
             tmUTC.tm_min = t.minute;

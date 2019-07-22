@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -73,13 +73,13 @@ namespace ppx {
                 if (sCurrent[0] == L'\0')
                     break;
 
-                // ²éÕÒÈÎÒ»·Ö¸ô·û
+                // æŸ¥æ‰¾ä»»ä¸€åˆ†éš”ç¬¦
                 const wchar_t *sArg = wcspbrk(sCurrent, delims);
 
                 if (!sArg)
                     break;
 
-                sArg = _wcsinc(sArg); // ×Ö·ûÖ¸ÕësArgÏòºóÒÆ¶¯Ò»¸ö×Ö·û
+                sArg = _wcsinc(sArg); // å­—ç¬¦æŒ‡é’ˆsArgå‘åç§»åŠ¨ä¸€ä¸ªå­—ç¬¦
 
                 if (sArg[0] == L'\0')
                     break; // ends with delim

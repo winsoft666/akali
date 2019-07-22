@@ -1,4 +1,4 @@
-#include "ppxbase/schedule_task.h"
+﻿#include "ppxbase/schedule_task.h"
 #include <Atlbase.h>
 #include <comdef.h>
 #include <taskschd.h>

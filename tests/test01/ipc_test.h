@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ppx_base.h"
 
 class IPCTester {

@@ -1,4 +1,4 @@
-#include "ppxbase/string_helper.h"
+﻿#include "ppxbase/string_helper.h"
 #include <algorithm>
 #include <cctype>
 #include <locale>

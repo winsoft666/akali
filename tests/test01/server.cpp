@@ -1,4 +1,4 @@
-#include "ipc_test.h"
+﻿#include "ipc_test.h"
 
 // test02-server.exe -ipc_s:tests
 int main() {

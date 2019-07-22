@@ -1,4 +1,4 @@
-#ifndef BASE_BIND_INTERNAL_H_
+﻿#ifndef BASE_BIND_INTERNAL_H_
 #define BASE_BIND_INTERNAL_H_
 #pragma once
 

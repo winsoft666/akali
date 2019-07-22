@@ -69,4 +69,8 @@
 #include "ppxbase/shortcut.h"
 #include "ppxbase/screenshot.h"
 
+#pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "UserEnv.lib")
+#pragma comment(lib, "DbgHelp.lib")
+
 #endif // !PPX_BASE_H__

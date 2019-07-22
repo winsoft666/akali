@@ -1,4 +1,4 @@
-/****************************** Module Header ******************************\
+﻿/****************************** Module Header ******************************\
 * Module Name:  ServiceInstaller.cpp
 * Project:      CppWindowsService
 * Copyright (c) Microsoft Corporation.

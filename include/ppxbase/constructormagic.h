@@ -1,4 +1,4 @@
-#ifndef PPX_BASE_CONSTRUCTOR_MAGIC_H__
+﻿#ifndef PPX_BASE_CONSTRUCTOR_MAGIC_H__
 #define PPX_BASE_CONSTRUCTOR_MAGIC_H__
 
 // Put this in the declarations for a class to be uncopyable.

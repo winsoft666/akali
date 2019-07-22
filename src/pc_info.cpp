@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -198,7 +198,7 @@ namespace ppx {
             if (GetAdaptersAddresses(AF_UNSPEC, 0, NULL, pAddresses, &outBufLen) == NO_ERROR) {
                 // If successful, output some information from the data we received
                 for (PIP_ADAPTER_ADDRESSES pCurrAddresses = pAddresses; pCurrAddresses != NULL; pCurrAddresses = pCurrAddresses->Next) {
-                    // È·±£MACµØÖ·µÄ³¤¶ÈÎª 00-00-00-00-00-00
+                    // ç¡®ä¿MACåœ°å€çš„é•¿åº¦ä¸º 00-00-00-00-00-00
                     if (pCurrAddresses->PhysicalAddressLength != 6)
                         continue;
                     char acMAC[32] = { 0 };

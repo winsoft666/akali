@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
 * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -62,7 +62,7 @@ namespace ppx
             std::wstring GetPrivateBuild();
             std::wstring GetSpecialBuild();
 
-            // WindowsµÄÎÄ¼şÊ±¼äÎªÒ»¸ö64Î»ÕûÊı£¨ÓÃFILETIME½á¹¹Ìå´æ´¢£©,Ëü¼ÇÂ¼´Ó1601-1-1 00:00:00µ½µ±Ç°¸ñÁÖÍşÖÎÊ±¼ä£¨UTC£©Ëù¾­¹ıµÄ100ÄÉÃë(ns)Êı
+            // Windowsçš„æ–‡ä»¶æ—¶é—´ä¸ºä¸€ä¸ª64ä½æ•´æ•°ï¼ˆç”¨FILETIMEç»“æ„ä½“å­˜å‚¨ï¼‰,å®ƒè®°å½•ä»1601-1-1 00:00:00åˆ°å½“å‰æ ¼æ—å¨æ²»æ—¶é—´ï¼ˆUTCï¼‰æ‰€ç»è¿‡çš„100çº³ç§’(ns)æ•°
             // See: https ://blog.csdn.net/china_jeffery/article/details/78409614 
             //
             FILETIME GetCreationTime() const;

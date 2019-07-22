@@ -1,12 +1,12 @@
-#include "ppx_base.h"
+ï»¿#include "ppx_base.h"
 using namespace ppx;
 #include "gtest/gtest.h"
 
 TEST(ppxbase, string)
 {
-	std::string str = "AAbbCCc²âÊÔ";
+	std::string str = "AAbbCCcæµ‹è¯•";
 	str = base::StringToLower(str);
-	EXPECT_EQ(str, "aabbccc²âÊÔ");
+	EXPECT_EQ(str, "aabbcccæµ‹è¯•");
 }
 
 TEST(ppxbase, shortcut)
@@ -18,11 +18,11 @@ TEST(ppxbase, shortcut)
 	sp.SetDescription(L"this is description");
 	sp.SetTarget(L"D:\\test.exe");
 	sp.SetIcon(L"D:\\test.exe", 0);
-	EXPECT_TRUE(CreateOrUpdateShortcutLink(L"D:\\²âÊÔ.lnk", sp, SHORTCUT_CREATE_ALWAYS));
+	EXPECT_TRUE(CreateOrUpdateShortcutLink(L"D:\\æµ‹è¯•.lnk", sp, SHORTCUT_CREATE_ALWAYS));
 
 	std::wstring target_path;
 	std::wstring args;
-	EXPECT_TRUE(ResolveShortcut(L"D:\\²âÊÔ.lnk", target_path, args));
+	EXPECT_TRUE(ResolveShortcut(L"D:\\æµ‹è¯•.lnk", target_path, args));
 	EXPECT_EQ(target_path, L"D:\\test.exe");
 	EXPECT_EQ(args, L"this is arguments");
 }

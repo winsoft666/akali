@@ -99,8 +99,7 @@ namespace ppx {
 
 
 		PPXBASE_API bool ResolveShortcut(const std::wstring& shortcut_path,
-			std::wstring &target_path,
-			std::wstring &args);
+			ShortcutProperties& properties);
 
 		// Pins a shortcut to the Windows 7 taskbar. The shortcut file must already
 		// exist and be a shortcut that points to an executable.

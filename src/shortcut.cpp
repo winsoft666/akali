@@ -167,7 +167,7 @@ namespace ppx {
 		}
 
 		bool ResolveShortcut(const std::wstring& shortcut_path, 
-			std::wstring &target_path, std::wstring &args) {
+			ShortcutProperties& properties) {
 			HRESULT result;
 			IShellLink* i_shell_link = NULL;
 			IPersistFile* persist = NULL;
@@ -192,7 +192,7 @@ namespace ppx {
 			}
 
 
-			WCHAR temp[MAX_PATH];
+			WCHAR temp[MAX_PATH] = { 0 };
 			// Try to find the target of a shortcut.
 			result = i_shell_link->Resolve(0, SLR_NO_UI | SLR_NOSEARCH);
 			if (FAILED(result))
@@ -201,12 +201,29 @@ namespace ppx {
 			result = i_shell_link->GetPath(temp, MAX_PATH, NULL, SLGP_UNCPRIORITY);
 			if (FAILED(result))
 				return false;
-			target_path = temp;
+			properties.target = temp;
 
 			result = i_shell_link->GetArguments(temp, MAX_PATH);
 			if (FAILED(result))
 				return false;
-			args = temp;
+			properties.arguments = temp;
+
+			result = i_shell_link->GetWorkingDirectory(temp, MAX_PATH);
+			if (FAILED(result))
+				return false;
+			properties.working_dir = temp;
+
+			result = i_shell_link->GetDescription(temp, MAX_PATH);
+			if (FAILED(result))
+				return false;
+			properties.description = temp;
+
+			int iconIndex = 0;
+			result = i_shell_link->GetIconLocation(temp, MAX_PATH, &iconIndex);
+			if (FAILED(result))
+				return false;
+			properties.icon = temp;
+			properties.icon_index = iconIndex;
 
 			if (persist)
 				persist->Release();

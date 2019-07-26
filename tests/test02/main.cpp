@@ -34,6 +34,10 @@ TEST(ppxbase, Screenshot) {
 	EXPECT_TRUE(Screenshot::FullScreenToFile(L"D:\\fullscreen.bmp"));
 }
 
+TEST(ppxbase, RegisterTest) {
+	bool b = ppx::base::RegKey::DeleteSubKeys(HKEY_LOCAL_MACHINE, TEXT("Software\\V"), false);
+}
+
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

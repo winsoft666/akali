@@ -189,7 +189,15 @@ namespace ppx {
             return false;
         }
 
-        HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const {
+		bool RegKey::DeleteSubKeys(HKEY hKeyRoot, LPCTSTR lpSubKey, bool bPrefer64View)
+		{
+			TCHAR szDelKey[MAX_PATH * 2];
+
+			StringCchCopy(szDelKey, MAX_PATH * 2, lpSubKey);
+			return RegDelSubKeysRecurse(hKeyRoot, szDelKey, bPrefer64View);
+		}
+
+		HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const {
             return GetValue(pszValueName, REG_DWORD, (LPBYTE)pdwDataOut, sizeof(DWORD));
         }
 
@@ -433,6 +441,77 @@ namespace ppx {
 
             return false;
         }
-    }
+
+		BOOL RegKey::RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64View)
+		{
+			LPTSTR lpEnd = NULL;
+			LONG lResult;
+			DWORD dwSize = 0;
+			TCHAR szName[MAX_PATH] = { 0 };
+			HKEY hKey = NULL;
+			FILETIME ftWrite;
+
+			// First, see if we can delete the key without having to recurse.
+			lResult = RegDeleteKeyEx(hKeyRoot, lpSubKey, bPrefer64View ? KEY_WOW64_64KEY : KEY_WOW64_32KEY, 0);
+			if (lResult == ERROR_SUCCESS)
+				return TRUE;
+
+			REGSAM rsam = KEY_READ;
+			if (bPrefer64View)
+				rsam |= KEY_WOW64_64KEY;
+
+			lResult = RegOpenKeyEx(hKeyRoot, lpSubKey, 0, rsam, &hKey);
+			if (lResult != ERROR_SUCCESS)
+			{
+				if (lResult == ERROR_FILE_NOT_FOUND) {
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+
+			// Check for an ending slash and add one if it is missing.
+
+			lpEnd = lpSubKey + lstrlen(lpSubKey);
+
+			if (*(lpEnd - 1) != TEXT('\\'))
+			{
+				*lpEnd = TEXT('\\');
+				lpEnd++;
+				*lpEnd = TEXT('\0');
+			}
+
+			// Enumerate the keys
+			dwSize = MAX_PATH;
+			lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL, NULL, NULL, &ftWrite);
+			if (lResult == ERROR_SUCCESS){
+				do {
+					*lpEnd = TEXT('\0');
+					StringCchCat(lpSubKey, MAX_PATH * 2, szName);
+
+					if (!RegDelSubKeysRecurse(hKeyRoot, lpSubKey, bPrefer64View)) {
+						break;
+					}
+
+					dwSize = MAX_PATH;
+					lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL, NULL, NULL, &ftWrite);
+				} while (lResult == ERROR_SUCCESS);
+			}
+
+			lpEnd--;
+			*lpEnd = TEXT('\0');
+
+			RegCloseKey(hKey);
+
+			// Try again to delete the key.
+			lResult = RegDeleteKeyEx(hKeyRoot, lpSubKey, bPrefer64View ? KEY_WOW64_64KEY : KEY_WOW64_32KEY, 0);
+			if (lResult == ERROR_SUCCESS)
+				return TRUE;
+
+			return FALSE;
+		}
+
+	}
 }
 #endif

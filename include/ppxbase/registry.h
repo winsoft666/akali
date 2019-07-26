@@ -51,6 +51,7 @@ namespace ppx {
 			HRESULT WatchForChange(DWORD dwChangeFilter, bool bWatchSubtree);
 			HRESULT WaitForChange(DWORD dwChangeFilter, bool bWatchSubtree);
 			static bool DeleteKey(HKEY hKey, LPCWSTR pszSubKey, LPCWSTR pszValName, bool bPrefer64View);
+			static bool DeleteSubKeys(HKEY hKeyRoot, LPCTSTR lpSubKey, bool bPrefer64View);
 			HRESULT GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const;
 			HRESULT GetBINARYValue(LPCWSTR pszValueName, LPBYTE pbDataOut, int cbDataOut) const;
 			HRESULT GetSZValue(LPCWSTR pszValueName, OUT std::wstring &strValue) const;
@@ -80,6 +81,7 @@ namespace ppx {
 			static unsigned int _stdcall NotifyWaitThreadProc(LPVOID pvParam);
 			static bool RegDeleteKey32_64(HKEY hKey, LPCWSTR pszSubKey, bool bPrefer64View);
 			static bool RegDeleteSubKeys(HKEY hKey, bool bPrefer64View);
+			static BOOL RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64View);
 		};
 	}
 }

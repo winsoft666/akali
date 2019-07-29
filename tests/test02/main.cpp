@@ -35,7 +35,11 @@ TEST(ppxbase, Screenshot) {
 }
 
 TEST(ppxbase, RegisterTest) {
-	bool b = ppx::base::RegKey::DeleteSubKeys(HKEY_LOCAL_MACHINE, TEXT("Software\\V"), false);
+	std::vector<std::wstring> subkeys;
+	ppx::base::RegKey reg(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\");
+	if (reg.Open(KEY_READ | KEY_WOW64_64KEY, FALSE) == S_OK) {
+		reg.GetSubKeys(subkeys);
+	}
 }
 
 int main(int argc, char *argv[]) {

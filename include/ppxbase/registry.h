@@ -62,6 +62,7 @@ namespace ppx {
 			HRESULT SetSZValue(LPCWSTR pszValueName, const std::wstring &strData);
 			HRESULT SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring> &vStrValues);
 
+			HRESULT GetSubKeys(std::vector<std::wstring> &subKeys);
 		protected:
 			void OnChange(HKEY hkey);
 		private:

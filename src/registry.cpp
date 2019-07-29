@@ -194,7 +194,7 @@ namespace ppx {
 			TCHAR szDelKey[MAX_PATH * 2];
 
 			StringCchCopy(szDelKey, MAX_PATH * 2, lpSubKey);
-			return RegDelSubKeysRecurse(hKeyRoot, szDelKey, bPrefer64View);
+			return RegDelSubKeysRecurse(hKeyRoot, szDelKey, bPrefer64View) == TRUE;
 		}
 
 		HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const {
@@ -287,7 +287,56 @@ namespace ppx {
         }
 
 
-        void RegKey::OnChange(HKEY hkey) {
+		HRESULT RegKey::GetSubKeys(std::vector<std::wstring> &subKeys)
+		{
+			WCHAR    achKey[256];   // buffer for subkey name
+			DWORD    cbName = 255;                   // size of name string
+			WCHAR    achClass[MAX_PATH] = TEXT("");  // buffer for class name
+			DWORD    cchClassName = MAX_PATH;  // size of class string
+			DWORD    cSubKeys = 0;             // number of subkeys
+			DWORD    cbMaxSubKey;              // longest subkey size
+			DWORD    cchMaxClass;              // longest class string
+			DWORD    cValues;              // number of values for key
+			DWORD    cchMaxValue;          // longest value name
+			DWORD    cbMaxValueData;       // longest value data
+			DWORD    cbSecurityDescriptor; // size of security descriptor
+			FILETIME ftLastWriteTime;      // last write time
+
+			DWORD retCode = RegQueryInfoKeyW(
+				m_hkey,                    // key handle
+				achClass,                // buffer for class name
+				&cchClassName,           // size of class string
+				NULL,                    // reserved
+				&cSubKeys,               // number of subkeys
+				&cbMaxSubKey,            // longest subkey size
+				&cchMaxClass,            // longest class string
+				&cValues,                // number of values for this key
+				&cchMaxValue,            // longest value name
+				&cbMaxValueData,         // longest value data
+				&cbSecurityDescriptor,   // security descriptor
+				&ftLastWriteTime);       // last write time
+
+			if (retCode != ERROR_SUCCESS)
+				return retCode;
+
+			for (DWORD i = 0; i < cSubKeys; i++) {
+				cbName = 255;
+				retCode = RegEnumKeyExW(m_hkey, i,
+					achKey,
+					&cbName,
+					NULL,
+					NULL,
+					NULL,
+					&ftLastWriteTime);
+				if (retCode == ERROR_SUCCESS) {
+					subKeys.push_back(achKey);
+				}
+			}
+
+			return ERROR_SUCCESS;
+		}
+
+		void RegKey::OnChange(HKEY hkey) {
             UNREFERENCED_PARAMETER(hkey);
             //
             // Default does nothing.

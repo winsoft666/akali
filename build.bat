@@ -71,7 +71,7 @@ if "" == "%BUILD_SHARED_LIBS%" (
 
 vcpkg install gtest:%VCPKG_TARGET_TRIPLET%
 
-cmake.exe -G "Visual Studio 14" -DCMAKE_TOOLCHAIN_FILE=D:\sourcecode\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DCMAKE_INSTALL_PREFIX=D:\ppxbase -DBUILD_TESTS=ON -S %~dp0 -B %~dp0build
+cmake.exe -G "Visual Studio 15" -DCMAKE_TOOLCHAIN_FILE=D:\sourcecode\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DCMAKE_INSTALL_PREFIX=D:\ppxbase -DBUILD_TESTS=ON -S %~dp0 -B %~dp0build
 
 cmake.exe --build %~dp0build --config Debug --target INSTALL
 cmake.exe --build %~dp0build --config Release --target INSTALL

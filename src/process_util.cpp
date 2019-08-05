@@ -291,6 +291,21 @@ namespace ppx {
             return EasyCreateProcess(strCmdLine.c_str(), lpProcessInfo, bInheritHandles);
         }
 
+		PPXBASE_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD* pExitCode, BOOL bInheritHandles /*= FALSE*/)
+		{
+			PROCESS_INFORMATION pi;
+			BOOL bRet = EasyCreateProcess(strCmdLine.c_str(), &pi, bInheritHandles);
+			if (bRet) {
+				if (pi.hProcess) {
+					WaitForSingleObject(pi.hProcess, INFINITE);
+					GetExitCodeProcess(pi.hProcess, pExitCode);
+				}
+				SAFE_CLOSE(pi.hThread);
+				SAFE_CLOSE(pi.hProcess);
+			}
+			return bRet;
+		}
+
 		BOOL CreateUserProcess(PCTSTR pszFilePath) {
             HANDLE hUserTokenDup = NULL;
             HANDLE hPToken = NULL;

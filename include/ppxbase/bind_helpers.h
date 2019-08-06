@@ -279,7 +279,6 @@ namespace ppx {
                     : is_valid_(other.is_valid_), scoper_(std::move(other.scoper_)) {
                 }
                 T Take() const {
-                    CHECK(is_valid_);
                     is_valid_ = false;
                     return std::move(scoper_);
                 }

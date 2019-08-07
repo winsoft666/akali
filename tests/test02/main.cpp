@@ -41,6 +41,9 @@ TEST(ppxbase, RegisterTest) {
 		reg.GetSubKeys(subkeys);
 	}
 }
+TEST(ppxbase, Logging) {
+	PPX_LOG(LS_INFO) << "test";
+}
 
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);

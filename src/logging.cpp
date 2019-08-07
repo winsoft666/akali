@@ -163,8 +163,10 @@ namespace ppx {
                 break;
             }
 
+#if (defined DEBUG || defined _DEBUG)
             if (file != nullptr)
 				impl_->print_stream_ << "(" << FilenameFromPath(file) << ":" << line << "): ";
+#endif
 
             if (err_ctx != ERRCTX_NONE) {
                 std::stringstream tmp;

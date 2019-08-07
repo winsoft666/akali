@@ -45,6 +45,13 @@ TEST(ppxbase, Logging) {
 	PPX_LOG(LS_INFO) << "test";
 }
 
+TEST(ppxbase, NetAvaliability) {
+	ppx::base::ScopedCOMInitializer com;
+	bool avaliable = false;
+	EXPECT_TRUE(ppx::base::InternetAvailabilityChecker::InternetConnectionAvailable(avaliable));
+	EXPECT_TRUE(avaliable);
+}
+
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

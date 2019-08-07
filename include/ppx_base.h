@@ -68,6 +68,16 @@
 #include "ppxbase/miscellaneous.h"
 #include "ppxbase/shortcut.h"
 #include "ppxbase/screenshot.h"
+#include "ppxbase/host_resolve.h"
+#include "ppxbase/ipaddress.h"
+#include "ppxbase/networkprotocoldef.h"
+#include "ppxbase/ping.h"
+#include "ppxbase/socket.h"
+#include "ppxbase/socketaddress.h"
+#include "ppxbase/overlappedsocket.h"
+#include "ppxbase/iocp.h"
+#include "ppxbase/iocpserver.h"
+#include "ppxbase/internet_availability_checker.h"
 
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "UserEnv.lib")

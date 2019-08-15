@@ -23,27 +23,15 @@ namespace ppx {
             packet_size_(packet_size),
             send_timeout_ms_(send_timeout_ms),
             recv_timeout_ms_(recv_timeout_ms),
-            ttl_(ttl),
-            exit_(CreateEvent(NULL, TRUE, FALSE, NULL))
+            ttl_(ttl)
         {
             WSADATA wsaData;
             WORD wVersionRequested = MAKEWORD(2, 2);
             WSAStartup(wVersionRequested, &wsaData);
-            threads_ = new std::vector<std::thread>();
         }
 
         Ping::~Ping() {
-            if (exit_)
-                SetEvent(exit_);
-            for (size_t i = 0; i < threads_->size(); i++) {
-                if ((*threads_)[i].joinable())
-                    (*threads_)[i].join();
-            }
-            (*threads_).clear();
-            SAFE_CLOSE(exit_);
             WSACleanup();
-
-            SAFE_DELETE(threads_);
         }
 
         void Ping::FillPingPacket(__u8* icmp_packet, __u16 seq, __u16 icmp_packet_size) {
@@ -104,42 +92,36 @@ namespace ppx {
             return true;
         }
 
-        bool Ping::AsyncPing(const IPAddress &ip, unsigned short times, std::function<void(const std::vector<PingRsp>&)> callback) {
+        bool Ping::SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp>& rsps) {
             if (!ip.IsValid())
                 return false;
             if (times <= 0 || times > 0xFFFF)
                 return false;
 
-            (*threads_).push_back(std::thread(&Ping::DoPing, this, ip, times, callback));
-
-            return true;
-        }
-
-        void Ping::DoPing(const IPAddress &ip, unsigned short times, std::function<void(const std::vector<PingRsp>&)> callback) {
             // socket函数需要管理员权限
-            // 需要绕开管理员权限，可以使用IcmpSendEcho系列函数
-            //
+           // 需要绕开管理员权限，可以使用IcmpSendEcho系列函数
+           //
             SOCKET s = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
             if (s == INVALID_SOCKET) {
-                return;
+                return false;
             }
 
             int err = setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout_ms_), sizeof(send_timeout_ms_));
             if (err == SOCKET_ERROR) {
                 closesocket(s);
-                return;
+                return false;
             }
 
             err = setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&recv_timeout_ms_), sizeof(recv_timeout_ms_));
             if (err == SOCKET_ERROR) {
                 closesocket(s);
-                return;
+                return false;
             }
 
             err = setsockopt(s, IPPROTO_IP, IP_TTL, reinterpret_cast<const char*>(&ttl_), sizeof(ttl_));
             if (err == SOCKET_ERROR) {
                 closesocket(s);
-                return;
+                return false;
             }
 
             // ping request
@@ -151,11 +133,8 @@ namespace ppx {
             __u16 ip_packet_size = icmp_packet_size + 20; // 20 bytes ip header, no option.
             __u8 *ip_packet = new __u8[ip_packet_size];
 
-
-            std::vector<PingRsp> rsps;
-
             unsigned short i = 0;
-            while (i++ < times && (exit_ && WaitForSingleObject(exit_, 0) != WAIT_OBJECT_0)) {
+            while (i++ < times) {
                 PingRsp rsp;
                 rsp.recved_bytes = SOCKET_ERROR;
                 rsp.sent_bytes = SOCKET_ERROR;
@@ -177,7 +156,7 @@ namespace ppx {
                     int gle = WSAGetLastError();
                     continue;
                 }
-                
+
                 rsp.sent_bytes = packet_size_;
 
 
@@ -202,9 +181,6 @@ namespace ppx {
                 DecodeIPPacket(reinterpret_cast<__u8*>(ip_packet), ip_packet_size, rsp);
 
                 rsps.push_back(rsp);
-
-                if( exit_ && WaitForSingleObject(exit_, 1000) == WAIT_OBJECT_0)
-                    break;
             }
 
             delete[] icmp_packet;
@@ -214,10 +190,7 @@ namespace ppx {
                 closesocket(s);
             }
 
-            if (callback) {
-                callback(rsps);
-            }
+            return true;
         }
-
     }
 }

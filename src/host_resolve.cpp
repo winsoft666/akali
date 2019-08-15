@@ -48,7 +48,16 @@ namespace ppx {
 				sockaddr_in *paddr_in = reinterpret_cast<sockaddr_in *>(cursor->ai_addr);
 
 				IPAddress ip(paddr_in->sin_addr);
-				ip_list.push_back(ip);
+
+                bool found = false;
+                for (auto it : ip_list) {
+                    if (it == ip) {
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found)
+				    ip_list.push_back(ip);
 			}
 			freeaddrinfo(result);
 

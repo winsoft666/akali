@@ -52,6 +52,26 @@ TEST(ppxbase, NetAvaliability) {
 	EXPECT_TRUE(avaliable);
 }
 
+TEST(ppxbase, Ping) {
+    using namespace ppx::base;
+    HostResolve hostr;
+    std::vector<IPAddress> ip_list;
+    EXPECT_TRUE(hostr.Resolve("store.steampowered.com", ip_list));
+    EXPECT_TRUE(ip_list.size() > 0);
+
+    ppx::base::Ping pinger(32, 3000, 3000, 128);
+
+    for (auto item : ip_list) {
+        printf("%s\n", item.ToString().c_str());
+        std::vector<Ping::PingRsp> rsps;
+        if (pinger.SyncPing(item, 3, rsps)) {
+            for (auto r : rsps) {
+                printf("%s %dms\n", r.from_ip.ToString().c_str(), r.used_time_ms);
+            }
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

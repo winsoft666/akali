@@ -58,18 +58,15 @@ namespace ppx {
 
            virtual ~Ping();
 
-           bool AsyncPing(const IPAddress &ip, unsigned short times, std::function<void(const std::vector<PingRsp>&)> callback);
+           bool SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp>& rsps);
         protected:
             void FillPingPacket(__u8* icmp_packet, __u16 seq, __u16 icmp_packet_size);
             bool DecodeIPPacket(__u8* ip_packet, __u16 packet_size, PingRsp &rsp);
-            void DoPing(const IPAddress &ip, unsigned short times, std::function<void(const std::vector<PingRsp>&)> callback);
         private:
             int ttl_;
             int packet_size_;
             int send_timeout_ms_;
             int recv_timeout_ms_;
-            std::vector<std::thread> *threads_;
-            HANDLE exit_;
         };
     }
 }

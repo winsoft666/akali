@@ -25,7 +25,7 @@ namespace ppx {
             virtual void Release() const = 0;
         };
 
-        class RefCountedBase : public IRefObj {
+        class PPXBASE_API RefCountedBase : public IRefObj {
         public:
             RefCountedBase() : ref_count_(0) {
             }

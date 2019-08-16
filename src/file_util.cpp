@@ -22,6 +22,7 @@
 #include <windows.h>
 #include <strsafe.h>
 #include <Shlwapi.h>
+#include "ppxbase/logging.h"
 
 namespace ppx {
     namespace base {
@@ -115,43 +116,49 @@ namespace ppx {
 		bool DeleteDir(const char* pszDir) {
             if (!pszDir)
                 return false;
-            bool bRet = false;
+            return DeleteDir(AnsiToUnicode(pszDir).c_str());
+        }
+
+        bool DeleteDir(const wchar_t* pszDir) {
+            if (!pszDir)
+                return false;
+            bool bRet = true;
             const int kBufSize = MAX_PATH * 4;
             HANDLE              hFind = INVALID_HANDLE_VALUE;
-            CHAR                szTemp[kBufSize] = { 0 };
-            WIN32_FIND_DATAA    wfd;
+            WCHAR                szTemp[kBufSize] = { 0 };
+            WIN32_FIND_DATAW    wfd;
 
-            StringCchCopyA(szTemp, kBufSize, pszDir);
-            PathAddBackslashA(szTemp);
-            StringCchCatA(szTemp, kBufSize, "*.*");
+            StringCchCopyW(szTemp, kBufSize, pszDir);
+            PathAddBackslashW(szTemp);
+            StringCchCatW(szTemp, kBufSize, L"*.*");
 
-            hFind = FindFirstFileA(szTemp, &wfd);
+            hFind = FindFirstFileW(szTemp, &wfd);
             if (hFind == INVALID_HANDLE_VALUE) {
                 return false;
             }
 
             do {
-                if (lstrcmpiA(wfd.cFileName, ".") && lstrcmpiA(wfd.cFileName, "..")) {
-                    StringCchCopyA(szTemp, kBufSize, pszDir);
-                    PathAddBackslashA(szTemp);
-                    StringCchCatA(szTemp, kBufSize, wfd.cFileName);
+                if (lstrcmpiW(wfd.cFileName, L".") != 0 && lstrcmpiW(wfd.cFileName, L"..") != 0) {
+                    StringCchCopyW(szTemp, kBufSize, pszDir);
+                    PathAddBackslashW(szTemp);
+                    StringCchCatW(szTemp, kBufSize, wfd.cFileName);
 
                     if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                         bRet = DeleteDir(szTemp);
                     }
                     else {
-                        bRet = (DeleteFileA(szTemp) == TRUE);
+                        bRet = (DeleteFileW(szTemp) == TRUE);
                         if (!bRet) {
-                            SetFileAttributesA(szTemp, FILE_ATTRIBUTE_NORMAL);
-                            bRet = (DeleteFileA(szTemp) == TRUE);
+                            SetFileAttributesW(szTemp, FILE_ATTRIBUTE_NORMAL);
+                            bRet = (DeleteFileW(szTemp) == TRUE);
                         }
                     }
                     if (!bRet) {
-                        break;
+                        TraceMsgW(L"DeleteFile failed: %s, GLE: %ld", szTemp, GetLastError());
                     }
                 }
 
-            } while (FindNextFileA(hFind, &wfd));
+            } while (FindNextFileW(hFind, &wfd));
 
             FindClose(hFind);
 
@@ -159,12 +166,12 @@ namespace ppx {
                 return bRet;
             }
 
-            bRet = (RemoveDirectoryA(pszDir) == TRUE);
+            bRet = (RemoveDirectoryW(pszDir) == TRUE);
             if (!bRet) {
-                DWORD dwAttr = GetFileAttributesA(pszDir);
+                DWORD dwAttr = GetFileAttributesW(pszDir);
                 dwAttr &= ~(FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN);
-                SetFileAttributesA(pszDir, dwAttr);
-                bRet = (RemoveDirectoryA(pszDir) == TRUE);
+                SetFileAttributesW(pszDir, dwAttr);
+                bRet = (RemoveDirectoryW(pszDir) == TRUE);
             }
 
             return bRet;

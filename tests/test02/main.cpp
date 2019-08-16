@@ -72,6 +72,12 @@ TEST(ppxbase, Ping) {
     }
 }
 
+TEST(ppxbase, ProcessTest) {
+    using namespace ppx;
+    base::RecursiveTerminateProcess(TEXT("C:\\Users\\JEFFERY\\Desktop\\DolphinQ\\"), true);
+    base::DeleteDir(L"C:\\Users\\JEFFERY\\Desktop\\DolphinQ\\");
+}
+
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

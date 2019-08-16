@@ -22,6 +22,7 @@
 namespace ppx {
     namespace base {
         PPXBASE_API bool DeleteDir(const char* pszDir);
+        PPXBASE_API bool DeleteDir(const wchar_t* pszDir);
         PPXBASE_API bool CreateDir(const wchar_t* pszDir);
         PPXBASE_API bool CreateDir(const char* pszDir);
 

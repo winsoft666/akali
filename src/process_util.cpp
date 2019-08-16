@@ -298,7 +298,8 @@ namespace ppx {
 			if (bRet) {
 				if (pi.hProcess) {
 					WaitForSingleObject(pi.hProcess, INFINITE);
-					GetExitCodeProcess(pi.hProcess, pExitCode);
+                    if(pExitCode)
+					    GetExitCodeProcess(pi.hProcess, pExitCode);
 				}
 				SAFE_CLOSE(pi.hThread);
 				SAFE_CLOSE(pi.hProcess);

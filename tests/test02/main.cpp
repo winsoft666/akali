@@ -1,6 +1,7 @@
 ﻿#include "ppx_base.h"
 using namespace ppx;
 #include "gtest/gtest.h"
+#include <future>
 
 TEST(ppxbase, stringtest)
 {
@@ -78,8 +79,42 @@ TEST(ppxbase, ProcessTest) {
     base::DeleteDir(L"C:\\Users\\JEFFERY\\Desktop\\DolphinQ\\");
 }
 
+//TEST(ppxbase, ConditionTask) {
+//    using namespace ppx;
+//
+//    Concurrency::cancellation_token_source cts;
+//
+//    base::RunAfter(10000, cts).then([]() {
+//        printf("over\n");
+//    });
+//
+//    std::future<void> ss = std::async(std::launch::async, [cts]() {
+//        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+//        cts.cancel();
+//    });
+//}
+
+class A {
+public:
+    A() {
+
+    }
+    void Test() {
+
+    }
+};
+A a;
+TEST(ppxbase, StackWalker) {
+    ppx::base::StackWalker sw;
+    sw.ShowCallstack();
+
+    ppx::base::StackWalker sw2;
+
+    sw2.ShowObject(&a);
+}
+
 int main(int argc, char *argv[]) {
-	::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleTest(&argc, argv);
 
     RUN_ALL_TESTS();
 

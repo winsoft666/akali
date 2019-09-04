@@ -78,6 +78,8 @@
 #include "ppxbase/iocp.h"
 #include "ppxbase/iocpserver.h"
 #include "ppxbase/internet_availability_checker.h"
+#include "ppxbase/condition_task.h"
+#include "ppxbase/stack_walker.h"
 
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "UserEnv.lib")

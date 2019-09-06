@@ -16,7 +16,7 @@
 #include "ppxbase/driver_info.h"
 #include <assert.h>
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <direct.h>
@@ -267,7 +267,7 @@ namespace ppx {
             DWORD dwHDSerialNum = 0;
 
             if (!::GetVolumeInformationW(GetRoot(nDrive).c_str(), NULL, 0, &dwHDSerialNum, NULL, NULL, NULL, 0))
-                return (DWORD) -1;
+                return (DWORD) - 1;
 
             return dwHDSerialNum;
         }

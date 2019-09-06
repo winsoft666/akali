@@ -15,7 +15,7 @@
 #ifndef PPX_BASE_MISCELLANEOUS_SAF234_
 #define PPX_BASE_MISCELLANEOUS_SAF234_
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#pragma once
+    #pragma once
 #endif
 
 #ifdef _WIN32
@@ -31,18 +31,18 @@ struct _tagpropertykey;
 typedef _tagpropertykey PROPERTYKEY;
 
 #ifdef _X86_
-#define DebugBreak()    _asm { int 3 }
+    #define DebugBreak()    _asm { int 3 }
 #endif
 
 namespace ppx {
     namespace base {
-		PPXBASE_API double RoundEx(double v, int digits);
+        PPXBASE_API double RoundEx(double v, int digits);
 
-		PPXBASE_API bool FloatEqual(const float &f1, const float &f2);
-		PPXBASE_API bool FloatNotEqual(const float &f1, const float &f2);
+        PPXBASE_API bool FloatEqual(const float &f1, const float &f2);
+        PPXBASE_API bool FloatNotEqual(const float &f1, const float &f2);
 
-		// version format XXXX.XXXX.XXXX.XXXX
-		PPXBASE_API int VersionCompare(const std::string &str_ver1, const std::string &str_ver2);
+        // version format XXXX.XXXX.XXXX.XXXX
+        PPXBASE_API int VersionCompare(const std::string &str_ver1, const std::string &str_ver2);
     }
 }
 

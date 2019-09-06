@@ -24,7 +24,7 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API Random {
-        public:
+          public:
             Random();
 
             // Return pseudo-random integer of the specified type.
@@ -32,10 +32,10 @@ namespace ppx {
             template <typename T>
             T Rand() {
                 static_assert(std::numeric_limits<T>::is_integer &&
-                    std::numeric_limits<T>::radix == 2 &&
-                    std::numeric_limits<T>::digits <= 32,
-                    "Rand is only supported for built-in integer types that are "
-                    "32 bits or smaller.");
+                              std::numeric_limits<T>::radix == 2 &&
+                              std::numeric_limits<T>::digits <= 32,
+                              "Rand is only supported for built-in integer types that are "
+                              "32 bits or smaller.");
                 return static_cast<T>(NextOutput());
             }
 
@@ -54,7 +54,7 @@ namespace ppx {
             // Exponential Distribution.
             double Exponential(double lambda);
 
-        private:
+          private:
             // Outputs a nonzero 64-bit random number.
             uint64_t NextOutput();
 

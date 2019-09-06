@@ -15,27 +15,27 @@
 #include <stdint.h>
 
 #if defined(POSIX)
-#include <sys/time.h>
-#if defined(_MAC)
-#include <mach/mach_time.h>
-#endif
+    #include <sys/time.h>
+    #if defined(_MAC)
+        #include <mach/mach_time.h>
+    #endif
 #endif
 
 #if defined(_WIN32)
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
-#include <mmsystem.h>
-#include <sys/timeb.h>
-#include <strsafe.h>
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
+    #include <mmsystem.h>
+    #include <sys/timeb.h>
+    #include <strsafe.h>
 #endif
 #include "ppxbase/timeutils.h"
 
 #pragma warning(disable:4995)
 
 namespace ppx {
-	namespace base {
+    namespace base {
 
         ppx::base::Time GetLocalTime() {
             Time t;
@@ -134,27 +134,24 @@ namespace ppx {
             char szString[512];
             if (nano_precision) {
                 StringCchPrintfA(szString, 512,
-                    "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u:%03u",
-                    year, month, day, hour, minute, second, milliseconds, microseconds, nanoseconds
-                );
-            }
-            else if (micro_precision) {
+                                 "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u:%03u",
+                                 year, month, day, hour, minute, second, milliseconds, microseconds, nanoseconds
+                                );
+            } else if (micro_precision) {
                 StringCchPrintfA(szString, 512,
-                    "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u",
-                    year, month, day, hour, minute, second, milliseconds, microseconds 
-                );
-            }
-            else if (mill_precision) {
+                                 "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u",
+                                 year, month, day, hour, minute, second, milliseconds, microseconds
+                                );
+            } else if (mill_precision) {
                 StringCchPrintfA(szString, 512,
-                    "%04d/%02d/%02d %02u:%02u:%02u:%03u",
-                    year, month, day, hour, minute, second, milliseconds
-                );
-            }
-            else {
+                                 "%04d/%02d/%02d %02u:%02u:%02u:%03u",
+                                 year, month, day, hour, minute, second, milliseconds
+                                );
+            } else {
                 StringCchPrintfA(szString, 512,
-                    "%04d/%02d/%02d %02u:%02u:%02u",
-                    year, month, day, hour, minute, second
-                );
+                                 "%04d/%02d/%02d %02u:%02u:%02u",
+                                 year, month, day, hour, minute, second
+                                );
             }
 
             return szString;

@@ -18,87 +18,87 @@
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <functional>
 #include "ppxbase_export.h"
 
 namespace ppx {
-	namespace base {
+    namespace base {
 
-		class PPXBASE_API TimerBase {
-		public:
-			TimerBase();
-			virtual ~TimerBase();
-			static void CALLBACK TimerProc(void *param, BOOLEAN timerCalled);
+        class PPXBASE_API TimerBase {
+          public:
+            TimerBase();
+            virtual ~TimerBase();
+            static void CALLBACK TimerProc(void *param, BOOLEAN timerCalled);
 
-			// About dwFlags, see: https://msdn.microsoft.com/en-us/library/windows/desktop/ms682485(v=vs.85).aspx
-			// 
-			BOOL Start(DWORD ulInterval,  // ulInterval in ms
-				BOOL bImmediately,
-				BOOL bOnce,
-				ULONG dwFlags = WT_EXECUTELONGFUNCTION);
-			void Stop(bool bWait);
-			virtual void OnTimedEvent();
-		private:
-			HANDLE m_hTimer;
-			PTP_TIMER m_pTimer;
-		};
+            // About dwFlags, see: https://msdn.microsoft.com/en-us/library/windows/desktop/ms682485(v=vs.85).aspx
+            //
+            BOOL Start(DWORD ulInterval,  // ulInterval in ms
+                       BOOL bImmediately,
+                       BOOL bOnce,
+                       ULONG dwFlags = WT_EXECUTELONGFUNCTION);
+            void Stop(bool bWait);
+            virtual void OnTimedEvent();
+          private:
+            HANDLE m_hTimer;
+            PTP_TIMER m_pTimer;
+        };
 
-		template <class T>
-		class TTimer : public TimerBase {
-		public:
-			typedef private void (T::*POnTimer)(void);
+        template <class T>
+        class TTimer : public TimerBase {
+          public:
+            typedef private void (T::*POnTimer)(void);
 
-			TTimer() {
-				m_pClass = NULL;
-				m_pfnOnTimer = NULL;
-			}
+            TTimer() {
+                m_pClass = NULL;
+                m_pfnOnTimer = NULL;
+            }
 
-			void SetTimedEvent(T *pClass, POnTimer pFunc) {
-				m_pClass = pClass;
-				m_pfnOnTimer = pFunc;
-			}
+            void SetTimedEvent(T *pClass, POnTimer pFunc) {
+                m_pClass = pClass;
+                m_pfnOnTimer = pFunc;
+            }
 
-		protected:
-			void OnTimedEvent() override {
-				if (m_pfnOnTimer && m_pClass) {
-					(m_pClass->*m_pfnOnTimer)();
-				}
-			}
+          protected:
+            void OnTimedEvent() override {
+                if (m_pfnOnTimer && m_pClass) {
+                    (m_pClass->*m_pfnOnTimer)();
+                }
+            }
 
-		private:
-			T * m_pClass;
-			POnTimer m_pfnOnTimer;
-		};
+          private:
+            T *m_pClass;
+            POnTimer m_pfnOnTimer;
+        };
 
-		class PPXBASE_API Timer : public TimerBase {
-		public:
-			typedef std::function<void()> FN_CB;
-			Timer() {
+        class PPXBASE_API Timer : public TimerBase {
+          public:
+            typedef std::function<void()> FN_CB;
+            Timer() {
 
-			}
+            }
 
-			Timer(FN_CB cb) {
-				SetTimedEvent(cb);
-			}
+            Timer(FN_CB cb) {
+                SetTimedEvent(cb);
+            }
 
-			void SetTimedEvent(FN_CB cb) {
-				m_cb = cb;
-			}
+            void SetTimedEvent(FN_CB cb) {
+                m_cb = cb;
+            }
 
-		protected:
-			void OnTimedEvent() override {
-				if (m_cb) {
-					m_cb();
-				}
-			}
+          protected:
+            void OnTimedEvent() override {
+                if (m_cb) {
+                    m_cb();
+                }
+            }
 
-		private:
-			FN_CB m_cb;
-		};
-	}
+          private:
+            FN_CB m_cb;
+        };
+    }
 }
 #endif
 #endif // !PPX_BASE_WIN_TIMER_H_

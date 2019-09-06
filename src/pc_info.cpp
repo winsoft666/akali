@@ -91,7 +91,7 @@ namespace ppx {
         }
 
 
-        std::string GetMACThroughIP(const std::string& ip) {
+        std::string GetMACThroughIP(const std::string &ip) {
             if (ip.length() == 0)
                 return "";
 
@@ -107,12 +107,12 @@ namespace ppx {
                 DWORD dwRet = SendARP(DestIP, (ULONG)NULL, (PULONG)mac, (PULONG)&MacLen);
                 if (dwRet == NO_ERROR) {
                     sprintf_s(szMac, 32, "%02x-%02x-%02x-%02x-%02x-%02x",
-                        (unsigned int)mac[0],
-                        (unsigned int)mac[1],
-                        (unsigned int)mac[2],
-                        (unsigned int)mac[3],
-                        (unsigned int)mac[4],
-                        (unsigned int)mac[5]);
+                              (unsigned int)mac[0],
+                              (unsigned int)mac[1],
+                              (unsigned int)mac[2],
+                              (unsigned int)mac[3],
+                              (unsigned int)mac[4],
+                              (unsigned int)mac[5]);
 
                     ret = szMac;
                 }
@@ -155,8 +155,7 @@ namespace ppx {
                     cpuid
                     mov uCpuID, edx
                 }
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
+            } __except (EXCEPTION_EXECUTE_HANDLER) {
                 bException = TRUE;
             }
 
@@ -203,13 +202,13 @@ namespace ppx {
                         continue;
                     char acMAC[32] = { 0 };
                     sprintf_s(acMAC, "%02X-%02X-%02X-%02X-%02X-%02X",
-                        int(pCurrAddresses->PhysicalAddress[0]),
-                        int(pCurrAddresses->PhysicalAddress[1]),
-                        int(pCurrAddresses->PhysicalAddress[2]),
-                        int(pCurrAddresses->PhysicalAddress[3]),
-                        int(pCurrAddresses->PhysicalAddress[4]),
-                        int(pCurrAddresses->PhysicalAddress[5]));
-                    
+                              int(pCurrAddresses->PhysicalAddress[0]),
+                              int(pCurrAddresses->PhysicalAddress[1]),
+                              int(pCurrAddresses->PhysicalAddress[2]),
+                              int(pCurrAddresses->PhysicalAddress[3]),
+                              int(pCurrAddresses->PhysicalAddress[4]),
+                              int(pCurrAddresses->PhysicalAddress[5]));
+
                     mac_list.push_back(acMAC);
                 }
             }
@@ -251,13 +250,13 @@ namespace ppx {
                     if (ip.length() > 0) {
                         char acMAC[32] = { 0 };
                         sprintf_s(acMAC, "%02X-%02X-%02X-%02X-%02X-%02X",
-                            int(pIpAdapterInfo->Address[0]),
-                            int(pIpAdapterInfo->Address[1]),
-                            int(pIpAdapterInfo->Address[2]),
-                            int(pIpAdapterInfo->Address[3]),
-                            int(pIpAdapterInfo->Address[4]),
-                            int(pIpAdapterInfo->Address[5]));
-                        
+                                  int(pIpAdapterInfo->Address[0]),
+                                  int(pIpAdapterInfo->Address[1]),
+                                  int(pIpAdapterInfo->Address[2]),
+                                  int(pIpAdapterInfo->Address[3]),
+                                  int(pIpAdapterInfo->Address[4]),
+                                  int(pIpAdapterInfo->Address[5]));
+
                         mac_ret = acMAC;
                         break;
                     }
@@ -273,22 +272,22 @@ namespace ppx {
             return mac_ret;
         }
 
-		PPXBASE_API int64_t GetValidMacInteger() {
-			std::string strMac = GetValidMAC();
-			if (strMac.length() == 0)
-				return 0;
+        PPXBASE_API int64_t GetValidMacInteger() {
+            std::string strMac = GetValidMAC();
+            if (strMac.length() == 0)
+                return 0;
 
-			int64_t ret = 0L;
-			std::vector<std::string> mac_values;
-			mac_values = StringSplit(strMac, "-");
+            int64_t ret = 0L;
+            std::vector<std::string> mac_values;
+            mac_values = StringSplit(strMac, "-");
 
-			for (size_t i = 0; i < mac_values.size(); i++) {
-				int64_t l = strtol(mac_values[i].c_str(), NULL, 16) * (long long)pow(10, i * 3);
-				ret += l;
-			}
+            for (size_t i = 0; i < mac_values.size(); i++) {
+                int64_t l = strtol(mac_values[i].c_str(), NULL, 16) * (long long)pow(10, i * 3);
+                ret += l;
+            }
 
-			return ret;
-		}
+            return ret;
+        }
 
-	}
+    }
 }

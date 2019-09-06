@@ -38,8 +38,8 @@ namespace ppx {
             //                 into the Bind() system.
 
             template <typename Callable,
-                typename Signature = decltype(&Callable::operator())>
-                struct ExtractCallableRunTypeImpl;
+                      typename Signature = decltype(&Callable::operator())>
+            struct ExtractCallableRunTypeImpl;
 
             template <typename Callable, typename R, typename... Args>
             struct ExtractCallableRunTypeImpl<Callable, R(Callable::*)(Args...) const> {
@@ -76,7 +76,7 @@ namespace ppx {
 
             template <typename Callable>
             struct IsConvertibleToRunType<Callable, void_t<decltype(&Callable::operator())>>
-                : std::is_convertible<Callable, ExtractCallableRunType<Callable>*> {
+        : std::is_convertible<Callable, ExtractCallableRunType<Callable>*> {
             };
 
             // HasRefCountedTypeAsRawPtr selects true_type when any of the |Args| is a raw
@@ -118,14 +118,14 @@ namespace ppx {
             // to the function type while capturing lambdas can't.
             template <typename Functor>
             struct FunctorTraits<Functor,
-                std::enable_if_t<IsConvertibleToRunType<Functor>::value>> {
+                       std::enable_if_t<IsConvertibleToRunType<Functor>::value>> {
                 using RunType = ExtractCallableRunType<Functor>;
                 static constexpr bool is_method = false;
                 static constexpr bool is_nullable = false;
 
                 template <typename... RunArgs>
                 static ExtractReturnType<RunType>
-                    Invoke(const Functor& functor, RunArgs&&... args) {
+                Invoke(const Functor &functor, RunArgs &&... args) {
                     return functor(std::forward<RunArgs>(args)...);
                 }
             };
@@ -138,7 +138,7 @@ namespace ppx {
                 static constexpr bool is_nullable = true;
 
                 template <typename... RunArgs>
-                static R Invoke(R(*function)(Args...), RunArgs&&... args) {
+                static R Invoke(R(*function)(Args...), RunArgs &&... args) {
                     return function(std::forward<RunArgs>(args)...);
                 }
             };
@@ -147,26 +147,26 @@ namespace ppx {
 
             // For functions.
             template <typename R, typename... Args>
-            struct FunctorTraits<R(__stdcall*)(Args...)> {
+            struct FunctorTraits<R(__stdcall *)(Args...)> {
                 using RunType = R(Args...);
                 static constexpr bool is_method = false;
                 static constexpr bool is_nullable = true;
 
                 template <typename... RunArgs>
-                static R Invoke(R(__stdcall* function)(Args...), RunArgs&&... args) {
+                static R Invoke(R(__stdcall *function)(Args...), RunArgs &&... args) {
                     return function(std::forward<RunArgs>(args)...);
                 }
             };
 
             // For functions.
             template <typename R, typename... Args>
-            struct FunctorTraits<R(__fastcall*)(Args...)> {
+            struct FunctorTraits<R(__fastcall *)(Args...)> {
                 using RunType = R(Args...);
                 static constexpr bool is_method = false;
                 static constexpr bool is_nullable = true;
 
                 template <typename... RunArgs>
-                static R Invoke(R(__fastcall* function)(Args...), RunArgs&&... args) {
+                static R Invoke(R(__fastcall *function)(Args...), RunArgs &&... args) {
                     return function(std::forward<RunArgs>(args)...);
                 }
             };
@@ -176,14 +176,14 @@ namespace ppx {
             // For methods.
             template <typename R, typename Receiver, typename... Args>
             struct FunctorTraits<R(Receiver::*)(Args...)> {
-                using RunType = R(Receiver*, Args...);
+                using RunType = R(Receiver *, Args...);
                 static constexpr bool is_method = true;
                 static constexpr bool is_nullable = true;
 
                 template <typename ReceiverPtr, typename... RunArgs>
                 static R Invoke(R(Receiver::*method)(Args...),
-                    ReceiverPtr&& receiver_ptr,
-                    RunArgs&&... args) {
+                                ReceiverPtr &&receiver_ptr,
+                                RunArgs &&... args) {
                     return ((*receiver_ptr).*method)(std::forward<RunArgs>(args)...);
                 }
             };
@@ -191,14 +191,14 @@ namespace ppx {
             // For const methods.
             template <typename R, typename Receiver, typename... Args>
             struct FunctorTraits<R(Receiver::*)(Args...) const> {
-                using RunType = R(const Receiver*, Args...);
+                using RunType = R(const Receiver *, Args...);
                 static constexpr bool is_method = true;
                 static constexpr bool is_nullable = true;
 
                 template <typename ReceiverPtr, typename... RunArgs>
                 static R Invoke(R(Receiver::*method)(Args...) const,
-                    ReceiverPtr&& receiver_ptr,
-                    RunArgs&&... args) {
+                                ReceiverPtr &&receiver_ptr,
+                                RunArgs &&... args) {
                     return ((*receiver_ptr).*method)(std::forward<RunArgs>(args)...);
                 }
             };
@@ -210,8 +210,8 @@ namespace ppx {
                     typename ForceVoidReturn<typename FunctorTraits<T>::RunType>::RunType;
 
                 template <typename IgnoreResultType, typename... RunArgs>
-                static void Invoke(IgnoreResultType&& ignore_result_helper,
-                    RunArgs&&... args) {
+                static void Invoke(IgnoreResultType &&ignore_result_helper,
+                                   RunArgs &&... args) {
                     FunctorTraits<T>::Invoke(
                         std::forward<IgnoreResultType>(ignore_result_helper).functor_,
                         std::forward<RunArgs>(args)...);
@@ -226,10 +226,10 @@ namespace ppx {
                 static constexpr bool is_nullable = true;
 
                 template <typename CallbackType, typename... RunArgs>
-                static R Invoke(CallbackType&& callback, RunArgs&&... args) {
+                static R Invoke(CallbackType &&callback, RunArgs &&... args) {
                     DCHECK(!callback.is_null());
                     return std::forward<CallbackType>(callback).Run(
-                        std::forward<RunArgs>(args)...);
+                               std::forward<RunArgs>(args)...);
                 }
             };
 
@@ -241,10 +241,10 @@ namespace ppx {
                 static constexpr bool is_nullable = true;
 
                 template <typename CallbackType, typename... RunArgs>
-                static R Invoke(CallbackType&& callback, RunArgs&&... args) {
+                static R Invoke(CallbackType &&callback, RunArgs &&... args) {
                     DCHECK(!callback.is_null());
                     return std::forward<CallbackType>(callback).Run(
-                        std::forward<RunArgs>(args)...);
+                               std::forward<RunArgs>(args)...);
                 }
             };
 
@@ -265,10 +265,10 @@ namespace ppx {
             template <typename ReturnType>
             struct InvokeHelper<false, ReturnType> {
                 template <typename Functor, typename... RunArgs>
-                static inline ReturnType MakeItSo(Functor&& functor, RunArgs&&... args) {
+                static inline ReturnType MakeItSo(Functor &&functor, RunArgs &&... args) {
                     using Traits = MakeFunctorTraits<Functor>;
                     return Traits::Invoke(std::forward<Functor>(functor),
-                        std::forward<RunArgs>(args)...);
+                                          std::forward<RunArgs>(args)...);
                 }
             };
 
@@ -278,18 +278,18 @@ namespace ppx {
                 // Otherwise, the function result would be undefined if the the WeakPtr<>
                 // is invalidated.
                 static_assert(std::is_void<ReturnType>::value,
-                    "weak_ptrs can only bind to methods without return values");
+                              "weak_ptrs can only bind to methods without return values");
 
                 template <typename Functor, typename BoundWeakPtr, typename... RunArgs>
-                static inline void MakeItSo(Functor&& functor,
-                    BoundWeakPtr&& weak_ptr,
-                    RunArgs&&... args) {
+                static inline void MakeItSo(Functor &&functor,
+                                            BoundWeakPtr &&weak_ptr,
+                                            RunArgs &&... args) {
                     if (!weak_ptr)
                         return;
                     using Traits = MakeFunctorTraits<Functor>;
                     Traits::Invoke(std::forward<Functor>(functor),
-                        std::forward<BoundWeakPtr>(weak_ptr),
-                        std::forward<RunArgs>(args)...);
+                                   std::forward<BoundWeakPtr>(weak_ptr),
+                                   std::forward<RunArgs>(args)...);
                 }
             };
 
@@ -301,45 +301,45 @@ namespace ppx {
 
             template <typename StorageType, typename R, typename... UnboundArgs>
             struct Invoker<StorageType, R(UnboundArgs...)> {
-                static R RunOnce(BindStateBase* base,
-                    PassingTraitsType<UnboundArgs>... unbound_args) {
+                static R RunOnce(BindStateBase *base,
+                                 PassingTraitsType<UnboundArgs>... unbound_args) {
                     // Local references to make debugger stepping easier. If in a debugger,
                     // you really want to warp ahead and step through the
                     // InvokeHelper<>::MakeItSo() call below.
-                    StorageType* storage = static_cast<StorageType*>(base);
+                    StorageType *storage = static_cast<StorageType *>(base);
                     static constexpr size_t num_bound_args =
-                        std::tuple_size<decltype(storage->bound_args_)>::value;
+                        std::tuple_size < decltype(storage->bound_args_) >::value;
                     return RunImpl(std::move(storage->functor_),
-                        std::move(storage->bound_args_),
-                        std::make_index_sequence<num_bound_args>(),
-                        std::forward<UnboundArgs>(unbound_args)...);
+                                   std::move(storage->bound_args_),
+                                   std::make_index_sequence<num_bound_args>(),
+                                   std::forward<UnboundArgs>(unbound_args)...);
                 }
 
-                static R Run(BindStateBase* base,
-                    PassingTraitsType<UnboundArgs>... unbound_args) {
+                static R Run(BindStateBase *base,
+                             PassingTraitsType<UnboundArgs>... unbound_args) {
                     // Local references to make debugger stepping easier. If in a debugger,
                     // you really want to warp ahead and step through the
                     // InvokeHelper<>::MakeItSo() call below.
-                    const StorageType* storage = static_cast<StorageType*>(base);
+                    const StorageType *storage = static_cast<StorageType *>(base);
                     static constexpr size_t num_bound_args =
-                        std::tuple_size<decltype(storage->bound_args_)>::value;
+                        std::tuple_size < decltype(storage->bound_args_) >::value;
                     return RunImpl(storage->functor_, storage->bound_args_,
-                        std::make_index_sequence<num_bound_args>(),
-                        std::forward<UnboundArgs>(unbound_args)...);
+                                   std::make_index_sequence<num_bound_args>(),
+                                   std::forward<UnboundArgs>(unbound_args)...);
                 }
 
             private:
                 template <typename Functor, typename BoundArgsTuple, size_t... indices>
-                static inline R RunImpl(Functor&& functor,
-                    BoundArgsTuple&& bound,
-                    std::index_sequence<indices...>,
-                    UnboundArgs&&... unbound_args) {
+                static inline R RunImpl(Functor &&functor,
+                                        BoundArgsTuple &&bound,
+                                        std::index_sequence<indices...>,
+                                        UnboundArgs &&... unbound_args) {
                     static constexpr bool is_method = MakeFunctorTraits<Functor>::is_method;
 
                     return InvokeHelper<false, R>::MakeItSo(
-                        std::forward<Functor>(functor),
-                        Unwrap(std::get<indices>(std::forward<BoundArgsTuple>(bound)))...,
-                        std::forward<UnboundArgs>(unbound_args)...);
+                               std::forward<Functor>(functor),
+                               Unwrap(std::get<indices>(std::forward<BoundArgsTuple>(bound)))...,
+                               std::forward<UnboundArgs>(unbound_args)...);
                 }
             };
 
@@ -374,35 +374,35 @@ namespace ppx {
 
             template <typename Functor>
             std::enable_if_t<FunctorTraits<Functor>::is_nullable, bool> IsNull(
-                const Functor& functor) {
+                const Functor &functor) {
                 return !functor;
             }
 
             template <typename Functor>
-            std::enable_if_t<!FunctorTraits<Functor>::is_nullable, bool> IsNull(
-                const Functor&) {
+            std::enable_if_t < !FunctorTraits<Functor>::is_nullable, bool > IsNull(
+                const Functor &) {
                 return false;
             }
 
             // Used by ApplyCancellationTraits below.
             template <typename Functor, typename BoundArgsTuple, size_t... indices>
-            bool ApplyCancellationTraitsImpl(const Functor& functor,
-                const BoundArgsTuple& bound_args,
-                std::index_sequence<indices...>) {
+            bool ApplyCancellationTraitsImpl(const Functor &functor,
+                                             const BoundArgsTuple &bound_args,
+                                             std::index_sequence<indices...>) {
                 return CallbackCancellationTraits<Functor, BoundArgsTuple>::IsCancelled(
-                    functor, std::get<indices>(bound_args)...);
+                           functor, std::get<indices>(bound_args)...);
             }
 
             // Relays |base| to corresponding CallbackCancellationTraits<>::Run(). Returns
             // true if the callback |base| represents is canceled.
             template <typename BindStateType>
-            bool ApplyCancellationTraits(const BindStateBase* base) {
-                const BindStateType* storage = static_cast<const BindStateType*>(base);
+            bool ApplyCancellationTraits(const BindStateBase *base) {
+                const BindStateType *storage = static_cast<const BindStateType *>(base);
                 static constexpr size_t num_bound_args =
-                    std::tuple_size<decltype(storage->bound_args_)>::value;
+                    std::tuple_size < decltype(storage->bound_args_) >::value;
                 return ApplyCancellationTraitsImpl(
-                    storage->functor_, storage->bound_args_,
-                    std::make_index_sequence<num_bound_args>());
+                           storage->functor_, storage->bound_args_,
+                           std::make_index_sequence<num_bound_args>());
             };
 
             // BindState<>
@@ -410,54 +410,54 @@ namespace ppx {
             // This stores all the state passed into Bind().
             template <typename Functor, typename... BoundArgs>
             struct BindState final : BindStateBase {
-                using IsCancellable = std::integral_constant<
-                    bool,
-                    CallbackCancellationTraits<Functor,
-                    std::tuple<BoundArgs...>>::is_cancellable>;
+                using IsCancellable = std::integral_constant <
+                                      bool,
+                                      CallbackCancellationTraits<Functor,
+                                      std::tuple<BoundArgs...>>::is_cancellable >;
 
                 template <typename ForwardFunctor, typename... ForwardBoundArgs>
                 explicit BindState(BindStateBase::InvokeFuncStorage invoke_func,
-                    ForwardFunctor&& functor,
-                    ForwardBoundArgs&&... bound_args)
-                    // IsCancellable is std::false_type if
-                    // CallbackCancellationTraits<>::IsCancelled returns always false.
-                    // Otherwise, it's std::true_type.
+                                   ForwardFunctor &&functor,
+                                   ForwardBoundArgs &&... bound_args)
+                // IsCancellable is std::false_type if
+                // CallbackCancellationTraits<>::IsCancelled returns always false.
+                // Otherwise, it's std::true_type.
                     : BindState(IsCancellable{},
-                        invoke_func,
-                        std::forward<ForwardFunctor>(functor),
-                        std::forward<ForwardBoundArgs>(bound_args)...) {
+                                invoke_func,
+                                std::forward<ForwardFunctor>(functor),
+                                std::forward<ForwardBoundArgs>(bound_args)...) {
                 }
 
                 Functor functor_;
                 std::tuple<BoundArgs...> bound_args_;
 
-            private:
+              private:
                 template <typename ForwardFunctor, typename... ForwardBoundArgs>
                 explicit BindState(std::true_type,
-                    BindStateBase::InvokeFuncStorage invoke_func,
-                    ForwardFunctor&& functor,
-                    ForwardBoundArgs&&... bound_args)
+                                   BindStateBase::InvokeFuncStorage invoke_func,
+                                   ForwardFunctor &&functor,
+                                   ForwardBoundArgs &&... bound_args)
                     : BindStateBase(invoke_func,
-                        &Destroy,
-                        &ApplyCancellationTraits<BindState>),
-                    functor_(std::forward<ForwardFunctor>(functor)),
-                    bound_args_(std::forward<ForwardBoundArgs>(bound_args)...) {
+                                    &Destroy,
+                                    &ApplyCancellationTraits<BindState>),
+                      functor_(std::forward<ForwardFunctor>(functor)),
+                      bound_args_(std::forward<ForwardBoundArgs>(bound_args)...) {
                 }
 
                 template <typename ForwardFunctor, typename... ForwardBoundArgs>
                 explicit BindState(std::false_type,
-                    BindStateBase::InvokeFuncStorage invoke_func,
-                    ForwardFunctor&& functor,
-                    ForwardBoundArgs&&... bound_args)
+                                   BindStateBase::InvokeFuncStorage invoke_func,
+                                   ForwardFunctor &&functor,
+                                   ForwardBoundArgs &&... bound_args)
                     : BindStateBase(invoke_func, &Destroy),
-                    functor_(std::forward<ForwardFunctor>(functor)),
-                    bound_args_(std::forward<ForwardBoundArgs>(bound_args)...) {
+                      functor_(std::forward<ForwardFunctor>(functor)),
+                      bound_args_(std::forward<ForwardBoundArgs>(bound_args)...) {
                 }
 
                 ~BindState() {}
 
-                static void Destroy(const BindStateBase* self) {
-                    delete static_cast<const BindState*>(self);
+                static void Destroy(const BindStateBase *self) {
+                    delete static_cast<const BindState *>(self);
                 }
             };
 
@@ -468,7 +468,7 @@ namespace ppx {
             template <typename Functor, typename... BoundArgs>
             struct MakeBindStateTypeImpl<false, Functor, BoundArgs...> {
                 static_assert(!HasRefCountedTypeAsRawPtr<std::decay_t<BoundArgs>...>::value,
-                    "A parameter is a refcounted type and needs scoped_refptr.");
+                              "A parameter is a refcounted type and needs scoped_refptr.");
                 using Type = BindState<std::decay_t<Functor>, std::decay_t<BoundArgs>...>;
             };
 
@@ -480,20 +480,20 @@ namespace ppx {
             template <typename Functor, typename Receiver, typename... BoundArgs>
             struct MakeBindStateTypeImpl<true, Functor, Receiver, BoundArgs...> {
                 static_assert(!std::is_array<std::remove_reference_t<Receiver>>::value,
-                    "First bound argument to a method cannot be an array.");
+                              "First bound argument to a method cannot be an array.");
                 static_assert(!HasRefCountedTypeAsRawPtr<std::decay_t<BoundArgs>...>::value,
-                    "A parameter is a refcounted type and needs scoped_refptr.");
+                              "A parameter is a refcounted type and needs scoped_refptr.");
 
-            private:
+              private:
                 using DecayedReceiver = std::decay_t<Receiver>;
 
-            public:
-                using Type = BindState<
-                    std::decay_t<Functor>,
-                    std::conditional_t<std::is_pointer<DecayedReceiver>::value,
-                    ScopedRefPtr<std::remove_pointer_t<DecayedReceiver>>,
-                    DecayedReceiver>,
-                    std::decay_t<BoundArgs>...>;
+              public:
+                using Type = BindState <
+                             std::decay_t<Functor>,
+                             std::conditional_t<std::is_pointer<DecayedReceiver>::value,
+                             ScopedRefPtr<std::remove_pointer_t<DecayedReceiver>>,
+                             DecayedReceiver>,
+                             std::decay_t<BoundArgs>... >;
             };
 
             template <typename Functor, typename... BoundArgs>

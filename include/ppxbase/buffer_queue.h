@@ -32,8 +32,8 @@ namespace ppx {
         } QUEUE_ELEMENT;
 
         class PPXBASE_API BufferQueue {
-        public:
-            explicit BufferQueue(const std::string& queue_name = "");
+          public:
+            explicit BufferQueue(const std::string &queue_name = "");
             ~BufferQueue();
 
             bool AddToFront(void *pSrcData, unsigned int nSrcDataSize);
@@ -61,12 +61,12 @@ namespace ppx {
             unsigned int GetFrontDataSize();
             unsigned int GetLastDataSize();
 
-			int64_t ToOneBuffer(char** ppBuf) const;
-			int64_t ToOneBufferWithNullEnding(char** ppBuf) const;
-        private:
+            int64_t ToOneBuffer(char **ppBuf) const;
+            int64_t ToOneBufferWithNullEnding(char **ppBuf) const;
+          private:
 
-			class BufferQueueImpl;
-			BufferQueueImpl* impl_;
+            class BufferQueueImpl;
+            BufferQueueImpl *impl_;
 
             PPX_DISALLOW_COPY_AND_ASSIGN(BufferQueue);
         };

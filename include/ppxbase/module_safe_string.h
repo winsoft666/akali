@@ -20,7 +20,7 @@
 #include "ppxbase_export.h"
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 
@@ -29,10 +29,10 @@ namespace ppx {
 
         template <typename T>
         class vm_allocator : public std::allocator<T> {
-        public:
+          public:
             typedef size_t size_type;
-            typedef T* pointer;
-            typedef const T* const_pointer;
+            typedef T *pointer;
+            typedef const T *const_pointer;
 
             template<typename _Tp1>
             struct rebind {
@@ -68,7 +68,7 @@ namespace ppx {
 
         typedef std::basic_string<char, std::char_traits<char>, vm_allocator<char> > ModuleSafeString;
 
-        #define ModuleSafeVector(T) std::vector<T, ppx::base::vm_allocator<T> >
+#define ModuleSafeVector(T) std::vector<T, ppx::base::vm_allocator<T> >
     }
 }
 #else

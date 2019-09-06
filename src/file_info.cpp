@@ -62,8 +62,8 @@ namespace ppx {
         bool FileInfo::Create(const std::wstring &strFileName) {
             Reset();
 
-            HANDLE hFile = CreateFileW(strFileName.c_str(), GENERIC_READ, 
-                FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+            HANDLE hFile = CreateFileW(strFileName.c_str(), GENERIC_READ,
+                                       FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
             if (hFile == INVALID_HANDLE_VALUE) {
                 return false;
             }
@@ -117,7 +117,7 @@ namespace ppx {
                 ZeroMemory(strSubBlock, MAX_PATH * 2 * sizeof(WCHAR));
                 swprintf_s(strSubBlock, L"\\StringFileInfo\\%04X%04X\\", dwLangCode & 0x0000FFFF, (dwLangCode & 0xFFFF0000) >> 16);
 
-				WCHAR strTmp[MAX_PATH * 2] = { 0 };
+                WCHAR strTmp[MAX_PATH * 2] = { 0 };
                 ZeroMemory(strTmp, MAX_PATH * 2 * sizeof(WCHAR));
 
                 swprintf_s(strTmp, L"%s%s", strSubBlock, L"CompanyName");
@@ -125,42 +125,42 @@ namespace ppx {
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strCompanyName = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"FileDescription");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"FileDescription");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strFileDescription = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"FileVersion");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"FileVersion");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strFileVersion = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"InternalName");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"InternalName");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strInternalName = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"LegalCopyright");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"LegalCopyright");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strLegalCopyright = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"OriginalFileName");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"OriginalFileName");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strOriginalFileName = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"ProductName");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"ProductName");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strProductName = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"ProductVersion");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"ProductVersion");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strProductVersion = (LPCTSTR)lpInfo;
 
-				swprintf_s(strTmp, L"%s%s", strSubBlock, L"Comments");
+                swprintf_s(strTmp, L"%s%s", strSubBlock, L"Comments");
 
                 if (VerQueryValueW(lpData, strTmp, &lpInfo, &unInfoLen))
                     m_strComments = (LPCTSTR)lpInfo;
@@ -264,9 +264,9 @@ namespace ppx {
             wchar_t strTemp[MAX_PATH * 2] = { 0 };
 
             StringCchPrintfW(strTemp, MAX_PATH * 2, L"%d.%d.%d.%d", (m_FileInfo.dwFileVersionMS & 0xFFFF0000) >> 16,
-                        (m_FileInfo.dwFileVersionMS & 0x0000FFFF),
-                        (m_FileInfo.dwFileVersionLS & 0xFFFF0000) >> 16,
-                        m_FileInfo.dwFileVersionLS & 0x0000FFFF);
+                             (m_FileInfo.dwFileVersionMS & 0x0000FFFF),
+                             (m_FileInfo.dwFileVersionLS & 0xFFFF0000) >> 16,
+                             m_FileInfo.dwFileVersionLS & 0x0000FFFF);
 
             return strTemp;
         }

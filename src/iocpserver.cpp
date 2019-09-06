@@ -28,7 +28,7 @@ namespace ppx {
 
         }
 
-        bool IOCPServer::Start(const SocketAddress & addr, int family, int type) {
+        bool IOCPServer::Start(const SocketAddress &addr, int family, int type) {
             socket_ = new OverlappedSocket();
             PPX_ASSERT(socket_);
 
@@ -87,7 +87,7 @@ namespace ppx {
             return start_time_;
         }
 
-        void IOCPServer::OnAcceptEvent(OverlappedSocket * socket) {
+        void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
             PPX_ASSERT(socket);
             PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [Connected]";
             {
@@ -96,13 +96,13 @@ namespace ppx {
             }
         }
 
-        void IOCPServer::OnReadEvent(OverlappedSocket * socket, const PER_IO_CONTEXT * io_ctx) {
+        void IOCPServer::OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
             PPX_ASSERT(socket);
             PPX_ASSERT(io_ctx);
             PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [RECV] " << io_ctx->GetBuffer();
         }
 
-        void IOCPServer::OnWriteEvent(OverlappedSocket * socket, const PER_IO_CONTEXT * io_ctx) {
+        void IOCPServer::OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
             PPX_ASSERT(socket);
             PPX_ASSERT(io_ctx);
             PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [SEND] " << io_ctx->GetBuffer();
@@ -112,7 +112,7 @@ namespace ppx {
 
         }
 
-        void IOCPServer::OnCloseEvent(OverlappedSocket * socket, int error) {
+        void IOCPServer::OnCloseEvent(OverlappedSocket *socket, int error) {
             PPX_ASSERT(socket);
             PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [Disconnected] error=" << error;
             socket->Close();

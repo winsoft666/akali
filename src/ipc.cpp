@@ -28,7 +28,7 @@
 namespace ppx {
     namespace base {
         class IPC::IPCImpl {
-        public:
+          public:
             IPCImpl() :
                 buffer_size_(4096),
                 exit_(false) {
@@ -38,8 +38,8 @@ namespace ppx {
             ~IPCImpl() {
             }
 
-            bool SyncSend(const char* ipc_name, unsigned int ipc_name_len, const void *msg, unsigned int msg_size, unsigned int timeout = 5000) {
-                unsigned char * msg_enc_data = nullptr;
+            bool SyncSend(const char *ipc_name, unsigned int ipc_name_len, const void *msg, unsigned int msg_size, unsigned int timeout = 5000) {
+                unsigned char *msg_enc_data = nullptr;
                 unsigned int msg_enc_data_size = 0;
 
                 unsigned char *rand_aes_key = nullptr;
@@ -110,12 +110,12 @@ namespace ppx {
 
                 for (;;) {
                     HANDLE hPipe = CreateNamedPipeA(strPipeName.c_str(),
-                        PIPE_ACCESS_DUPLEX,
-                        PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
-                        PIPE_UNLIMITED_INSTANCES,
-                        buffer_size_, buffer_size_,
-                        5000,
-                        NULL);
+                                                    PIPE_ACCESS_DUPLEX,
+                                                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+                                                    PIPE_UNLIMITED_INSTANCES,
+                                                    buffer_size_, buffer_size_,
+                                                    5000,
+                                                    NULL);
                     if (hPipe == INVALID_HANDLE_VALUE) {
                         return;
                     }
@@ -126,8 +126,7 @@ namespace ppx {
                         if (exit_) {
                             CloseHandle(hPipe);
                             break;
-                        }
-                        else {
+                        } else {
                             std::future<void> f = std::async(std::launch::async, std::bind(&IPCImpl::InstanceThrProc, this, hPipe));
                             bool add = false;
 
@@ -143,22 +142,21 @@ namespace ppx {
                                 instance_thrs_.push_back(std::move(f));
                             }
                         }
-                    }
-                    else {
+                    } else {
                         CloseHandle(hPipe);
                     }
                 }
             }
 
 
-            void OnRecvMsg(const void * buffer, unsigned int buffer_size) {
+            void OnRecvMsg(const void *buffer, unsigned int buffer_size) {
                 if (cb_) {
                     cb_(buffer, buffer_size);
                 }
             }
 
             void InstanceThrProc(HANDLE hPipe) {
-                char *pRequest = (char*)malloc(buffer_size_ + 1);
+                char *pRequest = (char *)malloc(buffer_size_ + 1);
                 if (!pRequest) {
                     return;
                 }
@@ -174,7 +172,7 @@ namespace ppx {
                     if (!fSuccess) {
                         if (dwGLE == ERROR_MORE_DATA) {
                             unsigned int max_buf_size = buffer_size_ * 4;
-                            char *pNewRequest = (char*)malloc(max_buf_size + 1);
+                            char *pNewRequest = (char *)malloc(max_buf_size + 1);
                             if (!pNewRequest)
                                 break;
                             memset(pNewRequest, 0, max_buf_size + 1);
@@ -191,8 +189,7 @@ namespace ppx {
                             }
 
                             total_read += dwBytesRead;
-                        }
-                        else {
+                        } else {
                             PPX_LOG(LS_ERROR) << "SRV ReadFile Failed, GLE: " << dwGLE;
                             break;
                         }
@@ -211,7 +208,7 @@ namespace ppx {
                 return;
             }
 
-            bool StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const void* data, unsigned int data_size)> cb) {
+            bool StartListen(const char *ipc_name, unsigned int ipc_name_len, std::function<void(const void *data, unsigned int data_size)> cb) {
                 ipc_name_.clear();
                 ipc_name_.assign(ipc_name, ipc_name_len);
 
@@ -236,9 +233,9 @@ namespace ppx {
             }
 
 
-        public:
+          public:
             std::string ipc_name_;
-            std::function<void(const void* data, unsigned int data_size)> cb_;
+            std::function<void(const void *data, unsigned int data_size)> cb_;
             std::thread listen_thr_;
             std::vector<std::future<void>> instance_thrs_;
             std::atomic_bool exit_;
@@ -253,7 +250,7 @@ namespace ppx {
             SAFE_DELETE(impl_);
         }
 
-        bool IPC::StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const void* data, unsigned int data_size)> cb) {
+        bool IPC::StartListen(const char *ipc_name, unsigned int ipc_name_len, std::function<void(const void *data, unsigned int data_size)> cb) {
             return impl_->StartListen(ipc_name, ipc_name_len, cb);
         }
 
@@ -261,7 +258,7 @@ namespace ppx {
             impl_->StopListen();
         }
 
-        bool IPC::SyncSend(const char* ipc_name, unsigned int ipc_name_len, const void* data, unsigned int data_size) {
+        bool IPC::SyncSend(const char *ipc_name, unsigned int ipc_name_len, const void *data, unsigned int data_size) {
 
             bool ret = impl_->SyncSend(ipc_name, ipc_name_len, data, data_size, 30000);
 

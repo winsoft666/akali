@@ -51,26 +51,26 @@ namespace ppx {
                 return static_cast<Dst>(value);
 
             switch (internal::RangeCheck<Dst>(value)) {
-            case internal::TYPE_VALID:
-                return static_cast<Dst>(value);
+                case internal::TYPE_VALID:
+                    return static_cast<Dst>(value);
 
-            case internal::TYPE_UNDERFLOW:
-                return std::numeric_limits<Dst>::min();
+                case internal::TYPE_UNDERFLOW:
+                    return std::numeric_limits<Dst>::min();
 
-            case internal::TYPE_OVERFLOW:
-                return std::numeric_limits<Dst>::max();
+                case internal::TYPE_OVERFLOW:
+                    return std::numeric_limits<Dst>::max();
 
                 // Should fail only on attempting to assign NaN to a saturated integer.
-            case internal::TYPE_INVALID:
-                PPX_NOT_REACHED("");
-                return std::numeric_limits<Dst>::max();
+                case internal::TYPE_INVALID:
+                    PPX_NOT_REACHED("");
+                    return std::numeric_limits<Dst>::max();
             }
 
             PPX_NOT_REACHED("");
             return static_cast<Dst>(value);
         }
 
-    } 
+    }
 }
 
 #endif  // ! PPX_BASE_SAFE_CONVERSIONS_H_

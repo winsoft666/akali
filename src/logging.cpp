@@ -80,37 +80,37 @@ namespace ppx {
         }  // namespace
 
 
-		class LogMessage::Impl {
-		public:
-			Impl() {
-				is_noop_ = false;
-			}
+        class LogMessage::Impl {
+          public:
+            Impl() {
+                is_noop_ = false;
+            }
 
-			~Impl() {
+            ~Impl() {
 
-			}
+            }
 
-			// The ostream that buffers the formatted message before output
-			std::ostringstream print_stream_;
+            // The ostream that buffers the formatted message before output
+            std::ostringstream print_stream_;
 
-			// The severity level of this message
-			LoggingSeverity severity_;
+            // The severity level of this message
+            LoggingSeverity severity_;
 
-			// String data generated in the constructor, that should be appended to the message before output.
-			std::string extra_;
+            // String data generated in the constructor, that should be appended to the message before output.
+            std::string extra_;
 
-			bool is_noop_;
+            bool is_noop_;
 
-			// The output streams and their associated severities
-			static StreamList streams_;
+            // The output streams and their associated severities
+            static StreamList streams_;
 
-			// Flags for formatting options
-			static bool thread_;
-			static bool timestamp_;
+            // Flags for formatting options
+            static bool thread_;
+            static bool timestamp_;
 
-			// Determines if logs will be directed to stderr in debug mode.
-			static bool log_to_stderr_;
-		};
+            // Determines if logs will be directed to stderr in debug mode.
+            static bool log_to_stderr_;
+        };
 
 
         bool LogMessage::Impl::log_to_stderr_ = true;
@@ -121,51 +121,50 @@ namespace ppx {
         bool LogMessage::Impl::thread_ = 1;
         bool LogMessage::Impl::timestamp_ = 1;
 
-        LogMessage::LogMessage(const char *file, int line, LoggingSeverity sev, LogErrorContext err_ctx, int err)
-             {
-			impl_ = new Impl();
+        LogMessage::LogMessage(const char *file, int line, LoggingSeverity sev, LogErrorContext err_ctx, int err) {
+            impl_ = new Impl();
 
-			impl_->severity_ = sev;
-			impl_->is_noop_ = IsNoop(sev);
+            impl_->severity_ = sev;
+            impl_->is_noop_ = IsNoop(sev);
 
             if (impl_->is_noop_)
                 return;
 
             if (impl_->timestamp_) {
-				impl_->print_stream_ << "[" << GetLocalTime().ToString(true) << "] ";
+                impl_->print_stream_ << "[" << GetLocalTime().ToString(true) << "] ";
             }
 
             if (impl_->thread_) {
 #ifdef _WIN32
                 DWORD id = GetCurrentThreadId();
-				impl_->print_stream_ << "[" << std::dec << id << "] ";
+                impl_->print_stream_ << "[" << std::dec << id << "] ";
 #endif
             }
 
             switch (sev) {
-            case ppx::base::LS_SENSITIVE:
-				impl_->print_stream_ << "[SENSITIVE] ";
-                break;
-            case ppx::base::LS_VERBOSE:
-				impl_->print_stream_ << "[VERBOSE] ";
-                break;
-            case ppx::base::LS_INFO:
-				impl_->print_stream_ << "[INFO] ";
-                break;
-            case ppx::base::LS_WARNING:
-				impl_->print_stream_ << "[WARNING] ";
-                break;
-            case ppx::base::LS_ERROR:
-				impl_->print_stream_ << "[ERROR] ";
-                break;
-            case ppx::base::LS_NONE:
-            default:
-                break;
+                case ppx::base::LS_SENSITIVE:
+                    impl_->print_stream_ << "[SENSITIVE] ";
+                    break;
+                case ppx::base::LS_VERBOSE:
+                    impl_->print_stream_ << "[VERBOSE] ";
+                    break;
+                case ppx::base::LS_INFO:
+                    impl_->print_stream_ << "[INFO] ";
+                    break;
+                case ppx::base::LS_WARNING:
+                    impl_->print_stream_ << "[WARNING] ";
+                    break;
+                case ppx::base::LS_ERROR:
+                    impl_->print_stream_ << "[ERROR] ";
+                    break;
+                case ppx::base::LS_NONE:
+                default:
+                    break;
             }
 
 #if (defined DEBUG || defined _DEBUG)
             if (file != nullptr)
-				impl_->print_stream_ << "(" << FilenameFromPath(file) << ":" << line << "): ";
+                impl_->print_stream_ << "(" << FilenameFromPath(file) << ":" << line << "): ";
 #endif
 
             if (err_ctx != ERRCTX_NONE) {
@@ -173,30 +172,30 @@ namespace ppx {
                 char prefix[14] = { 0 };
                 sprintf_s(prefix, sizeof(prefix), "[0x%08X]", err);
                 tmp << prefix;
-				char err_buf[100] = { 0 };
+                char err_buf[100] = { 0 };
 
                 switch (err_ctx) {
                     case ERRCTX_ERRNO:
-						strerror_s(err_buf, 100, err);
+                        strerror_s(err_buf, 100, err);
                         tmp << " " << err_buf;
                         break;
 #ifdef _WIN32
 
                     case ERRCTX_HRESULT: {
-                            char msgbuf[256];
-                            DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+                        char msgbuf[256];
+                        DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 
-                            if (DWORD len = FormatMessageA( flags, nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                                            msgbuf, sizeof(msgbuf) / sizeof(msgbuf[0]), nullptr)) {
-                                while ((len > 0) && isspace(static_cast<unsigned char>(msgbuf[len - 1]))) {
-                                    msgbuf[--len] = 0;
-                                }
-
-                                tmp << " " << msgbuf;
+                        if (DWORD len = FormatMessageA( flags, nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                                                        msgbuf, sizeof(msgbuf) / sizeof(msgbuf[0]), nullptr)) {
+                            while ((len > 0) && isspace(static_cast<unsigned char>(msgbuf[len - 1]))) {
+                                msgbuf[--len] = 0;
                             }
 
-                            break;
+                            tmp << " " << msgbuf;
                         }
+
+                        break;
+                    }
 
 #endif  // _WIN32
 
@@ -204,7 +203,7 @@ namespace ppx {
                         break;
                 }
 
-				impl_->extra_ = tmp.str();
+                impl_->extra_ = tmp.str();
             }
         }
 
@@ -228,7 +227,7 @@ namespace ppx {
                 }
             }
 
-			SAFE_DELETE(impl_);
+            SAFE_DELETE(impl_);
         }
 
         std::ostream &LogMessage::stream() {
@@ -253,11 +252,11 @@ namespace ppx {
         }
 
         void LogMessage::LogThreads(bool on) {
-			Impl::thread_ = on;
+            Impl::thread_ = on;
         }
 
         void LogMessage::LogTimestamps(bool on) {
-			Impl::timestamp_ = on;
+            Impl::timestamp_ = on;
         }
 
         void LogMessage::LogToDebug(LoggingSeverity min_sev) {
@@ -267,7 +266,7 @@ namespace ppx {
         }
 
         void LogMessage::SetLogToStderr(bool log_to_stderr) {
-			Impl::log_to_stderr_ = log_to_stderr;
+            Impl::log_to_stderr_ = log_to_stderr;
         }
 
         int LogMessage::GetLogToStream(LogSink *stream) {
@@ -285,7 +284,7 @@ namespace ppx {
 
         void LogMessage::AddLogToStream(LogSink *stream, LoggingSeverity min_sev) {
             CritScope cs(&g_log_crit);
-			Impl::streams_.push_back(std::make_pair(stream, min_sev));
+            Impl::streams_.push_back(std::make_pair(stream, min_sev));
             UpdateMinLogSeverity();
         }
 
@@ -347,9 +346,9 @@ namespace ppx {
                 return;
 
             if (!impl_->extra_.empty())
-				impl_->print_stream_ << " : " << impl_->extra_;
+                impl_->print_stream_ << " : " << impl_->extra_;
 
-			impl_->print_stream_ << std::endl;
+            impl_->print_stream_ << std::endl;
         }
 
         //////////////////////////////////////////////////////////////////////

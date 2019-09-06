@@ -168,8 +168,8 @@ namespace ppx {
     c_type FLAG_##name = (default);                         \
     /* register the flag */                                 \
     static ppx::base::Flag Flag_##name(__FILE__, #name, (comment),      \
-                                 ppx::base::Flag::type, &FLAG_##name,   \
-                                 ppx::base::FlagValue::New_##type(default))
+                                       ppx::base::Flag::type, &FLAG_##name,   \
+                                       ppx::base::FlagValue::New_##type(default))
 
 
         // Internal use only.

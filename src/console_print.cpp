@@ -16,38 +16,36 @@
 #include <stdio.h>
 
 namespace ppx {
-	namespace base {
+    namespace base {
 
-		void PrintConsoleProcess(double percentage) {
-			const char* PBSTR =
-				"============================================================";
-			const int PBWIDTH = 60;
-			int val = (int)(percentage * 100);
-			int lpad = (int)(percentage * PBWIDTH);
-			int rpad = PBWIDTH - lpad;
+        void PrintConsoleProcess(double percentage) {
+            const char *PBSTR =
+                "============================================================";
+            const int PBWIDTH = 60;
+            int val = (int)(percentage * 100);
+            int lpad = (int)(percentage * PBWIDTH);
+            int rpad = PBWIDTH - lpad;
 
-			if (val < 0 || val > 100)
-				return;
+            if (val < 0 || val > 100)
+                return;
 
-			if (val == 100 || val == 0) {
-				static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-				if (val == 100 && hConsole) {
-					printf("\r[%.*s%*s] ", lpad, PBSTR, rpad, "");
-					CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-					GetConsoleScreenBufferInfo(hConsole, &csbiInfo);
-					SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-					printf("%3d%%", val);
-					SetConsoleTextAttribute(hConsole, csbiInfo.wAttributes);
-				}
-				else {
-					printf("\r[%.*s%*s] %3d%%", lpad, PBSTR, rpad, "", val);
-				}
-			}
-			else {
-				printf("\r[%.*s>%*s] %3d%%", lpad, PBSTR, rpad - 1, "", val);
-			}
-			fflush(stdout);
-		}
+            if (val == 100 || val == 0) {
+                static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+                if (val == 100 && hConsole) {
+                    printf("\r[%.*s%*s] ", lpad, PBSTR, rpad, "");
+                    CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+                    GetConsoleScreenBufferInfo(hConsole, &csbiInfo);
+                    SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+                    printf("%3d%%", val);
+                    SetConsoleTextAttribute(hConsole, csbiInfo.wAttributes);
+                } else {
+                    printf("\r[%.*s%*s] %3d%%", lpad, PBSTR, rpad, "", val);
+                }
+            } else {
+                printf("\r[%.*s>%*s] %3d%%", lpad, PBSTR, rpad - 1, "", val);
+            }
+            fflush(stdout);
+        }
 
-	}
+    }
 }

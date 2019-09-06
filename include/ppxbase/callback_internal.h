@@ -56,15 +56,15 @@ namespace ppx {
             // function pointer.
             class PPXBASE_API BindStateBase
                 : public RefCountedBase {
-            public:
+              public:
                 using InvokeFuncStorage = void(*)();
 
-            private:
+              private:
                 BindStateBase(InvokeFuncStorage polymorphic_invoke,
-                    void(*destructor)(const BindStateBase *));
+                              void(*destructor)(const BindStateBase *));
                 BindStateBase(InvokeFuncStorage polymorphic_invoke,
-                    void(*destructor)(const BindStateBase *),
-                    bool(*is_cancelled)(const BindStateBase *));
+                              void(*destructor)(const BindStateBase *),
+                              bool(*is_cancelled)(const BindStateBase *));
 
                 ~BindStateBase() = default;
 
@@ -100,7 +100,7 @@ namespace ppx {
             // CallbackBase<MoveOnly> is a direct base class of MoveOnly callbacks, and
             // CallbackBase<Copyable> uses CallbackBase<MoveOnly> for its implementation.
             class PPXBASE_API CallbackBase {
-            public:
+              public:
                 CallbackBase(CallbackBase &&c);
                 CallbackBase &operator=(CallbackBase &&c);
 
@@ -125,7 +125,7 @@ namespace ppx {
                 // Returns the Callback into an uninitialized state.
                 void Reset();
 
-            protected:
+              protected:
                 using InvokeFuncStorage = BindStateBase::InvokeFuncStorage;
 
                 // Returns true if this callback equals |other|. |other| may be null.
@@ -149,13 +149,13 @@ namespace ppx {
 
             // CallbackBase<Copyable> is a direct base class of Copyable Callbacks.
             class PPXBASE_API CallbackBaseCopyable : public CallbackBase {
-            public:
+              public:
                 CallbackBaseCopyable(const CallbackBaseCopyable &c);
                 CallbackBaseCopyable(CallbackBaseCopyable &&c);
                 CallbackBaseCopyable &operator=(const CallbackBaseCopyable &c);
                 CallbackBaseCopyable &operator=(CallbackBaseCopyable &&c);
 
-            protected:
+              protected:
                 explicit CallbackBaseCopyable(BindStateBase *bind_state)
                     : CallbackBase(bind_state) {
                 }

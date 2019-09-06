@@ -23,8 +23,7 @@ namespace ppx {
             packet_size_(packet_size),
             send_timeout_ms_(send_timeout_ms),
             recv_timeout_ms_(recv_timeout_ms),
-            ttl_(ttl)
-        {
+            ttl_(ttl) {
             WSADATA wsaData;
             WORD wVersionRequested = MAKEWORD(2, 2);
             WSAStartup(wVersionRequested, &wsaData);
@@ -34,9 +33,9 @@ namespace ppx {
             WSACleanup();
         }
 
-        void Ping::FillPingPacket(__u8* icmp_packet, __u16 seq, __u16 icmp_packet_size) {
+        void Ping::FillPingPacket(__u8 *icmp_packet, __u16 seq, __u16 icmp_packet_size) {
             assert(icmp_packet);
-            ping_hdr* p_ping_hdr = reinterpret_cast<ping_hdr*>(icmp_packet);
+            ping_hdr *p_ping_hdr = reinterpret_cast<ping_hdr *>(icmp_packet);
             if (!p_ping_hdr)
                 return;
             p_ping_hdr->common_hdr.type = 8;
@@ -55,18 +54,18 @@ namespace ppx {
                 memset((icmp_packet + junk_offset), 'E', junk_data_size);
 
             p_ping_hdr->common_hdr.check = 0;
-            p_ping_hdr->common_hdr.check = GetCheckSum(reinterpret_cast<__u16*>(icmp_packet), icmp_packet_size);
+            p_ping_hdr->common_hdr.check = GetCheckSum(reinterpret_cast<__u16 *>(icmp_packet), icmp_packet_size);
         }
 
-        bool Ping::DecodeIPPacket(__u8* ip_packet, __u16 packet_size, PingRsp &rsp) {
-            iphdr* ip_hdr = reinterpret_cast<iphdr*>(ip_packet);
+        bool Ping::DecodeIPPacket(__u8 *ip_packet, __u16 packet_size, PingRsp &rsp) {
+            iphdr *ip_hdr = reinterpret_cast<iphdr *>(ip_packet);
             if (!ip_hdr)
                 return false;
             __u32 now = (__u32)(base::GetTimeStamp() / 1000);
 
             __u16 ip_hdr_len = ip_hdr->ihl * 4; // bytes
 
-            ping_hdr *p_ping_hdr = reinterpret_cast<ping_hdr*>(ip_packet + ip_hdr_len);
+            ping_hdr *p_ping_hdr = reinterpret_cast<ping_hdr *>(ip_packet + ip_hdr_len);
             if (p_ping_hdr->common_hdr.type != 0 || p_ping_hdr->common_hdr.code != 0) {
                 printf("non-echo response, type=%d, code=%d\n", p_ping_hdr->common_hdr.type, p_ping_hdr->common_hdr.code);
                 return false;
@@ -78,7 +77,7 @@ namespace ppx {
             }
 
             __u32 timestamp = 0;
-            memcpy(&timestamp, reinterpret_cast<__u32*>((__u8*)p_ping_hdr + sizeof(ping_hdr)), sizeof(__u32));
+            memcpy(&timestamp, reinterpret_cast<__u32 *>((__u8 *)p_ping_hdr + sizeof(ping_hdr)), sizeof(__u32));
 
             in_addr from;
             from.s_addr = ip_hdr->saddr;
@@ -92,33 +91,33 @@ namespace ppx {
             return true;
         }
 
-        bool Ping::SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp>& rsps) {
+        bool Ping::SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp> &rsps) {
             if (!ip.IsValid())
                 return false;
             if (times <= 0 || times > 0xFFFF)
                 return false;
 
             // socket函数需要管理员权限
-           // 需要绕开管理员权限，可以使用IcmpSendEcho系列函数
-           //
+            // 需要绕开管理员权限，可以使用IcmpSendEcho系列函数
+            //
             SOCKET s = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
             if (s == INVALID_SOCKET) {
                 return false;
             }
 
-            int err = setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout_ms_), sizeof(send_timeout_ms_));
+            int err = setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char *>(&send_timeout_ms_), sizeof(send_timeout_ms_));
             if (err == SOCKET_ERROR) {
                 closesocket(s);
                 return false;
             }
 
-            err = setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&recv_timeout_ms_), sizeof(recv_timeout_ms_));
+            err = setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&recv_timeout_ms_), sizeof(recv_timeout_ms_));
             if (err == SOCKET_ERROR) {
                 closesocket(s);
                 return false;
             }
 
-            err = setsockopt(s, IPPROTO_IP, IP_TTL, reinterpret_cast<const char*>(&ttl_), sizeof(ttl_));
+            err = setsockopt(s, IPPROTO_IP, IP_TTL, reinterpret_cast<const char *>(&ttl_), sizeof(ttl_));
             if (err == SOCKET_ERROR) {
                 closesocket(s);
                 return false;
@@ -146,11 +145,11 @@ namespace ppx {
                 addr.sin_addr = ip.GetIPv4Address();
 
                 int sent = sendto(s,
-                    reinterpret_cast<const char*>(icmp_packet),
-                    icmp_packet_size,
-                    0,
-                    reinterpret_cast<const sockaddr*>(&addr),
-                    sizeof(sockaddr));
+                                  reinterpret_cast<const char *>(icmp_packet),
+                                  icmp_packet_size,
+                                  0,
+                                  reinterpret_cast<const sockaddr *>(&addr),
+                                  sizeof(sockaddr));
 
                 if (sent == SOCKET_ERROR) {
                     int gle = WSAGetLastError();
@@ -163,11 +162,11 @@ namespace ppx {
                 sockaddr_in from;
                 int from_len = sizeof(sockaddr_in);
                 int bread = recvfrom(s,
-                    reinterpret_cast<char*>(ip_packet),
-                    ip_packet_size,
-                    0,
-                    reinterpret_cast<sockaddr*>(&from),
-                    &from_len);
+                                     reinterpret_cast<char *>(ip_packet),
+                                     ip_packet_size,
+                                     0,
+                                     reinterpret_cast<sockaddr *>(&from),
+                                     &from_len);
 
                 if (bread == SOCKET_ERROR) {
                     int gle = WSAGetLastError();
@@ -178,7 +177,7 @@ namespace ppx {
                     continue;
                 }
 
-                DecodeIPPacket(reinterpret_cast<__u8*>(ip_packet), ip_packet_size, rsp);
+                DecodeIPPacket(reinterpret_cast<__u8 *>(ip_packet), ip_packet_size, rsp);
 
                 rsps.push_back(rsp);
             }

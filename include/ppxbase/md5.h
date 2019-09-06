@@ -19,8 +19,7 @@
 #include <string>
 #include "ppxbase_export.h"
 
-namespace ppx
-{
+namespace ppx {
     namespace base {
         namespace libmd5_internal {
             typedef unsigned int UWORD32;
@@ -39,7 +38,7 @@ namespace ppx
             PPXBASE_API void MD5SigToString(unsigned char sig[16], char *str, int len);
         }
 
-		// Helper function.
+        // Helper function.
         PPXBASE_API std::string GetStringMd5(const std::string &str);
         PPXBASE_API std::string GetStringMd5(const void *buffer, unsigned int buffer_size);
         PPXBASE_API std::string GetFileMd5(const std::string &file_path);

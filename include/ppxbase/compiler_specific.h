@@ -36,7 +36,7 @@
 // MSVC_PUSH_DISABLE_WARNING pushes |n| onto a stack of warnings to be disabled.
 // The warning remains disabled until popped by MSVC_POP_WARNING.
 #define MSVC_PUSH_DISABLE_WARNING(n) __pragma(warning(push)) \
-                                     __pragma(warning(disable:n))
+    __pragma(warning(disable:n))
 
 // MSVC_PUSH_WARNING_LEVEL pushes |n| as the global warning level.  The level
 // remains in effect until popped by MSVC_POP_WARNING().  Use 0 to disable all
@@ -70,9 +70,9 @@
 
 
 #if COMPILER_MSVC && defined(NDEBUG)
-#define ALWAYS_INLINE __forceinline
+    #define ALWAYS_INLINE __forceinline
 #else
-#define ALWAYS_INLINE inline
+    #define ALWAYS_INLINE inline
 #endif
 
 // Specify memory alignment for structs, classes, etc.
@@ -122,12 +122,12 @@
 
 // Sanitizers annotations.
 #if defined(__has_attribute)
-#if __has_attribute(no_sanitize)
-#define NO_SANITIZE(what) __attribute__((no_sanitize(what)))
-#endif
+    #if __has_attribute(no_sanitize)
+        #define NO_SANITIZE(what) __attribute__((no_sanitize(what)))
+    #endif
 #endif
 #if !defined(NO_SANITIZE)
-#define NO_SANITIZE(what)
+    #define NO_SANITIZE(what)
 #endif
 
 // MemorySanitizer annotations.
@@ -137,33 +137,33 @@
 
 // DISABLE_CFI_PERF -- Disable Control Flow Integrity for perf reasons.
 #if !defined(DISABLE_CFI_PERF)
-#define DISABLE_CFI_PERF
+    #define DISABLE_CFI_PERF
 #endif
 
 // Macro useful for writing cross-platform function pointers.
 #if !defined(CDECL)
-#if defined(WIN32)
-#define CDECL __cdecl
-#else  // defined(WIN32)
-#define CDECL
-#endif  // defined(WIN32)
+    #if defined(WIN32)
+        #define CDECL __cdecl
+    #else  // defined(WIN32)
+        #define CDECL
+    #endif  // defined(WIN32)
 #endif  // !defined(CDECL)
 
 // Macro for hinting that an expression is likely to be false.
 #if !defined(UNLIKELY)
-#define UNLIKELY(x) (x)
+    #define UNLIKELY(x) (x)
 #endif  // !defined(UNLIKELY)
 
 #if !defined(LIKELY)
-#define LIKELY(x) (x)
+    #define LIKELY(x) (x)
 #endif  // !defined(LIKELY)
 
 // Compiler feature-detection.
 // clang.llvm.org/docs/LanguageExtensions.html#has-feature-and-has-extension
 #if defined(__has_feature)
-#define HAS_FEATURE(FEATURE) __has_feature(FEATURE)
+    #define HAS_FEATURE(FEATURE) __has_feature(FEATURE)
 #else
-#define HAS_FEATURE(FEATURE) 0
+    #define HAS_FEATURE(FEATURE) 0
 #endif
 
 #endif  // BASE_COMPILER_SPECIFIC_H_

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <shellapi.h>
@@ -12,17 +12,17 @@
 
 namespace ppx {
     namespace base {
-// -----------------------------------------------------------------------------
-// Implementation of Flag
+        // -----------------------------------------------------------------------------
+        // Implementation of Flag
 
-        Flag::Flag(const char* file, const char* name, const char* comment,
-            Type type, void* variable, FlagValue default__)
+        Flag::Flag(const char *file, const char *name, const char *comment,
+                   Type type, void *variable, FlagValue default__)
             : file_(file),
-            name_(name),
-            comment_(comment),
-            type_(type),
-            variable_(reinterpret_cast<FlagValue*>(variable)),
-            default_(default__) {
+              name_(name),
+              comment_(comment),
+              type_(type),
+              variable_(reinterpret_cast<FlagValue *>(variable)),
+              default_(default__) {
             FlagList::Register(this);
         }
 
@@ -34,49 +34,53 @@ namespace ppx {
             // of a flag variable for convenient access. Since union members
             // are guarantee to be aligned at the beginning, this works.
             switch (type_) {
-            case Flag::BOOL:
-                variable_->b = default_.b;
-                return;
-            case Flag::INT:
-                variable_->i = default_.i;
-                return;
-            case Flag::FLOAT:
-                variable_->f = default_.f;
-                return;
-            case Flag::STRING:
-                variable_->s = default_.s;
-                return;
+                case Flag::BOOL:
+                    variable_->b = default_.b;
+                    return;
+                case Flag::INT:
+                    variable_->i = default_.i;
+                    return;
+                case Flag::FLOAT:
+                    variable_->f = default_.f;
+                    return;
+                case Flag::STRING:
+                    variable_->s = default_.s;
+                    return;
             }
             PPX_NOT_REACHED("unreachable code");
         }
 
 
-        static const char* Type2String(Flag::Type type) {
+        static const char *Type2String(Flag::Type type) {
             switch (type) {
-            case Flag::BOOL: return "bool";
-            case Flag::INT: return "int";
-            case Flag::FLOAT: return "float";
-            case Flag::STRING: return "string";
+                case Flag::BOOL:
+                    return "bool";
+                case Flag::INT:
+                    return "int";
+                case Flag::FLOAT:
+                    return "float";
+                case Flag::STRING:
+                    return "string";
             }
             PPX_NOT_REACHED("unreachable code");
-			return NULL;
+            return NULL;
         }
 
 
-        static void PrintFlagValue(Flag::Type type, FlagValue* p) {
+        static void PrintFlagValue(Flag::Type type, FlagValue *p) {
             switch (type) {
-            case Flag::BOOL:
-                printf("%s", (p->b ? "true" : "false"));
-                return;
-            case Flag::INT:
-                printf("%d", p->i);
-                return;
-            case Flag::FLOAT:
-                printf("%f", p->f);
-                return;
-            case Flag::STRING:
-                printf("%s", p->s);
-                return;
+                case Flag::BOOL:
+                    printf("%s", (p->b ? "true" : "false"));
+                    return;
+                case Flag::INT:
+                    printf("%d", p->i);
+                    return;
+                case Flag::FLOAT:
+                    printf("%f", p->f);
+                    return;
+                case Flag::STRING:
+                    printf("%s", p->s);
+                    return;
             }
             PPX_NOT_REACHED("unreachable code");
         }
@@ -84,7 +88,7 @@ namespace ppx {
 
         void Flag::Print(bool print_current_value) {
             printf("  --%s (%s)  type: %s  default: ", name_, comment_,
-                Type2String(type_));
+                   Type2String(type_));
             PrintFlagValue(type_, &default_);
             if (print_current_value) {
                 printf("  current value: ");
@@ -97,17 +101,17 @@ namespace ppx {
         // -----------------------------------------------------------------------------
         // Implementation of FlagList
 
-        Flag* FlagList::list_ = nullptr;
+        Flag *FlagList::list_ = nullptr;
 
         FlagList::FlagList() {
             list_ = nullptr;
         }
 
-        void FlagList::Print(const char* file, bool print_current_value) {
+        void FlagList::Print(const char *file, bool print_current_value) {
             // Since flag registration is likely by file (= C++ file),
             // we don't need to sort by file and still get grouped output.
-            const char* current = nullptr;
-            for (Flag* f = list_; f != nullptr; f = f->next()) {
+            const char *current = nullptr;
+            for (Flag *f = list_; f != nullptr; f = f->next()) {
                 if (file == nullptr || file == f->file()) {
                     if (current != f->file()) {
                         printf("Flags from %s:\n", f->file());
@@ -119,18 +123,18 @@ namespace ppx {
         }
 
 
-        Flag* FlagList::Lookup(const char* name) {
-            Flag* f = list_;
+        Flag *FlagList::Lookup(const char *name) {
+            Flag *f = list_;
             while (f != nullptr && strcmp(name, f->name()) != 0)
                 f = f->next();
             return f;
         }
 
 
-        void FlagList::SplitArgument(const char* arg,
-            char* buffer, int buffer_size,
-            const char** name, const char** value,
-            bool* is_bool) {
+        void FlagList::SplitArgument(const char *arg,
+                                     char *buffer, int buffer_size,
+                                     const char **name, const char **value,
+                                     bool *is_bool) {
             *name = nullptr;
             *value = nullptr;
             *is_bool = false;
@@ -165,23 +169,23 @@ namespace ppx {
         }
 
 
-        int FlagList::SetFlagsFromCommandLine(int* argc, const char** argv,
-            bool remove_flags) {
+        int FlagList::SetFlagsFromCommandLine(int *argc, const char **argv,
+                                              bool remove_flags) {
             // parse arguments
             for (int i = 1; i < *argc; /* see below */) {
                 int j = i;  // j > 0
-                const char* arg = argv[i++];
+                const char *arg = argv[i++];
 
                 // split arg into flag components
                 char buffer[1024];
-                const char* name;
-                const char* value;
+                const char *name;
+                const char *value;
                 bool is_bool;
                 SplitArgument(arg, buffer, sizeof buffer, &name, &value, &is_bool);
 
                 if (name != nullptr) {
                     // lookup the flag
-                    Flag* flag = Lookup(name);
+                    Flag *flag = Lookup(name);
                     if (flag == nullptr) {
                         fprintf(stderr, "Error: unrecognized flag %s\n", arg);
                         return j;
@@ -191,37 +195,36 @@ namespace ppx {
                     if (flag->type() != Flag::BOOL && value == nullptr) {
                         if (i < *argc) {
                             value = argv[i++];
-                        }
-                        else {
+                        } else {
                             fprintf(stderr, "Error: missing value for flag %s of type %s\n",
-                                arg, Type2String(flag->type()));
+                                    arg, Type2String(flag->type()));
                             return j;
                         }
                     }
 
                     // set the flag
                     char empty[] = { '\0' };
-                    char* endp = empty;
+                    char *endp = empty;
                     switch (flag->type()) {
-                    case Flag::BOOL:
-                        *flag->bool_variable() = !is_bool;
-                        break;
-                    case Flag::INT:
-                        *flag->int_variable() = strtol(value, &endp, 10);
-                        break;
-                    case Flag::FLOAT:
-                        *flag->float_variable() = strtod(value, &endp);
-                        break;
-                    case Flag::STRING:
-                        *flag->string_variable() = value;
-                        break;
+                        case Flag::BOOL:
+                            *flag->bool_variable() = !is_bool;
+                            break;
+                        case Flag::INT:
+                            *flag->int_variable() = strtol(value, &endp, 10);
+                            break;
+                        case Flag::FLOAT:
+                            *flag->float_variable() = strtod(value, &endp);
+                            break;
+                        case Flag::STRING:
+                            *flag->string_variable() = value;
+                            break;
                     }
 
                     // handle errors
                     if ((flag->type() == Flag::BOOL && value != nullptr) ||
-                        (flag->type() != Flag::BOOL && is_bool) || *endp != '\0') {
+                            (flag->type() != Flag::BOOL && is_bool) || *endp != '\0') {
                         fprintf(stderr, "Error: illegal value for flag %s of type %s\n",
-                            arg, Type2String(flag->type()));
+                                arg, Type2String(flag->type()));
                         return j;
                     }
 
@@ -246,7 +249,7 @@ namespace ppx {
             return 0;
         }
 
-        void FlagList::Register(Flag* flag) {
+        void FlagList::Register(Flag *flag) {
             PPX_ASSERT(flag);
             PPX_ASSERT(strlen(flag->name()) > 0);
             // NOTE: Don't call Lookup() within Register because it accesses the name_
@@ -264,7 +267,7 @@ namespace ppx {
             // now, convert it to a list of wide char strings.
             LPWSTR *wide_argv = ::CommandLineToArgvW(command_line, &argc_);
             // now allocate an array big enough to hold that many string pointers.
-            argv_ = new char*[argc_];
+            argv_ = new char *[argc_];
 
             // iterate over the returned wide strings;
             for (int i = 0; i < argc_; ++i) {
@@ -288,4 +291,4 @@ namespace ppx {
         }
 
     }
-} 
+}

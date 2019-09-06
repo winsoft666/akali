@@ -24,13 +24,13 @@
 
 namespace ppx {
     namespace base {
-        typedef std::list<OverlappedSocket*> ClientList;
+        typedef std::list<OverlappedSocket *> ClientList;
 
         class PPXBASE_API IOCPServer : public OverlappedSocket::OverlappedSocketDelegate {
-        public:
+          public:
             void OnAcceptEvent(OverlappedSocket *socket) override;
-            void OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT* io_ctx) override;
-            void OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT* io_ctx) override;
+            void OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) override;
+            void OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) override;
             void OnConnectEvent(OverlappedSocket *socket) override;
             void OnCloseEvent(OverlappedSocket *socket, int close_code) override;
 
@@ -42,10 +42,10 @@ namespace ppx {
 
             int64_t GetStartTime() const;
 
-        private:
+          private:
             int64_t start_time_;
 
-            OverlappedSocket* socket_;
+            OverlappedSocket *socket_;
 
             ClientList client_list_;
             base::CriticalSection crit_;  // CriticalSection for client_list_

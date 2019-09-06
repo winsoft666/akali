@@ -36,7 +36,7 @@ namespace ppx {
         BOOL TimerBase::Start(DWORD ulInterval,  // ulInterval in ms
                               BOOL bImmediately,
                               BOOL bOnce,
-							  ULONG dwFlags /* = WT_EXECUTELONGFUNCTION */) {
+                              ULONG dwFlags /* = WT_EXECUTELONGFUNCTION */) {
             BOOL bRet = FALSE;
 
             if (!m_hTimer) {
@@ -46,7 +46,7 @@ namespace ppx {
                                              (PVOID)this,
                                              bImmediately ? 0 : ulInterval,
                                              bOnce ? 0 : ulInterval,
-										     dwFlags);
+                                             dwFlags);
             }
 
             return bRet;

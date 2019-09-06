@@ -26,11 +26,11 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API HostResolve {
-        public:
-			HostResolve();
-			virtual~HostResolve();
+          public:
+            HostResolve();
+            virtual~HostResolve();
 
-            bool Resolve(const std::string &host, std::vector<IPAddress>& ip_list);
+            bool Resolve(const std::string &host, std::vector<IPAddress> &ip_list);
         };
     }
 }

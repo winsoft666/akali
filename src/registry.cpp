@@ -189,15 +189,14 @@ namespace ppx {
             return false;
         }
 
-		bool RegKey::DeleteSubKeys(HKEY hKeyRoot, LPCTSTR lpSubKey, bool bPrefer64View)
-		{
-			TCHAR szDelKey[MAX_PATH * 2];
+        bool RegKey::DeleteSubKeys(HKEY hKeyRoot, LPCTSTR lpSubKey, bool bPrefer64View) {
+            TCHAR szDelKey[MAX_PATH * 2];
 
-			StringCchCopy(szDelKey, MAX_PATH * 2, lpSubKey);
-			return RegDelSubKeysRecurse(hKeyRoot, szDelKey, bPrefer64View) == TRUE;
-		}
+            StringCchCopy(szDelKey, MAX_PATH * 2, lpSubKey);
+            return RegDelSubKeysRecurse(hKeyRoot, szDelKey, bPrefer64View) == TRUE;
+        }
 
-		HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const {
+        HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const {
             return GetValue(pszValueName, REG_DWORD, (LPBYTE)pdwDataOut, sizeof(DWORD));
         }
 
@@ -287,56 +286,55 @@ namespace ppx {
         }
 
 
-		HRESULT RegKey::GetSubKeys(std::vector<std::wstring> &subKeys)
-		{
-			WCHAR    achKey[256];   // buffer for subkey name
-			DWORD    cbName = 255;                   // size of name string
-			WCHAR    achClass[MAX_PATH] = TEXT("");  // buffer for class name
-			DWORD    cchClassName = MAX_PATH;  // size of class string
-			DWORD    cSubKeys = 0;             // number of subkeys
-			DWORD    cbMaxSubKey;              // longest subkey size
-			DWORD    cchMaxClass;              // longest class string
-			DWORD    cValues;              // number of values for key
-			DWORD    cchMaxValue;          // longest value name
-			DWORD    cbMaxValueData;       // longest value data
-			DWORD    cbSecurityDescriptor; // size of security descriptor
-			FILETIME ftLastWriteTime;      // last write time
+        HRESULT RegKey::GetSubKeys(std::vector<std::wstring> &subKeys) {
+            WCHAR    achKey[256];   // buffer for subkey name
+            DWORD    cbName = 255;                   // size of name string
+            WCHAR    achClass[MAX_PATH] = TEXT("");  // buffer for class name
+            DWORD    cchClassName = MAX_PATH;  // size of class string
+            DWORD    cSubKeys = 0;             // number of subkeys
+            DWORD    cbMaxSubKey;              // longest subkey size
+            DWORD    cchMaxClass;              // longest class string
+            DWORD    cValues;              // number of values for key
+            DWORD    cchMaxValue;          // longest value name
+            DWORD    cbMaxValueData;       // longest value data
+            DWORD    cbSecurityDescriptor; // size of security descriptor
+            FILETIME ftLastWriteTime;      // last write time
 
-			DWORD retCode = RegQueryInfoKeyW(
-				m_hkey,                    // key handle
-				achClass,                // buffer for class name
-				&cchClassName,           // size of class string
-				NULL,                    // reserved
-				&cSubKeys,               // number of subkeys
-				&cbMaxSubKey,            // longest subkey size
-				&cchMaxClass,            // longest class string
-				&cValues,                // number of values for this key
-				&cchMaxValue,            // longest value name
-				&cbMaxValueData,         // longest value data
-				&cbSecurityDescriptor,   // security descriptor
-				&ftLastWriteTime);       // last write time
+            DWORD retCode = RegQueryInfoKeyW(
+                                m_hkey,                    // key handle
+                                achClass,                // buffer for class name
+                                &cchClassName,           // size of class string
+                                NULL,                    // reserved
+                                &cSubKeys,               // number of subkeys
+                                &cbMaxSubKey,            // longest subkey size
+                                &cchMaxClass,            // longest class string
+                                &cValues,                // number of values for this key
+                                &cchMaxValue,            // longest value name
+                                &cbMaxValueData,         // longest value data
+                                &cbSecurityDescriptor,   // security descriptor
+                                &ftLastWriteTime);       // last write time
 
-			if (retCode != ERROR_SUCCESS)
-				return retCode;
+            if (retCode != ERROR_SUCCESS)
+                return retCode;
 
-			for (DWORD i = 0; i < cSubKeys; i++) {
-				cbName = 255;
-				retCode = RegEnumKeyExW(m_hkey, i,
-					achKey,
-					&cbName,
-					NULL,
-					NULL,
-					NULL,
-					&ftLastWriteTime);
-				if (retCode == ERROR_SUCCESS) {
-					subKeys.push_back(achKey);
-				}
-			}
+            for (DWORD i = 0; i < cSubKeys; i++) {
+                cbName = 255;
+                retCode = RegEnumKeyExW(m_hkey, i,
+                                        achKey,
+                                        &cbName,
+                                        NULL,
+                                        NULL,
+                                        NULL,
+                                        &ftLastWriteTime);
+                if (retCode == ERROR_SUCCESS) {
+                    subKeys.push_back(achKey);
+                }
+            }
 
-			return ERROR_SUCCESS;
-		}
+            return ERROR_SUCCESS;
+        }
 
-		void RegKey::OnChange(HKEY hkey) {
+        void RegKey::OnChange(HKEY hkey) {
             UNREFERENCED_PARAMETER(hkey);
             //
             // Default does nothing.
@@ -379,7 +377,7 @@ namespace ppx {
                 cch += vStrValues[i].length() + 1;
 
             LPWSTR pszBuf = new WCHAR[cch];
-			LPWSTR pszWrite = pszBuf;
+            LPWSTR pszWrite = pszBuf;
 
             for (size_t i = 0; i < cEntries; i++) {
                 const std::wstring &s = vStrValues[i];
@@ -491,76 +489,72 @@ namespace ppx {
             return false;
         }
 
-		BOOL RegKey::RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64View)
-		{
-			LPTSTR lpEnd = NULL;
-			LONG lResult;
-			DWORD dwSize = 0;
-			TCHAR szName[MAX_PATH] = { 0 };
-			HKEY hKey = NULL;
-			FILETIME ftWrite;
+        BOOL RegKey::RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64View) {
+            LPTSTR lpEnd = NULL;
+            LONG lResult;
+            DWORD dwSize = 0;
+            TCHAR szName[MAX_PATH] = { 0 };
+            HKEY hKey = NULL;
+            FILETIME ftWrite;
 
-			// First, see if we can delete the key without having to recurse.
-			lResult = RegDeleteKeyEx(hKeyRoot, lpSubKey, bPrefer64View ? KEY_WOW64_64KEY : KEY_WOW64_32KEY, 0);
-			if (lResult == ERROR_SUCCESS)
-				return TRUE;
+            // First, see if we can delete the key without having to recurse.
+            lResult = RegDeleteKeyEx(hKeyRoot, lpSubKey, bPrefer64View ? KEY_WOW64_64KEY : KEY_WOW64_32KEY, 0);
+            if (lResult == ERROR_SUCCESS)
+                return TRUE;
 
-			REGSAM rsam = KEY_READ;
-			if (bPrefer64View)
-				rsam |= KEY_WOW64_64KEY;
+            REGSAM rsam = KEY_READ;
+            if (bPrefer64View)
+                rsam |= KEY_WOW64_64KEY;
 
-			lResult = RegOpenKeyEx(hKeyRoot, lpSubKey, 0, rsam, &hKey);
-			if (lResult != ERROR_SUCCESS)
-			{
-				if (lResult == ERROR_FILE_NOT_FOUND) {
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
+            lResult = RegOpenKeyEx(hKeyRoot, lpSubKey, 0, rsam, &hKey);
+            if (lResult != ERROR_SUCCESS) {
+                if (lResult == ERROR_FILE_NOT_FOUND) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            }
 
-			// Check for an ending slash and add one if it is missing.
+            // Check for an ending slash and add one if it is missing.
 
-			lpEnd = lpSubKey + lstrlen(lpSubKey);
+            lpEnd = lpSubKey + lstrlen(lpSubKey);
 
-			if (*(lpEnd - 1) != TEXT('\\'))
-			{
-				*lpEnd = TEXT('\\');
-				lpEnd++;
-				*lpEnd = TEXT('\0');
-			}
+            if (*(lpEnd - 1) != TEXT('\\')) {
+                *lpEnd = TEXT('\\');
+                lpEnd++;
+                *lpEnd = TEXT('\0');
+            }
 
-			// Enumerate the keys
-			dwSize = MAX_PATH;
-			lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL, NULL, NULL, &ftWrite);
-			if (lResult == ERROR_SUCCESS){
-				do {
-					*lpEnd = TEXT('\0');
-					StringCchCat(lpSubKey, MAX_PATH * 2, szName);
+            // Enumerate the keys
+            dwSize = MAX_PATH;
+            lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL, NULL, NULL, &ftWrite);
+            if (lResult == ERROR_SUCCESS) {
+                do {
+                    *lpEnd = TEXT('\0');
+                    StringCchCat(lpSubKey, MAX_PATH * 2, szName);
 
-					if (!RegDelSubKeysRecurse(hKeyRoot, lpSubKey, bPrefer64View)) {
-						break;
-					}
+                    if (!RegDelSubKeysRecurse(hKeyRoot, lpSubKey, bPrefer64View)) {
+                        break;
+                    }
 
-					dwSize = MAX_PATH;
-					lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL, NULL, NULL, &ftWrite);
-				} while (lResult == ERROR_SUCCESS);
-			}
+                    dwSize = MAX_PATH;
+                    lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL, NULL, NULL, &ftWrite);
+                } while (lResult == ERROR_SUCCESS);
+            }
 
-			lpEnd--;
-			*lpEnd = TEXT('\0');
+            lpEnd--;
+            *lpEnd = TEXT('\0');
 
-			RegCloseKey(hKey);
+            RegCloseKey(hKey);
 
-			// Try again to delete the key.
-			lResult = RegDeleteKeyEx(hKeyRoot, lpSubKey, bPrefer64View ? KEY_WOW64_64KEY : KEY_WOW64_32KEY, 0);
-			if (lResult == ERROR_SUCCESS)
-				return TRUE;
+            // Try again to delete the key.
+            lResult = RegDeleteKeyEx(hKeyRoot, lpSubKey, bPrefer64View ? KEY_WOW64_64KEY : KEY_WOW64_32KEY, 0);
+            if (lResult == ERROR_SUCCESS)
+                return TRUE;
 
-			return FALSE;
-		}
+            return FALSE;
+        }
 
-	}
+    }
 }
 #endif

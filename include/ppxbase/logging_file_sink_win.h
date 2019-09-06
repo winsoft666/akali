@@ -24,13 +24,13 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API LoggingFileSinkWin : public LogSink {
-        public:
+          public:
             static LoggingFileSinkWin *GetSink();
-        protected:
+          protected:
             LoggingFileSinkWin();
             virtual ~LoggingFileSinkWin();
-            void OnLogMessage(const std::string& message) override;
-            
+            void OnLogMessage(const std::string &message) override;
+
             void WriteData(LPCVOID pBytes, DWORD dwSize);
             void Write(LPCSTR szFormat, ...);
             void Start();
@@ -43,7 +43,7 @@ namespace ppx {
             void IncrIndent();
             void DecrIndent();
             void GetLogFileName(LPTSTR szFileName);
-        private:
+          private:
             HANDLE m_hFile;
             CRITICAL_SECTION m_Crit4File;
             CRITICAL_SECTION m_Crit4Toggle;

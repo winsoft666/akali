@@ -21,17 +21,17 @@
 
 namespace ppx {
     namespace base {
-        PPXBASE_API bool DeleteDir(const char* pszDir);
-        PPXBASE_API bool DeleteDir(const wchar_t* pszDir);
-        PPXBASE_API bool CreateDir(const wchar_t* pszDir);
-        PPXBASE_API bool CreateDir(const char* pszDir);
+        PPXBASE_API bool DeleteDir(const char *pszDir);
+        PPXBASE_API bool DeleteDir(const wchar_t *pszDir);
+        PPXBASE_API bool CreateDir(const wchar_t *pszDir);
+        PPXBASE_API bool CreateDir(const char *pszDir);
 
-         // bCopySource: 
-         // CopyDir(L"D:\\test", L"E:\\", true, &num); will create new folder named 'test' in E:\\
-         //
-        PPXBASE_API void CopyDir(const wchar_t* pszSource, const wchar_t* pszDest, bool bCopySource, int *pIgnoreNum);
+        // bCopySource:
+        // CopyDir(L"D:\\test", L"E:\\", true, &num); will create new folder named 'test' in E:\\
+        //
+        PPXBASE_API void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource, int *pIgnoreNum);
 
-		PPXBASE_API bool PathIsExists(const wchar_t *pszPath);
+        PPXBASE_API bool PathIsExists(const wchar_t *pszPath);
     }
 }
 

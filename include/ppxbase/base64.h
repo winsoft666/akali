@@ -22,7 +22,7 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API Base64 {
-        public:
+          public:
             enum DecodeOption {
                 DO_PARSE_STRICT = 1,  // Parse only base64 characters
                 DO_PARSE_WHITE = 2,   // Parse only base64 and whitespace characters
@@ -84,24 +84,24 @@ namespace ppx {
                 return DecodeFromArray(data.data(), data.size(), flags, result, data_used);
             }
 
-        private:
+          private:
             static const char Base64Table[];
             static const unsigned char DecodeTable[];
 
             static size_t GetNextQuantum(DecodeFlags parse_flags,
-                bool illegal_pads,
-                const char *data,
-                size_t len,
-                size_t *dpos,
-                unsigned char qbuf[4],
-                bool *padded);
+                                         bool illegal_pads,
+                                         const char *data,
+                                         size_t len,
+                                         size_t *dpos,
+                                         unsigned char qbuf[4],
+                                         bool *padded);
 
             template <typename T>
             static bool DecodeFromArrayTemplate(const char *data,
-                size_t len,
-                DecodeFlags flags,
-                T *result,
-                size_t *data_used);
+                                                size_t len,
+                                                DecodeFlags flags,
+                                                T *result,
+                                                size_t *data_used);
         };
     }
 }  // namespace ppx

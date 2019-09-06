@@ -24,28 +24,28 @@ namespace ppx {
 
         template<class T>
         class Singleton {
-        public:
-            static T* Instance();
+          public:
+            static T *Instance();
             static void Release();
-        protected:
+          protected:
             Singleton() {}
-            Singleton(const Singleton&) {}
-            Singleton& operator=(const Singleton&) {}
-        private:
-            static T* this_;
+            Singleton(const Singleton &) {}
+            Singleton &operator=(const Singleton &) {}
+          private:
+            static T *this_;
             static std::mutex m_;
         };
 
 
         template<class T>
-        T*  Singleton<T>::this_ = nullptr;
+        T  *Singleton<T>::this_ = nullptr;
 
         template<class T>
         std::mutex Singleton<T>::m_;
 
 
         template<class T>
-        T* Singleton<T>::Instance(void) {
+        T *Singleton<T>::Instance(void) {
             //double-check
             if (this_ == nullptr) {
                 std::lock_guard<std::mutex> lg(m_);
@@ -64,7 +64,7 @@ namespace ppx {
         }
 
 #define SINGLETON_CLASS_DECLARE(class_name)	\
-	friend class ::ppx::base::Singleton<##class_name>;
+    friend class ::ppx::base::Singleton<##class_name>;
     }
 }
 

@@ -2,8 +2,8 @@
 *
 * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
 *
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
-* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED 
+* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 *
 * Expect bugs
@@ -16,8 +16,7 @@
 
 #include "ppxbase/md5.h"
 
-namespace ppx
-{
+namespace ppx {
     namespace base {
         namespace libmd5_internal {
             /*
@@ -58,11 +57,9 @@ namespace ppx
 
                 if (p[0] == 0x12 && p[1] == 0x34 && p[2] == 0x56 && p[3] == 0x78) {
                     g_bigEndian = 1;
-                }
-                else if (p[0] == 0x78 && p[1] == 0x56 && p[2] == 0x34 && p[3] == 0x12) {
+                } else if (p[0] == 0x78 && p[1] == 0x56 && p[2] == 0x34 && p[3] == 0x12) {
                     g_bigEndian = 0;
-                }
-                else {
+                } else {
                     g_bigEndian = *sp != 0x12;
                 }
 
@@ -78,7 +75,7 @@ namespace ppx
 
                 do {
                     *buf++ = (UWORD32)((unsigned)p[3] << 8 | p[2]) << 16 |
-                        ((unsigned)p[1] << 8 | p[0]);
+                             ((unsigned)p[1] << 8 | p[0]);
                     p += 4;
                 } while (--words);
             }
@@ -93,15 +90,15 @@ namespace ppx
 #define F3(x, y, z) (x ^ y ^ z)
 #define F4(x, y, z) (y ^ (x | ~z))
 
-        /* This is the central step in the MD5 algorithm. */
+            /* This is the central step in the MD5 algorithm. */
 #define MD5STEP(f,w,x,y,z,in,s) \
     (w += f(x,y,z) + in, w = (w<<s | w>>(32-s)) + x)
 
-        /*
-         * The core of the MD5 algorithm, this alters an existing MD5 hash to
-         * reflect the addition of 16 longwords of new data.  MD5Update blocks
-         * the data and converts bytes into longwords for this routine.
-         */
+            /*
+             * The core of the MD5 algorithm, this alters an existing MD5 hash to
+             * reflect the addition of 16 longwords of new data.  MD5Update blocks
+             * the data and converts bytes into longwords for this routine.
+             */
             void MD5Transform(UWORD32 buf[4], UWORD32 const in[16]) {
                 register UWORD32 a, b, c, d;
 
@@ -257,8 +254,7 @@ namespace ppx
                 /* Bytes of padding needed to make 56 bytes (-8..55) */
                 count = 56 - 1 - count;
 
-                if (count < 0)      /* Padding forces an extra block */
-                {
+                if (count < 0) {    /* Padding forces an extra block */
                     memset(p, 0, count + 8);
                     byteSwap(ctx->in, 16);
                     MD5Transform(ctx->buf, ctx->in);
@@ -295,8 +291,8 @@ namespace ppx
                 max_p = str + len;
 
                 for (sig_p = (unsigned char *)signature;
-                    sig_p < (unsigned char *)signature + 16;
-                    sig_p++) {
+                        sig_p < (unsigned char *)signature + 16;
+                        sig_p++) {
                     high = *sig_p / 16;
                     low = *sig_p % 16;
 

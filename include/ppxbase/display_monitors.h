@@ -44,22 +44,22 @@ namespace ppx {
         } DSPMONITOR;
 
         class PPXBASE_API DisplayMonitors {
-        public:
+          public:
             DisplayMonitors();
             ~DisplayMonitors();
 
-            // Enumerate all the display devices which PC is connecting. 
+            // Enumerate all the display devices which PC is connecting.
             bool EnumDisplayMonitors();
 
-            // Return the number of devices 
+            // Return the number of devices
             int GetCount() const;
 
-            // Get the device configuration depending the requesting index. 
-            bool GetDspInfo(const int index, DSPMONITOR * dsp);
+            // Get the device configuration depending the requesting index.
+            bool GetDspInfo(const int index, DSPMONITOR *dsp);
 
-            bool GetPrimaryDspInfo(DSPMONITOR* dsp);
+            bool GetPrimaryDspInfo(DSPMONITOR *dsp);
 
-        private:
+          private:
             std::vector<DSPMONITOR>  dsp_list_;
         };
     }

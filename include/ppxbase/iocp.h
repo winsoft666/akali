@@ -105,7 +105,7 @@ namespace ppx {
 
             void RemoveContext(_PER_IO_CONTEXT *pContext) {
                 for (std::vector<_PER_IO_CONTEXT *>::iterator it = io_ctx_array.begin();
-                    it != io_ctx_array.end(); it++) {
+                        it != io_ctx_array.end(); it++) {
                     if (pContext == *it) {
                         delete pContext;
                         pContext = NULL;

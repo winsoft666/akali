@@ -49,7 +49,7 @@ namespace ppx {
             PPX_ASSERT(low <= high);
             const int64_t low_i64{ low };
             return CheckedCast<int32_t>(
-                Rand(CheckedCast<uint32_t>(high - low_i64)) + low_i64);
+                       Rand(CheckedCast<uint32_t>(high - low_i64)) + low_i64);
         }
 
         template <>

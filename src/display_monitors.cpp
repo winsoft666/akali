@@ -5,7 +5,7 @@ namespace ppx {
     namespace base {
 
         static BOOL CALLBACK Monitorenumproc(HMONITOR hMonitor, HDC hdc, LPRECT pRect, LPARAM arg) {
-            std::vector<HMONITOR>* monitors = (std::vector<HMONITOR>*)arg;
+            std::vector<HMONITOR> *monitors = (std::vector<HMONITOR> *)arg;
             monitors->push_back(hMonitor);
 
             return TRUE;
@@ -30,7 +30,7 @@ namespace ppx {
             _In_  MONITOR_DPI_TYPE dpiType,
             _Out_ UINT             *dpiX,
             _Out_ UINT             *dpiY
-            );
+        );
 
         int GetDPIOfMonitor(HMONITOR hMonitor) {
             UINT dpix = 96, dpiy = 96;
@@ -42,8 +42,7 @@ namespace ppx {
                 if (GetDpiForMonitor != NULL && GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpix, &dpiy) != S_OK) {
                     return 96;
                 }
-            }
-            else {
+            } else {
                 HDC screen = GetDC(0);
                 dpix = GetDeviceCaps(screen, LOGPIXELSX);
                 ReleaseDC(0, screen);
@@ -90,7 +89,7 @@ namespace ppx {
             return (int)dsp_list_.size();
         }
 
-        bool DisplayMonitors::GetDspInfo(const int index, DSPMONITOR * dsp) {
+        bool DisplayMonitors::GetDspInfo(const int index, DSPMONITOR *dsp) {
             if (index >= 0 && index < (int)dsp_list_.size()) {
                 if (dsp != NULL) {
                     *dsp = dsp_list_[index];
@@ -100,7 +99,7 @@ namespace ppx {
             return false;
         }
 
-        bool DisplayMonitors::GetPrimaryDspInfo(DSPMONITOR* dsp) {
+        bool DisplayMonitors::GetPrimaryDspInfo(DSPMONITOR *dsp) {
             for (size_t i = 0; i < dsp_list_.size(); i++) {
                 if (dsp_list_[i].primary) {
                     *dsp = dsp_list_[i];

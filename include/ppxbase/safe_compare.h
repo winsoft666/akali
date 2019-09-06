@@ -49,15 +49,15 @@ namespace ppx {
             template <size_t N>
             struct LargerIntImpl : std::false_type {};
             template <>
-            struct LargerIntImpl<sizeof(int8_t)> : std::true_type {
+        struct LargerIntImpl<sizeof(int8_t)> : std::true_type {
                 using type = int16_t;
             };
             template <>
-            struct LargerIntImpl<sizeof(int16_t)> : std::true_type {
+        struct LargerIntImpl<sizeof(int16_t)> : std::true_type {
                 using type = int32_t;
             };
             template <>
-            struct LargerIntImpl<sizeof(int32_t)> : std::true_type {
+        struct LargerIntImpl<sizeof(int32_t)> : std::true_type {
                 using type = int64_t;
             };
 
@@ -67,9 +67,9 @@ namespace ppx {
             // for it.
             template <typename T1, typename T2>
             struct LargerInt
-                : LargerIntImpl < sizeof(T1) < sizeof(T2) || sizeof(T1) < sizeof(int *)
-                ? sizeof(T1)
-                : 0 > {};
+            : LargerIntImpl < sizeof(T1) < sizeof(T2) || sizeof(T1) < sizeof(int *)
+              ? sizeof(T1)
+              : 0 > {};
 
             template <typename T>
             constexpr typename std::make_unsigned<T>::type MakeUnsigned(T a) {
@@ -78,59 +78,59 @@ namespace ppx {
 
             // Overload for when both T1 and T2 have the same signedness.
             template <typename Op,
-                typename T1,
-                typename T2,
-                typename std::enable_if<std::is_signed<T1>::value ==
-                std::is_signed<T2>::value>::type * = nullptr>
-                constexpr bool Cmp(T1 a, T2 b) {
+                      typename T1,
+                      typename T2,
+                      typename std::enable_if<std::is_signed<T1>::value ==
+                                              std::is_signed<T2>::value>::type * = nullptr>
+            constexpr bool Cmp(T1 a, T2 b) {
                 return Op::Op(a, b);
             }
 
             // Overload for signed - unsigned comparison that can be promoted to a bigger
             // signed type.
             template < typename Op,
-                typename T1,
-                typename T2,
-                typename std::enable_if < std::is_signed<T1>::value &&
-                std::is_unsigned<T2>::value &&
-                LargerInt<T2, T1>::value >::type * = nullptr >
-                constexpr bool Cmp(T1 a, T2 b) {
+                       typename T1,
+                       typename T2,
+                       typename std::enable_if < std::is_signed<T1>::value &&
+                                                 std::is_unsigned<T2>::value &&
+                                                 LargerInt<T2, T1>::value >::type * = nullptr >
+            constexpr bool Cmp(T1 a, T2 b) {
                 return Op::Op(a, static_cast<typename LargerInt<T2, T1>::type>(b));
             }
 
             // Overload for unsigned - signed comparison that can be promoted to a bigger
             // signed type.
             template < typename Op,
-                typename T1,
-                typename T2,
-                typename std::enable_if < std::is_unsigned<T1>::value &&
-                std::is_signed<T2>::value &&
-                LargerInt<T1, T2>::value >::type * = nullptr >
-                constexpr bool Cmp(T1 a, T2 b) {
+                       typename T1,
+                       typename T2,
+                       typename std::enable_if < std::is_unsigned<T1>::value &&
+                                                 std::is_signed<T2>::value &&
+                                                 LargerInt<T1, T2>::value >::type * = nullptr >
+            constexpr bool Cmp(T1 a, T2 b) {
                 return Op::Op(static_cast<typename LargerInt<T1, T2>::type>(a), b);
             }
 
             // Overload for signed - unsigned comparison that can't be promoted to a bigger
             // signed type.
             template < typename Op,
-                typename T1,
-                typename T2,
-                typename std::enable_if < std::is_signed<T1>::value &&
-                std::is_unsigned<T2>::value &&
-                !LargerInt<T2, T1>::value >::type * = nullptr >
-                constexpr bool Cmp(T1 a, T2 b) {
+                       typename T1,
+                       typename T2,
+                       typename std::enable_if < std::is_signed<T1>::value &&
+                                                 std::is_unsigned<T2>::value &&
+                                                 !LargerInt<T2, T1>::value >::type * = nullptr >
+            constexpr bool Cmp(T1 a, T2 b) {
                 return a < 0 ? Op::Op(-1, 0) : Op::Op(safe_cmp_impl::MakeUnsigned(a), b);
             }
 
             // Overload for unsigned - signed comparison that can't be promoted to a bigger
             // signed type.
             template < typename Op,
-                typename T1,
-                typename T2,
-                typename std::enable_if < std::is_unsigned<T1>::value &&
-                std::is_signed<T2>::value &&
-                !LargerInt<T1, T2>::value >::type * = nullptr >
-                constexpr bool Cmp(T1 a, T2 b) {
+                       typename T1,
+                       typename T2,
+                       typename std::enable_if < std::is_unsigned<T1>::value &&
+                                                 std::is_signed<T2>::value &&
+                                                 !LargerInt<T1, T2>::value >::type * = nullptr >
+            constexpr bool Cmp(T1 a, T2 b) {
                 return b < 0 ? Op::Op(0, -1) : Op::Op(a, safe_cmp_impl::MakeUnsigned(b));
             }
 
@@ -142,11 +142,11 @@ namespace ppx {
         }                                      \
     };
             PPX_SAFECMP_MAKE_OP(EqOp, == )
-                PPX_SAFECMP_MAKE_OP(NeOp, != )
-                PPX_SAFECMP_MAKE_OP(LtOp, < )
-                PPX_SAFECMP_MAKE_OP(LeOp, <= )
-                PPX_SAFECMP_MAKE_OP(GtOp, > )
-                PPX_SAFECMP_MAKE_OP(GeOp, >= )
+            PPX_SAFECMP_MAKE_OP(NeOp, != )
+            PPX_SAFECMP_MAKE_OP(LtOp, < )
+            PPX_SAFECMP_MAKE_OP(LeOp, <= )
+            PPX_SAFECMP_MAKE_OP(GtOp, > )
+            PPX_SAFECMP_MAKE_OP(GeOp, >= )
 #undef PPX_SAFECMP_MAKE_OP
 
         }  // namespace safe_cmp_impl
@@ -169,12 +169,12 @@ namespace ppx {
                            const T2& b) {           \
         return ppx::base::safe_cmp_impl::name##Op::Op(a, b);                                 \
     }
-    PPX_SAFECMP_MAKE_FUN(Eq)
-    PPX_SAFECMP_MAKE_FUN(Ne)
-    PPX_SAFECMP_MAKE_FUN(Lt)
-    PPX_SAFECMP_MAKE_FUN(Le)
-    PPX_SAFECMP_MAKE_FUN(Gt)
-    PPX_SAFECMP_MAKE_FUN(Ge)
+        PPX_SAFECMP_MAKE_FUN(Eq)
+        PPX_SAFECMP_MAKE_FUN(Ne)
+        PPX_SAFECMP_MAKE_FUN(Lt)
+        PPX_SAFECMP_MAKE_FUN(Le)
+        PPX_SAFECMP_MAKE_FUN(Gt)
+        PPX_SAFECMP_MAKE_FUN(Ge)
 #undef PPX_SAFECMP_MAKE_FUN
     }
 }

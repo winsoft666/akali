@@ -29,7 +29,7 @@ namespace ppx {
         PPXBASE_API void GetCPUId(std::string &cpu_id);
         PPXBASE_API void GetMACList(std::vector<std::string> &mac_list);
         PPXBASE_API std::string GetValidMAC();
-		PPXBASE_API int64_t GetValidMacInteger();
+        PPXBASE_API int64_t GetValidMacInteger();
     }
 }
 

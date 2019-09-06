@@ -23,38 +23,38 @@
 namespace ppx {
     namespace base {
 
-		class BufferQueue::BufferQueueImpl {
-		public:
-			BufferQueueImpl() {
-				first_element_ = 0;
-				last_element_ = 0;
-				element_num_ = 0;
-				total_data_size_ = 0;
-			}
+        class BufferQueue::BufferQueueImpl {
+          public:
+            BufferQueueImpl() {
+                first_element_ = 0;
+                last_element_ = 0;
+                element_num_ = 0;
+                total_data_size_ = 0;
+            }
 
-			~BufferQueueImpl() {
+            ~BufferQueueImpl() {
 
-			}
+            }
 
-			QUEUE_ELEMENT *first_element_;
-			QUEUE_ELEMENT *last_element_;
-			unsigned int element_num_;
-			unsigned int total_data_size_;
+            QUEUE_ELEMENT *first_element_;
+            QUEUE_ELEMENT *last_element_;
+            unsigned int element_num_;
+            unsigned int total_data_size_;
             std::string queue_name_;
-			std::recursive_mutex queue_mutex_;
-		};
+            std::recursive_mutex queue_mutex_;
+        };
 
         BufferQueue::BufferQueue(const std::string &queue_name) {
-			impl_ = new BufferQueueImpl();
+            impl_ = new BufferQueueImpl();
 
-			impl_->queue_name_ = queue_name;
+            impl_->queue_name_ = queue_name;
         }
 
 
         BufferQueue::~BufferQueue() {
             Clear();
 
-			SAFE_DELETE(impl_);
+            SAFE_DELETE(impl_);
         }
 
         unsigned int BufferQueue::GetFrontDataSize() {
@@ -67,63 +67,61 @@ namespace ppx {
             return impl_->last_element_->size;
         }
 
-		int64_t BufferQueue::ToOneBuffer(char** ppBuf) const {
-			std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
-			if (ppBuf == NULL)
-				return -1;
+        int64_t BufferQueue::ToOneBuffer(char **ppBuf) const {
+            std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
+            if (ppBuf == NULL)
+                return -1;
 
-			const unsigned int iBufSize = GetTotalDataSize();
+            const unsigned int iBufSize = GetTotalDataSize();
 
-			*ppBuf = (char*)malloc(iBufSize);
+            *ppBuf = (char *)malloc(iBufSize);
 
-			if (*ppBuf == NULL)
-				return -1;
+            if (*ppBuf == NULL)
+                return -1;
 
-			QUEUE_ELEMENT * p = impl_->first_element_;
-			unsigned int remaind = iBufSize;
-			char* pB = *ppBuf;
-			while (p && remaind > 0)
-			{
-				memcpy(pB, p->dataReadAddress, p->size);
-				remaind -= p->size;
-				pB += p->size;
+            QUEUE_ELEMENT *p = impl_->first_element_;
+            unsigned int remaind = iBufSize;
+            char *pB = *ppBuf;
+            while (p && remaind > 0) {
+                memcpy(pB, p->dataReadAddress, p->size);
+                remaind -= p->size;
+                pB += p->size;
 
-				p = p->next;
-			}
+                p = p->next;
+            }
 
-			return iBufSize;
-		}
+            return iBufSize;
+        }
 
-		int64_t BufferQueue::ToOneBufferWithNullEnding(char** ppBuf) const {
-			std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
-			if (ppBuf == NULL)
-				return -1;
+        int64_t BufferQueue::ToOneBufferWithNullEnding(char **ppBuf) const {
+            std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
+            if (ppBuf == NULL)
+                return -1;
 
-			const unsigned int iBufSize = GetTotalDataSize();
+            const unsigned int iBufSize = GetTotalDataSize();
 
-			*ppBuf = (char*)malloc(iBufSize + 1);
+            *ppBuf = (char *)malloc(iBufSize + 1);
 
-			if (*ppBuf == NULL)
-				return -1;
+            if (*ppBuf == NULL)
+                return -1;
 
-			(*ppBuf)[iBufSize] = 0;
+            (*ppBuf)[iBufSize] = 0;
 
-			QUEUE_ELEMENT * p = impl_->first_element_;
-			unsigned int remaind = iBufSize;
-			char* pB = *ppBuf;
-			while (p && remaind > 0)
-			{
-				memcpy(pB, p->dataReadAddress, p->size);
-				remaind -= p->size;
-				pB += p->size;
+            QUEUE_ELEMENT *p = impl_->first_element_;
+            unsigned int remaind = iBufSize;
+            char *pB = *ppBuf;
+            while (p && remaind > 0) {
+                memcpy(pB, p->dataReadAddress, p->size);
+                remaind -= p->size;
+                pB += p->size;
 
-				p = p->next;
-			}
+                p = p->next;
+            }
 
-			return iBufSize + 1;
-		}
+            return iBufSize + 1;
+        }
 
-		bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
+        bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
             if (pSrcData == 0 || nSrcDataSize == 0)
                 return false;
 
@@ -148,21 +146,21 @@ namespace ppx {
                 elem->dataStartAddress = data;
                 elem->size = nSrcDataSize;
 
-				impl_->total_data_size_ += nSrcDataSize;
-				impl_->element_num_++;
+                impl_->total_data_size_ += nSrcDataSize;
+                impl_->element_num_++;
 
 
                 if (impl_->first_element_ == 0) { // Add first element in queue.
                     // Now,no element in queue.
                     elem->prev = 0;
                     elem->next = 0;
-					impl_->first_element_ = elem;
-					impl_->last_element_ = elem;
+                    impl_->first_element_ = elem;
+                    impl_->last_element_ = elem;
                 } else {
                     elem->prev = 0;
                     elem->next = impl_->first_element_;
-					impl_->first_element_->prev = elem;
-					impl_->first_element_ = elem;
+                    impl_->first_element_->prev = elem;
+                    impl_->first_element_ = elem;
                 }
             }
 
@@ -197,25 +195,25 @@ namespace ppx {
                 elem->dataStartAddress = data;
                 elem->size = nSrcDataSize;
 
-				impl_->total_data_size_ += nSrcDataSize;
-				impl_->element_num_++;
+                impl_->total_data_size_ += nSrcDataSize;
+                impl_->element_num_++;
 
                 // Add last element in queue.
                 if (impl_->last_element_ == 0) {
                     // Now,no element in queue.
                     elem->prev = 0;
                     elem->next = 0;
-					impl_->first_element_ = elem;
-					impl_->last_element_ = elem;
+                    impl_->first_element_ = elem;
+                    impl_->last_element_ = elem;
                 } else {
                     elem->prev = impl_->last_element_;
                     elem->next = 0;
-					impl_->last_element_->next = elem;
-					impl_->last_element_ = elem;
+                    impl_->last_element_->next = elem;
+                    impl_->last_element_ = elem;
                 }
             }
 
-			TraceMsgA("Buffer Queue(%s): Add data to last element: data-size %d.\n", impl_->queue_name_.c_str(), nSrcDataSize);
+            TraceMsgA("Buffer Queue(%s): Add data to last element: data-size %d.\n", impl_->queue_name_.c_str(), nSrcDataSize);
 
             return true;
         }
@@ -235,8 +233,8 @@ namespace ppx {
                 if (size > 0)
                     memcpy(pDestData, impl_->first_element_->dataReadAddress, size);
 
-				impl_->element_num_--;
-				impl_->total_data_size_ -= impl_->first_element_->size;
+                impl_->element_num_--;
+                impl_->total_data_size_ -= impl_->first_element_->size;
 
                 QUEUE_ELEMENT *next = impl_->first_element_->next;
 
@@ -247,14 +245,14 @@ namespace ppx {
                         free(impl_->first_element_->dataStartAddress);
 
                     free(impl_->first_element_);
-					impl_->first_element_ = next;
+                    impl_->first_element_ = next;
                 } else {
                     if (impl_->first_element_->dataStartAddress)
                         free(impl_->first_element_->dataStartAddress);
 
                     free(impl_->first_element_);
-					impl_->first_element_ = 0;
-					impl_->last_element_ = 0;
+                    impl_->first_element_ = 0;
+                    impl_->last_element_ = 0;
                 }
 
                 rvalue = size;
@@ -264,7 +262,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): pop data from front element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
+            TraceMsgA("Buffer Queue(%s): pop data from front element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -282,8 +280,8 @@ namespace ppx {
                 if (size > 0)
                     memcpy(pDestData, impl_->last_element_->dataReadAddress, size);
 
-				impl_->element_num_--;
-				impl_->total_data_size_ -= impl_->last_element_->size;
+                impl_->element_num_--;
+                impl_->total_data_size_ -= impl_->last_element_->size;
 
                 QUEUE_ELEMENT *prev = impl_->last_element_->prev;
 
@@ -294,14 +292,14 @@ namespace ppx {
                         free(impl_->last_element_->dataStartAddress);
 
                     free(impl_->last_element_);
-					impl_->last_element_ = prev;
+                    impl_->last_element_ = prev;
                 } else {
                     if (impl_->last_element_->dataStartAddress)
                         free(impl_->last_element_->dataStartAddress);
 
                     free(impl_->last_element_);
-					impl_->first_element_ = 0;
-					impl_->last_element_ = 0;
+                    impl_->first_element_ = 0;
+                    impl_->last_element_ = 0;
                 }
 
                 rvalue = size;
@@ -311,7 +309,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): pop data from last element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
+            TraceMsgA("Buffer Queue(%s): pop data from last element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -332,8 +330,8 @@ namespace ppx {
                         memcpy(pBuffer, impl_->first_element_->dataReadAddress, nByteNeed);
 
                         nBytesRead += nByteNeed;
-						impl_->first_element_->size -= nByteNeed;
-						impl_->total_data_size_ -= nByteNeed;
+                        impl_->first_element_->size -= nByteNeed;
+                        impl_->total_data_size_ -= nByteNeed;
 
                         // check if buffer is empty.
                         if (impl_->first_element_->size == 0) {
@@ -342,7 +340,7 @@ namespace ppx {
                             PopFromFront((void *)1, 0);
                         } else {
                             // element isn't empty, but we have removed some data from element.
-							impl_->first_element_->dataReadAddress = (char *)impl_->first_element_->dataReadAddress + nByteNeed;
+                            impl_->first_element_->dataReadAddress = (char *)impl_->first_element_->dataReadAddress + nByteNeed;
                         }
 
                         nByteNeed = 0;
@@ -352,8 +350,8 @@ namespace ppx {
                         nBytesRead += impl_->first_element_->size;
                         pBuffer += impl_->first_element_->size;
                         nByteNeed -= impl_->first_element_->size;
-						impl_->total_data_size_ -= impl_->first_element_->size;
-						impl_->first_element_->size = 0;
+                        impl_->total_data_size_ -= impl_->first_element_->size;
+                        impl_->first_element_->size = 0;
                         nOutBufferNum++;
 
                         PopFromFront((void *)1, 0);
@@ -372,7 +370,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): pop data from %d element(s): data-size %d.\n", impl_->queue_name_.c_str(), nOutBufferNum, rvalue);
+            TraceMsgA("Buffer Queue(%s): pop data from %d element(s): data-size %d.\n", impl_->queue_name_.c_str(), nOutBufferNum, rvalue);
 
             return rvalue;
         }
@@ -396,7 +394,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): get data from front element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
+            TraceMsgA("Buffer Queue(%s): get data from front element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -421,7 +419,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): get data from last element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
+            TraceMsgA("Buffer Queue(%s): get data from last element: data-size %d.\n", impl_->queue_name_.c_str(), rvalue);
 
             return rvalue;
         }
@@ -439,9 +437,9 @@ namespace ppx {
                         if (impl_->first_element_->size == nByteNeed) { // remove this element from queue
                             PopFromFront((void *)1, 0);
                         } else { // element isn't empty, but we have removed some data from element
-							impl_->total_data_size_ -= nByteNeed;
-							impl_->first_element_->size -= nByteNeed;
-							impl_->first_element_->dataReadAddress = (char *)impl_->first_element_->dataReadAddress + nByteNeed;
+                            impl_->total_data_size_ -= nByteNeed;
+                            impl_->first_element_->size -= nByteNeed;
+                            impl_->first_element_->dataReadAddress = (char *)impl_->first_element_->dataReadAddress + nByteNeed;
                         }
 
                         break;
@@ -455,7 +453,7 @@ namespace ppx {
                 rvalue = 0;
             }
 
-			TraceMsgA("Buffer Queue(%s): remove data from %d element(s): data-size %d.\n", impl_->queue_name_.c_str(), rvalue, nBytesToRemove - nByteNeed);
+            TraceMsgA("Buffer Queue(%s): remove data from %d element(s): data-size %d.\n", impl_->queue_name_.c_str(), rvalue, nBytesToRemove - nByteNeed);
 
             return rvalue;
         }
@@ -492,12 +490,12 @@ namespace ppx {
                 }
             }
 
-			impl_->first_element_ = NULL;
-			impl_->last_element_ = NULL;
-			impl_->element_num_ = 0;
-			impl_->total_data_size_ = 0;
+            impl_->first_element_ = NULL;
+            impl_->last_element_ = NULL;
+            impl_->element_num_ = 0;
+            impl_->total_data_size_ = 0;
 
-			TraceMsgA("Buffer Queue(%s): clear all data\n", impl_->queue_name_.c_str());
+            TraceMsgA("Buffer Queue(%s): clear all data\n", impl_->queue_name_.c_str());
 
             return rvalue;
         }

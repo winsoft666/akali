@@ -39,7 +39,7 @@ namespace ppx {
 
         // Version-agnostic IP address class, wraps a union of in_addr and in6_addr.
         class PPXBASE_API IPAddress {
-        public:
+          public:
             IPAddress() : family_(AF_UNSPEC) {
                 memset(&u_, 0, sizeof(u_));
             }
@@ -103,7 +103,7 @@ namespace ppx {
             bool IsUnspecifiedIP() const;
 
             bool IsValid() const;
-        private:
+          private:
             int family_;
             union {
                 in_addr ip4;
@@ -114,7 +114,7 @@ namespace ppx {
         // IP class which could represent IPv6 address flags which is only
         // meaningful in IPv6 case.
         class PPXBASE_API InterfaceAddress : public IPAddress {
-        public:
+          public:
             InterfaceAddress() : ipv6_flags_(IPV6_ADDRESS_FLAG_NONE) {}
 
             InterfaceAddress(IPAddress ip)
@@ -138,45 +138,45 @@ namespace ppx {
                 return ipv6_flags_;
             }
             friend std::ostream &operator<<(std::ostream &os,
-                const InterfaceAddress &addr);
+                                            const InterfaceAddress &addr);
 
-        private:
+          private:
             int ipv6_flags_;
         };
 
-		PPXBASE_API bool IPFromAddrInfo(struct addrinfo *info, IPAddress *out);
-		PPXBASE_API bool IPFromString(const std::string &str, IPAddress *out);
-		PPXBASE_API bool IPFromString(const std::string &str, int flags,
-            InterfaceAddress *out);
-		PPXBASE_API bool IPIsAny(const IPAddress &ip);
-		PPXBASE_API bool IPIsLoopback(const IPAddress &ip);
-		PPXBASE_API bool IPIsPrivate(const IPAddress &ip);
-		PPXBASE_API bool IPIsUnspec(const IPAddress &ip);
-		PPXBASE_API size_t HashIP(const IPAddress &ip);
+        PPXBASE_API bool IPFromAddrInfo(struct addrinfo *info, IPAddress *out);
+        PPXBASE_API bool IPFromString(const std::string &str, IPAddress *out);
+        PPXBASE_API bool IPFromString(const std::string &str, int flags,
+                                      InterfaceAddress *out);
+        PPXBASE_API bool IPIsAny(const IPAddress &ip);
+        PPXBASE_API bool IPIsLoopback(const IPAddress &ip);
+        PPXBASE_API bool IPIsPrivate(const IPAddress &ip);
+        PPXBASE_API bool IPIsUnspec(const IPAddress &ip);
+        PPXBASE_API size_t HashIP(const IPAddress &ip);
 
         // These are only really applicable for IPv6 addresses.
-		PPXBASE_API bool IPIs6Bone(const IPAddress &ip);
-		PPXBASE_API bool IPIs6To4(const IPAddress &ip);
-		PPXBASE_API bool IPIsLinkLocal(const IPAddress &ip);
-		PPXBASE_API bool IPIsMacBased(const IPAddress &ip);
-		PPXBASE_API bool IPIsSiteLocal(const IPAddress &ip);
-		PPXBASE_API bool IPIsTeredo(const IPAddress &ip);
-		PPXBASE_API bool IPIsULA(const IPAddress &ip);
-		PPXBASE_API bool IPIsV4Compatibility(const IPAddress &ip);
-		PPXBASE_API bool IPIsV4Mapped(const IPAddress &ip);
+        PPXBASE_API bool IPIs6Bone(const IPAddress &ip);
+        PPXBASE_API bool IPIs6To4(const IPAddress &ip);
+        PPXBASE_API bool IPIsLinkLocal(const IPAddress &ip);
+        PPXBASE_API bool IPIsMacBased(const IPAddress &ip);
+        PPXBASE_API bool IPIsSiteLocal(const IPAddress &ip);
+        PPXBASE_API bool IPIsTeredo(const IPAddress &ip);
+        PPXBASE_API bool IPIsULA(const IPAddress &ip);
+        PPXBASE_API bool IPIsV4Compatibility(const IPAddress &ip);
+        PPXBASE_API bool IPIsV4Mapped(const IPAddress &ip);
 
         // Returns the precedence value for this IP as given in RFC3484.
-		PPXBASE_API int IPAddressPrecedence(const IPAddress &ip);
+        PPXBASE_API int IPAddressPrecedence(const IPAddress &ip);
 
         // Returns 'ip' truncated to be 'length' bits long.
-		PPXBASE_API IPAddress TruncateIP(const IPAddress &ip, int length);
+        PPXBASE_API IPAddress TruncateIP(const IPAddress &ip, int length);
 
-		PPXBASE_API IPAddress GetLoopbackIP(int family);
-		PPXBASE_API IPAddress GetAnyIP(int family);
+        PPXBASE_API IPAddress GetLoopbackIP(int family);
+        PPXBASE_API IPAddress GetAnyIP(int family);
 
         // Returns the number of contiguously set bits, counting from the MSB in network
         // byte order, in this IPAddress. Bits after the first 0 encountered are not counted.
-		PPXBASE_API int CountIPMaskBits(IPAddress mask);
+        PPXBASE_API int CountIPMaskBits(IPAddress mask);
     }
 }
 

@@ -14,16 +14,16 @@ namespace ppx {
             }
 
             BindStateBase::BindStateBase(InvokeFuncStorage polymorphic_invoke,
-                void(*destructor)(const BindStateBase *))
+                                         void(*destructor)(const BindStateBase *))
                 : BindStateBase(polymorphic_invoke, destructor, &ReturnFalse) {
             }
 
             BindStateBase::BindStateBase(InvokeFuncStorage polymorphic_invoke,
-                void(*destructor)(const BindStateBase *),
-                bool(*is_cancelled)(const BindStateBase *))
+                                         void(*destructor)(const BindStateBase *),
+                                         bool(*is_cancelled)(const BindStateBase *))
                 : polymorphic_invoke_(polymorphic_invoke),
-                destructor_(destructor),
-                is_cancelled_(is_cancelled) {
+                  destructor_(destructor),
+                  is_cancelled_(is_cancelled) {
             }
 
             CallbackBase::CallbackBase(CallbackBase &&c) = default;

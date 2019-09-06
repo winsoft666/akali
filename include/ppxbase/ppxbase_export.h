@@ -18,21 +18,21 @@
 
 
 #ifdef PPXBASE_STATIC
-#define PPXBASE_API 
+    #define PPXBASE_API
 #else
-#if defined(PPXBASE_EXPORTS)
-#	if defined(_MSC_VER)
-#		define PPXBASE_API __declspec(dllexport)
-#	else
-#		define PPXBASE_API 
-#	endif
-#else
-#	if defined(_MSC_VER)
-#		define PPXBASE_API __declspec(dllimport)
-#	else
-#		define PPXBASE_API 
-#	endif
-#endif
+    #if defined(PPXBASE_EXPORTS)
+        #if defined(_MSC_VER)
+            #define PPXBASE_API __declspec(dllexport)
+        #else
+            #define PPXBASE_API
+        #endif
+    #else
+        #if defined(_MSC_VER)
+            #define PPXBASE_API __declspec(dllimport)
+        #else
+            #define PPXBASE_API
+        #endif
+    #endif
 #endif
 
 #endif // !PPXBASE_EXPORT_H_

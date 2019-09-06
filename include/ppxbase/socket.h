@@ -163,45 +163,45 @@ namespace ppx {
             };
 
 
-            static int TranslateOption(Option opt, int* slevel, int* sopt) {
+            static int TranslateOption(Option opt, int *slevel, int *sopt) {
                 switch (opt) {
-                case OPT_DONTFRAGMENT:
-                    *slevel = IPPROTO_IP;
-                    *sopt = IP_DONTFRAGMENT;
-                    break;
-                case OPT_RCVBUF:
-                    *slevel = SOL_SOCKET;
-                    *sopt = SO_RCVBUF;
-                    break;
-                case OPT_SNDBUF:
-                    *slevel = SOL_SOCKET;
-                    *sopt = SO_SNDBUF;
-                    break;
-                case OPT_NODELAY:
-                    *slevel = IPPROTO_TCP;
-                    *sopt = TCP_NODELAY;
-                    break;
-                case OPT_DSCP:
-                    PPX_LOG(LS_WARNING) << "Socket::OPT_DSCP not supported.";
-                    return -1;
-                case OPT_BROADCAST:
-                    *slevel = SOL_SOCKET;
-                    *sopt = SO_BROADCAST;
-                    break;
-                case OPT_ADD_MEMBERSHIP:
-                    *slevel = IPPROTO_IP;
-                    *sopt = IP_ADD_MEMBERSHIP;
-                    break;
-                default:
-                    PPX_NOT_REACHED("");
-                    return -1;
+                    case OPT_DONTFRAGMENT:
+                        *slevel = IPPROTO_IP;
+                        *sopt = IP_DONTFRAGMENT;
+                        break;
+                    case OPT_RCVBUF:
+                        *slevel = SOL_SOCKET;
+                        *sopt = SO_RCVBUF;
+                        break;
+                    case OPT_SNDBUF:
+                        *slevel = SOL_SOCKET;
+                        *sopt = SO_SNDBUF;
+                        break;
+                    case OPT_NODELAY:
+                        *slevel = IPPROTO_TCP;
+                        *sopt = TCP_NODELAY;
+                        break;
+                    case OPT_DSCP:
+                        PPX_LOG(LS_WARNING) << "Socket::OPT_DSCP not supported.";
+                        return -1;
+                    case OPT_BROADCAST:
+                        *slevel = SOL_SOCKET;
+                        *sopt = SO_BROADCAST;
+                        break;
+                    case OPT_ADD_MEMBERSHIP:
+                        *slevel = IPPROTO_IP;
+                        *sopt = IP_ADD_MEMBERSHIP;
+                        break;
+                    default:
+                        PPX_NOT_REACHED("");
+                        return -1;
                 }
                 return 0;
             }
 
           protected:
-            Socket() : error_(0), 
-                connect_time_(0), 
+            Socket() : error_(0),
+                connect_time_(0),
                 state_(Socket::CS_CLOSED),
                 family_(AF_UNSPEC),
                 type_(0) {

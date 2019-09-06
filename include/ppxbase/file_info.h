@@ -19,27 +19,26 @@
 
 #ifdef _WIN32
 #ifndef _INC_WINDOWS
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <Windows.h>
 #endif
 #include <string>
 #include "ppxbase/timeutils.h"
 #include "ppxbase_export.h"
 
-namespace ppx
-{
+namespace ppx {
     namespace base {
         class PPXBASE_API FileInfo {
-        public:
+          public:
             FileInfo();
             ~FileInfo();
 
             bool Create(HMODULE hModule = NULL);
             bool Create(const std::wstring &strFileName);
 
-        public:
+          public:
             WORD GetFileVersion(int nIndex) const;
             WORD GetProductVersion(int nIndex) const;
             DWORD GetFileFlagsMask() const;
@@ -63,17 +62,17 @@ namespace ppx
             std::wstring GetSpecialBuild();
 
             // Windows的文件时间为一个64位整数（用FILETIME结构体存储）,它记录从1601-1-1 00:00:00到当前格林威治时间（UTC）所经过的100纳秒(ns)数
-            // See: https ://blog.csdn.net/china_jeffery/article/details/78409614 
+            // See: https ://blog.csdn.net/china_jeffery/article/details/78409614
             //
             FILETIME GetCreationTime() const;
             FILETIME GetLastAccessTime() const;
             FILETIME GetLastWriteTime() const;
 
-        private:
+          private:
             virtual void Reset();
             bool GetTranslationId(LPVOID lpData, UINT unBlockSize, WORD wLangId, DWORD &dwId, BOOL bPrimaryEnough = FALSE);
 
-        private:
+          private:
             VS_FIXEDFILEINFO m_FileInfo;
 
             std::wstring m_strCompanyName;

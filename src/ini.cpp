@@ -45,11 +45,11 @@ namespace ppx {
             SetLastError(0);
             UINT ret = GetPrivateProfileIntW(pszItem, pszSubItem, iDefault, m_szIniFile);
             DWORD dwGLE = GetLastError();
-			if (dwGLE == 0) {
-				ValueInt = ret;
-				return true;
-			}
-			return false;
+            if (dwGLE == 0) {
+                ValueInt = ret;
+                return true;
+            }
+            return false;
         }
 
         LPCWSTR Ini::ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR pszDefault, LPTSTR pszString, WORD wMaxCount) {
@@ -67,36 +67,33 @@ namespace ppx {
             bool ret = false;
             int iBufSize = 255;
             WCHAR *pBuf = NULL;
-            do 
-            {
-                pBuf = (WCHAR*)malloc(iBufSize * sizeof(WCHAR));
-				SetLastError(0);
-                DWORD dwRet = GetPrivateProfileStringW(pszItem, pszSubItem, L"" ,pBuf, iBufSize, m_szIniFile);
+            do {
+                pBuf = (WCHAR *)malloc(iBufSize * sizeof(WCHAR));
+                SetLastError(0);
+                DWORD dwRet = GetPrivateProfileStringW(pszItem, pszSubItem, L"", pBuf, iBufSize, m_szIniFile);
                 DWORD dwGLE = GetLastError();
                 if (dwRet == 0) {
                     ret = (dwGLE == 0);
                     break;
-                }
-                else if (dwRet == iBufSize - 1) {
+                } else if (dwRet == iBufSize - 1) {
                     free(pBuf);
                     pBuf = NULL;
                     iBufSize += 1024;
-                }
-                else {
+                } else {
                     ret = true;
                     break;
                 }
             } while (true);
 
-			if (ret) {
-				strString = pBuf;
-			}
+            if (ret) {
+                strString = pBuf;
+            }
             free(pBuf);
 
             return ret;
         }
 
-		bool Ini::WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt) {
+        bool Ini::WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt) {
             assert(m_szIniFile[0] != 0);
             if (wcslen(m_szIniFile) == 0 || !pszItem || !pszSubItem)
                 return false;
@@ -141,11 +138,11 @@ namespace ppx {
             return WritePrivateProfileString(pszItem, pszSubItem, ValueString, m_szIniFile) == TRUE;
         }
 
-		bool Ini::WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring& ValueString) {
-			return WriteString(pszItem, pszSubItem, ValueString.c_str());
-		}
+        bool Ini::WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring &ValueString) {
+            return WriteString(pszItem, pszSubItem, ValueString.c_str());
+        }
 
-		bool Ini::ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT & ValueRect) {
+        bool Ini::ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT &ValueRect) {
             assert(m_szIniFile[0] != 0);
             if (wcslen(m_szIniFile) == 0)
                 return false;
@@ -167,7 +164,7 @@ namespace ppx {
             return false;
         }
 
-        bool Ini::ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE & ValueSize) {
+        bool Ini::ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE &ValueSize) {
             assert(m_szIniFile[0] != 0);
             if (wcslen(m_szIniFile) == 0)
                 return false;
@@ -187,7 +184,7 @@ namespace ppx {
             return false;
         }
 
-        bool Ini::ReadPoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT & ValuePoint) {
+        bool Ini::ReadPoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT &ValuePoint) {
             assert(m_szIniFile[0] != 0);
             if (wcslen(m_szIniFile) == 0)
                 return false;
@@ -207,7 +204,7 @@ namespace ppx {
             return false;
         }
 
-        bool Ini::ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF & ValueColor) {
+        bool Ini::ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF &ValueColor) {
             assert(m_szIniFile[0] != 0);
             if (wcslen(m_szIniFile) == 0)
                 return false;
@@ -225,11 +222,11 @@ namespace ppx {
             return false;
         }
 
-        LONG Ini::SwitchStringToValue(LPCWSTR & pszSring) {
+        LONG Ini::SwitchStringToValue(LPCWSTR &pszSring) {
             assert((pszSring != NULL) && (pszSring[0] != 0));
             if ((pszSring == NULL) || (pszSring[0] == 0)) return 0L;
 
-            while (((pszSring[0] > 0) && (pszSring[0] < L'0')) || (pszSring[0] > L'9')) 
+            while (((pszSring[0] > 0) && (pszSring[0] < L'0')) || (pszSring[0] > L'9'))
                 pszSring++;
 
             LONG lValue = 0L;

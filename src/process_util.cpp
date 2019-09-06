@@ -30,12 +30,12 @@ namespace ppx {
     namespace base {
         ProcessFinder::ProcessFinder(DWORD dwFlags /* = 0*/, DWORD dwProcessID /* = 0*/) {
             m_hSnapShot = INVALID_HANDLE_VALUE;
-			if (dwFlags == 0)
-				dwFlags = TH32CS_SNAPALL;
+            if (dwFlags == 0)
+                dwFlags = TH32CS_SNAPALL;
             CreateSnapShot(dwFlags, dwProcessID);
         }
 
-		ProcessFinder::~ProcessFinder() {
+        ProcessFinder::~ProcessFinder() {
             if (m_hSnapShot != INVALID_HANDLE_VALUE) {
                 CloseHandle(m_hSnapShot);
                 m_hSnapShot = INVALID_HANDLE_VALUE;
@@ -291,23 +291,22 @@ namespace ppx {
             return EasyCreateProcess(strCmdLine.c_str(), lpProcessInfo, bInheritHandles);
         }
 
-		PPXBASE_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD* pExitCode, BOOL bInheritHandles /*= FALSE*/)
-		{
-			PROCESS_INFORMATION pi;
-			BOOL bRet = EasyCreateProcess(strCmdLine.c_str(), &pi, bInheritHandles);
-			if (bRet) {
-				if (pi.hProcess) {
-					WaitForSingleObject(pi.hProcess, INFINITE);
+        PPXBASE_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD *pExitCode, BOOL bInheritHandles /*= FALSE*/) {
+            PROCESS_INFORMATION pi;
+            BOOL bRet = EasyCreateProcess(strCmdLine.c_str(), &pi, bInheritHandles);
+            if (bRet) {
+                if (pi.hProcess) {
+                    WaitForSingleObject(pi.hProcess, INFINITE);
                     if(pExitCode)
-					    GetExitCodeProcess(pi.hProcess, pExitCode);
-				}
-				SAFE_CLOSE(pi.hThread);
-				SAFE_CLOSE(pi.hProcess);
-			}
-			return bRet;
-		}
+                        GetExitCodeProcess(pi.hProcess, pExitCode);
+                }
+                SAFE_CLOSE(pi.hThread);
+                SAFE_CLOSE(pi.hProcess);
+            }
+            return bRet;
+        }
 
-		BOOL CreateUserProcess(PCTSTR pszFilePath) {
+        BOOL CreateUserProcess(PCTSTR pszFilePath) {
             HANDLE hUserTokenDup = NULL;
             HANDLE hPToken = NULL;
             HANDLE hProcess = NULL;
@@ -462,8 +461,7 @@ namespace ppx {
                 if (hlib != NULL) {
                     FreeLibrary(hlib);
                 }
-            }
-            else {
+            } else {
                 res = TRUE;
             }
 
@@ -563,8 +561,7 @@ namespace ppx {
                 if (GetModuleFileNameExW(hProcess, hModule, Filename, MAX_PATH)) {
                     strPath = Filename;
                 }
-            }
-            else {
+            } else {
                 DWORD size = MAX_PATH;
                 if (QueryFullProcessImageNameW(hProcess, 0, Filename, &size)) {
                     strPath = Filename;

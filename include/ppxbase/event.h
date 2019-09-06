@@ -18,20 +18,20 @@
 #include "ppxbase/constructormagic.h"
 #include "ppxbase_export.h"
 #if defined(WIN32)
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
 #elif defined(POSIX)
-#include <pthread.h>
+    #include <pthread.h>
 #else
-#error "Must define either WIN or POSIX."
+    #error "Must define either WIN or POSIX."
 #endif
 
 namespace ppx {
     namespace base {
         class PPXBASE_API Event {
-        public:
+          public:
             static const int kForever = -1;
 
             Event(bool manual_reset, bool initially_signaled);
@@ -44,7 +44,7 @@ namespace ppx {
             // |milliseconds|.  To wait indefinetly, pass kForever.
             bool Wait(int milliseconds);
 
-        private:
+          private:
 #if defined(WIN32)
             HANDLE event_handle_;
 #elif defined(POSIX)

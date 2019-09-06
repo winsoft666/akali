@@ -10,7 +10,7 @@ namespace ppx {
     namespace base {
 
         class ScheduleTask::ScheduleTaskImpl {
-        public:
+          public:
             ScheduleTaskImpl() {
                 m_lpITS = NULL;
                 m_lpRootFolder = NULL;
@@ -47,7 +47,7 @@ namespace ppx {
             }
 
             BOOL NewTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
-                                       LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor) {
+                         LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor) {
                 if ( NULL == m_lpRootFolder ) {
                     return FALSE;
                 }
@@ -144,13 +144,13 @@ namespace ppx {
                 CComVariant variantTaskName(NULL);
                 variantTaskName = pszTaskName;
                 hr = m_lpRootFolder->RegisterTaskDefinition(variantTaskName.bstrVal,
-                                                            pTaskDefinition,
-                                                            TASK_CREATE_OR_UPDATE,
-                                                            _variant_t(),
-                                                            _variant_t(),
-                                                            TASK_LOGON_INTERACTIVE_TOKEN,
-                                                            _variant_t(""),
-                                                            &pRegisteredTask);
+                        pTaskDefinition,
+                        TASK_CREATE_OR_UPDATE,
+                        _variant_t(),
+                        _variant_t(),
+                        TASK_LOGON_INTERACTIVE_TOKEN,
+                        _variant_t(""),
+                        &pRegisteredTask);
                 if ( FAILED(hr) ) {
                     pTaskDefinition->Release();
                     return FALSE;
@@ -271,7 +271,7 @@ namespace ppx {
                 HRESULT hr = S_OK;
                 CComVariant variantTaskName(NULL);
                 CComVariant variantEnable(NULL);
-                variantTaskName = pszTaskName; 
+                variantTaskName = pszTaskName;
                 IRegisteredTask *pRegisteredTask = NULL;
 
                 hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
@@ -295,7 +295,7 @@ namespace ppx {
                 HRESULT hr = S_OK;
                 CComVariant variantTaskName(NULL);
                 CComVariant variantEnable(NULL);
-                variantTaskName = pszTaskName; 
+                variantTaskName = pszTaskName;
                 variantEnable = bEnable;
                 IRegisteredTask *pRegisteredTask = NULL;
 
@@ -303,14 +303,14 @@ namespace ppx {
                 if ( FAILED(hr) || (NULL == pRegisteredTask) ) {
                     return FALSE;
                 }
-  
+
                 pRegisteredTask->put_Enabled(variantEnable.boolVal);
                 pRegisteredTask->Release();
 
                 return TRUE;
             }
 
-        protected:
+          protected:
             ITaskService *m_lpITS;
             ITaskFolder *m_lpRootFolder;
         };
@@ -331,7 +331,7 @@ namespace ppx {
             return impl_->DeleteFolder(pszFolderName) == TRUE;
         }
 
-        bool ScheduleTask::NewTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath, 
+        bool ScheduleTask::NewTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
                                    LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor) {
             return impl_->NewTask(pszTaskName, pszProgramPath, pszParameters, pszDescription, pszAuthor) == TRUE;
         }

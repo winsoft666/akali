@@ -27,7 +27,7 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API Ping {
-        public:
+          public:
             typedef struct _PingRsp {
                 int icmp_seq;
 
@@ -38,7 +38,7 @@ namespace ppx {
 
                 int used_time_ms;
                 int ttl;
-                
+
                 _PingRsp() {
                     icmp_seq = -1;
                     sent_bytes = -1;
@@ -47,22 +47,22 @@ namespace ppx {
                     ttl = -1;
                 }
 
-            }PingRsp;
+            } PingRsp;
 
             Ping(
-                int packet_size = 32, 
-                int send_timeout_ms = 3000, 
-                int recv_timeout_ms = 3000, 
+                int packet_size = 32,
+                int send_timeout_ms = 3000,
+                int recv_timeout_ms = 3000,
                 int ttl = 128
             );
 
-           virtual ~Ping();
+            virtual ~Ping();
 
-           bool SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp>& rsps);
-        protected:
-            void FillPingPacket(__u8* icmp_packet, __u16 seq, __u16 icmp_packet_size);
-            bool DecodeIPPacket(__u8* ip_packet, __u16 packet_size, PingRsp &rsp);
-        private:
+            bool SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp> &rsps);
+          protected:
+            void FillPingPacket(__u8 *icmp_packet, __u16 seq, __u16 icmp_packet_size);
+            bool DecodeIPPacket(__u8 *ip_packet, __u16 packet_size, PingRsp &rsp);
+          private:
             int ttl_;
             int packet_size_;
             int send_timeout_ms_;

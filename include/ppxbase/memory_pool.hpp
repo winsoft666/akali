@@ -41,13 +41,13 @@ namespace ppx {
     namespace base {
         template <typename T, size_t BlockSize = 4096, bool ZeroOnDeallocate = true>
         class MemoryPool {
-        public:
+          public:
             /* Member types */
             typedef T               value_type;
-            typedef T*              pointer;
-            typedef T&              reference;
-            typedef const T*        const_pointer;
-            typedef const T&        const_reference;
+            typedef T              *pointer;
+            typedef T              &reference;
+            typedef const T        *const_pointer;
+            typedef const T        &const_reference;
             typedef size_t          size_type;
             typedef ptrdiff_t       difference_type;
             typedef std::false_type propagate_on_container_copy_assignment;
@@ -60,14 +60,14 @@ namespace ppx {
 
             /* Member functions */
             MemoryPool() noexcept;
-            MemoryPool(const MemoryPool& memoryPool) noexcept;
-            MemoryPool(MemoryPool&& memoryPool) noexcept;
-            template <class U> MemoryPool(const MemoryPool<U>& memoryPool) noexcept;
+            MemoryPool(const MemoryPool &memoryPool) noexcept;
+            MemoryPool(MemoryPool &&memoryPool) noexcept;
+            template <class U> MemoryPool(const MemoryPool<U> &memoryPool) noexcept;
 
             ~MemoryPool() noexcept;
 
-            MemoryPool& operator=(const MemoryPool& memoryPool) = delete;
-            MemoryPool& operator=(MemoryPool&& memoryPool) noexcept;
+            MemoryPool &operator=(const MemoryPool &memoryPool) = delete;
+            MemoryPool &operator=(MemoryPool &&memoryPool) noexcept;
 
             pointer address(reference x) const noexcept;
             const_pointer address(const_reference x) const noexcept;
@@ -78,21 +78,21 @@ namespace ppx {
 
             size_type max_size() const noexcept;
 
-            template <class U, class... Args> void construct(U* p, Args&&... args);
-            template <class U> void destroy(U* p);
+            template <class U, class... Args> void construct(U *p, Args &&... args);
+            template <class U> void destroy(U *p);
 
-            template <class... Args> pointer newElement(Args&&... args);
+            template <class... Args> pointer newElement(Args &&... args);
             void deleteElement(pointer p);
 
-        private:
+          private:
             struct Element_ {
-                Element_* pre;
-                Element_* next;
+                Element_ *pre;
+                Element_ *next;
             };
 
-            typedef char* data_pointer;
+            typedef char *data_pointer;
             typedef Element_ element_type;
-            typedef Element_* element_pointer;
+            typedef Element_ *element_pointer;
 
             element_pointer data_element_;
             element_pointer free_element_;
@@ -108,8 +108,8 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline typename MemoryPool<T, BlockSize, ZeroOnDeallocate>::size_type
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::padPointer(data_pointer p, size_type align)
-            const noexcept {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::padPointer(data_pointer p, size_type align)
+        const noexcept {
             uintptr_t result = reinterpret_cast<uintptr_t>(p);
             return ((align - result) % align);
         }
@@ -118,20 +118,20 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool()
-            noexcept {
+        noexcept {
             data_element_ = nullptr;
             free_element_ = nullptr;
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
-        MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool(const MemoryPool& memoryPool)
-            noexcept :
-        MemoryPool() {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool(const MemoryPool &memoryPool)
+        noexcept :
+            MemoryPool() {
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
-        MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool(MemoryPool&& memoryPool)
-            noexcept {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool(MemoryPool &&memoryPool)
+        noexcept {
             std::lock_guard<std::recursive_mutex> lock(m_);
 
             data_element_ = memoryPool.data_element_;
@@ -142,15 +142,15 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         template<class U>
-        MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool(const MemoryPool<U>& memoryPool)
-            noexcept :
-        MemoryPool() {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::MemoryPool(const MemoryPool<U> &memoryPool)
+        noexcept :
+            MemoryPool() {
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
-        MemoryPool<T, BlockSize, ZeroOnDeallocate>&
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::operator=(MemoryPool&& memoryPool)
-            noexcept {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate> &
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::operator=(MemoryPool &&memoryPool)
+        noexcept {
             std::lock_guard<std::recursive_mutex> lock(m_);
 
             if (this != &memoryPool) {
@@ -162,41 +162,41 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         MemoryPool<T, BlockSize, ZeroOnDeallocate>::~MemoryPool()
-            noexcept {
+        noexcept {
             std::lock_guard<std::recursive_mutex> lock(m_);
 
             element_pointer curr = data_element_;
             while (curr != nullptr) {
                 element_pointer prev = curr->next;
-                operator delete(reinterpret_cast<void*>(curr));
+                operator delete(reinterpret_cast<void *>(curr));
                 curr = prev;
             }
 
             curr = free_element_;
             while (curr != nullptr) {
                 element_pointer prev = curr->next;
-                operator delete(reinterpret_cast<void*>(curr));
+                operator delete(reinterpret_cast<void *>(curr));
                 curr = prev;
             }
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline typename MemoryPool<T, BlockSize, ZeroOnDeallocate>::pointer
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::address(reference x)
-            const noexcept {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::address(reference x)
+        const noexcept {
             return &x;
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline typename MemoryPool<T, BlockSize, ZeroOnDeallocate>::const_pointer
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::address(const_reference x)
-            const noexcept {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::address(const_reference x)
+        const noexcept {
             return &x;
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         void
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::allocateBlock() {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::allocateBlock() {
             // Allocate space for the new block and store a pointer to the previous one
             data_pointer new_block = reinterpret_cast<data_pointer> (operator new(BlockSize));
             element_pointer new_ele_pointer = reinterpret_cast<element_pointer>(new_block);
@@ -213,7 +213,7 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline typename MemoryPool<T, BlockSize, ZeroOnDeallocate>::pointer
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::allocate(size_type n, const_pointer hint) {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::allocate(size_type n, const_pointer hint) {
             std::lock_guard<std::recursive_mutex> lock(m_);
 
             if (free_element_ != nullptr) {
@@ -238,8 +238,7 @@ namespace ppx {
                 data_element_ = tmp;
 
                 return result;
-            }
-            else {
+            } else {
                 allocateBlock();
 
                 data_pointer body =
@@ -255,7 +254,7 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline void
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::deallocate(pointer p, size_type n) {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::deallocate(pointer p, size_type n) {
             std::lock_guard<std::recursive_mutex> lock(m_);
 
             if (p != nullptr) {
@@ -282,8 +281,7 @@ namespace ppx {
                 if (free_element_) {
                     ele_p->next = free_element_;
                     free_element_->pre = ele_p;
-                }
-                else {
+                } else {
                     ele_p->next = nullptr;
                 }
                 free_element_ = ele_p;
@@ -292,8 +290,8 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline typename MemoryPool<T, BlockSize, ZeroOnDeallocate>::size_type
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::max_size()
-            const noexcept {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::max_size()
+        const noexcept {
             size_type maxBlocks = -1 / BlockSize;
             return (BlockSize - sizeof(data_pointer)) / sizeof(element_type) * maxBlocks;
         }
@@ -301,21 +299,21 @@ namespace ppx {
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         template <class U, class... Args>
         inline void
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::construct(U* p, Args&&... args) {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::construct(U *p, Args &&... args) {
             new (p) U(std::forward<Args>(args)...);
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         template <class U>
         inline void
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::destroy(U* p) {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::destroy(U *p) {
             p->~U();
         }
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         template <class... Args>
         inline typename MemoryPool<T, BlockSize, ZeroOnDeallocate>::pointer
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::newElement(Args&&... args) {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::newElement(Args &&... args) {
             std::lock_guard<std::recursive_mutex> lock(m_);
             pointer result = allocate();
             construct<value_type>(result, std::forward<Args>(args)...);
@@ -324,7 +322,7 @@ namespace ppx {
 
         template <typename T, size_t BlockSize, bool ZeroOnDeallocate>
         inline void
-            MemoryPool<T, BlockSize, ZeroOnDeallocate>::deleteElement(pointer p) {
+        MemoryPool<T, BlockSize, ZeroOnDeallocate>::deleteElement(pointer p) {
             std::lock_guard<std::recursive_mutex> lock(m_);
             if (p != nullptr) {
                 p->~value_type();

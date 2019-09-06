@@ -19,11 +19,11 @@
 
 #include <limits>
 #ifdef min
-#undef min
+    #undef min
 #endif
 
 #ifdef max
-#undef max
+    #undef max
 #endif
 
 namespace ppx {

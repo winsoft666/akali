@@ -20,14 +20,13 @@
 #include <map>
 #include <string>
 
-namespace ppx
-{
+namespace ppx {
     namespace base {
 
         class PPXBASE_API CmdLineParser {
-        public:
-			typedef std::map<std::wstring, std::wstring> ValsMap;
-			typedef ValsMap::const_iterator ITERPOS;
+          public:
+            typedef std::map<std::wstring, std::wstring> ValsMap;
+            typedef ValsMap::const_iterator ITERPOS;
 
             explicit CmdLineParser(const std::wstring &cmdline);
             ~CmdLineParser();
@@ -41,12 +40,12 @@ namespace ppx
 
             std::wstring GetVal(const std::wstring &key) const;
 
-        private:
+          private:
             bool Parse(const std::wstring &cmdline);
 
             std::wstring         cmdline_;
-			class Impl;
-			Impl*		   impl_;
+            class Impl;
+            Impl		   *impl_;
         };
     }
 }

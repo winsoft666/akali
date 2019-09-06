@@ -2,7 +2,7 @@
 #define PPX_BASE_SCHEDULE_TASK_H__
 #pragma once
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <tchar.h>
@@ -11,7 +11,7 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API ScheduleTask {
-        public:
+          public:
             ScheduleTask();
             virtual ~ScheduleTask();
 
@@ -32,7 +32,7 @@ namespace ppx {
             bool IsEnable(LPCTSTR pszTaskName);
 
             bool SetEnable(LPCTSTR pszTaskName, bool bEnable);
-        private:
+          private:
             class ScheduleTaskImpl;
             ScheduleTaskImpl *impl_;
         };

@@ -20,7 +20,7 @@
 #ifdef _WIN32
 #include <tchar.h>
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include "ppxbase/stringencode.h"
@@ -43,9 +43,9 @@ namespace ppx {
             bool ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF &ValueColor);
             bool ReadInt(LPCWSTR pszItem, LPCWSTR pszSubItem, UINT &ValueInt);
             LPCWSTR ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR pszDefault, LPTSTR pszString, WORD wMaxCount);
-			bool ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strString);
+            bool ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strString);
             bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR ValueString);
-			bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring& ValueString);
+            bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring &ValueString);
             bool WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt);
             bool WriteRGBColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF ValueColor);
             bool WritePoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT ValuePoint);

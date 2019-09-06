@@ -106,12 +106,12 @@ namespace ppx {
             // Comparing addresses of the same family.
             switch (family_) {
                 case AF_INET: {
-                        return base::NetworkToHost32(u_.ip4.s_addr) < base::NetworkToHost32(other.u_.ip4.s_addr);
-                    }
+                    return base::NetworkToHost32(u_.ip4.s_addr) < base::NetworkToHost32(other.u_.ip4.s_addr);
+                }
 
                 case AF_INET6: {
-                        return memcmp(&u_.ip6.s6_addr, &other.u_.ip6.s6_addr, 16) < 0;
-                    }
+                    return memcmp(&u_.ip6.s6_addr, &other.u_.ip6.s6_addr, 16) < 0;
+                }
             }
 
             // Catches AF_UNSPEC and invalid addresses.
@@ -158,29 +158,29 @@ namespace ppx {
 
             switch (family_) {
                 case AF_INET: {
-                        std::string address = ToString();
-                        size_t find_pos = address.rfind('.');
+                    std::string address = ToString();
+                    size_t find_pos = address.rfind('.');
 
-                        if (find_pos == std::string::npos)
-                            return std::string();
+                    if (find_pos == std::string::npos)
+                        return std::string();
 
-                        address.resize(find_pos);
-                        address += ".x";
-                        return address;
-                    }
+                    address.resize(find_pos);
+                    address += ".x";
+                    return address;
+                }
 
                 case AF_INET6: {
-                        std::string result;
-                        result.resize(INET6_ADDRSTRLEN);
-                        in6_addr addr = GetIPv6Address();
-                        size_t len =
-                            sprintf_s(&(result[0]), result.size(), "%x:%x:%x:x:x:x:x:x",
-                                          (addr.s6_addr[0] << 8) + addr.s6_addr[1],
-                                          (addr.s6_addr[2] << 8) + addr.s6_addr[3],
-                                          (addr.s6_addr[4] << 8) + addr.s6_addr[5]);
-                        result.resize(len);
-                        return result;
-                    }
+                    std::string result;
+                    result.resize(INET6_ADDRSTRLEN);
+                    in6_addr addr = GetIPv6Address();
+                    size_t len =
+                        sprintf_s(&(result[0]), result.size(), "%x:%x:%x:x:x:x:x:x",
+                                  (addr.s6_addr[0] << 8) + addr.s6_addr[1],
+                                  (addr.s6_addr[2] << 8) + addr.s6_addr[3],
+                                  (addr.s6_addr[4] << 8) + addr.s6_addr[5]);
+                    result.resize(len);
+                    return result;
+                }
             }
 
             return std::string();
@@ -320,12 +320,12 @@ namespace ppx {
         bool IPIsLoopback(const IPAddress &ip) {
             switch (ip.GetFamily()) {
                 case AF_INET: {
-                        return (ip.v4AddressAsHostOrderInteger() >> 24) == 127;
-                    }
+                    return (ip.v4AddressAsHostOrderInteger() >> 24) == 127;
+                }
 
                 case AF_INET6: {
-                        return ip == IPAddress(in6addr_loopback);
-                    }
+                    return ip == IPAddress(in6addr_loopback);
+                }
             }
 
             return false;
@@ -334,12 +334,12 @@ namespace ppx {
         bool IPIsPrivate(const IPAddress &ip) {
             switch (ip.GetFamily()) {
                 case AF_INET: {
-                        return IsPrivateV4(ip.v4AddressAsHostOrderInteger());
-                    }
+                    return IsPrivateV4(ip.v4AddressAsHostOrderInteger());
+                }
 
                 case AF_INET6: {
-                        return IPIsLinkLocal(ip) || IPIsLoopback(ip);
-                    }
+                    return IPIsLinkLocal(ip) || IPIsLoopback(ip);
+                }
             }
 
             return false;
@@ -352,15 +352,15 @@ namespace ppx {
         size_t HashIP(const IPAddress &ip) {
             switch (ip.GetFamily()) {
                 case AF_INET: {
-                        return ip.GetIPv4Address().s_addr;
-                    }
+                    return ip.GetIPv4Address().s_addr;
+                }
 
                 case AF_INET6: {
-                        in6_addr v6addr = ip.GetIPv6Address();
-                        const uint32_t *v6_as_ints =
-                            reinterpret_cast<const uint32_t *>(&v6addr.s6_addr);
-                        return v6_as_ints[0] ^ v6_as_ints[1] ^ v6_as_ints[2] ^ v6_as_ints[3];
-                    }
+                    in6_addr v6addr = ip.GetIPv6Address();
+                    const uint32_t *v6_as_ints =
+                        reinterpret_cast<const uint32_t *>(&v6addr.s6_addr);
+                    return v6_as_ints[0] ^ v6_as_ints[1] ^ v6_as_ints[2] ^ v6_as_ints[3];
+                }
             }
 
             return 0;
@@ -422,33 +422,33 @@ namespace ppx {
 
             switch (mask.GetFamily()) {
                 case AF_INET: {
-                        word_to_count = base::NetworkToHost32(mask.GetIPv4Address().s_addr);
-                        break;
-                    }
+                    word_to_count = base::NetworkToHost32(mask.GetIPv4Address().s_addr);
+                    break;
+                }
 
                 case AF_INET6: {
-                        in6_addr v6addr = mask.GetIPv6Address();
-                        const uint32_t *v6_as_ints =
-                            reinterpret_cast<const uint32_t *>(&v6addr.s6_addr);
-                        int i = 0;
+                    in6_addr v6addr = mask.GetIPv6Address();
+                    const uint32_t *v6_as_ints =
+                        reinterpret_cast<const uint32_t *>(&v6addr.s6_addr);
+                    int i = 0;
 
-                        for (; i < 4; ++i) {
-                            if (v6_as_ints[i] != 0xFFFFFFFF) {
-                                break;
-                            }
+                    for (; i < 4; ++i) {
+                        if (v6_as_ints[i] != 0xFFFFFFFF) {
+                            break;
                         }
-
-                        if (i < 4) {
-                            word_to_count = base::NetworkToHost32(v6_as_ints[i]);
-                        }
-
-                        bits = (i * 32);
-                        break;
                     }
+
+                    if (i < 4) {
+                        word_to_count = base::NetworkToHost32(v6_as_ints[i]);
+                    }
+
+                    bits = (i * 32);
+                    break;
+                }
 
                 default: {
-                        return 0;
-                    }
+                    return 0;
+                }
             }
 
             if (word_to_count == 0) {

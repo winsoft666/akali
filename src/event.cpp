@@ -1,16 +1,16 @@
 ﻿#include "ppxbase/event.h"
 
 #if defined(WIN32)
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
 #elif defined(POSIX)
-#include <pthread.h>
-#include <sys/time.h>
-#include <time.h>
+    #include <pthread.h>
+    #include <sys/time.h>
+    #include <time.h>
 #else
-#error "Must define either WEBRTC_WIN or WEBRTC_POSIX."
+    #error "Must define either WEBRTC_WIN or WEBRTC_POSIX."
 #endif
 
 #include "ppxbase/assert.h"
@@ -21,8 +21,8 @@ namespace ppx {
 
         Event::Event(bool manual_reset, bool initially_signaled) {
             event_handle_ = ::CreateEvent(nullptr,  // Security attributes.
-                manual_reset, initially_signaled,
-                nullptr);  // Name.
+                                          manual_reset, initially_signaled,
+                                          nullptr);  // Name.
             PPX_ASSERT(event_handle_);
         }
 
@@ -47,7 +47,7 @@ namespace ppx {
 
         Event::Event(bool manual_reset, bool initially_signaled)
             : is_manual_reset_(manual_reset),
-            event_status_(initially_signaled) {
+              event_status_(initially_signaled) {
             RTC_CHECK(pthread_mutex_init(&event_mutex_, nullptr) == 0);
             RTC_CHECK(pthread_cond_init(&event_cond_, nullptr) == 0);
         }
@@ -79,8 +79,8 @@ namespace ppx {
                 // milliseconds (1e-3) to seconds and nanoseconds (1e-9).
 
 #ifdef HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE
-    // Use relative time version, which tends to be more efficient for
-    // pthread implementations where provided (like on Android).
+                // Use relative time version, which tends to be more efficient for
+                // pthread implementations where provided (like on Android).
                 ts.tv_sec = milliseconds / 1000;
                 ts.tv_nsec = (milliseconds % 1000) * 1000000;
 #else
@@ -103,13 +103,12 @@ namespace ppx {
                 while (!event_status_ && error == 0) {
 #ifdef HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE
                     error = pthread_cond_timedwait_relative_np(
-                        &event_cond_, &event_mutex_, &ts);
+                                &event_cond_, &event_mutex_, &ts);
 #else
                     error = pthread_cond_timedwait(&event_cond_, &event_mutex_, &ts);
 #endif
                 }
-            }
-            else {
+            } else {
                 while (!event_status_ && error == 0)
                     error = pthread_cond_wait(&event_cond_, &event_mutex_);
             }

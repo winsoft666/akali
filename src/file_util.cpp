@@ -17,7 +17,7 @@
 #include "ppxbase/stringencode.h"
 #include <io.h>
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <strsafe.h>
@@ -26,10 +26,10 @@
 
 namespace ppx {
     namespace base {
-        static void AddFile(const wchar_t* szPath, const wchar_t* szDest, WIN32_FIND_DATAW file, int *pIgnoreNum);
-        static void FileSearch(const wchar_t* szPath, const wchar_t* szDest, int *pIgnoreNum);
+        static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DATAW file, int *pIgnoreNum);
+        static void FileSearch(const wchar_t *szPath, const wchar_t *szDest, int *pIgnoreNum);
 
-        static void AddFile(const wchar_t* szPath, const wchar_t* szDest, WIN32_FIND_DATAW file, int *pIgnoreNum) {
+        static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DATAW file, int *pIgnoreNum) {
             if (file.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                 if (((wcscmp(file.cFileName, L".") != 0) && (wcscmp(file.cFileName, L"..") != 0))) {
                     wchar_t szTemp[MAX_PATH] = { 0 };
@@ -53,8 +53,7 @@ namespace ppx {
 
                     FileSearch(szTemp, szDir, pIgnoreNum);
                 }
-            }
-            else {
+            } else {
                 wchar_t szS[MAX_PATH] = { 0 };
                 StringCchPrintfW(szS, MAX_PATH, L"%s\\%s", szPath, file.cFileName);
                 wchar_t szD[MAX_PATH] = { 0 };
@@ -67,7 +66,7 @@ namespace ppx {
             }
         }
 
-        static void FileSearch(const wchar_t* szPath, const wchar_t* szDest, int *pIgnoreNum) {
+        static void FileSearch(const wchar_t *szPath, const wchar_t *szDest, int *pIgnoreNum) {
             wchar_t szTemp[MAX_PATH] = { 0 };
             wcscpy_s(szTemp, MAX_PATH, szPath);
 
@@ -88,7 +87,7 @@ namespace ppx {
             FindClose(fhandle);
         }
 
-        void CopyDir(const wchar_t* pszSource, const wchar_t* pszDest, bool bCopySource, int *pIgnoreNum) {
+        void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource, int *pIgnoreNum) {
             wchar_t szSource[MAX_PATH] = { 0 };
             wchar_t szDest[MAX_PATH] = { 0 };
             wcscpy_s(szSource, MAX_PATH, pszSource);
@@ -107,19 +106,19 @@ namespace ppx {
             FileSearch(szSource, szDest, pIgnoreNum);
         }
 
-		PPXBASE_API bool PathIsExists(const wchar_t *pszPath) {
-			if (pszPath && _waccess_s(pszPath, 0) == 0)
-				return true;
-			return false;
-		}
+        PPXBASE_API bool PathIsExists(const wchar_t *pszPath) {
+            if (pszPath && _waccess_s(pszPath, 0) == 0)
+                return true;
+            return false;
+        }
 
-		bool DeleteDir(const char* pszDir) {
+        bool DeleteDir(const char *pszDir) {
             if (!pszDir)
                 return false;
             return DeleteDir(AnsiToUnicode(pszDir).c_str());
         }
 
-        bool DeleteDir(const wchar_t* pszDir) {
+        bool DeleteDir(const wchar_t *pszDir) {
             if (!pszDir)
                 return false;
             bool bRet = true;
@@ -145,8 +144,7 @@ namespace ppx {
 
                     if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                         bRet = DeleteDir(szTemp);
-                    }
-                    else {
+                    } else {
                         bRet = (DeleteFileW(szTemp) == TRUE);
                         if (!bRet) {
                             SetFileAttributesW(szTemp, FILE_ATTRIBUTE_NORMAL);
@@ -177,16 +175,16 @@ namespace ppx {
             return bRet;
         }
 
-        bool CreateDir(const wchar_t* pszDir) {
+        bool CreateDir(const wchar_t *pszDir) {
             if (!pszDir)
                 return false;
-            wchar_t* p = NULL;
-            wchar_t* szDirBuf = NULL;
+            wchar_t *p = NULL;
+            wchar_t *szDirBuf = NULL;
             DWORD dwAttributes;
             size_t iLen = wcslen(pszDir);
 
             __try {
-                szDirBuf = (wchar_t*)malloc((iLen + 1) * sizeof(wchar_t));
+                szDirBuf = (wchar_t *)malloc((iLen + 1) * sizeof(wchar_t));
                 if (szDirBuf == NULL)
                     return false;
 
@@ -199,8 +197,7 @@ namespace ppx {
                     if (*p) p++;
                     while (*p && *p != L'\\') p = CharNextW(p);
                     if (*p) p++;
-                }
-                else if (*(p + 1) == L':') {
+                } else if (*(p + 1) == L':') {
                     p += 2;
                     if (*p && (*p == L'\\')) p++;
                 }
@@ -217,8 +214,7 @@ namespace ppx {
                                     return false;
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             if ((dwAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY) {
                                 free(szDirBuf);
                                 return false;
@@ -230,8 +226,7 @@ namespace ppx {
 
                     p = CharNextW(p);
                 }
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
+            } __except (EXCEPTION_EXECUTE_HANDLER) {
                 free(szDirBuf);
                 return false;
             }
@@ -240,7 +235,7 @@ namespace ppx {
             return true;
         }
 
-        bool CreateDir(const char* pszDir) {
+        bool CreateDir(const char *pszDir) {
             if (!pszDir) return false;
             return CreateDir(base::AnsiToUnicode(pszDir).c_str());
         }

@@ -17,25 +17,25 @@
 
 #include <string>
 #ifdef _WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
 #endif
 #include "ppxbase_export.h"
 
 namespace ppx {
-	namespace base {
-		class PPXBASE_API Screenshot {
-		public:
-			// 32 bit bmp
-			static bool FullScreenToFile(const std::wstring &file_path);
+    namespace base {
+        class PPXBASE_API Screenshot {
+          public:
+            // 32 bit bmp
+            static bool FullScreenToFile(const std::wstring &file_path);
 
-			// 32 bit bmp
-			static bool WindowToFile(HWND h, const std::wstring &file_path);
-			
-		};
-	}
+            // 32 bit bmp
+            static bool WindowToFile(HWND h, const std::wstring &file_path);
+
+        };
+    }
 }
 
 #endif

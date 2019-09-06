@@ -26,7 +26,7 @@ namespace ppx {
             }
 
             if (size == 1) {
-                checksum += *(unsigned char*)header;
+                checksum += *(unsigned char *)header;
             }
             checksum = (checksum >> 16) + (checksum & 0xffff);
 

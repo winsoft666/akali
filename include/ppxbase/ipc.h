@@ -23,20 +23,20 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API IPC {
-        public:
+          public:
             IPC();
             virtual ~IPC();
 
-            bool StartListen(const char* ipc_name, unsigned int ipc_name_len, std::function<void(const void* data, unsigned int data_size)> cb);
+            bool StartListen(const char *ipc_name, unsigned int ipc_name_len, std::function<void(const void *data, unsigned int data_size)> cb);
             void StopListen();
 
-            bool SyncSend(const char* ipc_name, unsigned int ipc_name_len, const void* data, unsigned int data_size);
+            bool SyncSend(const char *ipc_name, unsigned int ipc_name_len, const void *data, unsigned int data_size);
 
-        private:
+          private:
             class IPCImpl;
             IPCImpl *impl_;
 
-        private:
+          private:
             PPX_DISALLOW_COPY_AND_ASSIGN(IPC);
         };
     }

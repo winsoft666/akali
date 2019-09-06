@@ -178,35 +178,35 @@ namespace ppx {
 
             template <typename T>
             class UnretainedWrapper {
-            public:
+              public:
                 explicit UnretainedWrapper(T *o) : ptr_(o) {}
                 T *get() const {
                     return ptr_;
                 }
-            private:
+              private:
                 T *ptr_;
             };
 
             template <typename T>
             class ConstRefWrapper {
-            public:
+              public:
                 explicit ConstRefWrapper(const T &o) : ptr_(&o) {}
                 const T &get() const {
                     return *ptr_;
                 }
-            private:
+              private:
                 const T *ptr_;
             };
 
             template <typename T>
             class RetainedRefWrapper {
-            public:
+              public:
                 explicit RetainedRefWrapper(T *o) : ptr_(o) {}
                 explicit RetainedRefWrapper(ScopedRefPtr<T> o) : ptr_(std::move(o)) {}
                 T *get() const {
                     return ptr_.get();
                 }
-            private:
+              private:
                 ScopedRefPtr<T> ptr_;
             };
 
@@ -229,7 +229,7 @@ namespace ppx {
             // storage.
             template <typename T>
             class OwnedWrapper {
-            public:
+              public:
                 explicit OwnedWrapper(T *o) : ptr_(o) {}
                 ~OwnedWrapper() {
                     delete ptr_;
@@ -242,7 +242,7 @@ namespace ppx {
                     other.ptr_ = NULL;
                 }
 
-            private:
+              private:
                 mutable T *ptr_;
             };
 
@@ -271,7 +271,7 @@ namespace ppx {
             //     scoper to a Callback and allow the Callback to execute once.
             template <typename T>
             class PassedWrapper {
-            public:
+              public:
                 explicit PassedWrapper(T &&scoper)
                     : is_valid_(true), scoper_(std::move(scoper)) {
                 }
@@ -283,7 +283,7 @@ namespace ppx {
                     return std::move(scoper_);
                 }
 
-            private:
+              private:
                 mutable bool is_valid_;
                 mutable T scoper_;
             };
@@ -307,7 +307,7 @@ namespace ppx {
             // Do not use enable_if and SFINAE here to avoid MSVC2013 compile failure.
             template <size_t n, typename T, typename... List>
             struct DropTypeListItemImpl<n, TypeList<T, List...>>
-                : DropTypeListItemImpl < n - 1, TypeList<List... >> {
+                        : DropTypeListItemImpl < n - 1, TypeList<List... >> {
             };
 
             template <typename T, typename... List>
@@ -402,17 +402,17 @@ namespace ppx {
         }  // namespace Internal
 
         template <typename T>
-		static inline Internal::UnretainedWrapper<T> Unretained(T *o) {
+        static inline Internal::UnretainedWrapper<T> Unretained(T *o) {
             return Internal::UnretainedWrapper<T>(o);
         }
 
         template <typename T>
-		static inline Internal::RetainedRefWrapper<T> RetainedRef(T *o) {
+        static inline Internal::RetainedRefWrapper<T> RetainedRef(T *o) {
             return Internal::RetainedRefWrapper<T>(o);
         }
 
         template <typename T>
-		static inline Internal::RetainedRefWrapper<T> RetainedRef(ScopedRefPtr<T> o) {
+        static inline Internal::RetainedRefWrapper<T> RetainedRef(ScopedRefPtr<T> o) {
             return Internal::RetainedRefWrapper<T>(std::move(o));
         }
 
@@ -434,8 +434,8 @@ namespace ppx {
         // Both versions of Passed() prevent T from being an lvalue reference. The first
         // via use of enable_if, and the second takes a T* which will not bind to T&.
         template < typename T,
-            std::enable_if_t < !std::is_lvalue_reference<T>::value > * = nullptr >
-            static inline Internal::PassedWrapper<T> Passed(T && scoper) {
+                   std::enable_if_t < !std::is_lvalue_reference<T>::value > * = nullptr >
+        static inline Internal::PassedWrapper<T> Passed(T && scoper) {
             return Internal::PassedWrapper<T>(std::move(scoper));
         }
         template <typename T>
@@ -448,7 +448,7 @@ namespace ppx {
             return Internal::IgnoreResultHelper<T>(std::move(data));
         }
 
-		PPXBASE_API void DoNothing();
+        PPXBASE_API void DoNothing();
 
         template<typename T>
         void DeletePointer(T *obj) {
@@ -513,7 +513,7 @@ namespace ppx {
         // Specialization for a nested bind.
         template <typename Signature, typename... BoundArgs>
         struct CallbackCancellationTraits<OnceCallback<Signature>,
-            std::tuple<BoundArgs...>> {
+                   std::tuple<BoundArgs...>> {
             static constexpr bool is_cancellable = true;
 
             template <typename Functor>
@@ -524,7 +524,7 @@ namespace ppx {
 
         template <typename Signature, typename... BoundArgs>
         struct CallbackCancellationTraits<RepeatingCallback<Signature>,
-            std::tuple<BoundArgs...>> {
+                   std::tuple<BoundArgs...>> {
             static constexpr bool is_cancellable = true;
 
             template <typename Functor>

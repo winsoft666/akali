@@ -2,13 +2,13 @@
 #include "ppx_base.h"
 
 class IPCTester {
-public:
+  public:
     void StartIPCServer(const std::string &ipc_name);
     void StopIPCServer();
 
-    void OnMsgRec(const void* data, unsigned int data_size);
+    void OnMsgRec(const void *data, unsigned int data_size);
     void BatchSend(const std::string &ipc_name);
-private:
+  private:
     ppx::base::IPC ipc_;
     std::string ipc_name_;
 };

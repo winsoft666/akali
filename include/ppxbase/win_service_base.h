@@ -2,17 +2,17 @@
 * Module Name:  ServiceBase.h
 * Project:      CppWindowsService
 * Copyright (c) Microsoft Corporation.
-* 
-* Provides a base class for a service that will exist as part of a service 
-* application. CServiceBase must be derived from when creating a new service 
+*
+* Provides a base class for a service that will exist as part of a service
+* application. CServiceBase must be derived from when creating a new service
 * class.
-* 
+*
 * This source is subject to the Microsoft Public License.
 * See http://www.microsoft.com/en-us/openness/resources/licenses.aspx#MPL.
 * All other rights reserved.
-* 
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
-* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED 
+*
+* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 \***************************************************************************/
 #ifndef PPX_BASE_WIN_SERVICE_BASE_H_
@@ -21,7 +21,7 @@
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include "ppxbase_export.h"
@@ -29,61 +29,61 @@
 namespace ppx {
     namespace base {
         class PPXBASE_API WinServiceBase {
-        public:
+          public:
 
-            // Register the executable for a service with the Service Control Manager 
-            // (SCM). After you call Run(ServiceBase), the SCM issues a Start command, 
-            // which results in a call to the OnStart method in the service. This 
+            // Register the executable for a service with the Service Control Manager
+            // (SCM). After you call Run(ServiceBase), the SCM issues a Start command,
+            // which results in a call to the OnStart method in the service. This
             // method blocks until the service has stopped.
             static BOOL Run(WinServiceBase &service);
 
-            // Service object constructor. The optional parameters (fCanStop, 
-            // fCanShutdown and fCanPauseContinue) allow you to specify whether the 
-            // service can be stopped, paused and continued, or be notified when 
+            // Service object constructor. The optional parameters (fCanStop,
+            // fCanShutdown and fCanPauseContinue) allow you to specify whether the
+            // service can be stopped, paused and continued, or be notified when
             // system shutdown occurs.
             WinServiceBase(PWSTR pszServiceName,
-                BOOL fCanStop = TRUE,
-                BOOL fCanShutdown = TRUE,
-                BOOL fCanPauseContinue = FALSE);
+                           BOOL fCanStop = TRUE,
+                           BOOL fCanShutdown = TRUE,
+                           BOOL fCanPauseContinue = FALSE);
 
-            // Service object destructor. 
+            // Service object destructor.
             virtual ~WinServiceBase(void);
 
             // Stop the service.
             void Stop();
 
-        protected:
+          protected:
 
-            // When implemented in a derived class, executes when a Start command is 
-            // sent to the service by the SCM or when the operating system starts 
-            // (for a service that starts automatically). Specifies actions to take 
+            // When implemented in a derived class, executes when a Start command is
+            // sent to the service by the SCM or when the operating system starts
+            // (for a service that starts automatically). Specifies actions to take
             // when the service starts.
             virtual void OnStart(DWORD dwArgc, PWSTR *pszArgv);
 
-            // When implemented in a derived class, executes when a Stop command is 
-            // sent to the service by the SCM. Specifies actions to take when a 
+            // When implemented in a derived class, executes when a Stop command is
+            // sent to the service by the SCM. Specifies actions to take when a
             // service stops running.
             virtual void OnStop();
 
-            // When implemented in a derived class, executes when a Pause command is 
-            // sent to the service by the SCM. Specifies actions to take when a 
+            // When implemented in a derived class, executes when a Pause command is
+            // sent to the service by the SCM. Specifies actions to take when a
             // service pauses.
             virtual void OnPause();
 
-            // When implemented in a derived class, OnContinue runs when a Continue 
-            // command is sent to the service by the SCM. Specifies actions to take 
+            // When implemented in a derived class, OnContinue runs when a Continue
+            // command is sent to the service by the SCM. Specifies actions to take
             // when a service resumes normal functioning after being paused.
             virtual void OnContinue();
 
-            // When implemented in a derived class, executes when the system is 
-            // shutting down. Specifies what should occur immediately prior to the 
+            // When implemented in a derived class, executes when the system is
+            // shutting down. Specifies what should occur immediately prior to the
             // system shutting down.
             virtual void OnShutdown();
 
             // Set the service status and report the status to the SCM.
             void SetServiceStatus(DWORD dwCurrentState,
-                DWORD dwWin32ExitCode = NO_ERROR,
-                DWORD dwWaitHint = 0);
+                                  DWORD dwWin32ExitCode = NO_ERROR,
+                                  DWORD dwWaitHint = 0);
 
             // Log a message to the Application event log.
             void WriteEventLogEntry(PWSTR pszMessage, WORD wType);
@@ -92,15 +92,15 @@ namespace ppx {
 
             // Log an error message to the Application event log.
             void WriteErrorLogEntry(PWSTR pszFunction,
-                DWORD dwError = GetLastError());
+                                    DWORD dwError = GetLastError());
 
-        private:
+          private:
 
-            // Entry point for the service. It registers the handler function for the 
+            // Entry point for the service. It registers the handler function for the
             // service and starts the service.
             static void WINAPI ServiceMain(DWORD dwArgc, LPWSTR *lpszArgv);
 
-            // The function is called by the SCM whenever a control code is sent to 
+            // The function is called by the SCM whenever a control code is sent to
             // the service.
             static void WINAPI ServiceCtrlHandler(DWORD dwCtrl);
 
@@ -130,13 +130,13 @@ namespace ppx {
         };
 
         // Log a message to the Application event log.
-        // EVENTLOG_ERROR_TYPE 
-        // EVENTLOG_WARNING_TYPE 
-        // EVENTLOG_INFORMATION_TYPE  
+        // EVENTLOG_ERROR_TYPE
+        // EVENTLOG_WARNING_TYPE
+        // EVENTLOG_INFORMATION_TYPE
         //
-		PPXBASE_API void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...);
+        PPXBASE_API void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...);
 
-		PPXBASE_API void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...);
+        PPXBASE_API void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...);
     }
 }
 #endif

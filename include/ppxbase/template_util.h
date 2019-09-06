@@ -62,10 +62,10 @@ namespace ppx {
             struct SupportsOstreamOperator : std::false_type {};
             template <typename T>
             struct SupportsOstreamOperator < T,
-                decltype(void(std::declval<std::ostream &>()
-                    << std::declval<T>())) >
-                : std::true_type {
-            };
+                   decltype(void(std::declval<std::ostream &>()
+                                 << std::declval<T>())) >
+               : std::true_type {
+                   };
 
             // Used to detech whether the given type is an iterator.  This is normally used
             // with std::enable_if to provide disambiguation for functions that take
@@ -75,8 +75,8 @@ namespace ppx {
 
             template <typename T>
             struct is_iterator<T,
-                void_t<typename std::iterator_traits<T>::iterator_category>>
-                : std::true_type {};
+                       void_t<typename std::iterator_traits<T>::iterator_category>>
+                       : std::true_type {};
 
         }  // namespace internal
 
@@ -129,21 +129,21 @@ namespace ppx {
             // an integral type.
             template <typename T>
             struct IsIntEnum {
-            private:
+              private:
                 // This overload is used if the type is an enum, and unary plus
                 // compiles and turns it into an integral type.
-                template <typename X,
-                    typename std::enable_if<
-                    std::is_enum<X>::value &&
-                    std::is_integral<decltype(+std::declval<X>())>::value>::type* =
-                    nullptr>
-                    static int Test(int);
+                template < typename X,
+                           typename std::enable_if <
+                               std::is_enum<X>::value &&
+                               std::is_integral < decltype(+std::declval<X>()) >::value >::type * =
+                           nullptr >
+                static int Test(int);
 
                 // Otherwise, this overload is used.
                 template <typename>
                 static char Test(...);
 
-            public:
+              public:
                 static constexpr bool value =
                     std::is_same<decltype(Test<typename std::remove_reference<T>::type>(0)),
                     int>::value;
@@ -155,10 +155,10 @@ namespace ppx {
         // converts implicitly to an integral type.
         template <typename T>
         struct IsIntlike {
-        private:
+          private:
             using X = typename std::remove_reference<T>::type;
 
-        public:
+          public:
             static constexpr bool value =
                 std::is_integral<X>::value || type_traits_impl::IsIntEnum<X>::value;
         };

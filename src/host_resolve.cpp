@@ -28,26 +28,26 @@ namespace ppx {
             WSACleanup();
         }
 
-        bool HostResolve::Resolve(const std::string &host, std::vector<IPAddress>& ip_list) {
+        bool HostResolve::Resolve(const std::string &host, std::vector<IPAddress> &ip_list) {
             if (host.length() == 0)
                 return false;
 
-			struct addrinfo* result = nullptr;
-			struct addrinfo hints = { 0 };
-			hints.ai_family = AF_UNSPEC;
+            struct addrinfo *result = nullptr;
+            struct addrinfo hints = { 0 };
+            hints.ai_family = AF_UNSPEC;
 
-			hints.ai_flags = AI_ADDRCONFIG;
-			int ret = getaddrinfo(host.c_str(), nullptr, &hints, &result);
-			if (ret != 0) {
-				return false;
-			}
+            hints.ai_flags = AI_ADDRCONFIG;
+            int ret = getaddrinfo(host.c_str(), nullptr, &hints, &result);
+            if (ret != 0) {
+                return false;
+            }
 
-			struct addrinfo* cursor = result;
-			bool flag = false;
-			for (; cursor; cursor = cursor->ai_next) {
-				sockaddr_in *paddr_in = reinterpret_cast<sockaddr_in *>(cursor->ai_addr);
+            struct addrinfo *cursor = result;
+            bool flag = false;
+            for (; cursor; cursor = cursor->ai_next) {
+                sockaddr_in *paddr_in = reinterpret_cast<sockaddr_in *>(cursor->ai_addr);
 
-				IPAddress ip(paddr_in->sin_addr);
+                IPAddress ip(paddr_in->sin_addr);
 
                 bool found = false;
                 for (auto it : ip_list) {
@@ -57,9 +57,9 @@ namespace ppx {
                     }
                 }
                 if(!found)
-				    ip_list.push_back(ip);
-			}
-			freeaddrinfo(result);
+                    ip_list.push_back(ip);
+            }
+            freeaddrinfo(result);
 
             return true;
         }

@@ -39,15 +39,15 @@ namespace ppx {
             DWORD bytes = 0;
 
             if (SOCKET_ERROR == WSAIoctl(
-                s,
-                SIO_GET_EXTENSION_FUNCTION_POINTER,
-                &GuidAcceptEx,
-                sizeof(GuidAcceptEx),
-                &fn,
-                sizeof(fn),
-                &bytes,
-                NULL,
-                NULL)) {
+                        s,
+                        SIO_GET_EXTENSION_FUNCTION_POINTER,
+                        &GuidAcceptEx,
+                        sizeof(GuidAcceptEx),
+                        &fn,
+                        sizeof(fn),
+                        &bytes,
+                        NULL,
+                        NULL)) {
                 return NULL;
             }
 
@@ -60,15 +60,15 @@ namespace ppx {
             DWORD bytes = 0;
 
             if (SOCKET_ERROR == WSAIoctl(
-                s,
-                SIO_GET_EXTENSION_FUNCTION_POINTER,
-                &GuidConnectEx,
-                sizeof(GuidConnectEx),
-                &fn,
-                sizeof(fn),
-                &bytes,
-                NULL,
-                NULL)) {
+                        s,
+                        SIO_GET_EXTENSION_FUNCTION_POINTER,
+                        &GuidConnectEx,
+                        sizeof(GuidConnectEx),
+                        &fn,
+                        sizeof(fn),
+                        &bytes,
+                        NULL,
+                        NULL)) {
                 return NULL;
             }
 
@@ -81,15 +81,15 @@ namespace ppx {
             DWORD bytes = 0;
 
             if (SOCKET_ERROR == WSAIoctl(
-                s,
-                SIO_GET_EXTENSION_FUNCTION_POINTER,
-                &GuidGetAcceptExSockAddrs,
-                sizeof(GuidGetAcceptExSockAddrs),
-                &fn,
-                sizeof(fn),
-                &bytes,
-                NULL,
-                NULL)) {
+                        s,
+                        SIO_GET_EXTENSION_FUNCTION_POINTER,
+                        &GuidGetAcceptExSockAddrs,
+                        sizeof(GuidGetAcceptExSockAddrs),
+                        &fn,
+                        sizeof(fn),
+                        &bytes,
+                        NULL,
+                        NULL)) {
                 return NULL;
             }
 

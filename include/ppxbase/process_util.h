@@ -18,7 +18,7 @@
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <TlHelp32.h>
@@ -29,9 +29,9 @@ namespace ppx {
     namespace base {
         class PPXBASE_API ProcessFinder {
           public:
-			// If use default param, CreateToolhelp32Snapshot With dwFlags = TH32CS_SNAPALL, th32ProcessID = 0
-			//
-			ProcessFinder(DWORD dwFlags = 0, DWORD dwProcessID = 0);
+            // If use default param, CreateToolhelp32Snapshot With dwFlags = TH32CS_SNAPALL, th32ProcessID = 0
+            //
+            ProcessFinder(DWORD dwFlags = 0, DWORD dwProcessID = 0);
             ~ProcessFinder();
             BOOL CreateSnapShot(DWORD dwFlag, DWORD dwProcessID);
             BOOL ProcessFirst(PPROCESSENTRY32 ppe) const;
@@ -59,9 +59,9 @@ namespace ppx {
         PPXBASE_API std::wstring GetCurrentProcessDirectoryW();
         PPXBASE_API std::string GetCurrentProcessDirectoryA();
 #if defined(UNICODE) || defined(_UNICODE)
-#define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryW
+    #define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryW
 #else
-#define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryA
+    #define GetCurrentProcessDirectory ppx::base::GetCurrentProcessDirectoryA
 #endif
 
         PPXBASE_API BOOL MakesureProcessSingleInstance(LPCTSTR pszUniqueName);
@@ -70,11 +70,11 @@ namespace ppx {
         //
         PPXBASE_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
         PPXBASE_API BOOL EasyCreateProcess(const std::wstring &strCmdLine, LPPROCESS_INFORMATION lpProcessInfo, BOOL bInheritHandles = FALSE);
-		PPXBASE_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD* pExitCode, BOOL bInheritHandles = FALSE);
+        PPXBASE_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD *pExitCode, BOOL bInheritHandles = FALSE);
         PPXBASE_API BOOL CreateUserProcess(PCTSTR pszFilePath);
 
-		// Please see: https://blog.csdn.net/china_jeffery/article/details/88225810
-		//
+        // Please see: https://blog.csdn.net/china_jeffery/article/details/88225810
+        //
         PPXBASE_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
     }
 }

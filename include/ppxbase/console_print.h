@@ -17,15 +17,15 @@
 #pragma once
 
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include "ppxbase_export.h"
 
 namespace ppx {
-	namespace base {
-		PPXBASE_API void PrintConsoleProcess(double percentage);
-	}
+    namespace base {
+        PPXBASE_API void PrintConsoleProcess(double percentage);
+    }
 }
 
 #endif // !PPXBASE_CONSOLE_PRINT_H__

@@ -180,6 +180,10 @@ namespace ppx {
         }
 
 
+        int CmdLineParser::GetParamCount() const {
+            return impl_->value_map_.size();
+        }
+
         CmdLineParser::ITERPOS CmdLineParser::Begin() const {
             return impl_->value_map_.begin();
         }

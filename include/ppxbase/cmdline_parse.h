@@ -40,6 +40,8 @@ namespace ppx {
 
             std::wstring GetVal(const std::wstring &key) const;
 
+            int GetParamCount() const;
+
           private:
             bool Parse(const std::wstring &cmdline);
 

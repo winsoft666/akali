@@ -111,6 +111,12 @@ TEST(ppxbase, StackWalker) {
     sw2.ShowObject(&a);
 }
 
+TEST(ppxbase, GetParamCount) {
+    base::CmdLineParser cmd_parser(GetCommandLineW());
+    int c = cmd_parser.GetParamCount();
+
+}
+
 int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
 

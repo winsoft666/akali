@@ -117,6 +117,23 @@ TEST(ppxbase, GetParamCount) {
 
 }
 
+TEST(ppxbase, DirectoryMonitor) {
+    using namespace ppx;
+    base::DirectoryMonitor dm;
+    const DWORD dwNotificationFlags =
+        FILE_NOTIFY_CHANGE_CREATION |
+        FILE_NOTIFY_CHANGE_FILE_NAME |
+        FILE_NOTIFY_CHANGE_DIR_NAME |
+        FILE_NOTIFY_CHANGE_LAST_WRITE;
+    dm.StartMonitor(L"D:\\T", true, dwNotificationFlags, [](DWORD a, std::wstring str) {
+        PPX_LOG(LS_INFO) << "action:" << a << ", path:" << base::UnicodeToAnsi(str);
+    });
+
+    getchar();
+
+    dm.StopMonitor();
+}
+
 int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
 

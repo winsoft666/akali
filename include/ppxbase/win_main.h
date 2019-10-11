@@ -66,16 +66,15 @@ namespace ppx {
 
 
 
-#define MAIN_BEGIN(szDumpName) \
-    int __96A9695E_RUN_MAIN_FUNC(int argc, _TCHAR* argv[]);\
+#define WMAIN_BEGIN(szDumpName) \
+    int __96A9695E_RUN_MAIN_FUNC(int argc, wchar_t* argv[]);\
     LONG WINAPI __96A9695E_UnhandledExceptionHandler( _EXCEPTION_POINTERS *pExceptionInfo ) \
     { \
         OutputDebugString(TEXT("Create a dump file since an exception occurred in sub-thread.\n")); \
         int iRet = ppx::base::RecordExceptionInfo(pExceptionInfo, szDumpName); \
-        CrashNotify(); \
         return iRet; \
     } \
-    int _tmain(int argc, _TCHAR* argv[])\
+    int wmain(int argc, wchar_t* argv[])\
     { \
         ::SetUnhandledExceptionFilter( __96A9695E_UnhandledExceptionHandler );\
         int ret = 0;\
@@ -86,13 +85,42 @@ namespace ppx {
         __except(ppx::base::RecordExceptionInfo(GetExceptionInformation(), szDumpName))\
         {\
             OutputDebugString(TEXT("Create a dump file since an exception occurred in main-thread.\n")); \
-            CrashNotify(); \
         }\
         return ret;\
     }\
-    int __96A9695E_RUN_MAIN_FUNC(int argc, _TCHAR* argv[]) \
+    int __96A9695E_RUN_MAIN_FUNC(int argc, wchar_t* argv[]) \
     {
 
+
+
+#define MAIN_BEGIN(szDumpName) \
+    int __96A9695E_RUN_MAIN_FUNC(int argc, char* argv[]);\
+    LONG WINAPI __96A9695E_UnhandledExceptionHandler( _EXCEPTION_POINTERS *pExceptionInfo ) \
+    { \
+        OutputDebugString(TEXT("Create a dump file since an exception occurred in sub-thread.\n")); \
+        int iRet = ppx::base::RecordExceptionInfo(pExceptionInfo, szDumpName); \
+        return iRet; \
+    } \
+    int main(int argc, char* argv[])\
+    { \
+        ::SetUnhandledExceptionFilter( __96A9695E_UnhandledExceptionHandler );\
+        int ret = 0;\
+        __try\
+        {\
+            ret = __96A9695E_RUN_MAIN_FUNC(argc, argv);\
+        }\
+        __except(ppx::base::RecordExceptionInfo(GetExceptionInformation(), szDumpName))\
+        {\
+            OutputDebugString(TEXT("Create a dump file since an exception occurred in main-thread.\n")); \
+        }\
+        return ret;\
+    }\
+    int __96A9695E_RUN_MAIN_FUNC(int argc, char* argv[]) \
+    {
+
+
+
+#define WMAIN_END }
 #define MAIN_END }
 
 #endif

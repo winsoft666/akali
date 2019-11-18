@@ -348,7 +348,7 @@ namespace ppx {
             if (!impl_->extra_.empty())
                 impl_->print_stream_ << " : " << impl_->extra_;
 
-            impl_->print_stream_ << std::endl;
+            impl_->print_stream_ << "\r\n";
         }
 
         //////////////////////////////////////////////////////////////////////

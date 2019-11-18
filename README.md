@@ -1,111 +1,95 @@
-# 1. ppx是什么
-[ppx](https://github.com/winsoft666/ppx) 是一个C++的基础组件库，其提供了在Windows平台进行应用层开发所需要的大多数功能，其提供的大部分功能在Windows平台下通过了产品的验证和测试。
+# 1. What's ppxbase
+[ppxbase](https://github.com/winsoft666/ppxbase) is a C++ common library.
 
-# 如何编译
-1. ppx 依赖如下的第三方库:
-* cryptopp
-* curl
-* openssl
-* zlib
+# Update run_cmake.bat
+CMAKE_TOOLCHAIN_FILE: `***\scripts\buildsystems\vcpkg.cmake` file path.
+VCPKG_TARGET_TRIPLET: static library is `x86-windows-static`, dynamic library is `x86-windows`.
+BUILD_SHARED_LIBS: whether compile dynamic library, `ON`or`OFF`.
 
-使用[vcpkg](https://github.com/microsoft/vcpkg)对依赖库进行安装，如：
-```
-vcpkg install zlib:x86-windows
-vcpkg install zlib:x86-windows-static
-```
-
-2. 修改`run_cmake.bat`文件
-CMAKE_TOOLCHAIN_FILE: `***\scripts\buildsystems\vcpkg.cmake`文件路径.
-VCPKG_TARGET_TRIPLET: 静态库`x86-windows-static`，动态库`x86-windows`.
-BUILD_SHARED_LIBS: 是否编译动态库，`ON`或`OFF`.
-PPX_NO_HTTP: `ON`或`OFF`，是否集成HTTP下载和请求等功能，依赖libcurl.
-PPX_NO_ENCRYPT: `ON`或`OFF`，是否集成AES, DES, RAS加解密等功能，依赖encryptpp库.
-
-
-# 2. ppx包含哪些功能
-## 2.1 断言
+# 2. Feature
+## 2.1 Assert
 `base\assert.h`
 
-## 2.2 Base64编解码
+## 2.2 Base64
 `base\base64.h`
 
 ## 2.3 Md5
 `base\md5.h`
-支持字符串MD5，文件/大文件MD5
+String MD5，File/Big file MD5
 
-## 2.4 命令行参数定义、解析
+## 2.4 Command line parse
 `base\flags.h` 
-命令行参数定义，使用方法可以参考：[https://blog.csdn.net/china_jeffery/article/details/78653397](https://blog.csdn.net/china_jeffery/article/details/78653397)
+[https://blog.csdn.net/china_jeffery/article/details/78653397](https://blog.csdn.net/china_jeffery/article/details/78653397)
 
 `base\cmdline_parse.h`
 命令行参数解析
 
-## 2.5 字节序列转换、大小端
+## 2.5 Byte order
 `base\byteorder.h`
 `base\endianess_detect.h`
 
-## 2.6 临界区、事件
+## 2.6 Critical Section/Event
 `base\criticalsection.h`
 `base\event.h`
 
-## 2.7 磁盘驱动器信息获取
+## 2.7 Disk driver information
 `base\driver_info.h`
 
-## 2.8 文件信息获取
+## 2.8 File information
 `base\file_info.h`
 
-## 2.9 文件/目录读写、删除、拷贝等操作
+## 2.9 File operation
 `base\file_util.h`
 
-## 2.10 日志
+## 2.10 File Log
 `base\logging.h`
 `base\logging_file_sink_win.h`
 
-## 2.11 内存池
+## 2.11 Memory Pool
 `base\memory_pool.hpp`
 
-参考：[C++内存池技术](https://blog.csdn.net/china_jeffery/article/details/80750042)
+See: (https://blog.csdn.net/china_jeffery/article/details/80750042)
 
-## 2.12 支持跨MT模块安全传递的std::string
+## 2.12 How to pass std::string parameters cross MT module?
 `base\module_safe_string.h`
 
-参考：
+See:
 [Windows内存体系（9） -- 跨MT模块的内存相互释放的问题](https://blog.csdn.net/china_jeffery/article/details/79656307)
 [Windows内存体系（10） -- 使用std::string跨MT模块传参](https://blog.csdn.net/china_jeffery/article/details/79725667)
 
-## 2.13 操作系统版本获取和判断
+## 2.13 OS version
 `base\os_ver.h`
 
-## 2.14 本地计算机信息获取
+## 2.14 PC information
 `base\pc_info.h`
 
-## 2.15 安全释放宏
+## 2.15 Safe release/delete/close macro
 `base\safe_release_macro.h`
 
-## 2.16 单实例
+## 2.16 Singleton
 `base\singleton.h`
 
-## 2.17 字符串
+## 2.17 String Util
 `base\string.h`
 
-## 2.18 字符编码
+## 2.18 String Encode
 `base\stringencode.h`
-支持ANIS、Unicode、Utf8、Utf-BOM 这几种编码间的相互转换
 
-字符编码参考：[拨开字符编码的迷雾](https://blog.csdn.net/china_jeffery/column/info/18195)
+See: [拨开字符编码的迷雾](https://blog.csdn.net/china_jeffery/column/info/18195)
 
-## 2.19 线程辅助函数
+## 2.19 Thread Util
 `base\thread_util.h`
 
-## 2.20 进程辅助函数
+## 2.20 Process Util
 `base\process_util.h`
 
-## 2.21 定时器
+## 2.21 Timer
 `base\timer.h`
 
-## 2.22 Dump生成
+## 2.22 Dump Util
 `base\win_main.h`
-使用2行代码即可方便的让程序拥有生成崩溃dump的功能：
+
+How to use 2 line code to generate dump file:
 ```c++
 //用WINMAIN_BEGIN, WINMAIN_END取代WinMain，用MAIN_BEGIN, MAIN_END取代main
 //
@@ -113,46 +97,22 @@ WINMAIN_BEGIN(TEXT("Test"))
 WINMAIN_END
 ```
 
-关于dump的其他生成方式可以参考：[如何生成转储(dmp)文件--工具篇](https://blog.csdn.net/china_jeffery/article/details/78412415)
+Other way to generate dump: [如何生成转储(dmp)文件--工具篇](https://blog.csdn.net/china_jeffery/article/details/78412415)
 
-## 2.23 Windows服务
+## 2.23 Windows Service
 `base\win_service_base.h`
 `base\win_service_installer.h`
 
-## 2.24 随机数生成
+## 2.24 Random
 `base\random.h`
 
-## 2.25 AES加解密
+## 2.25 AES/DES
 `encrypt\encrypt_helper.h`
 
-## 2.26 RES加解密
+## 2.26 RES
 `encrypt\encrypt_helper.h`
 
-## 2.27 文件下载
-`net\file_download.h`
-支持多线程下载、断点续传
-
-## 2.28 HTTP请求
-`net\http_request.h`
-
-## 2.29 Ping功能
-`net\ping.h`
-
-## 2.30 IP、Socket封装
-`net\ipaddress.h`
-`net\socket.h`
-`net\socketaddress.h`
-
-## 2.31 Host解析
-`net\host_resolve.h`
-
-## 2.32 IOCP及IOCP Server
-`net\iocp.h`
-`net\iocpserver.h`
-
-Windows网络模型可以参考：[Windows网络模型](https://blog.csdn.net/china_jeffery/column/info/19222)
-
-## 2.33 Callback对象
+## 2.27 Callback对象
 `base\bind.h`
 `base\callback.h`
 
@@ -168,11 +128,11 @@ void DlgMain::OnNeedManualEnableAero() {
 
 ```
 
-## 2.34 时间获取转换等操作
+## 2.28 时间获取转换等操作
 `base\timeutil.h`
 
-## 2.35 进程间通信
-`net\ipc.h`
+## 2.29 Windows IPC based Named Pipe
+`base\ipc.h`
 
 
 ---------------------------------------------------------------

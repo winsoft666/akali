@@ -3,7 +3,9 @@
 
 # Update run_cmake.bat
 CMAKE_TOOLCHAIN_FILE: `***\scripts\buildsystems\vcpkg.cmake` file path.
+
 VCPKG_TARGET_TRIPLET: static library is `x86-windows-static`, dynamic library is `x86-windows`.
+
 BUILD_SHARED_LIBS: whether compile dynamic library, `ON`or`OFF`.
 
 # 2. Feature

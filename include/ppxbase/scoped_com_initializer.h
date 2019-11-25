@@ -15,6 +15,8 @@
 #ifndef PPXBASE_SCOPED_COM_INITIALIZER_H_
 #define PPXBASE_SCOPED_COM_INITIALIZER_H_
 #pragma once
+
+#ifdef _WIN32
 #include <objbase.h>
 #include "ppxbase/assert.h"
 #include "ppxbase/logging.h"
@@ -79,5 +81,6 @@ namespace ppx {
 
     }
 }
+#endif
 
 #endif

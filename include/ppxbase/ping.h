@@ -16,6 +16,7 @@
 #define PPX_BASE_PING_H_
 #pragma once
 
+#ifdef _WIN32
 #include <string>
 #include <functional>
 #include <thread>
@@ -23,6 +24,8 @@
 #include "ppxbase/ipaddress.h"
 #include "ppxbase/networkprotocoldef.h"
 #include "ppxbase_export.h"
+
+#pragma comment(lib, "ws2_32.lib")
 
 namespace ppx {
     namespace base {
@@ -70,5 +73,5 @@ namespace ppx {
         };
     }
 }
-
+#endif
 #endif //!PPX_BASE_PING_H_

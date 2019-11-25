@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase/shortcut.h"
+#ifdef _WIN32
 #include <windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
@@ -253,3 +254,5 @@ namespace ppx {
 
     }
 }
+
+#endif

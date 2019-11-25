@@ -23,7 +23,7 @@ configure_file (
   )
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
-option(BUILD_TESTS "Build tests project" ON)
+option(BUILD_TESTS "Build tests project" OFF)
 option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
 
 

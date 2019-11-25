@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase\ipc.h"
+#ifdef _WIN32
 #include <winsock2.h>
 #include <future>
 #include <thread>
@@ -266,3 +267,4 @@ namespace ppx {
         }
     }
 }
+#endif

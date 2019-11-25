@@ -15,6 +15,7 @@
 #ifndef PPX_BASE_IOCP_SERVER_H_
 #define PPX_BASE_IOCP_SERVER_H_
 
+#ifdef _WIN32
 #include <list>
 #include "ppxbase/iocp_socket.h"
 #include "ppxbase_export.h"
@@ -52,5 +53,7 @@ namespace ppx {
         };
     }
 }
+
+#endif
 
 #endif // PPX_BASE_IOCP_SERVER_H_

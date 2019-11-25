@@ -43,6 +43,16 @@ namespace ppx {
 
         // version format XXXX.XXXX.XXXX.XXXX
         PPXBASE_API int VersionCompare(const std::string &str_ver1, const std::string &str_ver2);
+
+#ifdef _WIN32
+        // 32 bit bmp
+        PPXBASE_API bool FullScreenToFile(const std::wstring &file_path);
+
+        // 32 bit bmp
+        PPXBASE_API bool WindowToFile(HWND h, const std::wstring &file_path);
+
+        PPXBASE_API void PrintConsoleProcess(double percentage);
+#endif
     }
 }
 

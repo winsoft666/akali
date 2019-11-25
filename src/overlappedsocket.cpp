@@ -13,11 +13,14 @@
 *******************************************************************************/
 
 #include "ppxbase/overlappedsocket.h"
+
+#ifdef _WIN32
 #include "ppxbase/logging.h"
 #include <process.h>
 #include "ppxbase/timeutils.h"
 #include "ppxbase/assert.h"
 #include "ppxbase/thread_util.h"
+#include "ppxbase//safe_release_macro.h"
 
 namespace ppx {
     namespace base {
@@ -44,7 +47,7 @@ namespace ppx {
             OVERLAPPED *overlapped = NULL;
             DWORD gle = 0;
 
-            while (!parent_->exit_.Wait(0)) {
+            while (WaitForSingleObject(parent_->exit_, 0) != WAIT_OBJECT_0) {
                 BOOL ret = GetQueuedCompletionStatus(parent_->iocp_, &transferred_bytes, (PULONG_PTR)&overlapped_socket, &overlapped, INFINITE);
 
                 if (overlapped_socket == EXIT_CODE) {
@@ -156,7 +159,7 @@ namespace ppx {
             workthread_num_(0),
             own_socket_ctx_(NULL),
             iocp_(INVALID_HANDLE_VALUE),
-            exit_(true, false),
+            exit_(CreateEvent(NULL, TRUE, FALSE, NULL)),
             closing_(false),
             connectex_fn_(NULL),
             acceptex_fn_(NULL),
@@ -165,6 +168,7 @@ namespace ppx {
 
         OverlappedSocket::~OverlappedSocket() {
             Close();
+            SAFE_CLOSE(exit_);
         }
 
         bool OverlappedSocket::CreateT(int family, int type) {
@@ -323,7 +327,7 @@ namespace ppx {
         int OverlappedSocket::Close() {
             int err = 0;
 
-            exit_.Set();
+            SetEvent(exit_);
 
             for (int i = 0; i < workthread_num_; i++) {
                 PostQueuedCompletionStatus(iocp_, 0, (DWORD)EXIT_CODE, NULL);
@@ -350,7 +354,7 @@ namespace ppx {
                 iocp_ = INVALID_HANDLE_VALUE;
             }
 
-            exit_.Reset();
+            ResetEvent(exit_);
 
             connectex_fn_ = NULL;
             acceptex_fn_ = NULL;
@@ -392,7 +396,7 @@ namespace ppx {
                 return false;
             }
 
-            exit_.Reset();
+            ResetEvent(exit_);
 
             workthread_num_ = GetNumberOfProcesser() * 2;
 
@@ -612,3 +616,5 @@ namespace ppx {
 
     }
 }
+
+#endif

@@ -14,6 +14,7 @@
 
 
 #include "ppxbase/logging_file_sink_win.h"
+#ifdef _WIN32
 #include <strsafe.h>
 #pragma warning(disable:4995)
 #pragma warning(disable:4996)
@@ -351,3 +352,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase/ping.h"
+#ifdef _WIN32
 #include <assert.h>
 #include "ppxbase/timeutils.h"
 #include "ppxbase/safe_release_macro.h"
@@ -193,3 +194,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

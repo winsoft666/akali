@@ -4,6 +4,7 @@
 
 #include "ppxbase_export.h"
 
+#ifdef _WIN32
 namespace ppx {
     namespace base {
         class PPXBASE_API InternetAvailabilityChecker {
@@ -12,5 +13,6 @@ namespace ppx {
         };
     }
 }
+#endif
 
 #endif // !PPXBAE_INTERNET_AVALIABILITY_CHECKER_H__

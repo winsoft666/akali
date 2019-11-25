@@ -16,7 +16,6 @@
 #include <sstream>
 #include "ppxbase/byteorder.h"
 #include "ppxbase/logging.h"
-#include "ppxbase/safe_conversions.h"
 
 namespace ppx {
     namespace base {
@@ -104,7 +103,7 @@ namespace ppx {
         }
 
         void SocketAddress::SetPort(int port) {
-            port_ = base::CheckedCast<uint16_t>(port);
+            port_ = static_cast<uint16_t>(port);
         }
 
         uint32_t SocketAddress::ip() const {

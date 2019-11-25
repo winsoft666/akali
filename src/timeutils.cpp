@@ -69,6 +69,7 @@ namespace ppx {
             return t;
         }
 
+#if defined(_WIN32)
         long long GetTimeStamp() {
             union {
                 long long ns100;
@@ -83,7 +84,7 @@ namespace ppx {
             return lNowMicroMS;
         }
 
-#if defined(_WIN32)
+
         ppx::base::Time FILETIMEToUTC(FILETIME ft) {
             SYSTEMTIME st;
             Time t;

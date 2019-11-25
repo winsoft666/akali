@@ -17,11 +17,11 @@
 #pragma once
 
 #ifdef _WIN32
-    #ifndef WIN32_LEAN_AND_MEAN
-        #define WIN32_LEAN_AND_MEAN
-    #endif
-    #include <windows.h>
+#ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
+#include <windows.h>
+
 #include <string>
 #include "ppxbase_export.h"
 
@@ -77,5 +77,5 @@ namespace ppx {
 #endif
     }
 }
-
+#endif
 #endif // !PPX_BASE_OS_VER_H__

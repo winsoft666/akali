@@ -35,19 +35,16 @@ namespace ppx {
             ITERPOS End() const;
 
             bool HasKey(const std::wstring &key) const;
-
             bool HasVal(const std::wstring &key) const;
-
             std::wstring GetVal(const std::wstring &key) const;
 
             int GetParamCount() const;
-
           private:
             bool Parse(const std::wstring &cmdline);
 
-            std::wstring         cmdline_;
+            std::wstring  cmdline_;
             class Impl;
-            Impl		   *impl_;
+            Impl *impl_;
         };
     }
 }

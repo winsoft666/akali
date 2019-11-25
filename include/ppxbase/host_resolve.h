@@ -16,12 +16,15 @@
 #define PPX_BASE_HOST_RESOLVE_H_
 #pragma once
 
+#ifdef _WIN32
 #include <string>
 #include <functional>
 #include <thread>
 #include <vector>
 #include "ppxbase/ipaddress.h"
 #include "ppxbase_export.h"
+
+#pragma comment(lib, "ws2_32.lib")
 
 namespace ppx {
     namespace base {
@@ -34,5 +37,7 @@ namespace ppx {
         };
     }
 }
+
+#endif
 
 #endif // !PPX_BASE_HOST_RESOLVE_H_

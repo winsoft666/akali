@@ -16,6 +16,7 @@
 #define PPX_BASE_H_
 #pragma once
 
+#ifdef _WIN32
 #include "ppxbase_export.h"
 #include <functional>
 #include "ppxbase/constructormagic.h"
@@ -41,5 +42,7 @@ namespace ppx {
         };
     }
 }
+
+#endif
 
 #endif // !PPX_BASE_H_

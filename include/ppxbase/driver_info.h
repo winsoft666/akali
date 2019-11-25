@@ -20,6 +20,7 @@
 #include <string>
 #include "ppxbase_export.h"
 
+#ifdef _WIN32
 namespace ppx {
     namespace base {
 
@@ -49,5 +50,7 @@ namespace ppx {
         };
     }
 }
+
+#endif
 
 #endif // !PPX_BASE_DRIVER_INFO_H_

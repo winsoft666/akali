@@ -12,12 +12,12 @@
 * file.
 *******************************************************************************/
 
-#ifndef RTC_BASE_OVERLAPPED_SOCKET_H_
-#define RTC_BASE_OVERLAPPED_SOCKET_H_
+#ifndef PPX_BASE_OVERLAPPED_SOCKET_H_
+#define PPX_BASE_OVERLAPPED_SOCKET_H_
 
+#ifdef _WIN32
 #include <memory>
 #include <thread>
-#include "ppxbase/event.h"
 #include "ppxbase/iocp_socket.h"
 #include "ppxbase/socket.h"
 #include "ppxbase/socketaddress.h"
@@ -82,7 +82,7 @@ namespace ppx {
             bool PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr);
             bool PostSendTo(const void *buffer, size_t length, PER_IO_CONTEXT *io_ctx, const SocketAddress &addr);
           private:
-            base::Event exit_;
+            HANDLE exit_;
             HANDLE iocp_;
             int workthread_num_;
             std::vector<std::unique_ptr<CompletionIOHandler>> workthreads_;
@@ -106,3 +106,5 @@ namespace ppx {
 }
 
 #endif
+
+#endif // !PPX_BASE_OVERLAPPED_SOCKET_H_

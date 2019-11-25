@@ -16,6 +16,8 @@
 #pragma once
 
 #include "ppxbase_export.h"
+
+#ifdef _WIN32
 #include <string>
 
 namespace ppx {
@@ -110,5 +112,5 @@ namespace ppx {
         PPXBASE_API bool TaskbarUnpinShortcutLink(const wchar_t *shortcut);
     }
 }
-
+#endif
 #endif // !PPXBASE_SHORTCUT_H__

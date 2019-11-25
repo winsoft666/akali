@@ -1,4 +1,5 @@
 #include "ppxbase/directory_monitor.h"
+#ifdef _WIN32
 #include "ppxbase/safe_release_macro.h"
 #include "ppxbase/logging.h"
 
@@ -124,3 +125,5 @@ namespace ppx {
 
     }
 }
+
+#endif

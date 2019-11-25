@@ -16,6 +16,7 @@
 #define PPX_DISPLAY_MINITORS_H__
 #pragma once
 
+#ifdef _WIN32
 #include <vector>
 #include "ppxbase_export.h"
 
@@ -64,5 +65,6 @@ namespace ppx {
         };
     }
 }
+#endif
 
 #endif //!PPX_DISPLAY_MINITORS_H__

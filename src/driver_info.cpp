@@ -14,6 +14,8 @@
 
 
 #include "ppxbase/driver_info.h"
+
+#ifdef _WIN32
 #include <assert.h>
 #ifndef WIN32_LEAN_AND_MEAN
     #define WIN32_LEAN_AND_MEAN
@@ -273,3 +275,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

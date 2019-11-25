@@ -30,7 +30,7 @@ TEST(ppxbase, shortcut) {
 
 TEST(ppxbase, Screenshot) {
     using namespace ppx::base;
-    EXPECT_TRUE(Screenshot::FullScreenToFile(L"D:\\fullscreen.bmp"));
+    EXPECT_TRUE(FullScreenToFile(L"D:\\fullscreen.bmp"));
 }
 
 TEST(ppxbase, RegisterTest) {

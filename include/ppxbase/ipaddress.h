@@ -23,6 +23,10 @@
 #include <vector>
 #include "ppxbase_export.h"
 
+#ifdef _WIN32
+#pragma comment(lib, "ws2_32.lib")
+#endif
+
 namespace ppx {
     namespace base {
         enum IPv6AddressFlag {

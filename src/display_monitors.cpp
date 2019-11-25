@@ -1,4 +1,6 @@
 ﻿#include "ppxbase/display_monitors.h"
+
+#ifdef _WIN32
 #include <windows.h>
 
 namespace ppx {
@@ -110,3 +112,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

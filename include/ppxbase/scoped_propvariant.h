@@ -14,7 +14,7 @@
 
 #ifndef PPXBASE_SCOPED_PROPVARIANT_H_
 #define PPXBASE_SCOPED_PROPVARIANT_H_
-
+#ifdef _WIN32
 #include <propidl.h>
 #include "ppxbase/assert.h"
 #include "ppxbase/constructormagic.h"
@@ -68,5 +68,7 @@ namespace ppx {
 
     }  // namespace win
 }  // namespace base
+
+#endif
 
 #endif  // BASE_WIN_SCOPED_PROPVARIANT_H_

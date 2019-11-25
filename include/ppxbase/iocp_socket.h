@@ -15,6 +15,7 @@
 #ifndef PPX_BASE_IOCP_H_
 #define PPX_BASE_IOCP_H_
 
+#ifdef _WIN32
 #include <winsock2.h>
 #include <MSWSock.h>
 #include <vector>
@@ -125,6 +126,6 @@ namespace ppx {
         PPXBASE_API LPFN_GETACCEPTEXSOCKADDRS GetAcceptExSockAddrsFnPointer(SOCKET s);
     }
 }
-
+#endif
 
 #endif // PPX_BASE_IOCP_H_

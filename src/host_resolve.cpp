@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase/host_resolve.h"
+#ifdef _WIN32
 #include "ppxbase/safe_release_macro.h"
 
 namespace ppx {
@@ -66,3 +67,5 @@ namespace ppx {
 
     }
 }
+
+#endif

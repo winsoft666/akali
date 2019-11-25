@@ -427,7 +427,7 @@ namespace ppx {
             return (TRUE);
         }
 
-        PPXBASE_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
+        BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
             OSVERSIONINFO VersionTmp;
             VersionTmp.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
             GetVersionEx(&VersionTmp);

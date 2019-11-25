@@ -1,7 +1,7 @@
 #ifndef __STACKWALKER_H__
 #define __STACKWALKER_H__
 
-#if defined(_MSC_VER)
+#ifdef _WIN32
 
 /**********************************************************************
  *
@@ -249,6 +249,6 @@ namespace ppx {
 #endif
     }
 }
-#endif //defined(_MSC_VER)
+#endif //defined(_WIN32)
 
 #endif // __STACKWALKER_H__

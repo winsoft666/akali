@@ -22,6 +22,10 @@
 #include "ppxbase/endianess_detect.h"
 #include "ppxbase_export.h"
 
+#ifdef _WIN32
+#pragma comment(lib, "ws2_32.lib")
+#endif
+
 namespace ppx {
     namespace base {
 #define htobe16(v) htons(v)

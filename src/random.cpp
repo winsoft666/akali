@@ -14,7 +14,6 @@
 
 #include "ppxbase/random.h"
 #include <math.h>
-#include "ppxbase/safe_conversions.h"
 #include "ppxbase/timeutils.h"
 
 #pragma warning(disable:4244)
@@ -48,8 +47,8 @@ namespace ppx {
         int32_t Random::Rand(int32_t low, int32_t high) {
             PPX_ASSERT(low <= high);
             const int64_t low_i64{ low };
-            return CheckedCast<int32_t>(
-                       Rand(CheckedCast<uint32_t>(high - low_i64)) + low_i64);
+            return static_cast<int32_t>(
+                       Rand(static_cast<uint32_t>(high - low_i64)) + low_i64);
         }
 
         template <>

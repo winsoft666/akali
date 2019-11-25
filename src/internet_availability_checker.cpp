@@ -1,4 +1,6 @@
 #include "ppxbase/internet_availability_checker.h"
+
+#ifdef _WIN32
 #include <netlistmgr.h>
 #include <atlbase.h>
 #include <atlcom.h>
@@ -30,3 +32,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

@@ -83,6 +83,7 @@
  **********************************************************************/
 
 #include "ppxbase/stack_walker.h"
+#ifdef _WIN32
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1353,3 +1354,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

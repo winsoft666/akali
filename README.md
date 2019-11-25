@@ -59,8 +59,9 @@
 Use `cmake` to generate project appropriate, then compile.
 
 cmake paramenters:
-BUILD_SHARED_LIBS: whether dynamic library or not, `ON`or`OFF`.
-BUILD_TESTS: whether compile test project or not, `ON`or`OFF`.
+
+- BUILD_SHARED_LIBS: whether dynamic library or not, `ON`or`OFF`.
+- BUILD_TESTS: whether compile test project or not, `ON`or`OFF`.
 
 ```bash
 # Windows Sample

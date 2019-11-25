@@ -58,8 +58,9 @@
 使用cmake生成相应工程，然后编译。
 
 cmake参数：
-BUILD_SHARED_LIBS: 是否编译动态库, `ON`or`OFF`.
-BUILD_TESTS: 是否编译测试工程, `ON`or`OFF`.
+
+- BUILD_SHARED_LIBS: 是否编译动态库, `ON`or`OFF`.
+- BUILD_TESTS: 是否编译测试工程, `ON`or`OFF`.
 
 ```bash
 # Windows示例

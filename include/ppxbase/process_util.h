@@ -47,7 +47,7 @@ namespace ppx {
             HANDLE m_hSnapShot;
         };
 
-        PPXBASE_API BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, BOOL bWaitProcess);
+        PPXBASE_API BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, LPCTSTR szDir, BOOL bWaitProcess);
         PPXBASE_API BOOL EnablePrivilege(LPCTSTR szPrivilege, BOOL fEnable);
         PPXBASE_API BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin);
         PPXBASE_API BOOL TerminateProcess(DWORD dwProcessId, DWORD dwExitCode);

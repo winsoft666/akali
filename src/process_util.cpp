@@ -146,10 +146,11 @@ namespace ppx {
 
 
 
-        BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, BOOL bWaitProcess) {
+        BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, LPCTSTR szDir, BOOL bWaitProcess) {
             SHELLEXECUTEINFO sei = { sizeof(SHELLEXECUTEINFO) };
             sei.lpVerb = TEXT("runas");
             sei.lpFile = szCommand;
+            sei.lpDirectory = szDir;
             sei.lpParameters = szArgs;
             sei.nShow = SW_SHOWNORMAL;
 

@@ -1,6 +1,6 @@
 [中文版](README_ch.md)
 # 1. Project Introduction
-[ppxbase](https://github.com/winsoft666/ppxbase) is a common C++ library, don't depend on third library.
+[ppxbase](https://github.com/winsoft666/ppxbase) is a common C++ library, don't depend on other library.
 
 # 2. Function Module
 |File|Function|Support Platform|

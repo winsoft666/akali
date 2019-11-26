@@ -67,4 +67,8 @@ cmake paramenters:
 ```bash
 # Windows Sample
 cmake.exe -G "Visual Studio 15 2017" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -S %~dp0 -B %~dp0build
+
+# Linux
+cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
+make
 ```

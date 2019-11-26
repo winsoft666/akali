@@ -18,7 +18,7 @@
     #pragma once
 #endif
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 
 
 #pragma warning ( disable : 4995 )
@@ -44,7 +44,7 @@ namespace ppx {
         // version format XXXX.XXXX.XXXX.XXXX
         PPXBASE_API int VersionCompare(const std::string &str_ver1, const std::string &str_ver2);
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
         // 32 bit bmp
         PPXBASE_API bool FullScreenToFile(const std::wstring &file_path);
 

@@ -40,8 +40,8 @@ namespace ppx {
             int ver1[4] = { 0 };
             int ver2[4] = { 0 };
 
-            sscanf_s(str_ver1.c_str(), "%d.%d.%d.%d", &ver1[0], &ver1[1], &ver1[2], &ver1[3]);
-            sscanf_s(str_ver2.c_str(), "%d.%d.%d.%d", &ver2[0], &ver2[1], &ver2[2], &ver2[3]);
+            sscanf(str_ver1.c_str(), "%d.%d.%d.%d", &ver1[0], &ver1[1], &ver1[2], &ver1[3]);
+            sscanf(str_ver2.c_str(), "%d.%d.%d.%d", &ver2[0], &ver2[1], &ver2[2], &ver2[3]);
 
             for (int i = 0; i < 4; i++) {
                 if (ver1[i] > ver2[i])
@@ -52,7 +52,7 @@ namespace ppx {
             return 0;
         }
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
         static bool SaveBmpBufToFile(const std::wstring &file_path, const void *buf, int width, int height, BITMAPINFOHEADER *bi_header) {
             BITMAPFILEHEADER Header;
             memset(&Header, 0, sizeof(Header));

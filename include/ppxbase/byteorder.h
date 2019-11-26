@@ -18,20 +18,26 @@
 #pragma once
 
 #include <stdlib.h>
+#if (defined _WIN32 || defined WIN32)
 #include <winsock2.h>
+#else
+#include <arpa/inet.h>
+#endif
 #include "ppxbase/endianess_detect.h"
 #include "ppxbase_export.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
 namespace ppx {
     namespace base {
+#if (defined _WIN32 || defined WIN32)
 #define htobe16(v) htons(v)
 #define htobe32(v) htonl(v)
 #define be16toh(v) ntohs(v)
 #define be32toh(v) ntohl(v)
+#endif
 #if _WIN32_WINNT>=0x0602 || WINVER>=0x0602 // Win8
     #define htobe64(v) htonll((v))
     #define be64toh(v) ntohll((v))

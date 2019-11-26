@@ -16,7 +16,7 @@
 #define PPXBASE_SCOPED_COM_INITIALIZER_H_
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <objbase.h>
 #include "ppxbase/assert.h"
 #include "ppxbase/logging.h"

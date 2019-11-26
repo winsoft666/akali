@@ -48,7 +48,6 @@
 #include "ppxbase/noncopyable.h"
 #include "ppxbase/singleton.h"
 #include "ppxbase/stringencode.h"
-#include "ppxbase/thread_util.h"
 #include "ppxbase/timer.h"
 #include "ppxbase/timeutils.h"
 #include "ppxbase/win_main.h"
@@ -71,9 +70,13 @@
 #include "ppxbase/internet_availability_checker.h"
 #include "ppxbase/stack_walker.h"
 #include "ppxbase/directory_monitor.h"
+#include "ppxbase/thread.h"
+#include "ppxbase/thread_pool.h"
 
+#if (defined WIN32 || defined _WIN32)
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "UserEnv.lib")
 #pragma comment(lib, "DbgHelp.lib")
+#endif
 
 #endif // !PPX_BASE_H__

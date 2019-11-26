@@ -14,7 +14,7 @@
 
 
 #include "ppxbase/logging_file_sink_win.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
 #pragma warning(disable:4995)
 #pragma warning(disable:4996)

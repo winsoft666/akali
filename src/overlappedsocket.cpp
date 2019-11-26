@@ -14,13 +14,12 @@
 
 #include "ppxbase/overlappedsocket.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include "ppxbase/logging.h"
 #include <process.h>
 #include "ppxbase/timeutils.h"
 #include "ppxbase/assert.h"
-#include "ppxbase/thread_util.h"
-#include "ppxbase//safe_release_macro.h"
+#include "ppxbase/safe_release_macro.h"
 
 namespace ppx {
     namespace base {
@@ -29,7 +28,6 @@ namespace ppx {
             parent_(parent) {
 
             thread_ = std::thread([this, index]() {
-                base::SetCurrentThreadName(("OverlappedSocketWorkThread_" + std::to_string(index)).c_str());
                 this->Run();
             });
         }
@@ -363,6 +361,42 @@ namespace ppx {
             addr_.Clear();
             state_ = Socket::CS_CLOSED;
             return err;
+        }
+
+        int OverlappedSocket::TranslateOption(Option opt, int *slevel, int *sopt) {
+            switch (opt) {
+            case OPT_DONTFRAGMENT:
+                *slevel = IPPROTO_IP;
+                *sopt = IP_DONTFRAGMENT;
+                break;
+            case OPT_RCVBUF:
+                *slevel = SOL_SOCKET;
+                *sopt = SO_RCVBUF;
+                break;
+            case OPT_SNDBUF:
+                *slevel = SOL_SOCKET;
+                *sopt = SO_SNDBUF;
+                break;
+            case OPT_NODELAY:
+                *slevel = IPPROTO_TCP;
+                *sopt = TCP_NODELAY;
+                break;
+            case OPT_DSCP:
+                PPX_LOG(LS_WARNING) << "Socket::OPT_DSCP not supported.";
+                return -1;
+            case OPT_BROADCAST:
+                *slevel = SOL_SOCKET;
+                *sopt = SO_BROADCAST;
+                break;
+            case OPT_ADD_MEMBERSHIP:
+                *slevel = IPPROTO_IP;
+                *sopt = IP_ADD_MEMBERSHIP;
+                break;
+            default:
+                PPX_NOT_REACHED("");
+                return -1;
+            }
+            return 0;
         }
 
         int OverlappedSocket::GetOption(Socket::Option opt, int *value) {

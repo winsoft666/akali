@@ -14,7 +14,7 @@
 
 #include "ppxbase/process_util.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <tchar.h>
 #include <shlobj.h> // for IsUserAnAdmin
 #include <Shlwapi.h>

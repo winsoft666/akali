@@ -16,7 +16,9 @@
 #include "ppxbase/safe_release_macro.h"
 #include <locale>
 #include <algorithm>
+#if (defined _WIN32 || defined WIN32)
 #include <tchar.h>
+#endif
 #include <map>
 #include "ppxbase/string_helper.h"
 #include "ppxbase/stringencode.h"
@@ -66,7 +68,7 @@ namespace ppx {
             impl_->value_map_.clear();
             cmdline_ = cmdline;
 
-            std::wstring strW = TCHARToUnicode(cmdline_);
+            std::wstring strW = cmdline_;
             const wchar_t *sCurrent = strW.c_str();
 
             for (;;) {
@@ -79,7 +81,7 @@ namespace ppx {
                 if (!sArg)
                     break;
 
-                sArg = _wcsinc(sArg); // 字符指针sArg向后移动一个字符
+                sArg++; // 字符指针sArg向后移动一个字符
 
                 if (sArg[0] == L'\0')
                     break; // ends with delim
@@ -100,21 +102,21 @@ namespace ppx {
                         impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, sEmpty));
                     }
 
-                    sCurrent = _wcsinc(sVal);
+                    sCurrent = sVal+1;
                     continue;
                 } else {
                     // key has value
                     std::wstring Key(sArg, (int)(sVal - sArg));
                     Key = StringToLower(Key);
 
-                    sVal = _wcsinc(sVal);
+                    sVal++;
 
                     const wchar_t *sQuote = wcspbrk(sVal, quotes);
                     const wchar_t *sEndQuote = NULL;
 
                     if (sQuote == sVal) {
                         // string with quotes (defined in quotes, e.g. '")
-                        sQuote = _wcsinc(sVal);
+                        sQuote = sVal + 1;
                         sEndQuote = wcspbrk(sQuote, quotes);
                     } else {
                         sQuote = sVal;
@@ -137,7 +139,7 @@ namespace ppx {
                             impl_->value_map_.insert(CmdLineParser::ValsMap::value_type(Key, csVal));
                         }
 
-                        sCurrent = _wcsinc(sEndQuote);
+                        sCurrent = sEndQuote + 1;
                         continue;
                     }
                 }

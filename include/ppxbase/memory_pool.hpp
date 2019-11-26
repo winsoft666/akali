@@ -18,6 +18,7 @@
 #include <climits>
 #include <cstddef>
 #include <mutex>
+#include <memory.h>
 #include "ppxbase_export.h"
 /*
 MemoryPool is mostly compliant with the C++ Standard Library allocators.

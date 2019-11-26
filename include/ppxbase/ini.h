@@ -17,7 +17,7 @@
 #define PPX_BASE_INI_H_
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <tchar.h>
 #ifndef WIN32_LEAN_AND_MEAN
     #define WIN32_LEAN_AND_MEAN

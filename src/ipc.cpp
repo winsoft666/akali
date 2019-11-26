@@ -12,8 +12,8 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase\ipc.h"
-#ifdef _WIN32
+#include "ppxbase/ipc.h"
+#if (defined _WIN32 || defined WIN32)
 #include <winsock2.h>
 #include <future>
 #include <thread>

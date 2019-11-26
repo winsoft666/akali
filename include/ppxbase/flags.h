@@ -261,6 +261,7 @@ namespace ppx {
         // This encapsulates all the work of getting the command line and translating
         // it to an array of 8-bit strings; all you have to do is create one of these,
         // and then call argc() and argv().
+#if (defined _WIN32 || defined WIN32)
         class PPXBASE_API WindowsCommandLineArguments {
           public:
             WindowsCommandLineArguments();
@@ -279,7 +280,7 @@ namespace ppx {
           private:
             PPX_DISALLOW_COPY_AND_ASSIGN(WindowsCommandLineArguments);
         };
-
+#endif
     }
 }
 

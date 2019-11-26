@@ -17,6 +17,7 @@
 #define PPX_BASE_WIN_SERVICE_INSTALLER_H_
 #pragma once
 
+#if (defined _WIN32 || defined WIN32)
 #include "ppxbase_export.h"
 
 namespace ppx {
@@ -71,5 +72,7 @@ namespace ppx {
         PPXBASE_API void StopService(PWSTR pszServiceName);
     }
 }
+
+#endif
 
 #endif // !PPX_BASE_WIN_SERVICE_INSTALLER_H_

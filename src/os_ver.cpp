@@ -14,7 +14,7 @@
 
 
 #include "ppxbase/os_ver.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
 
 /*
@@ -42,7 +42,7 @@ Windows 2000                                     5                0             
 
 namespace ppx {
     namespace base {
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
         OSVersion::OSVersion() {
             memset(&osvi, 0, sizeof(OSVERSIONINFOEXW));
             osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);

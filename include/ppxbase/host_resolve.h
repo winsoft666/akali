@@ -16,7 +16,7 @@
 #define PPX_BASE_HOST_RESOLVE_H_
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <string>
 #include <functional>
 #include <thread>

@@ -14,7 +14,7 @@
 
 #include "ppxbase/win_main.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 
 #include <tchar.h>
 #include <DbgHelp.h>

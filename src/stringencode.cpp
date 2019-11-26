@@ -15,7 +15,7 @@
 #include "ppxbase/stringencode.h"
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN
     #endif
@@ -220,7 +220,7 @@ namespace ppx {
             return result;
         }
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 
         std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page /*= 0*/) {
             std::string strRes;

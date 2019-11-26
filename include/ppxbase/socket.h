@@ -22,88 +22,6 @@
 #include "ppxbase/logging.h"
 #include "ppxbase_export.h"
 
-// Rather than converting errors into a private namespace,
-// Reuse the POSIX socket api errors. Note this depends on
-// Win32 compatibility.
-#if defined(WIN32)
-    #undef EWOULDBLOCK  // Remove errno.h's definition for each macro below.
-    #define EWOULDBLOCK WSAEWOULDBLOCK
-    #undef EINPROGRESS
-    #define EINPROGRESS WSAEINPROGRESS
-    #undef EALREADY
-    #define EALREADY WSAEALREADY
-    #undef ENOTSOCK
-    #define ENOTSOCK WSAENOTSOCK
-    #undef EDESTADDRREQ
-    #define EDESTADDRREQ WSAEDESTADDRREQ
-    #undef EMSGSIZE
-    #define EMSGSIZE WSAEMSGSIZE
-    #undef EPROTOTYPE
-    #define EPROTOTYPE WSAEPROTOTYPE
-    #undef ENOPROTOOPT
-    #define ENOPROTOOPT WSAENOPROTOOPT
-    #undef EPROTONOSUPPORT
-    #define EPROTONOSUPPORT WSAEPROTONOSUPPORT
-    #undef ESOCKTNOSUPPORT
-    #define ESOCKTNOSUPPORT WSAESOCKTNOSUPPORT
-    #undef EOPNOTSUPP
-    #define EOPNOTSUPP WSAEOPNOTSUPP
-    #undef EPFNOSUPPORT
-    #define EPFNOSUPPORT WSAEPFNOSUPPORT
-    #undef EAFNOSUPPORT
-    #define EAFNOSUPPORT WSAEAFNOSUPPORT
-    #undef EADDRINUSE
-    #define EADDRINUSE WSAEADDRINUSE
-    #undef EADDRNOTAVAIL
-    #define EADDRNOTAVAIL WSAEADDRNOTAVAIL
-    #undef ENETDOWN
-    #define ENETDOWN WSAENETDOWN
-    #undef ENETUNREACH
-    #define ENETUNREACH WSAENETUNREACH
-    #undef ENETRESET
-    #define ENETRESET WSAENETRESET
-    #undef ECONNABORTED
-    #define ECONNABORTED WSAECONNABORTED
-    #undef ECONNRESET
-    #define ECONNRESET WSAECONNRESET
-    #undef ENOBUFS
-    #define ENOBUFS WSAENOBUFS
-    #undef EISCONN
-    #define EISCONN WSAEISCONN
-    #undef ENOTCONN
-    #define ENOTCONN WSAENOTCONN
-    #undef ESHUTDOWN
-    #define ESHUTDOWN WSAESHUTDOWN
-    #undef ETOOMANYREFS
-    #define ETOOMANYREFS WSAETOOMANYREFS
-    #undef ETIMEDOUT
-    #define ETIMEDOUT WSAETIMEDOUT
-    #undef ECONNREFUSED
-    #define ECONNREFUSED WSAECONNREFUSED
-    #undef ELOOP
-    #define ELOOP WSAELOOP
-    #undef ENAMETOOLONG
-    #define ENAMETOOLONG WSAENAMETOOLONG
-    #undef EHOSTDOWN
-    #define EHOSTDOWN WSAEHOSTDOWN
-    #undef EHOSTUNREACH
-    #define EHOSTUNREACH WSAEHOSTUNREACH
-    #undef ENOTEMPTY
-    #define ENOTEMPTY WSAENOTEMPTY
-    #undef EPROCLIM
-    #define EPROCLIM WSAEPROCLIM
-    #undef EUSERS
-    #define EUSERS WSAEUSERS
-    #undef EDQUOT
-    #define EDQUOT WSAEDQUOT
-    #undef ESTALE
-    #define ESTALE WSAESTALE
-    #undef EREMOTE
-    #define EREMOTE WSAEREMOTE
-    #undef EACCES
-    #define SOCKET_EACCES WSAEACCES
-#endif  // WIN32
-
 
 namespace ppx {
     namespace base {
@@ -112,18 +30,6 @@ namespace ppx {
             return (e == EWOULDBLOCK) || (e == EAGAIN) || (e == EINPROGRESS);
         }
 
-        struct SentPacket {
-            SentPacket() : packet_id(-1), send_time_ms(-1) {}
-            SentPacket(int packet_id, int64_t send_time_ms)
-                : packet_id(packet_id), send_time_ms(send_time_ms) {
-            }
-
-            int packet_id;
-            int64_t send_time_ms;
-        };
-
-        // General interface for the socket implementations of various networks.  The
-        // methods match those of normal UNIX sockets very closely.
         class PPXBASE_API Socket {
           public:
             virtual ~Socket() {}
@@ -161,43 +67,6 @@ namespace ppx {
                 OPT_BROADCAST,
                 OPT_ADD_MEMBERSHIP
             };
-
-
-            static int TranslateOption(Option opt, int *slevel, int *sopt) {
-                switch (opt) {
-                    case OPT_DONTFRAGMENT:
-                        *slevel = IPPROTO_IP;
-                        *sopt = IP_DONTFRAGMENT;
-                        break;
-                    case OPT_RCVBUF:
-                        *slevel = SOL_SOCKET;
-                        *sopt = SO_RCVBUF;
-                        break;
-                    case OPT_SNDBUF:
-                        *slevel = SOL_SOCKET;
-                        *sopt = SO_SNDBUF;
-                        break;
-                    case OPT_NODELAY:
-                        *slevel = IPPROTO_TCP;
-                        *sopt = TCP_NODELAY;
-                        break;
-                    case OPT_DSCP:
-                        PPX_LOG(LS_WARNING) << "Socket::OPT_DSCP not supported.";
-                        return -1;
-                    case OPT_BROADCAST:
-                        *slevel = SOL_SOCKET;
-                        *sopt = SO_BROADCAST;
-                        break;
-                    case OPT_ADD_MEMBERSHIP:
-                        *slevel = IPPROTO_IP;
-                        *sopt = IP_ADD_MEMBERSHIP;
-                        break;
-                    default:
-                        PPX_NOT_REACHED("");
-                        return -1;
-                }
-                return 0;
-            }
 
           protected:
             Socket() : error_(0),

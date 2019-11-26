@@ -16,6 +16,7 @@
 #define PPX_BASE_PC_INFO_H_
 #pragma once
 
+#if (defined _WIN32 || defined WIN32)
 #include <string>
 #include <vector>
 #include "ppxbase_export.h"
@@ -32,6 +33,6 @@ namespace ppx {
         PPXBASE_API int64_t GetValidMacInteger();
     }
 }
-
+#endif
 
 #endif // !PPX_BASE_PC_INFO_H_

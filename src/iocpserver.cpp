@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase/iocpserver.h"
+#if (defined _WIN32 || defined WIN32)
 #include "ppxbase/timeutils.h"
 #include "ppxbase/logging.h"
 #include "ppxbase/overlappedsocket.h"
@@ -126,3 +127,5 @@ namespace ppx {
 
     }
 }
+
+#endif

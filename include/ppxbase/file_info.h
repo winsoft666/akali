@@ -17,7 +17,7 @@
 #define __FILE_INFO_SDFSDR54_H__
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #ifndef _INC_WINDOWS
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

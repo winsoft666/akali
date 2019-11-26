@@ -16,7 +16,7 @@
 #define PPX_BASE_LOGGING_FILE_SINK_WIN_H__
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <tchar.h>
 #include <wtypes.h>
 #include "ppxbase/logging.h"

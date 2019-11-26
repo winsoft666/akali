@@ -1,6 +1,6 @@
 ﻿#include "ppxbase/display_monitors.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <windows.h>
 
 namespace ppx {

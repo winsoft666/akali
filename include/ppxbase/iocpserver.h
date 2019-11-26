@@ -14,8 +14,9 @@
 
 #ifndef PPX_BASE_IOCP_SERVER_H_
 #define PPX_BASE_IOCP_SERVER_H_
+#pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <list>
 #include "ppxbase/iocp_socket.h"
 #include "ppxbase_export.h"

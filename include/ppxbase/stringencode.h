@@ -60,7 +60,7 @@ namespace ppx {
         PPXBASE_API size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const std::string &source, char delimiter);
 
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
     // About code_page, see https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
     //
     PPXBASE_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);

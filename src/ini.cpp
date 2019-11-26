@@ -14,11 +14,10 @@
 
 
 #include "ppxbase/ini.h"
+#if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
 #include <assert.h>
 #include "ppxbase/stringencode.h"
-
-#ifdef _WIN32
 
 namespace ppx {
     namespace base {

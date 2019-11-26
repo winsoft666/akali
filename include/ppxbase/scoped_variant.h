@@ -16,7 +16,7 @@
 #define PPXBASE_SCOPED_VARIANT_H__
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #ifndef _INC_WINDOWS
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

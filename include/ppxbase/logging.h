@@ -135,23 +135,21 @@ namespace ppx {
 #define PPX_LOG_ERRNO_EX(sev, err)      PPX_LOG_E(sev, ERRCTX_ERRNO, err)
 #define PPX_LOG_ERRNO(sev)              PPX_LOG_ERRNO_EX(sev, errno)
 
-#if defined(_WIN32)
+#if (defined _WIN32 || defined WIN32)
     #define PPX_LOG_GLE_EX(sev, err)        PPX_LOG_E(sev, ERRCTX_HRESULT, err)
     #define PPX_LOG_GLE(sev)                PPX_LOG_GLE_EX(sev, GetLastError())
-#endif  // _WIN32
-
-
-
-#ifdef _WIN32
-    PPXBASE_API void TraceMsgW(const wchar_t *lpFormat, ...);
-    PPXBASE_API void TraceMsgA(const char *lpFormat, ...);
-
-    #if (defined UNICODE) || (defined _UNICODE)
-        #define TraceMsg ppx::base::TraceMsgW
-    #else
-        #define TraceMsg ppx::base::TraceMsgA
-    #endif
 #endif
+
+
+        PPXBASE_API void TraceMsgW(const wchar_t *lpFormat, ...);
+        PPXBASE_API void TraceMsgA(const char *lpFormat, ...);
+
+#if (defined UNICODE) || (defined _UNICODE)
+    #define TraceMsg ppx::base::TraceMsgW
+#else
+    #define TraceMsg ppx::base::TraceMsgA
+#endif
+
 
 
     } // namespace base

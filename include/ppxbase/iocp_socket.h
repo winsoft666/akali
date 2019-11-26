@@ -15,7 +15,7 @@
 #ifndef PPX_BASE_IOCP_H_
 #define PPX_BASE_IOCP_H_
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <winsock2.h>
 #include <MSWSock.h>
 #include <vector>

@@ -2,7 +2,11 @@
 #include <algorithm>
 #include <cctype>
 #include <locale>
+#include <stdarg.h>
+#include <string.h>
+#if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
+#endif
 
 namespace ppx {
     namespace base {
@@ -30,7 +34,7 @@ namespace ppx {
                     return in + (L'Z' - L'z');
                 return in;
             }
-
+#if (defined _WIN32 || defined WIN32)
             static wchar_t *InnerMakeStringW(int &iBufLen, int iBufSizeStep, const wchar_t *pstrFormat, va_list Args) {
                 iBufLen = 0;
                 if (!pstrFormat)
@@ -84,7 +88,9 @@ namespace ppx {
 
                 return pMsgBuffer;
             }
+#endif
         }
+
         std::string StringToLower(const std::string &str) {
             std::string ret = str;
             std::transform(ret.begin(), ret.end(), ret.begin(), EasyToLowerA);
@@ -246,7 +252,7 @@ namespace ppx {
 
             return -1;
         }
-
+#if (defined _WIN32 || defined WIN32)
         std::string MakeString(const char *pstrFormat, ...) {
             std::string strResult;
             if (!pstrFormat)
@@ -296,6 +302,6 @@ namespace ppx {
 
             return strResult;
         }
-
+#endif
     }
 }

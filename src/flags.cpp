@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if (defined _WIN32 || defined WIN32)
 #ifndef WIN32_LEAN_AND_MEAN
     #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <shellapi.h>
+#endif
 #include "ppxbase/stringencode.h"
 
 namespace ppx {
@@ -260,7 +262,7 @@ namespace ppx {
             list_ = flag;
         }
 
-
+#if (defined _WIN32 || defined WIN32)
         WindowsCommandLineArguments::WindowsCommandLineArguments() {
             // start by getting the command line.
             LPTSTR command_line = ::GetCommandLine();
@@ -289,6 +291,6 @@ namespace ppx {
 
             delete[] argv_;
         }
-
+#endif
     }
 }

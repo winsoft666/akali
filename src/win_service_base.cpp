@@ -15,7 +15,7 @@
 * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 \***************************************************************************/
-
+#if (defined _WIN32 || defined WIN32)
 #pragma region Includes
 #include "ppxbase/win_service_base.h"
 #include <assert.h>
@@ -25,8 +25,6 @@
 #pragma endregion
 
 #pragma warning(disable:4995)
-
-#ifdef _WIN32
 
 namespace ppx {
     namespace base {

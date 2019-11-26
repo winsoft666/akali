@@ -1,5 +1,5 @@
 #include "ppxbase/directory_monitor.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include "ppxbase/safe_release_macro.h"
 #include "ppxbase/logging.h"
 

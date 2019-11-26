@@ -15,6 +15,7 @@
 #include "ppxbase/ipaddress.h"
 #include "ppxbase/byteorder.h"
 #include <stdio.h>
+#include <ios>
 
 namespace ppx {
     namespace base {
@@ -42,8 +43,13 @@ namespace ppx {
         }
 
         bool IPAddress::IsValid() const {
+#if (defined _WIN32 || defined WIN32)
             if (!IsUnspecifiedIP() && (u_.ip4.s_addr != 0 || u_.ip6.u.Word != 0))
                 return true;
+#else
+            if (!IsUnspecifiedIP() && (u_.ip4.s_addr != 0 || u_.ip6.__in6_u.__u6_addr16 != 0))
+                return true;
+#endif
             return false;
         }
 
@@ -143,7 +149,7 @@ namespace ppx {
                 src = &u_.ip6;
             }
 
-            if (!inet_ntop(family_, (LPVOID)src, buf, sizeof(buf))) {
+            if (!inet_ntop(family_, (void*)src, buf, sizeof(buf))) {
                 return std::string();
             }
 
@@ -224,15 +230,6 @@ namespace ppx {
             ipv6_flags_ = other.ipv6_flags_;
             static_cast<IPAddress &>(*this) = other;
             return *this;
-        }
-
-        std::ostream &operator<<(std::ostream &os, const InterfaceAddress &ip) {
-            os << static_cast<const IPAddress &>(ip);
-
-            if (ip.GetFamily() == AF_INET6)
-                os << "|flags:0x" << std::hex << ip.ipv6_flags();
-
-            return os;
         }
 
         bool IsPrivateV4(uint32_t ip_in_host_order) {

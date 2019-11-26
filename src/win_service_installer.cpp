@@ -14,6 +14,7 @@
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 \***************************************************************************/
 
+#if (defined _WIN32 || defined WIN32)
 #pragma region "Includes"
 #include <stdio.h>
 #include <windows.h>
@@ -233,3 +234,4 @@ namespace ppx {
 
     }
 }
+#endif

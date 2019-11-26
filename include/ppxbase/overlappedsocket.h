@@ -15,7 +15,7 @@
 #ifndef PPX_BASE_OVERLAPPED_SOCKET_H_
 #define PPX_BASE_OVERLAPPED_SOCKET_H_
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <memory>
 #include <thread>
 #include "ppxbase/iocp_socket.h"
@@ -81,6 +81,7 @@ namespace ppx {
             bool PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr);
             bool PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr);
             bool PostSendTo(const void *buffer, size_t length, PER_IO_CONTEXT *io_ctx, const SocketAddress &addr);
+            static int TranslateOption(Option opt, int *slevel, int *sopt);
           private:
             HANDLE exit_;
             HANDLE iocp_;

@@ -15,6 +15,7 @@
 *******************************************************************************/
 
 #include "ppxbase/md5.h"
+#include <memory.h>
 
 namespace ppx {
     namespace base {
@@ -333,9 +334,8 @@ namespace ppx {
         }
 
         std::string GetFileMd5(const std::string &file_path) {
-            FILE *f = NULL;
-
-            if (fopen_s(&f, file_path.c_str(), "rb"))
+            FILE *f = fopen(file_path.c_str(), "rb");
+            if (!f)
                 return "";
 
             unsigned char szMd5Sig[16] = { 0 };

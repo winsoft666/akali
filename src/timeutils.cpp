@@ -13,30 +13,25 @@
 *******************************************************************************/
 
 #include <stdint.h>
-
-#if defined(POSIX)
-    #include <sys/time.h>
-    #if defined(_MAC)
-        #include <mach/mach_time.h>
-    #endif
-#endif
-
-#if defined(_WIN32)
+#include <limits>
+#if (defined _WIN32 || defined WIN32)
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN
     #endif
     #include <windows.h>
     #include <mmsystem.h>
     #include <sys/timeb.h>
-    #include <strsafe.h>
+#pragma warning(disable:4995)
+#else
+#include <sys/time.h>
 #endif
 #include "ppxbase/timeutils.h"
 
-#pragma warning(disable:4995)
+
 
 namespace ppx {
     namespace base {
-
+#if (defined _WIN32 || defined WIN32)
         ppx::base::Time GetLocalTime() {
             Time t;
             SYSTEMTIME st;
@@ -68,9 +63,10 @@ namespace ppx {
 
             return t;
         }
+#endif
 
-#if defined(_WIN32)
         long long GetTimeStamp() {
+#if (defined _WIN32 || defined WIN32)
             union {
                 long long ns100;
                 FILETIME ft;
@@ -82,9 +78,15 @@ namespace ppx {
             long long lNowMicroMS = (long long)((fileTime.ns100 - 116444736000000000LL) / 10LL);
 
             return lNowMicroMS;
+#else
+            struct timeval tv;
+            gettimeofday(&tv, NULL);
+            long long lNowMicroMS = tv.tv_sec * 1000000 + tv.tv_usec;
+            return lNowMicroMS;
+#endif
         }
 
-
+#if (defined _WIN32 || defined WIN32)
         ppx::base::Time FILETIMEToUTC(FILETIME ft) {
             SYSTEMTIME st;
             Time t;
@@ -134,22 +136,22 @@ namespace ppx {
             bool nano_precision) {
             char szString[512];
             if (nano_precision) {
-                StringCchPrintfA(szString, 512,
+                snprintf(szString, 512,
                                  "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u:%03u",
                                  year, month, day, hour, minute, second, milliseconds, microseconds, nanoseconds
                                 );
             } else if (micro_precision) {
-                StringCchPrintfA(szString, 512,
+                snprintf(szString, 512,
                                  "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u",
                                  year, month, day, hour, minute, second, milliseconds, microseconds
                                 );
             } else if (mill_precision) {
-                StringCchPrintfA(szString, 512,
+                snprintf(szString, 512,
                                  "%04d/%02d/%02d %02u:%02u:%02u:%03u",
                                  year, month, day, hour, minute, second, milliseconds
                                 );
             } else {
-                StringCchPrintfA(szString, 512,
+                snprintf(szString, 512,
                                  "%04d/%02d/%02d %02u:%02u:%02u",
                                  year, month, day, hour, minute, second
                                 );

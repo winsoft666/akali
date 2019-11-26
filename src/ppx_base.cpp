@@ -1,6 +1,7 @@
 ﻿#include "ppx_base.h"
-#include "ppxbase\ppxbase_export.h"
+#include "ppxbase/ppxbase_export.h"
 
+#if (defined _WIN32 || defined WIN32)
 #ifndef PPX_STATIC
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {
     switch (dwReason) {
@@ -14,4 +15,5 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {
 
     return TRUE;
 }
+#endif
 #endif

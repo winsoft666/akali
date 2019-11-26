@@ -14,7 +14,7 @@
 
 
 #include "ppxbase/file_util.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include "ppxbase/stringencode.h"
 #include <io.h>
 #ifndef WIN32_LEAN_AND_MEAN

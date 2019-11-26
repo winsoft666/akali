@@ -41,8 +41,10 @@ namespace ppx {
         PPXBASE_API int StringReverseFind(const std::wstring &src, wchar_t ch, int iOffset = 0);
         PPXBASE_API int StringReverseFind(const std::wstring &src, const std::wstring &search, int iOffset = 0);
 
+#if (defined _WIN32 || defined WIN32)
         PPXBASE_API std::string MakeString(const char *pstrFormat, ...);
         PPXBASE_API std::wstring MakeString(const wchar_t *pstrFormat, ...);
+#endif
     }
 }
 

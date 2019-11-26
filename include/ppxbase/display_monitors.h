@@ -16,7 +16,7 @@
 #define PPX_DISPLAY_MINITORS_H__
 #pragma once
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <vector>
 #include "ppxbase_export.h"
 

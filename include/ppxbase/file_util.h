@@ -19,7 +19,7 @@
 #pragma once
 #include "ppxbase_export.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 namespace ppx {
     namespace base {
         PPXBASE_API bool DeleteDir(const char *pszDir);

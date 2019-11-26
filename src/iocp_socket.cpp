@@ -14,6 +14,8 @@
 
 #include "ppxbase/iocp_socket.h"
 
+#if (defined _WIN32 || defined WIN32)
+
 namespace ppx {
     namespace base {
 
@@ -97,3 +99,5 @@ namespace ppx {
         }
     }
 }
+
+#endif

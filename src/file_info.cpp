@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase/file_info.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <stdio.h>
 #include <tchar.h>
 #include <strsafe.h>

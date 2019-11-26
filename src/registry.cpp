@@ -12,7 +12,7 @@
 * file.
 *******************************************************************************/
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include "ppxbase/registry.h"
 #include <process.h>
 #include <strsafe.h>

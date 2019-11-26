@@ -85,11 +85,12 @@ else()
 		INTERFACE_COMPILE_DEFINITIONS PPXBASE_STATIC)
 endif()
 
-set_target_properties(${LIB_NAME} PROPERTIES COMPILE_FLAGS "/wd4251")
+if(WIN32)
+	set_target_properties(${LIB_NAME} PROPERTIES COMPILE_FLAGS "/wd4251")
 
-target_link_libraries(${LIB_NAME} PUBLIC 
-	Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib Psapi.lib Shlwapi.lib)
-
+	target_link_libraries(${LIB_NAME} PUBLIC 
+		Ws2_32.lib Iphlpapi.lib Userenv.lib Dbghelp.lib Psapi.lib Shlwapi.lib)
+endif()
 
 # Set output directory
 set_target_properties(${LIB_NAME}

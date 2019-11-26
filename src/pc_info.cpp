@@ -14,6 +14,7 @@
 
 
 #include "ppxbase/pc_info.h"
+#if (defined _WIN32 || defined WIN32)
 #include <WinSock2.h>
 #include <Iphlpapi.h>
 #include <thread>
@@ -291,3 +292,5 @@ namespace ppx {
 
     }
 }
+
+#endif

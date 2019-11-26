@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 
-#if defined(_WIN32)
+#if (defined _WIN32 || defined WIN32)
     #if !defined(WIN32_LEAN_AND_MEAN)
         #define WIN32_LEAN_AND_MEAN
     #endif
@@ -32,8 +32,8 @@
 #include <iomanip>
 #include <ostream>
 #include <vector>
-
-#include "ppxbase/criticalsection.h"
+#include <mutex>
+#include <stdarg.h>
 #include "ppxbase/logging.h"
 #include "ppxbase/stringencode.h"
 #include "ppxbase/timeutils.h"
@@ -76,7 +76,7 @@ namespace ppx {
             }
 
             // Global lock for log subsystem, only needed to serialize access to streams_.
-            CriticalSection g_log_crit;
+            std::mutex g_log_crit;
         }  // namespace
 
 
@@ -135,7 +135,7 @@ namespace ppx {
             }
 
             if (impl_->thread_) {
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
                 DWORD id = GetCurrentThreadId();
                 impl_->print_stream_ << "[" << std::dec << id << "] ";
 #endif
@@ -170,16 +170,20 @@ namespace ppx {
             if (err_ctx != ERRCTX_NONE) {
                 std::stringstream tmp;
                 char prefix[14] = { 0 };
-                sprintf_s(prefix, sizeof(prefix), "[0x%08X]", err);
+                snprintf(prefix, sizeof(prefix), "[0x%08X]", err);
                 tmp << prefix;
                 char err_buf[100] = { 0 };
 
                 switch (err_ctx) {
                     case ERRCTX_ERRNO:
+#if (defined _WIN32 || defined WIN32)
                         strerror_s(err_buf, 100, err);
+#else
+                        strerror_r(err, err_buf, 100);
+#endif
                         tmp << " " << err_buf;
                         break;
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 
                     case ERRCTX_HRESULT: {
                         char msgbuf[256];
@@ -197,7 +201,7 @@ namespace ppx {
                         break;
                     }
 
-#endif  // _WIN32
+#endif
 
                     default:
                         break;
@@ -219,7 +223,7 @@ namespace ppx {
                 OutputToDebug(str, impl_->severity_);
             }
 
-            CritScope cs(&g_log_crit);
+            std::lock_guard<std::mutex> lg(g_log_crit);
 
             for (auto &kv : impl_->streams_) {
                 if (impl_->severity_ >= kv.second) {
@@ -261,7 +265,7 @@ namespace ppx {
 
         void LogMessage::LogToDebug(LoggingSeverity min_sev) {
             g_dbg_sev = min_sev;
-            CritScope cs(&g_log_crit);
+            std::lock_guard<std::mutex> lg(g_log_crit);
             UpdateMinLogSeverity();
         }
 
@@ -270,7 +274,7 @@ namespace ppx {
         }
 
         int LogMessage::GetLogToStream(LogSink *stream) {
-            CritScope cs(&g_log_crit);
+            std::lock_guard<std::mutex> lg(g_log_crit);
             LoggingSeverity sev = LS_NONE;
 
             for (auto &kv : Impl::streams_) {
@@ -283,13 +287,13 @@ namespace ppx {
         }
 
         void LogMessage::AddLogToStream(LogSink *stream, LoggingSeverity min_sev) {
-            CritScope cs(&g_log_crit);
+            std::lock_guard<std::mutex> lg(g_log_crit);
             Impl::streams_.push_back(std::make_pair(stream, min_sev));
             UpdateMinLogSeverity();
         }
 
         void LogMessage::RemoveLogToStream(LogSink *stream) {
-            CritScope cs(&g_log_crit);
+            std::lock_guard<std::mutex> lg(g_log_crit);
 
             for (StreamList::iterator it = Impl::streams_.begin(); it != Impl::streams_.end(); ++it) {
                 if (stream == it->first) {
@@ -313,7 +317,7 @@ namespace ppx {
 
         void LogMessage::OutputToDebug(const std::string &str, LoggingSeverity severity) {
             bool log_to_stderr = Impl::log_to_stderr_;
-#if defined(_WIN32)
+#if (defined _WIN32 || defined WIN32)
             OutputDebugStringA(str.c_str());
 
             if (log_to_stderr) {
@@ -337,7 +341,7 @@ namespace ppx {
             if (severity >= g_dbg_sev)
                 return false;
 
-            CritScope cs(&g_log_crit);
+            std::lock_guard<std::mutex> lg(g_log_crit);
             return Impl::streams_.size() == 0;
         }
 
@@ -353,12 +357,11 @@ namespace ppx {
 
         //////////////////////////////////////////////////////////////////////
 
-#ifdef _WIN32
-
         void TraceMsgW(const wchar_t *lpFormat, ...) {
             if (!lpFormat)
                 return;
 
+#ifdef WIN32
             wchar_t *pMsgBuffer = NULL;
             unsigned int iMsgBufCount = 0;
 
@@ -394,12 +397,21 @@ namespace ppx {
                 free(pMsgBuffer);
                 pMsgBuffer = NULL;
             }
+#else
+            wchar_t msgBuf[1024] = { 0 };
+            va_list arglist;
+            va_start(arglist, lpFormat);
+            int err = vswprintf(msgBuf, 1024, lpFormat, arglist);
+            va_end(arglist);
+            printf("%ls\n", msgBuf);
+#endif
         }
 
         void TraceMsgA(const char *lpFormat, ...) {
             if (!lpFormat)
                 return;
 
+#ifdef WIN32
             char *pMsgBuffer = NULL;
             unsigned int iMsgBufCount = 0;
 
@@ -435,7 +447,14 @@ namespace ppx {
                 free(pMsgBuffer);
                 pMsgBuffer = NULL;
             }
-        }
+#else
+            char msgBuf[1024] = { 0 };
+            va_list arglist;
+            va_start(arglist, lpFormat);
+            int err = vsnprintf(msgBuf, 1024, lpFormat, arglist);
+            va_end(arglist);
+            printf("%s\n", msgBuf);
 #endif
+        }
     } // namespace base
 }  // namespace ppx

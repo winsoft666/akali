@@ -83,7 +83,7 @@
  **********************************************************************/
 
 #include "ppxbase/stack_walker.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 
 #include <stdio.h>
 #include <stdlib.h>

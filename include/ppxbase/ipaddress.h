@@ -16,14 +16,22 @@
 #define PPX_BASE_IP_ADDRESS_H_
 #pragma once
 
+#if (defined _WIN32 || defined WIN32)
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <sys/types.h>
+#include <netdb.h>
+#endif
 #include <string.h>
 #include <string>
 #include <vector>
 #include "ppxbase_export.h"
 
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
@@ -141,9 +149,6 @@ namespace ppx {
             int ipv6_flags() const {
                 return ipv6_flags_;
             }
-            friend std::ostream &operator<<(std::ostream &os,
-                                            const InterfaceAddress &addr);
-
           private:
             int ipv6_flags_;
         };

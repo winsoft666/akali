@@ -35,10 +35,12 @@
 
 #define PPX_ASSERT_FILE __FILE__
 #define PPX_ASSERT_LINE __LINE__
-#define PPX_ASSERT_FUNCTION __FUNCSIG__
+#define PPX_ASSERT_FUNCTION __FUNCTION__
 
+#ifdef _MSC_VER
 extern void __cdecl __debugbreak(void);
 #define PPX_ASSERT_DEBUG_BREAK() __debugbreak()
+#endif
 
 #define PPX_ASSERT_NO_MACRO
 
@@ -67,15 +69,12 @@ extern void __cdecl __debugbreak(void);
 #define PPX_ASSERT_1(expression)  PPX_ASSERT_2(expression, nullptr)
 
 #define PPX_ASSERT_3(expression, ...) \
-    __pragma(warning(push)) \
-    __pragma(warning(disable: 4127)) \
     do\
     {\
         if (!PPX_ASSERT_LIKELY(expression)) \
             ::ppx::Internal::HandleAssert(PPX_ASSERT_FILE, PPX_ASSERT_LINE, PPX_ASSERT_FUNCTION, #expression, __VA_ARGS__); \
     }\
-    while (false)\
-        __pragma(warning(pop))
+    while (false)
 
 
 #define PPX_ASSERT_USED_(...)            PPX_ASSERT_USED_0(PPX_ASSERT_NARG(__VA_ARGS__), __VA_ARGS__)
@@ -85,11 +84,15 @@ extern void __cdecl __debugbreak(void);
 #define PPX_STATIC_ASSERT_0(expression, message) static_assert(expression, message)
 #define PPX_STATIC_ASSERT_1(expression)  PPX_STATIC_ASSERT_0(expression, #expression)
 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4548)
 #pragma warning(disable: 4710)
+#endif
 #include <stdexcept>
+#ifdef _MSC_VER
 #pragma warning(pop)
+#endif
 #include <utility>
 
 namespace ppx {

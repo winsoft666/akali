@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include "ppxbase/ping.h"
-#ifdef _WIN32
+#if (defined _WIN32 || defined WIN32)
 #include <assert.h>
 #include "ppxbase/timeutils.h"
 #include "ppxbase/safe_release_macro.h"

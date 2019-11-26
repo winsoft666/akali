@@ -21,9 +21,9 @@
     #include <windows.h>
     #include <mmsystem.h>
     #include <sys/timeb.h>
-#pragma warning(disable:4995)
+    #pragma warning(disable:4995)
 #else
-#include <sys/time.h>
+    #include <sys/time.h>
 #endif
 #include "ppxbase/timeutils.h"
 
@@ -31,8 +31,9 @@
 
 namespace ppx {
     namespace base {
-#if (defined _WIN32 || defined WIN32)
+
         ppx::base::Time GetLocalTime() {
+#if (defined _WIN32 || defined WIN32)
             Time t;
             SYSTEMTIME st;
             GetLocalTime(&st);
@@ -46,9 +47,28 @@ namespace ppx {
             t.milliseconds = st.wMilliseconds;
 
             return t;
+#else
+            Time t;
+            struct timespec ts = { 0, 0 };
+            struct tm tm = {};
+            if (clock_gettime(CLOCK_REALTIME, &ts) == 0) {
+                time_t tim = ts.tv_nsec;
+                if (localtime_r(&tim, &tm)) {
+                    t.year = tm.tm_year;
+                    t.month = tm.tm_mon;
+                    t.day = tm.tm_mday;
+                    t.hour = tm.tm_hour;
+                    t.minute = tm.tm_min;
+                    t.second = tm.tm_sec;
+                }
+            }
+
+            return t;
+#endif
         }
 
         ppx::base::Time GetUTCTime() {
+#if (defined _WIN32 || defined WIN32)
             Time t;
             SYSTEMTIME st;
             GetSystemTime(&st);
@@ -62,8 +82,27 @@ namespace ppx {
             t.milliseconds = st.wMilliseconds;
 
             return t;
-        }
+
+#else
+            Time t;
+            struct timespec ts = { 0, 0 };
+            struct tm tm = {};
+            if (clock_gettime(CLOCK_REALTIME, &ts) == 0) {
+                time_t tim = ts.tv_nsec;
+                if (gmtime_r(&tim, &tm)) {
+                    t.year = tm.tm_year;
+                    t.month = tm.tm_mon;
+                    t.day = tm.tm_mday;
+                    t.hour = tm.tm_hour;
+                    t.minute = tm.tm_min;
+                    t.second = tm.tm_sec;
+                }
+            }
+
+            return t;
 #endif
+        }
+
 
         long long GetTimeStamp() {
 #if (defined _WIN32 || defined WIN32)
@@ -137,24 +176,24 @@ namespace ppx {
             char szString[512];
             if (nano_precision) {
                 snprintf(szString, 512,
-                                 "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u:%03u",
-                                 year, month, day, hour, minute, second, milliseconds, microseconds, nanoseconds
-                                );
+                         "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u:%03u",
+                         year, month, day, hour, minute, second, milliseconds, microseconds, nanoseconds
+                        );
             } else if (micro_precision) {
                 snprintf(szString, 512,
-                                 "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u",
-                                 year, month, day, hour, minute, second, milliseconds, microseconds
-                                );
+                         "%04d/%02d/%02d %02u:%02u:%02u:%03u:%03u",
+                         year, month, day, hour, minute, second, milliseconds, microseconds
+                        );
             } else if (mill_precision) {
                 snprintf(szString, 512,
-                                 "%04d/%02d/%02d %02u:%02u:%02u:%03u",
-                                 year, month, day, hour, minute, second, milliseconds
-                                );
+                         "%04d/%02d/%02d %02u:%02u:%02u:%03u",
+                         year, month, day, hour, minute, second, milliseconds
+                        );
             } else {
                 snprintf(szString, 512,
-                                 "%04d/%02d/%02d %02u:%02u:%02u",
-                                 year, month, day, hour, minute, second
-                                );
+                         "%04d/%02d/%02d %02u:%02u:%02u",
+                         year, month, day, hour, minute, second
+                        );
             }
 
             return szString;

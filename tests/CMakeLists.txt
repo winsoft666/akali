@@ -12,7 +12,7 @@
 # file.
 ###############################################################################
 
-set(EXE_NAME test02)
+set(EXE_NAME tests)
 
 if (MSVC AND USE_STATIC_CRT)
     set(CompilerFlags
@@ -37,18 +37,20 @@ file(GLOB SOURCE_FILES 			./*.cpp)
 
 add_executable(
 	${EXE_NAME}
-	WIN32
 	${SOURCE_FILES}
 	)
 	
 # Win32 Console
-set_target_properties(${EXE_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
-set_target_properties(${EXE_NAME} PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
+if (WIN32 OR _WIN32)
+	set_target_properties(${EXE_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
+	set_target_properties(${EXE_NAME} PROPERTIES COMPILE_DEFINITIONS "_CONSOLE")
+endif()
 
 find_package(GTest MODULE REQUIRED)
 target_link_libraries(${EXE_NAME} GTest::GTest GTest::Main)
 
-add_test(${EXE_NAME} ${EXE_NAME})
+add_test(NAME unit
+COMMAND ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
 
 if(BUILD_SHARED_LIBS)
 	add_dependencies(${EXE_NAME} ppxbase)

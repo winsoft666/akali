@@ -5,7 +5,9 @@
 #endif
 #include <windows.h>
 #else
-#include <pthread_np.h>
+#include <sys/prctl.h>
+#include <unistd.h>
+#include <sys/syscall.h>
 #endif
 
 namespace ppx {
@@ -115,7 +117,7 @@ namespace ppx {
 #if (defined WIN32 || defined _WIN32)
             return GetCurrentThreadId();
 #else
-            return static_cast<long>(pthread_getthreadid_np());
+            return static_cast<long>(syscall(__NR_gettid));
 #endif
         }
 

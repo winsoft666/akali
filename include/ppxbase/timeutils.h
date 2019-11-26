@@ -62,14 +62,15 @@ namespace ppx {
 
     // 从1970-01-01 00:00:00到当前格林威治时间（UTC）所经过的微妙数
     PPXBASE_API long long GetTimeStamp();
-#if (defined _WIN32 || defined WIN32)
-    PPXBASE_API Time FILETIMEToUTC(FILETIME ft);
 
     // Windows: precision is milliseconds
     PPXBASE_API Time GetLocalTime();
 
     // Windows: precision is milliseconds
     PPXBASE_API Time GetUTCTime();
+
+#if (defined _WIN32 || defined WIN32)
+    PPXBASE_API Time FILETIMEToUTC(FILETIME ft);
 #endif
         PPXBASE_API long long UTCToTimeStamp(Time t);
 

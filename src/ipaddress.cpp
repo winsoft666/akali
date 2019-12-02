@@ -180,7 +180,7 @@ namespace ppx {
                     result.resize(INET6_ADDRSTRLEN);
                     in6_addr addr = GetIPv6Address();
                     size_t len =
-                        sprintf_s(&(result[0]), result.size(), "%x:%x:%x:x:x:x:x:x",
+                        snprintf(&(result[0]), result.size(), "%x:%x:%x:x:x:x:x:x",
                                   (addr.s6_addr[0] << 8) + addr.s6_addr[1],
                                   (addr.s6_addr[2] << 8) + addr.s6_addr[3],
                                   (addr.s6_addr[4] << 8) + addr.s6_addr[5]);

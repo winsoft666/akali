@@ -16,6 +16,10 @@
 #include "ppxbase/byteorder.h"
 #include <stdio.h>
 #include <ios>
+#include <string>
+#include <sstream>
+#include <ostream>
+#include <iosfwd>
 
 namespace ppx {
     namespace base {

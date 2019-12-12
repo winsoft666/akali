@@ -25,6 +25,8 @@
 #include <string>
 #include "ppxbase_export.h"
 
+#pragma comment(lib, "Userenv.lib")
+
 namespace ppx {
     namespace base {
         class PPXBASE_API ProcessFinder {

@@ -19,7 +19,10 @@
 #pragma once
 #include "ppxbase_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+
+#pragma comment(lib, "Shlwapi.lib")
+
 namespace ppx {
     namespace base {
         PPXBASE_API bool DeleteDir(const char *pszDir);

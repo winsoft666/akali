@@ -13,10 +13,11 @@
 *******************************************************************************/
 
 #include "ppxbase/schedule_task.h"
-#if (defined _WIN32 || defined WIN32)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <Atlbase.h>
 #include <comdef.h>
 #include <taskschd.h>
+#include <strsafe.h>
 #include "ppxbase/safe_release_macro.h"
 
 #pragma comment(lib, "taskschd.lib")
@@ -61,7 +62,7 @@ namespace ppx {
                 ::CoUninitialize();
             }
 
-            BOOL NewTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
+            BOOL NewLoginTriggerTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
                          LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor) {
                 if ( NULL == m_lpRootFolder ) {
                     return FALSE;
@@ -325,6 +326,131 @@ namespace ppx {
                 return TRUE;
             }
 
+            bool GetProgramPath(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszProgramPath) {
+                if (NULL == m_lpRootFolder)
+                    return false;
+
+                HRESULT hr = S_OK;
+                CComVariant variantTaskName(NULL);
+                variantTaskName = pszTaskName;
+                IRegisteredTask *pRegisteredTask = NULL;
+                ITaskDefinition* pTaskDefinition = NULL;
+                IActionCollection* pActionColl = NULL;
+                IAction* pAction = NULL;
+                IExecAction *pExecAction = NULL;
+
+                bool bRet = false;
+                do 
+                {
+                    hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
+                    if (FAILED(hr) || (NULL == pRegisteredTask))
+                        break;
+
+                    hr = pRegisteredTask->get_Definition(&pTaskDefinition);
+                    if (FAILED(hr) || !pTaskDefinition)
+                        break;
+
+                    
+                    hr = pTaskDefinition->get_Actions(&pActionColl);
+                    if (FAILED(hr) || !pActionColl)
+                        break;
+
+                    hr = pActionColl->get_Item(lActionIndex, &pAction);
+                    if (FAILED(hr) || !pAction)
+                        break;
+
+                    hr = pAction->QueryInterface(IID_IExecAction, (PVOID *)(&pExecAction));
+                    if (FAILED(hr) || !pExecAction)
+                        break;
+
+                    CComVariant variantTaskStr(NULL);
+                    hr = pExecAction->get_Path(&variantTaskStr.bstrVal);
+                    if (FAILED(hr))
+                        break;
+                    StringCchCopy(pszProgramPath, MAX_PATH, variantTaskStr.bstrVal);
+                    bRet = true;
+                } while (false);
+
+                if (pExecAction)
+                    pExecAction->Release();
+
+                if (pAction)
+                    pAction->Release();
+
+                if (pActionColl)
+                    pActionColl->Release();
+
+                if (pTaskDefinition)
+                    pTaskDefinition->Release();
+
+                if (pRegisteredTask)
+                    pRegisteredTask->Release();
+
+                return bRet;
+            }
+
+            bool GetParameters(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszParameters) {
+                if (NULL == m_lpRootFolder)
+                    return false;
+
+                HRESULT hr = S_OK;
+                CComVariant variantTaskName(NULL);
+                variantTaskName = pszTaskName;
+                IRegisteredTask *pRegisteredTask = NULL;
+                ITaskDefinition* pTaskDefinition = NULL;
+                IActionCollection* pActionColl = NULL;
+                IAction* pAction = NULL;
+                IExecAction *pExecAction = NULL;
+
+                bool bRet = false;
+                do {
+                    hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
+                    if (FAILED(hr) || (NULL == pRegisteredTask))
+                        break;
+
+                    hr = pRegisteredTask->get_Definition(&pTaskDefinition);
+                    if (FAILED(hr) || !pTaskDefinition)
+                        break;
+
+
+                    hr = pTaskDefinition->get_Actions(&pActionColl);
+                    if (FAILED(hr) || !pActionColl)
+                        break;
+
+                    hr = pActionColl->get_Item(lActionIndex, &pAction);
+                    if (FAILED(hr) || !pAction)
+                        break;
+
+                    hr = pAction->QueryInterface(IID_IExecAction, (PVOID *)(&pExecAction));
+                    if (FAILED(hr) || !pExecAction)
+                        break;
+
+                    CComVariant variantTaskStr(NULL);
+                    hr = pExecAction->get_Arguments(&variantTaskStr.bstrVal);
+                    if (FAILED(hr))
+                        break;
+                    StringCchCopy(pszParameters, MAX_PATH, variantTaskStr.bstrVal);
+                    bRet = true;
+                } while (false);
+
+                if (pExecAction)
+                    pExecAction->Release();
+
+                if (pAction)
+                    pAction->Release();
+
+                if (pActionColl)
+                    pActionColl->Release();
+
+                if (pTaskDefinition)
+                    pTaskDefinition->Release();
+
+                if (pRegisteredTask)
+                    pRegisteredTask->Release();
+
+                return bRet;
+            }
+
           protected:
             ITaskService *m_lpITS;
             ITaskFolder *m_lpRootFolder;
@@ -346,9 +472,9 @@ namespace ppx {
             return impl_->DeleteFolder(pszFolderName) == TRUE;
         }
 
-        bool ScheduleTask::NewTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
+        bool ScheduleTask::NewLoginTriggerTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
                                    LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor) {
-            return impl_->NewTask(pszTaskName, pszProgramPath, pszParameters, pszDescription, pszAuthor) == TRUE;
+            return impl_->NewLoginTriggerTask(pszTaskName, pszProgramPath, pszParameters, pszDescription, pszAuthor) == TRUE;
         }
 
         bool ScheduleTask::IsExist(LPCTSTR pszTaskName) {
@@ -370,6 +496,15 @@ namespace ppx {
         bool ScheduleTask::SetEnable(LPCTSTR pszTaskName, bool bEnable) {
             return impl_->SetEnable(pszTaskName, bEnable) == TRUE;
         }
+
+        bool ScheduleTask::GetProgramPath(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszProgramPath) {
+            return impl_->GetProgramPath(pszTaskName, lActionIndex, pszProgramPath);
+        }
+
+        bool ScheduleTask::GetParameters(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszParameters) {
+            return impl_->GetParameters(pszTaskName, lActionIndex, pszParameters);
+        }
+
     }
 }
 

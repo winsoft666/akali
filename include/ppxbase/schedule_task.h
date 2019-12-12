@@ -36,8 +36,9 @@ namespace ppx {
             bool DeleteFolder(LPCTSTR pszFolderName);
 
             // ITrigger type is TASK_TRIGGER_LOGON
+            // Action number is 1
             //
-            bool NewTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath, LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor);
+            bool NewLoginTriggerTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath, LPCTSTR pszParameters, LPCTSTR pszDescription, LPCTSTR pszAuthor);
 
             bool IsExist(LPCTSTR pszTaskName);
 
@@ -48,6 +49,10 @@ namespace ppx {
             bool IsEnable(LPCTSTR pszTaskName);
 
             bool SetEnable(LPCTSTR pszTaskName, bool bEnable);
+
+            bool GetProgramPath(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszProgramPath);
+
+            bool GetParameters(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszParameters);
           private:
             class ScheduleTaskImpl;
             ScheduleTaskImpl *impl_;

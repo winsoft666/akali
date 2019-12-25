@@ -8,15 +8,15 @@
 #include <ShlObj.h>
 
 TEST(ScheduleTaskTest, test1) {
-    ppx::base::ScopedCOMInitializer com;
-    
-    ppx::base::ScheduleTask st;
+  ppx::base::ScopedCOMInitializer com;
 
-    TCHAR szProgramPath[MAX_PATH] = { 0 };
-    EXPECT_TRUE(st.GetProgramPath(TEXT("Steambox"), 1, szProgramPath));
+  ppx::base::ScheduleTask st;
 
-    TCHAR szParameters[MAX_PATH] = { 0 };
-    EXPECT_TRUE(st.GetParameters(TEXT("Steambox"), 1, szParameters));
+  TCHAR szProgramPath[MAX_PATH] = {0};
+  EXPECT_TRUE(st.GetProgramPath(TEXT("Steambox"), 1, szProgramPath));
+
+  TCHAR szParameters[MAX_PATH] = {0};
+  EXPECT_TRUE(st.GetParameters(TEXT("Steambox"), 1, szParameters));
 }
 
 #endif

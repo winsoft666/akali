@@ -15,9 +15,8 @@
 // you attempt to mix an earlier version of libstdc++ with >= GCC5. But
 // that's unlikely to work out, especially as GCC5 changed ABI.
 #define CR_GLIBCXX_5_0_0 20150123
-#if (defined(__GNUC__) && __GNUC__ < 5) || \
-    (defined(__GLIBCXX__) && __GLIBCXX__ == CR_GLIBCXX_5_0_0)
-    #define CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX
+#if (defined(__GNUC__) && __GNUC__ < 5) || (defined(__GLIBCXX__) && __GLIBCXX__ == CR_GLIBCXX_5_0_0)
+#define CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX
 #endif
 
 // This hacks around using gcc with libc++ which has some incompatibilies.
@@ -26,148 +25,129 @@
 // of gcc, or the android ndk is updated to a newer libc++ that works with older
 // gcc versions.
 #if !defined(__clang__) && defined(_LIBCPP_VERSION)
-    #define CR_USE_FALLBACKS_FOR_GCC_WITH_LIBCXX
+#define CR_USE_FALLBACKS_FOR_GCC_WITH_LIBCXX
 #endif
 
 namespace ppx {
-    namespace base {
+namespace base {
 
-        template <class T> struct is_non_const_reference : std::false_type {};
-        template <class T> struct is_non_const_reference<T &> : std::true_type {};
-        template <class T> struct is_non_const_reference<const T &> : std::false_type {};
+template <class T> struct is_non_const_reference : std::false_type {};
+template <class T> struct is_non_const_reference<T &> : std::true_type {};
+template <class T> struct is_non_const_reference<const T &> : std::false_type {};
 
-        namespace Internal {
+namespace Internal {
 
-            // Implementation detail of base::void_t below.
-            template <typename...>
-            struct make_void {
-                using type = void;
-            };
+// Implementation detail of base::void_t below.
+template <typename...> struct make_void { using type = void; };
 
-        }  // namespace internal
+} // namespace Internal
 
-        // base::void_t is an implementation of std::void_t from C++17.
-        //
-        // We use |base::internal::make_void| as a helper struct to avoid a C++14
-        // defect:
-        //   http://en.cppreference.com/w/cpp/types/void_t
-        //   http://open-std.org/JTC1/SC22/WG21/docs/cwg_defects.html#1558
-        template <typename... Ts>
-        using void_t = typename base::Internal::make_void<Ts...>::type;
+// base::void_t is an implementation of std::void_t from C++17.
+//
+// We use |base::internal::make_void| as a helper struct to avoid a C++14
+// defect:
+//   http://en.cppreference.com/w/cpp/types/void_t
+//   http://open-std.org/JTC1/SC22/WG21/docs/cwg_defects.html#1558
+template <typename... Ts> using void_t = typename base::Internal::make_void<Ts...>::type;
 
-        namespace Internal {
+namespace Internal {
 
-            // Uses expression SFINAE to detect whether using operator<< would work.
-            template <typename T, typename = void>
-            struct SupportsOstreamOperator : std::false_type {};
-            template <typename T>
-            struct SupportsOstreamOperator < T,
-                   decltype(void(std::declval<std::ostream &>()
-                                 << std::declval<T>())) >
-               : std::true_type {
-                   };
+// Uses expression SFINAE to detect whether using operator<< would work.
+template <typename T, typename = void> struct SupportsOstreamOperator : std::false_type {};
+template <typename T>
+struct SupportsOstreamOperator<T,
+                               decltype(void(std::declval<std::ostream &>() << std::declval<T>()))>
+    : std::true_type {};
 
-            // Used to detech whether the given type is an iterator.  This is normally used
-            // with std::enable_if to provide disambiguation for functions that take
-            // templatzed iterators as input.
-            template <typename T, typename = void>
-            struct is_iterator : std::false_type {};
+// Used to detech whether the given type is an iterator.  This is normally used
+// with std::enable_if to provide disambiguation for functions that take
+// templatzed iterators as input.
+template <typename T, typename = void> struct is_iterator : std::false_type {};
 
-            template <typename T>
-            struct is_iterator<T,
-                       void_t<typename std::iterator_traits<T>::iterator_category>>
-                       : std::true_type {};
+template <typename T>
+struct is_iterator<T, void_t<typename std::iterator_traits<T>::iterator_category>>
+    : std::true_type {};
 
-        }  // namespace internal
+} // namespace Internal
 
-        // is_trivially_copyable is especially hard to get right.
-        // - Older versions of libstdc++ will fail to have it like they do for other
-        //   type traits. This has become a subset of the second point, but used to be
-        //   handled independently.
-        // - An experimental release of gcc includes most of type_traits but misses
-        //   is_trivially_copyable, so we still have to avoid using libstdc++ in this
-        //   case, which is covered by CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX.
-        // - When compiling libc++ from before r239653, with a gcc compiler, the
-        //   std::is_trivially_copyable can fail. So we need to work around that by not
-        //   using the one in libc++ in this case. This is covered by the
-        //   CR_USE_FALLBACKS_FOR_GCC_WITH_LIBCXX define, and is discussed in
-        //   https://llvm.org/bugs/show_bug.cgi?id=27538#c1 where they point out that
-        //   in libc++'s commit r239653 this is fixed by libc++ checking for gcc 5.1.
-        // - In both of the above cases we are using the gcc compiler. When defining
-        //   this ourselves on compiler intrinsics, the __is_trivially_copyable()
-        //   intrinsic is not available on gcc before version 5.1 (see the discussion in
-        //   https://llvm.org/bugs/show_bug.cgi?id=27538#c1 again), so we must check for
-        //   that version.
-        // - When __is_trivially_copyable() is not available because we are on gcc older
-        //   than 5.1, we need to fall back to something, so we use __has_trivial_copy()
-        //   instead based on what was done one-off in bit_cast() previously.
+// is_trivially_copyable is especially hard to get right.
+// - Older versions of libstdc++ will fail to have it like they do for other
+//   type traits. This has become a subset of the second point, but used to be
+//   handled independently.
+// - An experimental release of gcc includes most of type_traits but misses
+//   is_trivially_copyable, so we still have to avoid using libstdc++ in this
+//   case, which is covered by CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX.
+// - When compiling libc++ from before r239653, with a gcc compiler, the
+//   std::is_trivially_copyable can fail. So we need to work around that by not
+//   using the one in libc++ in this case. This is covered by the
+//   CR_USE_FALLBACKS_FOR_GCC_WITH_LIBCXX define, and is discussed in
+//   https://llvm.org/bugs/show_bug.cgi?id=27538#c1 where they point out that
+//   in libc++'s commit r239653 this is fixed by libc++ checking for gcc 5.1.
+// - In both of the above cases we are using the gcc compiler. When defining
+//   this ourselves on compiler intrinsics, the __is_trivially_copyable()
+//   intrinsic is not available on gcc before version 5.1 (see the discussion in
+//   https://llvm.org/bugs/show_bug.cgi?id=27538#c1 again), so we must check for
+//   that version.
+// - When __is_trivially_copyable() is not available because we are on gcc older
+//   than 5.1, we need to fall back to something, so we use __has_trivial_copy()
+//   instead based on what was done one-off in bit_cast() previously.
 
-        // TODO(crbug.com/554293): Remove this when all platforms have this in the std
-        // namespace and it works with gcc as needed.
-#if defined(CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX) || \
+// TODO(crbug.com/554293): Remove this when all platforms have this in the std
+// namespace and it works with gcc as needed.
+#if defined(CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX) ||                                      \
     defined(CR_USE_FALLBACKS_FOR_GCC_WITH_LIBCXX)
-        template <typename T>
-        struct is_trivially_copyable {
-            // TODO(danakj): Remove this when android builders are all using a newer version
-            // of gcc, or the android ndk is updated to a newer libc++ that does this for
-            // us.
+template <typename T> struct is_trivially_copyable {
+  // TODO(danakj): Remove this when android builders are all using a newer version
+  // of gcc, or the android ndk is updated to a newer libc++ that does this for
+  // us.
 #if _GNUC_VER >= 501
-            static constexpr bool value = __is_trivially_copyable(T);
+  static constexpr bool value = __is_trivially_copyable(T);
 #else
-            static constexpr bool value =
-                __has_trivial_copy(T) && __has_trivial_destructor(T);
+  static constexpr bool value = __has_trivial_copy(T) && __has_trivial_destructor(T);
 #endif
-        };
+};
 #else
-        template <class T>
-        using is_trivially_copyable = std::is_trivially_copyable<T>;
+template <class T> using is_trivially_copyable = std::is_trivially_copyable<T>;
 #endif
 
-        namespace type_traits_impl {
+namespace type_traits_impl {
 
-            // Determines if the given type is an enum that converts implicitly to
-            // an integral type.
-            template <typename T>
-            struct IsIntEnum {
-              private:
-                // This overload is used if the type is an enum, and unary plus
-                // compiles and turns it into an integral type.
-                template < typename X,
-                           typename std::enable_if <
-                               std::is_enum<X>::value &&
-                               std::is_integral < decltype(+std::declval<X>()) >::value >::type * =
-                           nullptr >
-                static int Test(int);
+// Determines if the given type is an enum that converts implicitly to
+// an integral type.
+template <typename T> struct IsIntEnum {
+private:
+  // This overload is used if the type is an enum, and unary plus
+  // compiles and turns it into an integral type.
+  template <typename X,
+            typename std::enable_if<std::is_enum<X>::value &&
+                                    std::is_integral<decltype(+std::declval<X>())>::value>::type * =
+                nullptr>
+  static int Test(int);
 
-                // Otherwise, this overload is used.
-                template <typename>
-                static char Test(...);
+  // Otherwise, this overload is used.
+  template <typename> static char Test(...);
 
-              public:
-                static constexpr bool value =
-                    std::is_same<decltype(Test<typename std::remove_reference<T>::type>(0)),
-                    int>::value;
-            };
+public:
+  static constexpr bool value =
+      std::is_same<decltype(Test<typename std::remove_reference<T>::type>(0)), int>::value;
+};
 
-        }  // namespace type_traits_impl
+} // namespace type_traits_impl
 
-        // Determines if the given type is integral, or an enum that
-        // converts implicitly to an integral type.
-        template <typename T>
-        struct IsIntlike {
-          private:
-            using X = typename std::remove_reference<T>::type;
+// Determines if the given type is integral, or an enum that
+// converts implicitly to an integral type.
+template <typename T> struct IsIntlike {
+private:
+  using X = typename std::remove_reference<T>::type;
 
-          public:
-            static constexpr bool value =
-                std::is_integral<X>::value || type_traits_impl::IsIntEnum<X>::value;
-        };
+public:
+  static constexpr bool value = std::is_integral<X>::value || type_traits_impl::IsIntEnum<X>::value;
+};
 
-
-    }  // namespace base
-}
+} // namespace base
+} // namespace ppx
 
 #undef CR_USE_FALLBACKS_FOR_GCC_WITH_LIBCXX
 #undef CR_USE_FALLBACKS_FOR_OLD_EXPERIMENTAL_GLIBCXX
 
-#endif  // BASE_TEMPLATE_UTIL_H_
+#endif // BASE_TEMPLATE_UTIL_H_

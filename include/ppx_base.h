@@ -1,16 +1,16 @@
 ﻿/*******************************************************************************
-* Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
-*
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-*
-* Expect bugs
-*
-* Please use and enjoy. Please let me know of any bugs/improvements
-* that you have found/implemented and I will fix/incorporate them into this
-* file.
-*******************************************************************************/
+ * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+ *
+ * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Expect bugs
+ *
+ * Please use and enjoy. Please let me know of any bugs/improvements
+ * that you have found/implemented and I will fix/incorporate them into this
+ * file.
+ *******************************************************************************/
 
 #ifndef PPX_BASE_H__
 #define PPX_BASE_H__
@@ -41,6 +41,7 @@
 #include "ppxbase/os_ver.h"
 #include "ppxbase/pc_info.h"
 #include "ppxbase/process_util.h"
+#include "ppxbase/process.hpp"
 #include "ppxbase/random.h"
 #include "ppxbase/registry.h"
 #include "ppxbase/string_helper.h"

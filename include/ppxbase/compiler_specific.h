@@ -1,16 +1,16 @@
 ﻿/*******************************************************************************
-* Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
-*
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-*
-* Expect bugs
-*
-* Please use and enjoy. Please let me know of any bugs/improvements
-* that you have found/implemented and I will fix/incorporate them into this
-* file.
-*******************************************************************************/
+ * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+ *
+ * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Expect bugs
+ *
+ * Please use and enjoy. Please let me know of any bugs/improvements
+ * that you have found/implemented and I will fix/incorporate them into this
+ * file.
+ *******************************************************************************/
 
 #ifndef BASE_COMPILER_SPECIFIC_H_
 #define BASE_COMPILER_SPECIFIC_H_
@@ -31,12 +31,11 @@
 
 // MSVC_SUPPRESS_WARNING disables warning |n| for the remainder of the line and
 // for the next line of the source file.
-#define MSVC_SUPPRESS_WARNING(n) __pragma(warning(suppress:n))
+#define MSVC_SUPPRESS_WARNING(n) __pragma(warning(suppress : n))
 
 // MSVC_PUSH_DISABLE_WARNING pushes |n| onto a stack of warnings to be disabled.
 // The warning remains disabled until popped by MSVC_POP_WARNING.
-#define MSVC_PUSH_DISABLE_WARNING(n) __pragma(warning(push)) \
-    __pragma(warning(disable:n))
+#define MSVC_PUSH_DISABLE_WARNING(n) __pragma(warning(push)) __pragma(warning(disable : n))
 
 // MSVC_PUSH_WARNING_LEVEL pushes |n| as the global warning level.  The level
 // remains in effect until popped by MSVC_POP_WARNING().  Use 0 to disable all
@@ -48,7 +47,6 @@
 
 #define MSVC_DISABLE_OPTIMIZE() __pragma(optimize("", off))
 #define MSVC_ENABLE_OPTIMIZE() __pragma(optimize("", on))
-
 
 // Annotate a variable indicating it's ok if the variable is not used.
 // (Typically used to silence a compiler warning when the assignment
@@ -68,11 +66,10 @@
 //   NOINLINE void DoStuff() { ... }
 #define NOINLINE __declspec(noinline)
 
-
 #if COMPILER_MSVC && defined(NDEBUG)
-    #define ALWAYS_INLINE __forceinline
+#define ALWAYS_INLINE __forceinline
 #else
-    #define ALWAYS_INLINE inline
+#define ALWAYS_INLINE inline
 #endif
 
 // Specify memory alignment for structs, classes, etc.
@@ -105,7 +102,6 @@
 #undef WARN_UNUSED_RESULT
 #define WARN_UNUSED_RESULT
 
-
 // Tell the compiler a function is using a printf-style format string.
 // |format_param| is the one-based index of the format string parameter;
 // |dots_param| is the one-based index of the "..." parameter.
@@ -122,48 +118,47 @@
 
 // Sanitizers annotations.
 #if defined(__has_attribute)
-    #if __has_attribute(no_sanitize)
-        #define NO_SANITIZE(what) __attribute__((no_sanitize(what)))
-    #endif
+#if __has_attribute(no_sanitize)
+#define NO_SANITIZE(what) __attribute__((no_sanitize(what)))
+#endif
 #endif
 #if !defined(NO_SANITIZE)
-    #define NO_SANITIZE(what)
+#define NO_SANITIZE(what)
 #endif
 
 // MemorySanitizer annotations.
 #define MSAN_UNPOISON(p, size)
 #define MSAN_CHECK_MEM_IS_INITIALIZED(p, size)
 
-
 // DISABLE_CFI_PERF -- Disable Control Flow Integrity for perf reasons.
 #if !defined(DISABLE_CFI_PERF)
-    #define DISABLE_CFI_PERF
+#define DISABLE_CFI_PERF
 #endif
 
 // Macro useful for writing cross-platform function pointers.
 #if !defined(CDECL)
-    #if defined(WIN32)
-        #define CDECL __cdecl
-    #else  // defined(WIN32)
-        #define CDECL
-    #endif  // defined(WIN32)
-#endif  // !defined(CDECL)
+#if defined(WIN32)
+#define CDECL __cdecl
+#else // defined(WIN32)
+#define CDECL
+#endif // defined(WIN32)
+#endif // !defined(CDECL)
 
 // Macro for hinting that an expression is likely to be false.
 #if !defined(UNLIKELY)
-    #define UNLIKELY(x) (x)
-#endif  // !defined(UNLIKELY)
+#define UNLIKELY(x) (x)
+#endif // !defined(UNLIKELY)
 
 #if !defined(LIKELY)
-    #define LIKELY(x) (x)
-#endif  // !defined(LIKELY)
+#define LIKELY(x) (x)
+#endif // !defined(LIKELY)
 
 // Compiler feature-detection.
 // clang.llvm.org/docs/LanguageExtensions.html#has-feature-and-has-extension
 #if defined(__has_feature)
-    #define HAS_FEATURE(FEATURE) __has_feature(FEATURE)
+#define HAS_FEATURE(FEATURE) __has_feature(FEATURE)
 #else
-    #define HAS_FEATURE(FEATURE) 0
+#define HAS_FEATURE(FEATURE) 0
 #endif
 
-#endif  // BASE_COMPILER_SPECIFIC_H_
+#endif // BASE_COMPILER_SPECIFIC_H_

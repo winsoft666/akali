@@ -1,16 +1,16 @@
 ﻿/*******************************************************************************
-* Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
-*
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-*
-* Expect bugs
-*
-* Please use and enjoy. Please let me know of any bugs/improvements
-* that you have found/implemented and I will fix/incorporate them into this
-* file.
-*******************************************************************************/
+ * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+ *
+ * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Expect bugs
+ *
+ * Please use and enjoy. Please let me know of any bugs/improvements
+ * that you have found/implemented and I will fix/incorporate them into this
+ * file.
+ *******************************************************************************/
 
 #ifndef PPX_BASE_IP_ADDRESS_H_
 #define PPX_BASE_IP_ADDRESS_H_
@@ -36,157 +36,144 @@
 #endif
 
 namespace ppx {
-    namespace base {
-        enum IPv6AddressFlag {
-            IPV6_ADDRESS_FLAG_NONE = 0x00,
+namespace base {
+enum IPv6AddressFlag {
+  IPV6_ADDRESS_FLAG_NONE = 0x00,
 
-            // Temporary address is dynamic by nature and will not carry MAC address.
-            IPV6_ADDRESS_FLAG_TEMPORARY = 1 << 0,
+  // Temporary address is dynamic by nature and will not carry MAC address.
+  IPV6_ADDRESS_FLAG_TEMPORARY = 1 << 0,
 
-            // Temporary address could become deprecated once the preferred
-            // lifetime is reached. It is still valid but just shouldn't be used
-            // to create new connection.
-            IPV6_ADDRESS_FLAG_DEPRECATED = 1 << 1,
-        };
+  // Temporary address could become deprecated once the preferred
+  // lifetime is reached. It is still valid but just shouldn't be used
+  // to create new connection.
+  IPV6_ADDRESS_FLAG_DEPRECATED = 1 << 1,
+};
 
-        // Version-agnostic IP address class, wraps a union of in_addr and in6_addr.
-        class PPXBASE_API IPAddress {
-          public:
-            IPAddress() : family_(AF_UNSPEC) {
-                memset(&u_, 0, sizeof(u_));
-            }
+// Version-agnostic IP address class, wraps a union of in_addr and in6_addr.
+class PPXBASE_API IPAddress {
+public:
+  IPAddress() : family_(AF_UNSPEC) { memset(&u_, 0, sizeof(u_)); }
 
-            explicit IPAddress(const in_addr &ip4) : family_(AF_INET) {
-                memset(&u_, 0, sizeof(u_));
-                u_.ip4 = ip4;
-            }
+  explicit IPAddress(const in_addr &ip4) : family_(AF_INET) {
+    memset(&u_, 0, sizeof(u_));
+    u_.ip4 = ip4;
+  }
 
-            explicit IPAddress(const in6_addr &ip6) : family_(AF_INET6) {
-                u_.ip6 = ip6;
-            }
+  explicit IPAddress(const in6_addr &ip6) : family_(AF_INET6) { u_.ip6 = ip6; }
 
-            explicit IPAddress(uint32_t ip_in_host_byte_order);
+  explicit IPAddress(uint32_t ip_in_host_byte_order);
 
-            IPAddress(const IPAddress &other) : family_(other.family_) {
-                ::memcpy(&u_, &other.u_, sizeof(u_));
-            }
+  IPAddress(const IPAddress &other) : family_(other.family_) {
+    ::memcpy(&u_, &other.u_, sizeof(u_));
+  }
 
-            virtual ~IPAddress() {}
+  virtual ~IPAddress() {}
 
-            const IPAddress &operator=(const IPAddress &other) {
-                family_ = other.family_;
-                memcpy(&u_, &other.u_, sizeof(u_));
-                return *this;
-            }
+  const IPAddress &operator=(const IPAddress &other) {
+    family_ = other.family_;
+    memcpy(&u_, &other.u_, sizeof(u_));
+    return *this;
+  }
 
-            bool operator==(const IPAddress &other) const;
-            bool operator!=(const IPAddress &other) const;
-            bool operator <(const IPAddress &other) const;
-            bool operator >(const IPAddress &other) const;
-            friend std::ostream &operator<<(std::ostream &os, const IPAddress &addr);
+  bool operator==(const IPAddress &other) const;
+  bool operator!=(const IPAddress &other) const;
+  bool operator<(const IPAddress &other) const;
+  bool operator>(const IPAddress &other) const;
+  friend std::ostream &operator<<(std::ostream &os, const IPAddress &addr);
 
-            int GetFamily() const {
-                return family_;
-            }
-            in_addr GetIPv4Address() const;
-            in6_addr GetIPv6Address() const;
+  int GetFamily() const { return family_; }
+  in_addr GetIPv4Address() const;
+  in6_addr GetIPv6Address() const;
 
-            // Returns the number of bytes needed to store the raw address.
-            size_t Size() const;
+  // Returns the number of bytes needed to store the raw address.
+  size_t Size() const;
 
-            // Wraps inet_ntop.
-            std::string ToString() const;
+  // Wraps inet_ntop.
+  std::string ToString() const;
 
-            // Same as ToString but annoymizes it by hiding the last part.
-            std::string ToSensitiveString() const;
+  // Same as ToString but annoymizes it by hiding the last part.
+  std::string ToSensitiveString() const;
 
-            // Returns an unmapped address from a possibly-mapped address.
-            // Returns the same address if this isn't a mapped address.
-            IPAddress Normalized() const;
+  // Returns an unmapped address from a possibly-mapped address.
+  // Returns the same address if this isn't a mapped address.
+  IPAddress Normalized() const;
 
-            // Returns this address as an IPv6 address.
-            // Maps v4 addresses (as ::ffff:a.b.c.d), returns v6 addresses unchanged.
-            IPAddress AsIPv6Address() const;
+  // Returns this address as an IPv6 address.
+  // Maps v4 addresses (as ::ffff:a.b.c.d), returns v6 addresses unchanged.
+  IPAddress AsIPv6Address() const;
 
-            // For socketaddress' benefit. Returns the IP in host byte order.
-            uint32_t v4AddressAsHostOrderInteger() const;
+  // For socketaddress' benefit. Returns the IP in host byte order.
+  uint32_t v4AddressAsHostOrderInteger() const;
 
-            // Whether this is an unspecified IP address.
-            bool IsUnspecifiedIP() const;
+  // Whether this is an unspecified IP address.
+  bool IsUnspecifiedIP() const;
 
-            bool IsValid() const;
-          private:
-            int family_;
-            union {
-                in_addr ip4;
-                in6_addr ip6;
-            } u_;
-        };
+  bool IsValid() const;
 
-        // IP class which could represent IPv6 address flags which is only
-        // meaningful in IPv6 case.
-        class PPXBASE_API InterfaceAddress : public IPAddress {
-          public:
-            InterfaceAddress() : ipv6_flags_(IPV6_ADDRESS_FLAG_NONE) {}
+private:
+  int family_;
+  union {
+    in_addr ip4;
+    in6_addr ip6;
+  } u_;
+};
 
-            InterfaceAddress(IPAddress ip)
-                : IPAddress(ip), ipv6_flags_(IPV6_ADDRESS_FLAG_NONE) {
-            }
+// IP class which could represent IPv6 address flags which is only
+// meaningful in IPv6 case.
+class PPXBASE_API InterfaceAddress : public IPAddress {
+public:
+  InterfaceAddress() : ipv6_flags_(IPV6_ADDRESS_FLAG_NONE) {}
 
-            InterfaceAddress(IPAddress addr, int ipv6_flags)
-                : IPAddress(addr), ipv6_flags_(ipv6_flags) {
-            }
+  InterfaceAddress(IPAddress ip) : IPAddress(ip), ipv6_flags_(IPV6_ADDRESS_FLAG_NONE) {}
 
-            InterfaceAddress(const in6_addr &ip6, int ipv6_flags)
-                : IPAddress(ip6), ipv6_flags_(ipv6_flags) {
-            }
+  InterfaceAddress(IPAddress addr, int ipv6_flags) : IPAddress(addr), ipv6_flags_(ipv6_flags) {}
 
-            const InterfaceAddress &operator=(const InterfaceAddress &other);
+  InterfaceAddress(const in6_addr &ip6, int ipv6_flags) : IPAddress(ip6), ipv6_flags_(ipv6_flags) {}
 
-            bool operator==(const InterfaceAddress &other) const;
-            bool operator!=(const InterfaceAddress &other) const;
+  const InterfaceAddress &operator=(const InterfaceAddress &other);
 
-            int ipv6_flags() const {
-                return ipv6_flags_;
-            }
-          private:
-            int ipv6_flags_;
-        };
+  bool operator==(const InterfaceAddress &other) const;
+  bool operator!=(const InterfaceAddress &other) const;
 
-        PPXBASE_API bool IPFromAddrInfo(struct addrinfo *info, IPAddress *out);
-        PPXBASE_API bool IPFromString(const std::string &str, IPAddress *out);
-        PPXBASE_API bool IPFromString(const std::string &str, int flags,
-                                      InterfaceAddress *out);
-        PPXBASE_API bool IPIsAny(const IPAddress &ip);
-        PPXBASE_API bool IPIsLoopback(const IPAddress &ip);
-        PPXBASE_API bool IPIsPrivate(const IPAddress &ip);
-        PPXBASE_API bool IPIsUnspec(const IPAddress &ip);
-        PPXBASE_API size_t HashIP(const IPAddress &ip);
+  int ipv6_flags() const { return ipv6_flags_; }
 
-        // These are only really applicable for IPv6 addresses.
-        PPXBASE_API bool IPIs6Bone(const IPAddress &ip);
-        PPXBASE_API bool IPIs6To4(const IPAddress &ip);
-        PPXBASE_API bool IPIsLinkLocal(const IPAddress &ip);
-        PPXBASE_API bool IPIsMacBased(const IPAddress &ip);
-        PPXBASE_API bool IPIsSiteLocal(const IPAddress &ip);
-        PPXBASE_API bool IPIsTeredo(const IPAddress &ip);
-        PPXBASE_API bool IPIsULA(const IPAddress &ip);
-        PPXBASE_API bool IPIsV4Compatibility(const IPAddress &ip);
-        PPXBASE_API bool IPIsV4Mapped(const IPAddress &ip);
+private:
+  int ipv6_flags_;
+};
 
-        // Returns the precedence value for this IP as given in RFC3484.
-        PPXBASE_API int IPAddressPrecedence(const IPAddress &ip);
+PPXBASE_API bool IPFromAddrInfo(struct addrinfo *info, IPAddress *out);
+PPXBASE_API bool IPFromString(const std::string &str, IPAddress *out);
+PPXBASE_API bool IPFromString(const std::string &str, int flags, InterfaceAddress *out);
+PPXBASE_API bool IPIsAny(const IPAddress &ip);
+PPXBASE_API bool IPIsLoopback(const IPAddress &ip);
+PPXBASE_API bool IPIsPrivate(const IPAddress &ip);
+PPXBASE_API bool IPIsUnspec(const IPAddress &ip);
+PPXBASE_API size_t HashIP(const IPAddress &ip);
 
-        // Returns 'ip' truncated to be 'length' bits long.
-        PPXBASE_API IPAddress TruncateIP(const IPAddress &ip, int length);
+// These are only really applicable for IPv6 addresses.
+PPXBASE_API bool IPIs6Bone(const IPAddress &ip);
+PPXBASE_API bool IPIs6To4(const IPAddress &ip);
+PPXBASE_API bool IPIsLinkLocal(const IPAddress &ip);
+PPXBASE_API bool IPIsMacBased(const IPAddress &ip);
+PPXBASE_API bool IPIsSiteLocal(const IPAddress &ip);
+PPXBASE_API bool IPIsTeredo(const IPAddress &ip);
+PPXBASE_API bool IPIsULA(const IPAddress &ip);
+PPXBASE_API bool IPIsV4Compatibility(const IPAddress &ip);
+PPXBASE_API bool IPIsV4Mapped(const IPAddress &ip);
 
-        PPXBASE_API IPAddress GetLoopbackIP(int family);
-        PPXBASE_API IPAddress GetAnyIP(int family);
+// Returns the precedence value for this IP as given in RFC3484.
+PPXBASE_API int IPAddressPrecedence(const IPAddress &ip);
 
-        // Returns the number of contiguously set bits, counting from the MSB in network
-        // byte order, in this IPAddress. Bits after the first 0 encountered are not counted.
-        PPXBASE_API int CountIPMaskBits(IPAddress mask);
-    }
-}
+// Returns 'ip' truncated to be 'length' bits long.
+PPXBASE_API IPAddress TruncateIP(const IPAddress &ip, int length);
+
+PPXBASE_API IPAddress GetLoopbackIP(int family);
+PPXBASE_API IPAddress GetAnyIP(int family);
+
+// Returns the number of contiguously set bits, counting from the MSB in network
+// byte order, in this IPAddress. Bits after the first 0 encountered are not counted.
+PPXBASE_API int CountIPMaskBits(IPAddress mask);
+} // namespace base
+} // namespace ppx
 
 #endif // !PPX_BASE_IP_ADDRESS_H_

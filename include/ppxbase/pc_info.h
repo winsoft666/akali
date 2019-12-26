@@ -28,7 +28,6 @@ PPXBASE_API void GetLocalIPList(std::vector<std::string> &ip_list,
                                 std::vector<std::string> &gateway_ip_list);
 PPXBASE_API std::string GetMACThroughIP(const std::string &ip);
 PPXBASE_API std::string GetPCName();
-PPXBASE_API void GetCPUId(std::string &cpu_id);
 PPXBASE_API void GetMACList(std::vector<std::string> &mac_list);
 PPXBASE_API std::string GetValidMAC();
 PPXBASE_API int64_t GetValidMacInteger();

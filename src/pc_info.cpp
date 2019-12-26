@@ -130,48 +130,6 @@ std::string GetPCName() {
   return pc_name;
 }
 
-void GetCPUId(std::string &cpu_id) {
-  BYTE lpInfo[16] = {0};
-  UINT iCount = 0;
-
-  BOOL bException = FALSE;
-  BYTE szCpu[16] = {0};
-  UINT uCpuID = 0U;
-
-  __try {
-    _asm {
-                    mov eax, 0
-                    cpuid
-                    mov dword ptr szCpu[0], ebx
-                    mov dword ptr szCpu[4], edx
-                    mov dword ptr szCpu[8], ecx
-                    mov eax, 1
-                    cpuid
-                    mov uCpuID, edx
-    }
-  } __except (EXCEPTION_EXECUTE_HANDLER) {
-    bException = TRUE;
-  }
-
-  if (!bException) {
-    CopyMemory(lpInfo + iCount, &uCpuID, sizeof(UINT));
-    iCount += sizeof(UINT);
-
-    uCpuID = (UINT)strlen((char *)szCpu);
-    CopyMemory(lpInfo + iCount, szCpu, uCpuID);
-    iCount += uCpuID;
-
-    char output[33] = {0};
-
-    for (UINT i = 0; i < iCount; i++) {
-      unsigned char b = *(lpInfo + i);
-      sprintf_s(output + i * 2, 3, "%02X", b);
-    }
-
-    cpu_id = output;
-  }
-}
-
 void GetMACList(std::vector<std::string> &mac_list) {
   ULONG outBufLen = sizeof(IP_ADAPTER_ADDRESSES);
   PIP_ADAPTER_ADDRESSES pAddresses = (IP_ADAPTER_ADDRESSES *)malloc(outBufLen);

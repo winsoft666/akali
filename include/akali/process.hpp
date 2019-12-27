@@ -121,14 +121,22 @@ public:
   /// force=true is only supported on Unix-like systems.
   static bool Kill(id_type id, bool force = false) noexcept;
 
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
   /// Kill all process that executed file name is executed_file_name.
   /// force=true is only supported on Unix-like systems.
   /// Return true when all process have been killed.
   /// Return false when have one or more process kill failed.
   static bool Kill(const string_type &executed_file_name, bool force = false) noexcept;
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+
   /// terminate all process that EXE file in "dir" directory.
   static void RecursiveKill(const string_type &dir, bool exclude_self) noexcept;
+#else
+  /// Kill all process that executed file name is executed_file_name.
+  /// force=true is only supported on Unix-like systems.
+  /// Return true when all process have been killed.
+  /// Return false when have one or more process kill failed.
+  static bool Kill(const std::string &executed_file_name, bool force = false) noexcept;
 #endif
 private:
   Data data_;

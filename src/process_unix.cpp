@@ -18,16 +18,30 @@
 #include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iosfwd>
+
+// clang-format off
+#if (defined UNICODE) || (defined _UNICODE)
+#define __T(x) L ## x
+#else
+#define __T(x) x
+#endif
+#define _T(x) __T(x)
+// clang-format on
 
 namespace akali {
-Process::Data::Data() noexcept : id(-1) {}
+Process::Data::Data() noexcept
+    : id(-1) {}
 
 Process::Process(const std::function<void()> &function,
                  std::function<void(const char *, size_t)> read_stdout,
                  std::function<void(const char *, size_t)> read_stderr, bool open_stdin,
                  const Config &config) noexcept
-    : closed(true), read_stdout(std::move(read_stdout)), read_stderr(std::move(read_stderr)),
-      open_stdin(open_stdin), config(config) {
+    : closed_(true)
+    , read_stdout_(std::move(read_stdout))
+    , read_stderr_(std::move(read_stderr))
+    , open_stdin_(open_stdin)
+    , config_(config) {
   open(function);
   async_read();
 }
@@ -379,13 +393,13 @@ void Process::KillProcessTree(id_type id, bool force) noexcept {
     ::kill(-id, SIGINT);
 }
 
-bool Process::Kill(id_type id, bool /*force*/) noexcept {
+bool Process::Kill(id_type id, bool force) noexcept {
   if (force)
     return ::kill(id, SIGTERM) == 0;
   return ::kill(id, SIGINT) == 0;
 }
 
-bool Process::Kill(const string_type &executed_file_name, bool force) {
+bool Process::Kill(const std::string &executed_file_name, bool force) noexcept {
   if (executed_file_name.length() == 0)
     return false;
 
@@ -403,22 +417,20 @@ bool Process::Kill(const string_type &executed_file_name, bool force) {
       int id = atoi(dirp->d_name);
       if (id > 0) {
         // Read contents of virtual /proc/{pid}/cmdline file
-        string_type cmdPath = string_type(_T("/proc/")) + dirp->d_name + _T("/cmdline");
-#if (defined UNICODE) || (defined _UNICODE)
-        wifstream cmdFile(cmdPath.c_str());
-#else
-        ifstream cmdFile(cmdPath.c_str());
-#endif
-        string_type cmdLine;
+
+        std::string cmdPath = std::string("/proc/") + dirp->d_name + std::string("/cmdline");
+        std::ifstream cmdFile(cmdPath.c_str());
+
+        std::string cmdLine;
         std::getline(cmdFile, cmdLine);
         if (!cmdLine.empty()) {
           // Keep first cmdline item which contains the program path
-          size_t pos = cmdLine.find(_T('\0'));
+          size_t pos = cmdLine.find('\0');
           if (pos != string_type::npos)
             cmdLine = cmdLine.substr(0, pos);
           // Keep program name only, removing the path
-          pos = cmdLine.rfind(_T('/'));
-          if (pos != string_type::npos)
+          pos = cmdLine.rfind('/');
+          if (pos != std::string::npos)
             cmdLine = cmdLine.substr(pos + 1);
           // Compare against requested process name
           if (executed_file_name == cmdLine) {

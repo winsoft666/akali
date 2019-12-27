@@ -22,9 +22,9 @@
 namespace akali {
 // in Unix os, see ip.h
 
-#define __u8 unsigned char
-#define __u16 unsigned short
-#define __u32 unsigned long
+typedef unsigned char __u8;
+typedef unsigned short __u16;
+typedef unsigned long __u32;
 
 #pragma pack(1)
 

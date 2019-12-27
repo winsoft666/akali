@@ -19,12 +19,10 @@
 #include <stdio.h>
 #include <windows.h>
 #include <strsafe.h>
-#include "ppxbase\win_service_installer.h"
+#include "akali\win_service_installer.h"
 #pragma endregion
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 //
 //   FUNCTION: InstallService
 //
@@ -223,7 +221,5 @@ void StopService(PWSTR pszServiceName) {
   CloseServiceHandle(schSCManager);
   CloseServiceHandle(schService);
 }
-
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

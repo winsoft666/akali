@@ -12,7 +12,7 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/os_ver.h"
+#include "akali/os_ver.h"
 #if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
 
@@ -37,8 +37,7 @@ Windows 2000                                     5                0             
 */
 #define VER_SUITE_WH_SERVER 0x00008000
 
-namespace ppx {
-namespace base {
+namespace akali {
 #if (defined _WIN32 || defined WIN32)
 OSVersion::OSVersion() {
   memset(&osvi, 0, sizeof(OSVERSIONINFOEXW));
@@ -175,7 +174,5 @@ bool OSVersion::IsWin64() {
   return bIsWow64 == 1;
 }
 #endif
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

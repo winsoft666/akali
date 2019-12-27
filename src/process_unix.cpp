@@ -1,4 +1,4 @@
-#include "ppxbase/process.hpp"
+#include "akali/process.hpp"
 #if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
 
 #include <algorithm>
@@ -19,8 +19,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-namespace ppx {
-namespace base {
+namespace akali {
 Process::Data::Data() noexcept : id(-1) {}
 
 Process::Process(const std::function<void()> &function,
@@ -435,7 +434,5 @@ bool Process::Kill(const string_type &executed_file_name, bool force) {
 
   return ret;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

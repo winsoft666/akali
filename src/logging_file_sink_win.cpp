@@ -12,15 +12,13 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/logging_file_sink_win.h"
+#include "akali/logging_file_sink_win.h"
 #if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
 #pragma warning(disable : 4995)
 #pragma warning(disable : 4996)
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 const int STLOG_MAX_FILE_NUM = 3;
 const long STLOG_FILE_MAX_SIZE_IN_BYTE = 20971520; // 20MB
 const int STLOG_CHECK_PRECISION = 8000;
@@ -358,7 +356,5 @@ void LoggingFileSinkWin::GetLogFileName(LPTSTR szFileName) {
 
   ::_tcscpy(szFileName, wszExecutableFileName);
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

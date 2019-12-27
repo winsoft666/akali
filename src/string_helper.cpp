@@ -1,4 +1,4 @@
-﻿#include "ppxbase/string_helper.h"
+﻿#include "akali/string_helper.h"
 #include <algorithm>
 #include <cctype>
 #include <locale>
@@ -8,8 +8,7 @@
 #include <strsafe.h>
 #endif
 
-namespace ppx {
-namespace base {
+namespace akali {
 namespace {
 static char EasyToLowerA(char in) {
   if (in <= 'Z' && in >= 'A')
@@ -308,5 +307,4 @@ std::wstring MakeString(const wchar_t *pstrFormat, ...) {
   return strResult;
 }
 #endif
-} // namespace base
-} // namespace ppx
+} // namespace akali

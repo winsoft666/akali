@@ -13,14 +13,13 @@
 *******************************************************************************/
 
 #if (defined _WIN32 || defined WIN32)
-#include "ppxbase/registry.h"
+#include "akali/registry.h"
 #include <process.h>
 #include <strsafe.h>
-#include "ppxbase/safe_release_macro.h"
-#include "ppxbase/os_ver.h"
+#include "akali/safe_release_macro.h"
+#include "akali/os_ver.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 RegKey::RegKey(HKEY hkeyRoot, LPCWSTR pszSubKey)
     : m_hkeyRoot(hkeyRoot), m_hkey(NULL), m_hChangeEvent(NULL), m_hNotifyThr(NULL),
       m_bWatchSubtree(false), m_dwChangeFilter(0), m_strSubKey(pszSubKey) {}
@@ -513,7 +512,5 @@ BOOL RegKey::RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64
 
   return FALSE;
 }
-
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

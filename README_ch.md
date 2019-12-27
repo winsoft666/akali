@@ -1,5 +1,5 @@
 # 1. 项目介绍
-[ppxbase](https://github.com/winsoft666/ppxbase)是一个通用的C++功能库，不依赖任何第三方库。
+[Akali](https://github.com/winsoft666/Akali)是一个通用的C++功能库，不依赖任何第三方库。
 
 # 2. 功能模块
 |文件|功能|支持平台|

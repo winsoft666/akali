@@ -13,9 +13,9 @@
 ###############################################################################
 
 if(BUILD_SHARED_LIBS)
-	set(LIB_NAME ppxbase)
+	set(LIB_NAME akali)
 else()
-	set(LIB_NAME ppxbase-static)
+	set(LIB_NAME akali-static)
 endif()
 
 if (MSVC AND USE_STATIC_CRT)
@@ -35,7 +35,7 @@ endif()
 
 
 file(GLOB ROOT_HEADER_FILES 			../include/*.h ../include/*.hpp)
-file(GLOB BASE_HEADER_FILES 			../include/ppxbase/*.h ../include/ppxbase/*.hpp)
+file(GLOB BASE_HEADER_FILES 			../include/akali/*.h ../include/akali/*.hpp)
 
 file(GLOB BASE_SOURCE_FILES 			./*.cpp)
 
@@ -43,12 +43,12 @@ file(GLOB BASE_SOURCE_FILES 			./*.cpp)
 source_group("Source Files" 		    FILES ${BASE_SOURCE_FILES})
 
 source_group("Header Files" 			FILES ${ROOT_HEADER_FILES})
-source_group("Header Files\\ppxbase"   	FILES ${BASE_HEADER_FILES})
+source_group("Header Files\\akali"   	FILES ${BASE_HEADER_FILES})
 
 
 if(BUILD_SHARED_LIBS)
-	add_definitions(-DPPXBASE_EXPORTS)
-	set(PPXBASE_STATIC NO)
+	add_definitions(-DAKALI_EXPORTS)
+	set(AKALI_STATIC NO)
 	
 	add_library(
 		${LIB_NAME}
@@ -64,8 +64,8 @@ if(BUILD_SHARED_LIBS)
 		DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
 
 else()
-	add_definitions(-DPPXBASE_STATIC)
-	set(PPXBASE_STATIC YES)
+	add_definitions(-DAKALI_STATIC)
+	set(AKALI_STATIC YES)
 	
 	add_library(
 		${LIB_NAME}
@@ -82,7 +82,7 @@ else()
 		
 		
 	set_target_properties(${LIB_NAME} PROPERTIES 
-		INTERFACE_COMPILE_DEFINITIONS PPXBASE_STATIC)
+		INTERFACE_COMPILE_DEFINITIONS AKALI_STATIC)
 endif()
 
 if(WIN32)
@@ -111,14 +111,14 @@ install(TARGETS ${LIB_NAME}
 	
 
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/ppxbase-config.cmake 
-	DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR})
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/akali-config.cmake 
+	DESTINATION ${AKALI_INSTALL_CMAKE_DIR})
 
-install(FILES ../include/ppx_base.h 
+install(FILES ../include/akali.h 
 	DESTINATION include)
 
 install(FILES ${BASE_HEADER_FILES} 
-	DESTINATION include/ppxbase)
+	DESTINATION include/akali)
 
 export(TARGETS ${LIB_NAME}
        APPEND FILE ${PROJECT_BINARY_DIR}/${LIB_NAME}-target.cmake
@@ -126,6 +126,6 @@ export(TARGETS ${LIB_NAME}
 
 install(EXPORT ${LIB_NAME}-target
         FILE ${LIB_NAME}-target.cmake
-        DESTINATION ${PPXBASE_INSTALL_CMAKE_DIR}
+        DESTINATION ${AKALI_INSTALL_CMAKE_DIR}
 )
 

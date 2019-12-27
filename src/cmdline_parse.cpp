@@ -12,20 +12,18 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/cmdline_parse.h"
-#include "ppxbase/safe_release_macro.h"
+#include "akali/cmdline_parse.h"
+#include "akali/safe_release_macro.h"
 #include <locale>
 #include <algorithm>
 #if (defined _WIN32 || defined WIN32)
 #include <tchar.h>
 #endif
 #include <map>
-#include "ppxbase/string_helper.h"
-#include "ppxbase/stringencode.h"
+#include "akali/string_helper.h"
+#include "akali/stringencode.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 class CmdLineParser::Impl {
 public:
   Impl() { value_map_.clear(); }
@@ -180,5 +178,4 @@ int CmdLineParser::GetParamCount() const { return impl_->value_map_.size(); }
 CmdLineParser::ITERPOS CmdLineParser::Begin() const { return impl_->value_map_.begin(); }
 
 CmdLineParser::ITERPOS CmdLineParser::End() const { return impl_->value_map_.end(); }
-} // namespace base
-} // namespace ppx
+} // namespace akali

@@ -15,13 +15,11 @@
 #include <string.h>
 #include <malloc.h>
 #include <stdio.h>
-#include "ppxbase/buffer_queue.h"
-#include "ppxbase/logging.h"
-#include "ppxbase/safe_release_macro.h"
+#include "akali/buffer_queue.h"
+#include "akali/logging.h"
+#include "akali/safe_release_macro.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 class BufferQueue::BufferQueueImpl {
 public:
   BufferQueueImpl() {
@@ -511,5 +509,4 @@ unsigned int BufferQueue::Clear() {
 
   return rvalue;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

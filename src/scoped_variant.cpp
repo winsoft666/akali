@@ -1,11 +1,9 @@
-﻿#include "ppxbase/scoped_variant.h"
+﻿#include "akali/scoped_variant.h"
 
 #if (defined _WIN32 || defined WIN32)
-#include "ppxbase/assert.h"
+#include "akali/assert.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 // Global, const instance of an empty variant.
 const VARIANT ScopedVariant::kEmptyVariant = {VT_EMPTY};
 
@@ -27,7 +25,7 @@ ScopedVariant::ScopedVariant(int value, VARTYPE vt) {
 }
 
 ScopedVariant::ScopedVariant(double value, VARTYPE vt) {
-  PPX_ASSERT(vt == VT_R8 || vt == VT_DATE);
+  AKALI_ASSERT(vt == VT_R8 || vt == VT_DATE);
   var_.vt = vt;
   var_.dblVal = value;
 }
@@ -72,7 +70,7 @@ void ScopedVariant::Swap(ScopedVariant &var) {
 }
 
 VARIANT *ScopedVariant::Receive() {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "variant leak.type: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "variant leak.type: %d", var_.vt);
   return &var_;
 }
 
@@ -107,79 +105,79 @@ int ScopedVariant::Compare(const VARIANT &var, bool ignore_case) const {
 }
 
 void ScopedVariant::Set(const wchar_t *str) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_BSTR;
   var_.bstrVal = ::SysAllocString(str);
 }
 
 void ScopedVariant::Set(int8_t i8) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_I1;
   var_.cVal = i8;
 }
 
 void ScopedVariant::Set(uint8_t ui8) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_UI1;
   var_.bVal = ui8;
 }
 
 void ScopedVariant::Set(int16_t i16) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_I2;
   var_.iVal = i16;
 }
 
 void ScopedVariant::Set(uint16_t ui16) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_UI2;
   var_.uiVal = ui16;
 }
 
 void ScopedVariant::Set(int32_t i32) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_I4;
   var_.lVal = i32;
 }
 
 void ScopedVariant::Set(uint32_t ui32) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_UI4;
   var_.ulVal = ui32;
 }
 
 void ScopedVariant::Set(int64_t i64) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_I8;
   var_.llVal = i64;
 }
 
 void ScopedVariant::Set(uint64_t ui64) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_UI8;
   var_.ullVal = ui64;
 }
 
 void ScopedVariant::Set(float r32) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_R4;
   var_.fltVal = r32;
 }
 
 void ScopedVariant::Set(double r64) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_R8;
   var_.dblVal = r64;
 }
 
 void ScopedVariant::SetDate(DATE date) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_DATE;
   var_.date = date;
 }
 
 void ScopedVariant::Set(IDispatch *disp) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_DISPATCH;
   var_.pdispVal = disp;
   if (disp)
@@ -187,13 +185,13 @@ void ScopedVariant::Set(IDispatch *disp) {
 }
 
 void ScopedVariant::Set(bool b) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_BOOL;
   var_.boolVal = b ? VARIANT_TRUE : VARIANT_FALSE;
 }
 
 void ScopedVariant::Set(IUnknown *unk) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   var_.vt = VT_UNKNOWN;
   var_.punkVal = unk;
   if (unk)
@@ -201,19 +199,19 @@ void ScopedVariant::Set(IUnknown *unk) {
 }
 
 void ScopedVariant::Set(SAFEARRAY *array) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   if (SUCCEEDED(::SafeArrayGetVartype(array, &var_.vt))) {
     var_.vt |= VT_ARRAY;
     var_.parray = array;
   }
   else {
-    PPX_ASSERT(!array, "Unable to determine safearray vartype");
+    AKALI_ASSERT(!array, "Unable to determine safearray vartype");
     var_.vt = VT_EMPTY;
   }
 }
 
 void ScopedVariant::Set(const VARIANT &var) {
-  PPX_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
   if (FAILED(::VariantCopy(&var_, &var))) {
     var_.vt = VT_EMPTY;
   }
@@ -266,8 +264,5 @@ bool ScopedVariant::IsLeakableVarType(VARTYPE vt) {
 
   return leakable;
 }
-
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

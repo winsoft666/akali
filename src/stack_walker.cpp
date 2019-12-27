@@ -82,7 +82,7 @@
  *
  **********************************************************************/
 
-#include "ppxbase/stack_walker.h"
+#include "akali/stack_walker.h"
 #if (defined _WIN32 || defined WIN32)
 
 #include <stdio.h>
@@ -217,9 +217,7 @@ typedef DWORD64(__stdcall *PTRANSLATE_ADDRESS_ROUTINE64)(HANDLE hProcess, HANDLE
 #define _tcscat_s _tcscat
 #endif
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 static void MyStrCpy(char *szDest, size_t nMaxDestSize, const char *szSrc) {
   if (nMaxDestSize <= 0)
     return;
@@ -1330,7 +1328,5 @@ void StackWalker::OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUser
 }
 
 void StackWalker::OnOutput(LPCSTR buffer) { OutputDebugStringA(buffer); }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

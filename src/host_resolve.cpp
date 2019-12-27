@@ -12,13 +12,11 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/host_resolve.h"
+#include "akali/host_resolve.h"
 #if (defined _WIN32 || defined WIN32)
-#include "ppxbase/safe_release_macro.h"
+#include "akali/safe_release_macro.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 HostResolve::HostResolve() {
   WSADATA wsaData;
   WORD wVersionRequested = MAKEWORD(2, 2);
@@ -62,8 +60,5 @@ bool HostResolve::Resolve(const std::string &host, std::vector<IPAddress> &ip_li
 
   return true;
 }
-
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

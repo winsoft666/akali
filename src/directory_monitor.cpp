@@ -1,11 +1,9 @@
-#include "ppxbase/directory_monitor.h"
+#include "akali/directory_monitor.h"
 #if (defined _WIN32 || defined WIN32)
-#include "ppxbase/safe_release_macro.h"
-#include "ppxbase/logging.h"
+#include "akali/safe_release_macro.h"
+#include "akali/logging.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 DirectoryMonitor::DirectoryMonitor() : directory_(INVALID_HANDLE_VALUE) {
   ::ZeroMemory(&overlapped_, sizeof(OVERLAPPED));
   overlapped_.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -81,7 +79,7 @@ bool DirectoryMonitor::StartMonitor(const std::wstring &direcotry, bool watch_su
         }
       }
       else {
-        base::TraceMsgW(L"ReadDirectoryChangesW failed, GLE: %ld", gle);
+        TraceMsgW(L"ReadDirectoryChangesW failed, GLE: %ld", gle);
         if (watch_buffer)
           free(watch_buffer);
         break;
@@ -99,8 +97,5 @@ void DirectoryMonitor::StopMonitor() {
     directory_ = INVALID_HANDLE_VALUE;
   }
 }
-
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

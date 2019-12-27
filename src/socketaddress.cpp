@@ -12,13 +12,12 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/socketaddress.h"
+#include "akali/socketaddress.h"
 #include <sstream>
-#include "ppxbase/byteorder.h"
-#include "ppxbase/logging.h"
+#include "akali/byteorder.h"
+#include "akali/logging.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 SocketAddress::SocketAddress() { Clear(); }
 
 SocketAddress::SocketAddress(const std::string &hostname, int port) {
@@ -233,7 +232,7 @@ void SocketAddress::ToSockAddr(sockaddr_in *saddr) const {
   }
 
   saddr->sin_family = AF_INET;
-  saddr->sin_port = base::HostToNetwork16(port_);
+  saddr->sin_port = HostToNetwork16(port_);
 
   if (IPIsAny(ip_)) {
     saddr->sin_addr.s_addr = INADDR_ANY;
@@ -247,8 +246,8 @@ bool SocketAddress::FromSockAddr(const sockaddr_in &saddr) {
   if (saddr.sin_family != AF_INET)
     return false;
 
-  SetIP(base::NetworkToHost32(saddr.sin_addr.s_addr));
-  SetPort(base::NetworkToHost16(saddr.sin_port));
+  SetIP(NetworkToHost32(saddr.sin_addr.s_addr));
+  SetPort(NetworkToHost16(saddr.sin_port));
   literal_ = false;
   return true;
 }
@@ -261,14 +260,14 @@ static size_t ToSockAddrStorageHelper(sockaddr_storage *addr, IPAddress ip, uint
   if (addr->ss_family == AF_INET6) {
     sockaddr_in6 *saddr = reinterpret_cast<sockaddr_in6 *>(addr);
     saddr->sin6_addr = ip.GetIPv6Address();
-    saddr->sin6_port = base::HostToNetwork16(port);
+    saddr->sin6_port = HostToNetwork16(port);
     saddr->sin6_scope_id = scope_id;
     return sizeof(sockaddr_in6);
   }
   else if (addr->ss_family == AF_INET) {
     sockaddr_in *saddr = reinterpret_cast<sockaddr_in *>(addr);
     saddr->sin_addr = ip.GetIPv4Address();
-    saddr->sin_port = base::HostToNetwork16(port);
+    saddr->sin_port = HostToNetwork16(port);
     return sizeof(sockaddr_in);
   }
 
@@ -290,12 +289,12 @@ bool SocketAddressFromSockAddrStorage(const sockaddr_storage &addr, SocketAddres
 
   if (addr.ss_family == AF_INET) {
     const sockaddr_in *saddr = reinterpret_cast<const sockaddr_in *>(&addr);
-    *out = SocketAddress(IPAddress(saddr->sin_addr), base::NetworkToHost16(saddr->sin_port));
+    *out = SocketAddress(IPAddress(saddr->sin_addr), NetworkToHost16(saddr->sin_port));
     return true;
   }
   else if (addr.ss_family == AF_INET6) {
     const sockaddr_in6 *saddr = reinterpret_cast<const sockaddr_in6 *>(&addr);
-    *out = SocketAddress(IPAddress(saddr->sin6_addr), base::NetworkToHost16(saddr->sin6_port));
+    *out = SocketAddress(IPAddress(saddr->sin6_addr), NetworkToHost16(saddr->sin6_port));
     out->SetScopeID(saddr->sin6_scope_id);
     return true;
   }
@@ -313,5 +312,4 @@ SocketAddress EmptySocketAddressWithFamily(int family) {
 
   return SocketAddress();
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

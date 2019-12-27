@@ -1,4 +1,4 @@
-﻿#include "ppxbase/flags.h"
+﻿#include "akali/flags.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,10 +10,9 @@
 #include <windows.h>
 #include <shellapi.h>
 #endif
-#include "ppxbase/stringencode.h"
+#include "akali/stringencode.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 // -----------------------------------------------------------------------------
 // Implementation of Flag
 
@@ -44,7 +43,7 @@ void Flag::SetToDefault() {
     variable_->s = default_.s;
     return;
   }
-  PPX_NOT_REACHED("unreachable code");
+  AKALI_NOT_REACHED("unreachable code");
 }
 
 static const char *Type2String(Flag::Type type) {
@@ -58,7 +57,7 @@ static const char *Type2String(Flag::Type type) {
   case Flag::STRING:
     return "string";
   }
-  PPX_NOT_REACHED("unreachable code");
+  AKALI_NOT_REACHED("unreachable code");
   return NULL;
 }
 
@@ -77,7 +76,7 @@ static void PrintFlagValue(Flag::Type type, FlagValue *p) {
     printf("%s", p->s);
     return;
   }
-  PPX_NOT_REACHED("unreachable code");
+  AKALI_NOT_REACHED("unreachable code");
 }
 
 void Flag::Print(bool print_current_value) {
@@ -144,7 +143,7 @@ void FlagList::SplitArgument(const char *arg, char *buffer, int buffer_size, con
     if (*arg == '=') {
       // make a copy so we can NUL-terminate flag name
       int n = static_cast<int>(arg - *name);
-      PPX_ASSERT(n < buffer_size);
+      AKALI_ASSERT(n < buffer_size);
       memcpy(buffer, *name, n * sizeof(char));
       buffer[n] = '\0';
       *name = buffer;
@@ -235,8 +234,8 @@ int FlagList::SetFlagsFromCommandLine(int *argc, const char **argv, bool remove_
 }
 
 void FlagList::Register(Flag *flag) {
-  PPX_ASSERT(flag);
-  PPX_ASSERT(strlen(flag->name()) > 0);
+  AKALI_ASSERT(flag);
+  AKALI_ASSERT(strlen(flag->name()) > 0);
   // NOTE: Don't call Lookup() within Register because it accesses the name_
   // of other flags in list_, and if the flags are coming from two different
   // compilation units, the initialization order between them is undefined, and
@@ -275,5 +274,4 @@ WindowsCommandLineArguments::~WindowsCommandLineArguments() {
   delete[] argv_;
 }
 #endif
-} // namespace base
-} // namespace ppx
+} // namespace akali

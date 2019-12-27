@@ -12,19 +12,17 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/schedule_task.h"
+#include "akali/schedule_task.h"
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <Atlbase.h>
 #include <comdef.h>
 #include <taskschd.h>
 #include <strsafe.h>
-#include "ppxbase/safe_release_macro.h"
+#include "akali/safe_release_macro.h"
 
 #pragma comment(lib, "taskschd.lib")
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 class ScheduleTask::ScheduleTaskImpl {
 public:
   ScheduleTaskImpl() {
@@ -480,7 +478,5 @@ bool ScheduleTask::GetParameters(LPCTSTR pszTaskName, long lActionIndex, LPTSTR 
   return impl_->GetParameters(pszTaskName, lActionIndex, pszParameters);
 }
 
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

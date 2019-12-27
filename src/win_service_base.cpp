@@ -17,21 +17,19 @@
 \***************************************************************************/
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #pragma region Includes
-#include "ppxbase/win_service_base.h"
+#include "akali/win_service_base.h"
 
 #include <assert.h>
 #include <strsafe.h>
 
 #include <string>
 
-#include "ppxbase/stringencode.h"
+#include "akali/stringencode.h"
 #pragma endregion
 
 #pragma warning(disable : 4995)
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 #pragma region Static Members
 
 // Initialize the singleton service instance.
@@ -629,7 +627,5 @@ void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...) {
 }
 
 #pragma endregion
-
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

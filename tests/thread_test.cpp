@@ -1,12 +1,12 @@
 #include <iostream>
 #include "gtest/gtest.h"
-#include "ppxbase/thread.h"
+#include "akali/thread.hpp"
 
 TEST(ThreadTest, test1) {
-  long call_tid = ppx::base::Thread::GetCurThreadId();
+  long call_tid = akali::Thread::GetCurThreadId();
 
   std::string str_thread_name = "test-thread1";
-  ppx::base::Thread t(str_thread_name);
+  akali::Thread t(str_thread_name);
   EXPECT_TRUE(str_thread_name == t.GetThreadName());
   EXPECT_TRUE(t.Start());
 
@@ -21,7 +21,7 @@ TEST(ThreadTest, test1) {
 
   bool task_done = false;
   auto res = t.Invoke([sub_tid, &task_done]() {
-    long cur_tid = ppx::base::Thread::GetCurThreadId();
+    long cur_tid = akali::Thread::GetCurThreadId();
     EXPECT_TRUE(sub_tid == cur_tid);
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     task_done = true;

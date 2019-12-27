@@ -12,13 +12,12 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/miscellaneous.h"
+#include "akali/miscellaneous.h"
 #include <math.h>
-#include "ppxbase/assert.h"
+#include "akali/assert.h"
 #include <stdio.h>
 
-namespace ppx {
-namespace base {
+namespace akali {
 double RoundEx(double v, int digits) {
   return floor(v * pow(10.f, digits) + 0.5) / pow(10.f, digits);
 }
@@ -196,6 +195,4 @@ void PrintConsoleProcess(double percentage) {
   fflush(stdout);
 }
 #endif
-} // namespace base
-
-} // namespace ppx
+} // namespace akali

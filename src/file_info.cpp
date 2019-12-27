@@ -12,15 +12,14 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/file_info.h"
+#include "akali/file_info.h"
 #if (defined _WIN32 || defined WIN32)
 #include <stdio.h>
 #include <tchar.h>
 #include <strsafe.h>
 #pragma comment(lib, "Version.lib")
 
-namespace ppx {
-namespace base {
+namespace akali {
 FileInfo::FileInfo() { Reset(); }
 
 FileInfo::~FileInfo() {}
@@ -297,6 +296,5 @@ void FileInfo::Reset() {
   m_ftLastAccessTime.dwHighDateTime = m_ftLastAccessTime.dwLowDateTime = 0;
   m_ftLastWriteTime.dwHighDateTime = m_ftLastWriteTime.dwLowDateTime = 0;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

@@ -12,7 +12,7 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/win_main.h"
+#include "akali/win_main.h"
 
 #if (defined _WIN32 || defined WIN32)
 
@@ -20,9 +20,7 @@
 #include <DbgHelp.h>
 #include <strsafe.h>
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 static TCHAR *lstrrchr(LPCTSTR string, int ch) {
   TCHAR *start = (TCHAR *)string;
 
@@ -103,7 +101,5 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR *sz
 
   return EXCEPTION_EXECUTE_HANDLER;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

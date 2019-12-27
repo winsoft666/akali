@@ -1,11 +1,9 @@
-﻿#include "ppxbase/display_monitors.h"
+﻿#include "akali/display_monitors.h"
 
 #if (defined _WIN32 || defined WIN32)
 #include <windows.h>
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 static BOOL CALLBACK Monitorenumproc(HMONITOR hMonitor, HDC hdc, LPRECT pRect, LPARAM arg) {
   std::vector<HMONITOR> *monitors = (std::vector<HMONITOR> *)arg;
   monitors->push_back(hMonitor);
@@ -104,7 +102,5 @@ bool DisplayMonitors::GetPrimaryDspInfo(DSPMONITOR *dsp) {
   }
   return false;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

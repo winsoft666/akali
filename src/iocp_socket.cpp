@@ -12,13 +12,11 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/iocp_socket.h"
+#include "akali/iocp_socket.h"
 
 #if (defined _WIN32 || defined WIN32)
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 int GetNumberOfProcesser() {
   SYSTEM_INFO si;
   GetSystemInfo(&si);
@@ -74,7 +72,5 @@ LPFN_GETACCEPTEXSOCKADDRS GetAcceptExSockAddrsFnPointer(SOCKET s) {
 
   return fn;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

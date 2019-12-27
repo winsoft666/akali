@@ -12,14 +12,13 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/ping.h"
+#include "akali/ping.h"
 #if (defined _WIN32 || defined WIN32)
 #include <assert.h>
-#include "ppxbase/timeutils.h"
-#include "ppxbase/safe_release_macro.h"
+#include "akali/timeutils.h"
+#include "akali/safe_release_macro.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 Ping::Ping(int packet_size /*= 32*/, int send_timeout_ms /*= 3000*/, int recv_timeout_ms /*= 3000*/,
            int ttl /*= 128*/)
     : packet_size_(packet_size), send_timeout_ms_(send_timeout_ms),
@@ -40,7 +39,7 @@ void Ping::FillPingPacket(__u8 *icmp_packet, __u16 seq, __u16 icmp_packet_size) 
   p_ping_hdr->common_hdr.code = 0;
   p_ping_hdr->id = (__u16)GetCurrentProcessId();
   p_ping_hdr->seq = seq;
-  __u32 now = (__u32)(base::GetTimeStamp() / 1000);
+  __u32 now = (__u32)(GetTimeStamp() / 1000);
 
   memcpy((icmp_packet + sizeof(ping_hdr)), &now, sizeof(__u32));
 
@@ -60,7 +59,7 @@ bool Ping::DecodeIPPacket(__u8 *ip_packet, __u16 packet_size, PingRsp &rsp) {
   iphdr *ip_hdr = reinterpret_cast<iphdr *>(ip_packet);
   if (!ip_hdr)
     return false;
-  __u32 now = (__u32)(base::GetTimeStamp() / 1000);
+  __u32 now = (__u32)(GetTimeStamp() / 1000);
 
   __u16 ip_hdr_len = ip_hdr->ihl * 4; // bytes
 
@@ -185,7 +184,5 @@ bool Ping::SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingR
 
   return true;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

@@ -1,4 +1,4 @@
-#include "ppxbase/process.hpp"
+#include "akali/process.hpp"
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 
 #include <Shlwapi.h>
@@ -10,8 +10,7 @@
 #include <cstring>
 #include <stdexcept>
 
-namespace ppx {
-namespace base {
+namespace akali {
 Process::Data::Data() noexcept : id(0), handle(NULL) {}
 
 // Simple HANDLE wrapper to close it automatically from the destructor.
@@ -465,6 +464,5 @@ void Process::RecursiveKill(const string_type &dir, bool exclude_self) noexcept 
 
   FindClose(fhandle);
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

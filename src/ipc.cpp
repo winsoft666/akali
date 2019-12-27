@@ -12,7 +12,7 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/ipc.h"
+#include "akali/ipc.h"
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <algorithm>
 #include <assert.h>
@@ -22,8 +22,7 @@
 #include <thread>
 #include <winsock2.h>
 
-namespace ppx {
-namespace base {
+namespace akali {
 class IPC::IPCImpl {
 public:
   IPCImpl() : buffer_size_(4096), exit_(false) {}
@@ -89,7 +88,7 @@ public:
     if (!fSuccess) {
       CloseHandle(hPipe);
       // if (dwGLE != 232 || msg_size != 0)
-      //    PPX_LOG(LS_ERROR) << "WriteFile Failed, GLE: " << dwGLE;
+      //    AKALI_LOG(LS_ERROR) << "WriteFile Failed, GLE: " << dwGLE;
       return false;
     }
 
@@ -184,7 +183,7 @@ public:
           fSuccess = ReadFile(hPipe, pRequest + dwBytesRead, max_buf_size - dwBytesRead,
                               &dwBytesRead, NULL);
           if (!fSuccess) {
-            // PPX_LOG(LS_ERROR) << "SRV Receive Data Failed, Size > "
+            // AKALI_LOG(LS_ERROR) << "SRV Receive Data Failed, Size > "
             //                  << max_buf_size;
             break;
           }
@@ -192,7 +191,7 @@ public:
           total_read += dwBytesRead;
         }
         else {
-          // PPX_LOG(LS_ERROR) << "SRV ReadFile Failed, GLE: " << dwGLE;
+          // AKALI_LOG(LS_ERROR) << "SRV ReadFile Failed, GLE: " << dwGLE;
           break;
         }
       }
@@ -274,6 +273,5 @@ bool IPC::SyncSend(const std::string &target_ipc_name, const void *data, unsigne
 
   return ret;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

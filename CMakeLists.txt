@@ -15,11 +15,11 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 
-project(ppxbase CXX)
+project(Akali CXX)
 
 configure_file (
-  "${PROJECT_SOURCE_DIR}/include/ppx_config.h.in"
-  "${PROJECT_SOURCE_DIR}/include/ppx_config.h"
+  "${PROJECT_SOURCE_DIR}/include/akali_config.h.in"
+  "${PROJECT_SOURCE_DIR}/include/akali_config.h"
   )
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -37,11 +37,11 @@ if(WIN32)
 endif()
 
 if(MSVC)
-  set(PPXBASE_INSTALL_CMAKE_DIR share/ppxbase)
+  set(AKALI_INSTALL_CMAKE_DIR share/Akali)
 elseif(WIN32 AND NOT CYGWIN)
-  set(PPXBASE_INSTALL_CMAKE_DIR CMake)
+  set(AKALI_INSTALL_CMAKE_DIR CMake)
 else()
-  set(PPXBASE_INSTALL_CMAKE_DIR lib/cmake/ppxbase)
+  set(AKALI_INSTALL_CMAKE_DIR lib/cmake/Akali)
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

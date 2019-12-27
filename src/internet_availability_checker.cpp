@@ -1,24 +1,23 @@
-#include "ppxbase/internet_availability_checker.h"
+#include "akali/internet_availability_checker.h"
 
 #if (defined _WIN32 || defined WIN32)
 #include <netlistmgr.h>
 #include <atlbase.h>
 #include <atlcom.h>
-#include "ppxbase/assert.h"
+#include "akali/assert.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 bool InternetAvailabilityChecker::InternetConnectionAvailable(bool &avaliable) {
   CComPtr<INetworkListManager> manager;
   HRESULT hr = manager.CoCreateInstance(CLSID_NetworkListManager);
-  PPX_ASSERT(SUCCEEDED(hr), "initialize COM first, suggest ppx::base::ScopedCOMInitializer");
+  AKALI_ASSERT(SUCCEEDED(hr), "initialize COM first, suggest akali::ScopedCOMInitializer");
   if (FAILED(hr)) {
     return false;
   }
 
   VARIANT_BOOL is_connected;
   hr = manager->get_IsConnectedToInternet(&is_connected);
-  PPX_ASSERT(SUCCEEDED(hr), "initialize COM first, suggest ppx::base::ScopedCOMInitializer");
+  AKALI_ASSERT(SUCCEEDED(hr), "initialize COM first, suggest akali::ScopedCOMInitializer");
   if (FAILED(hr)) {
     return false;
   }
@@ -30,7 +29,5 @@ bool InternetAvailabilityChecker::InternetConnectionAvailable(bool &avaliable) {
   avaliable = (is_connected != FALSE);
   return true;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

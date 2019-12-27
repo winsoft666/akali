@@ -12,10 +12,9 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/byteorder.h"
+#include "akali/byteorder.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 void Set8(void *memory, size_t offset, uint8_t v) { static_cast<uint8_t *>(memory)[offset] = v; }
 
 uint8_t Get8(const void *memory, size_t offset) {
@@ -58,5 +57,4 @@ uint32_t HostToNetwork32(uint32_t n) { return htobe32(n); }
 uint16_t NetworkToHost16(uint16_t n) { return be16toh(n); }
 
 uint32_t NetworkToHost32(uint32_t n) { return be32toh(n); }
-} // namespace base
-} // namespace ppx
+} // namespace akali

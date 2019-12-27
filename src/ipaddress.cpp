@@ -12,8 +12,8 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/ipaddress.h"
-#include "ppxbase/byteorder.h"
+#include "akali/ipaddress.h"
+#include "akali/byteorder.h"
 #include <stdio.h>
 #include <ios>
 #include <string>
@@ -21,9 +21,7 @@
 #include <ostream>
 #include <iosfwd>
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 // Prefixes used for categorizing IPv6 addresses.
 static const in6_addr kV4MappedPrefix = {{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0}}};
 static const in6_addr k6To4Prefix = {{{0x20, 0x02, 0}}};
@@ -36,7 +34,7 @@ static in_addr ExtractMappedAddress(const in6_addr &addr);
 
 uint32_t IPAddress::v4AddressAsHostOrderInteger() const {
   if (family_ == AF_INET) {
-    return base::NetworkToHost32(u_.ip4.s_addr);
+    return NetworkToHost32(u_.ip4.s_addr);
   }
   else {
     return 0;
@@ -92,7 +90,7 @@ bool IPAddress::operator>(const IPAddress &other) const {
 
 IPAddress::IPAddress(uint32_t ip_in_host_byte_order) : family_(AF_INET) {
   memset(&u_, 0, sizeof(u_));
-  u_.ip4.s_addr = base::HostToNetwork32(ip_in_host_byte_order);
+  u_.ip4.s_addr = HostToNetwork32(ip_in_host_byte_order);
 }
 
 bool IPAddress::operator<(const IPAddress &other) const {
@@ -112,7 +110,7 @@ bool IPAddress::operator<(const IPAddress &other) const {
   // Comparing addresses of the same family.
   switch (family_) {
   case AF_INET: {
-    return base::NetworkToHost32(u_.ip4.s_addr) < base::NetworkToHost32(other.u_.ip4.s_addr);
+    return NetworkToHost32(u_.ip4.s_addr) < NetworkToHost32(other.u_.ip4.s_addr);
   }
 
   case AF_INET6: {
@@ -367,9 +365,9 @@ IPAddress TruncateIP(const IPAddress &ip, int length) {
     }
 
     int mask = (0xFFFFFFFF << (32 - length));
-    uint32_t host_order_ip = base::NetworkToHost32(ip.GetIPv4Address().s_addr);
+    uint32_t host_order_ip = NetworkToHost32(ip.GetIPv4Address().s_addr);
     in_addr masked;
-    masked.s_addr = base::HostToNetwork32(host_order_ip & mask);
+    masked.s_addr = HostToNetwork32(host_order_ip & mask);
     return IPAddress(masked);
   }
   else if (ip.GetFamily() == AF_INET6) {
@@ -390,8 +388,8 @@ IPAddress TruncateIP(const IPAddress &ip, int length) {
 
     for (int i = 0; i < 4; ++i) {
       if (i == position) {
-        uint32_t host_order_inner = base::NetworkToHost32(v6_as_ints[i]);
-        v6_as_ints[i] = base::HostToNetwork32(host_order_inner & inner_mask);
+        uint32_t host_order_inner = NetworkToHost32(v6_as_ints[i]);
+        v6_as_ints[i] = HostToNetwork32(host_order_inner & inner_mask);
       }
       else if (i > position) {
         v6_as_ints[i] = 0;
@@ -410,7 +408,7 @@ int CountIPMaskBits(IPAddress mask) {
 
   switch (mask.GetFamily()) {
   case AF_INET: {
-    word_to_count = base::NetworkToHost32(mask.GetIPv4Address().s_addr);
+    word_to_count = NetworkToHost32(mask.GetIPv4Address().s_addr);
     break;
   }
 
@@ -426,7 +424,7 @@ int CountIPMaskBits(IPAddress mask) {
     }
 
     if (i < 4) {
-      word_to_count = base::NetworkToHost32(v6_as_ints[i]);
+      word_to_count = NetworkToHost32(v6_as_ints[i]);
     }
 
     bits = (i * 32);
@@ -571,5 +569,4 @@ IPAddress GetAnyIP(int family) {
   return IPAddress();
 }
 
-} // namespace base
-} // namespace ppx
+} // namespace akali

@@ -12,10 +12,9 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/endianess_detect.h"
+#include "akali/endianess_detect.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 bool IsHostBigEndian() {
   int nl = 0x12345678;
   short ns = 0x1234;
@@ -36,5 +35,4 @@ bool IsHostBigEndian() {
 
   return big_endian;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

@@ -2,15 +2,15 @@
 
 #include <iostream>
 #include "gtest/gtest.h"
-#include "ppxbase/schedule_task.h"
-#include "ppxbase/scoped_com_initializer.h"
+#include "akali/schedule_task.h"
+#include "akali/scoped_com_initializer.h"
 #include <strsafe.h>
 #include <ShlObj.h>
 
 TEST(ScheduleTaskTest, test1) {
-  ppx::base::ScopedCOMInitializer com;
+  akali::ScopedCOMInitializer com;
 
-  ppx::base::ScheduleTask st;
+  akali::ScheduleTask st;
 
   TCHAR szProgramPath[MAX_PATH] = {0};
   EXPECT_TRUE(st.GetProgramPath(TEXT("Steambox"), 1, szProgramPath));

@@ -12,21 +12,19 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/shortcut.h"
+#include "akali/shortcut.h"
 #if (defined _WIN32 || defined WIN32)
 #include <windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
 #include <propkey.h>
 #include <strsafe.h>
-#include "ppxbase/os_ver.h"
-#include "ppxbase/assert.h"
-#include "ppxbase/file_util.h"
-#include "ppxbase/miscellaneous.h"
+#include "akali/os_ver.h"
+#include "akali/assert.h"
+#include "akali/file_util.h"
+#include "akali/miscellaneous.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 namespace {
 void InitializeShortcutInterfaces(const wchar_t *shortcut, IShellLink **i_shell_link,
                                   IPersistFile **i_persist_file) {
@@ -90,7 +88,7 @@ bool CreateOrUpdateShortcutLink(const std::wstring &shortcut_path,
       InitializeShortcutInterfaces(NULL, &i_shell_link, &i_persist_file);
     break;
   default:
-    PPX_NOT_REACHED("");
+    AKALI_NOT_REACHED("");
   }
 
   // Return false immediately upon failure to initialize shortcut interfaces.
@@ -240,8 +238,5 @@ bool TaskbarUnpinShortcutLink(const wchar_t *shortcut) {
   int result = reinterpret_cast<int>(ShellExecute(NULL, L"taskbarunpin", shortcut, NULL, NULL, 0));
   return result > 32;
 }
-
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

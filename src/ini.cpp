@@ -12,14 +12,13 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/ini.h"
+#include "akali/ini.h"
 #if (defined _WIN32 || defined WIN32)
 #include <strsafe.h>
 #include <assert.h>
-#include "ppxbase/stringencode.h"
+#include "akali/stringencode.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 Ini::Ini() { ZeroMemory(m_szIniFile, sizeof(m_szIniFile)); }
 
 Ini::~Ini() {}
@@ -235,6 +234,5 @@ LONG Ini::SwitchStringToValue(LPCWSTR &pszSring) {
 
   return lValue;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

@@ -12,12 +12,10 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/timer.h"
+#include "akali/timer.h"
 
 #if (defined _WIN32 || defined WIN32)
-namespace ppx {
-namespace base {
-
+namespace akali {
 TimerBase::TimerBase() {
   m_hTimer = NULL;
   m_pTimer = NULL;
@@ -52,6 +50,5 @@ void TimerBase::Stop(bool bWait) {
 }
 
 void TimerBase::OnTimedEvent() {}
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

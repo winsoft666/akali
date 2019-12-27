@@ -14,11 +14,10 @@
  *
  *******************************************************************************/
 
-#include "ppxbase/md5.h"
+#include "akali/md5.h"
 #include <memory.h>
 
-namespace ppx {
-namespace base {
+namespace akali {
 namespace libmd5_internal {
 /*
  * This code implements the MD5 message-digest algorithm.
@@ -357,5 +356,4 @@ std::string GetFileMd5(const std::string &file_path) {
 
   return szMd5;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

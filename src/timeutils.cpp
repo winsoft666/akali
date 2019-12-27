@@ -25,12 +25,10 @@
 #else
 #include <sys/time.h>
 #endif
-#include "ppxbase/timeutils.h"
+#include "akali/timeutils.h"
 
-namespace ppx {
-namespace base {
-
-ppx::base::Time GetLocalTime() {
+namespace akali {
+Time GetLocalTime() {
 #if (defined _WIN32 || defined WIN32)
   Time t;
   SYSTEMTIME st;
@@ -65,7 +63,7 @@ ppx::base::Time GetLocalTime() {
 #endif
 }
 
-ppx::base::Time GetUTCTime() {
+akali::Time GetUTCTime() {
 #if (defined _WIN32 || defined WIN32)
   Time t;
   SYSTEMTIME st;
@@ -123,7 +121,7 @@ long long GetTimeStamp() {
 }
 
 #if (defined _WIN32 || defined WIN32)
-ppx::base::Time FILETIMEToUTC(FILETIME ft) {
+Time FILETIMEToUTC(FILETIME ft) {
   SYSTEMTIME st;
   Time t;
   if (FileTimeToSystemTime(&ft, &st)) {
@@ -187,6 +185,4 @@ std::string Time::ToString(bool mill_precision, bool micro_precision, bool nano_
 
   return szString;
 }
-
-} // namespace base
-} // namespace ppx
+} // namespace akali

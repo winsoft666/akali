@@ -19,14 +19,14 @@
 #include <windows.h>
 #include <strsafe.h>
 #endif
-#include "ppxbase/assert.h"
+#include "akali/assert.h"
 #include <iostream>
 #include <stdio.h>
 #include <stdarg.h>
 #include <cstring>
 #include <cstdlib> // abort()
 
-namespace ppx {
+namespace akali {
 namespace Internal {
 void HandleAssert(const char *file, int line, const char *function, const char *expression,
                   const char *message, ...) {
@@ -67,7 +67,7 @@ void HandleAssert(const char *file, int line, const char *function, const char *
     return;
   }
   else if (ret == IDRETRY) {
-    PPX_ASSERT_DEBUG_BREAK();
+    AKALI_ASSERT_DEBUG_BREAK();
   }
   else if (ret == IDABORT) {
     _exit(3);

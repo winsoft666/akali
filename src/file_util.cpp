@@ -12,9 +12,9 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/file_util.h"
+#include "akali/file_util.h"
 #if (defined _WIN32 || defined WIN32)
-#include "ppxbase/stringencode.h"
+#include "akali/stringencode.h"
 #include <io.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -22,10 +22,9 @@
 #include <windows.h>
 #include <strsafe.h>
 #include <Shlwapi.h>
-#include "ppxbase/logging.h"
+#include "akali/logging.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DATAW file,
                     int *pIgnoreNum);
 static void FileSearch(const wchar_t *szPath, const wchar_t *szDest, int *pIgnoreNum);
@@ -109,7 +108,7 @@ void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource,
   FileSearch(szSource, szDest, pIgnoreNum);
 }
 
-PPXBASE_API bool PathIsExists(const wchar_t *pszPath) {
+AKALI_API bool PathIsExists(const wchar_t *pszPath) {
   if (pszPath && _waccess_s(pszPath, 0) == 0)
     return true;
   return false;
@@ -249,8 +248,7 @@ bool CreateDir(const wchar_t *pszDir) {
 bool CreateDir(const char *pszDir) {
   if (!pszDir)
     return false;
-  return CreateDir(base::AnsiToUnicode(pszDir).c_str());
+  return CreateDir(AnsiToUnicode(pszDir).c_str());
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

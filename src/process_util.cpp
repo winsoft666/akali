@@ -12,7 +12,7 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/process_util.h"
+#include "akali/process_util.h"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <tchar.h>
@@ -23,11 +23,10 @@
 #include <UserEnv.h>
 #include <Psapi.h>
 #include <shellapi.h>
-#include "ppxbase/safe_release_macro.h"
-#include "ppxbase/logging.h"
+#include "akali/safe_release_macro.h"
+#include "akali/logging.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 ProcessFinder::ProcessFinder(DWORD dwFlags /* = 0*/, DWORD dwProcessID /* = 0*/) {
   m_hSnapShot = INVALID_HANDLE_VALUE;
   if (dwFlags == 0)
@@ -287,13 +286,13 @@ BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo,
   return CreateProcess(NULL, szCL, NULL, NULL, bInheritHandles, 0, NULL, szDir, &si, lpProcessInfo);
 }
 
-PPXBASE_API BOOL EasyCreateProcess(const std::wstring &strCmdLine,
+AKALI_API BOOL EasyCreateProcess(const std::wstring &strCmdLine,
                                    LPPROCESS_INFORMATION lpProcessInfo,
                                    BOOL bInheritHandles /*= FALSE*/) {
   return EasyCreateProcess(strCmdLine.c_str(), lpProcessInfo, bInheritHandles);
 }
 
-PPXBASE_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD *pExitCode,
+AKALI_API BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD *pExitCode,
                                             BOOL bInheritHandles /*= FALSE*/) {
   PROCESS_INFORMATION pi;
   BOOL bRet = EasyCreateProcess(strCmdLine.c_str(), &pi, bInheritHandles);
@@ -321,7 +320,7 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
   PROCESSENTRY32 pe = {sizeof(pe)};
 
   if (!ph.ProcessFind(TEXT("winlogon.exe"), &pe)) {
-    base::TraceMsgA("CreateUserProcess: not find winlogon.exe \n");
+    TraceMsgA("CreateUserProcess: not find winlogon.exe \n");
     return FALSE;
   }
 
@@ -334,7 +333,7 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
   ProcessIdToSessionId(winlogon_process_id, &winlogon_session_id);
 
   if (winlogon_session_id != active_session_id) {
-    base::TraceMsgA("CreateUserProcess: winlogon_session_id != active_session_id\n");
+    TraceMsgA("CreateUserProcess: winlogon_session_id != active_session_id\n");
     return FALSE;
   }
 
@@ -347,12 +346,12 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
                               TOKEN_ASSIGN_PRIMARY | TOKEN_ADJUST_SESSIONID | TOKEN_READ |
                               TOKEN_WRITE,
                           &hPToken)) {
-    base::TraceMsgA("CreateUserProcess: OpenProcessToken failed, gle=%ld\n", GetLastError());
+    TraceMsgA("CreateUserProcess: OpenProcessToken failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid)) {
-    base::TraceMsgA("CreateUserProcess: LookupPrivilegeValue failed, gle=%ld\n", GetLastError());
+    TraceMsgA("CreateUserProcess: LookupPrivilegeValue failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
@@ -362,25 +361,25 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
 
   if (!DuplicateTokenEx(hPToken, MAXIMUM_ALLOWED, NULL, SecurityIdentification, TokenPrimary,
                         &hUserTokenDup)) {
-    base::TraceMsgA("CreateUserProcess: DuplicateTokenEx failed, gle=%ld\n", GetLastError());
+    TraceMsgA("CreateUserProcess: DuplicateTokenEx failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   // Adjust Token privilege
   if (!SetTokenInformation(hUserTokenDup, TokenSessionId, (LPVOID)active_session_id,
                            sizeof(DWORD))) {
-    base::TraceMsgA("CreateUserProcess: SetTokenInformation failed, gle=%ld\n", GetLastError());
+    TraceMsgA("CreateUserProcess: SetTokenInformation failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   if (!AdjustTokenPrivileges(hUserTokenDup, FALSE, &tp, sizeof(TOKEN_PRIVILEGES),
                              (PTOKEN_PRIVILEGES)NULL, NULL)) {
-    base::TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=%ld\n", GetLastError());
+    TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) {
-    base::TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=1300\n");
+    TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=1300\n");
     return FALSE;
   }
 
@@ -586,6 +585,5 @@ std::wstring GetProcessPath(DWORD dwProcessID) {
 
   return strPath;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali
 #endif

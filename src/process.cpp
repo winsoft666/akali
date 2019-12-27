@@ -1,7 +1,6 @@
-#include "ppxbase/process.hpp"
+#include "akali/process.hpp"
 
-namespace ppx {
-namespace base {
+namespace akali {
 Process::Process(const std::vector<string_type> &arguments, const string_type &path,
                  std::function<void(const char *bytes, size_t n)> read_stdout,
                  std::function<void(const char *bytes, size_t n)> read_stderr, bool open_stdin,
@@ -49,5 +48,4 @@ Process::~Process() noexcept { close_fds(); }
 Process::id_type Process::GetId() const noexcept { return data_.id; }
 
 bool Process::Write(const std::string &data) { return Write(data.c_str(), data.size()); }
-} // namespace base
-} // namespace ppx
+} // namespace akali

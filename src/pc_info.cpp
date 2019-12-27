@@ -12,16 +12,14 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/pc_info.h"
+#include "akali/pc_info.h"
 #if (defined _WIN32 || defined WIN32)
 #include <WinSock2.h>
 #include <Iphlpapi.h>
 #include <thread>
-#include "ppxbase/string_helper.h"
+#include "akali/string_helper.h"
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 std::string GetLocalIP() {
   WSADATA wsaData;
   int ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -219,7 +217,7 @@ std::string GetValidMAC() {
   return mac_ret;
 }
 
-PPXBASE_API int64_t GetValidMacInteger() {
+AKALI_API int64_t GetValidMacInteger() {
   std::string strMac = GetValidMAC();
   if (strMac.length() == 0)
     return 0;
@@ -235,8 +233,5 @@ PPXBASE_API int64_t GetValidMacInteger() {
 
   return ret;
 }
-
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

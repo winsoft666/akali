@@ -33,15 +33,14 @@
 #include <vector>
 #include <mutex>
 #include <stdarg.h>
-#include "ppxbase/logging.h"
-#include "ppxbase/stringencode.h"
-#include "ppxbase/timeutils.h"
-#include "ppxbase/safe_release_macro.h"
+#include "akali/logging.h"
+#include "akali/stringencode.h"
+#include "akali/timeutils.h"
+#include "akali/safe_release_macro.h"
 
 #pragma warning(disable : 4995)
 
-namespace ppx {
-namespace base {
+namespace akali {
 namespace {
 #if !defined(NDEBUG)
 static LoggingSeverity g_min_sev = LS_SENSITIVE;
@@ -134,22 +133,22 @@ LogMessage::LogMessage(const char *file, int line, LoggingSeverity sev, LogError
   }
 
   switch (sev) {
-  case ppx::base::LS_SENSITIVE:
+  case akali::LS_SENSITIVE:
     impl_->print_stream_ << "[SENSITIVE] ";
     break;
-  case ppx::base::LS_VERBOSE:
+  case akali::LS_VERBOSE:
     impl_->print_stream_ << "[VERBOSE] ";
     break;
-  case ppx::base::LS_INFO:
+  case akali::LS_INFO:
     impl_->print_stream_ << "[INFO] ";
     break;
-  case ppx::base::LS_WARNING:
+  case akali::LS_WARNING:
     impl_->print_stream_ << "[WARNING] ";
     break;
-  case ppx::base::LS_ERROR:
+  case akali::LS_ERROR:
     impl_->print_stream_ << "[ERROR] ";
     break;
-  case ppx::base::LS_NONE:
+  case akali::LS_NONE:
   default:
     break;
   }
@@ -436,5 +435,4 @@ void TraceMsgA(const char *lpFormat, ...) {
   printf("%s\n", msgBuf);
 #endif
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

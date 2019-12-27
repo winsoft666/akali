@@ -12,7 +12,7 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/driver_info.h"
+#include "akali/driver_info.h"
 
 #if (defined _WIN32 || defined WIN32)
 #include <assert.h>
@@ -22,8 +22,7 @@
 #include <windows.h>
 #include <direct.h>
 
-namespace ppx {
-namespace base {
+namespace akali {
 float DriveInfo::GetFreeMB(int nDrive) {
   std::wstring sRoot;
   unsigned long totalClusters, freeClusters, sectors, bytes;
@@ -270,7 +269,5 @@ unsigned long DriveInfo::GetSerialNumber(int nDrive) {
 
   return dwHDSerialNum;
 }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

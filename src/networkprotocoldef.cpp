@@ -12,10 +12,9 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/networkprotocoldef.h"
+#include "akali/networkprotocoldef.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 __u16 GetCheckSum(__u16 *header, __u32 size) {
   unsigned long checksum = 0;
 
@@ -34,5 +33,4 @@ __u16 GetCheckSum(__u16 *header, __u32 size) {
 
   return (unsigned short)(~checksum);
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

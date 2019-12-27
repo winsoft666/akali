@@ -12,7 +12,7 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/stringencode.h"
+#include "akali/stringencode.h"
 #include <stdio.h>
 #include <stdlib.h>
 #if (defined _WIN32 || defined WIN32)
@@ -26,8 +26,24 @@
 
 #define STACK_ARRAY(TYPE, LEN) static_cast<TYPE *>(::alloca((LEN) * sizeof(TYPE)))
 
-namespace ppx {
-namespace base {
+namespace akali {
+// Apply any suitable string transform (including the ones above) to an STL
+// string. Stack-allocated temporary space is used for the transformation, so
+// value and source may refer to the same string.
+typedef size_t (*Transform)(char *buffer, size_t buflen, const char *source, size_t srclen);
+
+
+
+// Return the result of applying transform t to source.
+std::string s_transform(const std::string &source, Transform t) {
+  // Ask transformation function to approximate the destination size (returns upper bound)
+  size_t maxlen = t(nullptr, 0, source.data(), source.length());
+  char *buffer = STACK_ARRAY(char, maxlen);
+  size_t len = t(buffer, maxlen, source.data(), source.length());
+  std::string result(buffer, len);
+  return result;
+}
+
 
 std::string UrlEncode(const std::string &str) {
   char hex[] = "0123456789ABCDEF";
@@ -204,15 +220,6 @@ size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const std::string &so
   return HexDecodeWithDelimiter(buffer, buflen, source.c_str(), source.length(), delimiter);
 }
 
-std::string s_transform(const std::string &source, Transform t) {
-  // Ask transformation function to approximate the destination size (returns upper bound)
-  size_t maxlen = t(nullptr, 0, source.data(), source.length());
-  char *buffer = STACK_ARRAY(char, maxlen);
-  size_t len = t(buffer, maxlen, source.data(), source.length());
-  std::string result(buffer, len);
-  return result;
-}
-
 #if (defined _WIN32 || defined WIN32)
 
 std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page /*= 0*/) {
@@ -343,5 +350,4 @@ std::string Utf8ToAnsi(const std::string &str, unsigned int code_page /*= 0*/) {
 }
 
 #endif
-} // namespace base
-} // namespace ppx
+} // namespace akali

@@ -12,14 +12,13 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/base64.h"
+#include "akali/base64.h"
 #include <string.h>
 #include <assert.h>
 
 using std::vector;
 
-namespace ppx {
-namespace base {
+namespace akali {
 static const char kPad = '=';
 static const unsigned char pd = 0xFD; // Padding
 static const unsigned char sp = 0xFE; // Whitespace
@@ -287,5 +286,4 @@ bool Base64::DecodeFromArrayTemplate(const char *data, size_t len, DecodeFlags f
 
   return success;
 }
-} // namespace base
-} // namespace ppx
+} // namespace akali

@@ -12,60 +12,59 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/iocpserver.h"
+#include "akali/iocpserver.h"
 #if (defined _WIN32 || defined WIN32)
-#include "ppxbase/timeutils.h"
-#include "ppxbase/logging.h"
-#include "ppxbase/overlappedsocket.h"
-#include "ppxbase/criticalsection.h"
+#include "akali/timeutils.h"
+#include "akali/logging.h"
+#include "akali/overlappedsocket.h"
+#include "akali/criticalsection.h"
 
-namespace ppx {
-namespace base {
+namespace akali {
 IOCPServer::IOCPServer() : start_time_(0) {}
 
 IOCPServer::~IOCPServer() {}
 
 bool IOCPServer::Start(const SocketAddress &addr, int family, int type) {
   socket_ = new OverlappedSocket();
-  PPX_ASSERT(socket_);
+  AKALI_ASSERT(socket_);
 
   socket_->RegisterDelegate(this);
 
   if (!socket_->CreateT(family, type)) {
-    PPX_LOG(LS_WARNING) << "CreateT: failed, error=" << socket_->GetError();
+    AKALI_LOG(LS_WARNING) << "CreateT: failed, error=" << socket_->GetError();
     return false;
   }
 
   if (socket_->Bind(addr) == SOCKET_ERROR) {
-    PPX_LOG(LS_WARNING) << "Bind: failed, error=" << socket_->GetError();
+    AKALI_LOG(LS_WARNING) << "Bind: failed, error=" << socket_->GetError();
     return false;
   }
 
   if (socket_->Listen(SOMAXCONN) == SOCKET_ERROR) {
-    PPX_LOG(LS_WARNING) << "Listen: failed, error=" << socket_->GetError();
+    AKALI_LOG(LS_WARNING) << "Listen: failed, error=" << socket_->GetError();
     return false;
   }
 
   if (!socket_->Accept()) {
-    PPX_LOG(LS_WARNING) << "Accept: failed, error=" << socket_->GetError();
+    AKALI_LOG(LS_WARNING) << "Accept: failed, error=" << socket_->GetError();
     return false;
   }
 
-  start_time_ = base::GetTimeStamp();
+  start_time_ = GetTimeStamp();
 
   return true;
 }
 
 bool IOCPServer::Stop() {
   if (socket_->Close() == SOCKET_ERROR) {
-    PPX_LOG(LS_WARNING) << "Close: failed, error=" << socket_->GetError();
+    AKALI_LOG(LS_WARNING) << "Close: failed, error=" << socket_->GetError();
     return false;
   }
 
   {
-    base::CritScope cs(&crit_);
+    CritScope cs(&crit_);
     for (ClientList::iterator it = client_list_.begin(); it != client_list_.end(); it++) {
-      PPX_ASSERT((*it) != NULL);
+      AKALI_ASSERT((*it) != NULL);
       (*it)->Close();
       delete (*it);
     }
@@ -83,44 +82,41 @@ bool IOCPServer::Stop() {
 int64_t IOCPServer::GetStartTime() const { return start_time_; }
 
 void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
-  PPX_ASSERT(socket);
-  PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [Connected]";
+  AKALI_ASSERT(socket);
+  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [Connected]";
   {
-    base::CritScope cs(&crit_);
+    CritScope cs(&crit_);
     client_list_.push_back(socket);
   }
 }
 
 void IOCPServer::OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
-  PPX_ASSERT(socket);
-  PPX_ASSERT(io_ctx);
-  PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [RECV] "
+  AKALI_ASSERT(socket);
+  AKALI_ASSERT(io_ctx);
+  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [RECV] "
                    << io_ctx->GetBuffer();
 }
 
 void IOCPServer::OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
-  PPX_ASSERT(socket);
-  PPX_ASSERT(io_ctx);
-  PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [SEND] "
+  AKALI_ASSERT(socket);
+  AKALI_ASSERT(io_ctx);
+  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [SEND] "
                    << io_ctx->GetBuffer();
 }
 
 void IOCPServer::OnConnectEvent(OverlappedSocket *socket) {}
 
 void IOCPServer::OnCloseEvent(OverlappedSocket *socket, int error) {
-  PPX_ASSERT(socket);
-  PPX_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString()
+  AKALI_ASSERT(socket);
+  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString()
                    << "] [Disconnected] error=" << error;
   socket->Close();
   {
-    base::CritScope cs(&crit_);
+    CritScope cs(&crit_);
     client_list_.remove(socket);
   }
   delete socket;
   socket = NULL;
 }
-
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

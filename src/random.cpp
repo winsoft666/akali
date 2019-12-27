@@ -12,18 +12,16 @@
 * file.
 *******************************************************************************/
 
-#include "ppxbase/random.h"
+#include "akali/random.h"
 #include <math.h>
-#include "ppxbase/timeutils.h"
+#include "akali/timeutils.h"
 
 #pragma warning(disable : 4244)
 
-namespace ppx {
-namespace base {
-
+namespace akali {
 Random::Random() {
   state_ = GetTimeStamp();
-  PPX_ASSERT(state_ != 0x0ull);
+  AKALI_ASSERT(state_ != 0x0ull);
 }
 
 uint32_t Random::Rand(uint32_t t) {
@@ -40,12 +38,12 @@ uint32_t Random::Rand(uint32_t t) {
 }
 
 uint32_t Random::Rand(uint32_t low, uint32_t high) {
-  PPX_ASSERT(low <= high);
+  AKALI_ASSERT(low <= high);
   return Rand(high - low) + low;
 }
 
 int32_t Random::Rand(int32_t low, int32_t high) {
-  PPX_ASSERT(low <= high);
+  AKALI_ASSERT(low <= high);
   const int64_t low_i64{low};
   return static_cast<int32_t>(Rand(static_cast<uint32_t>(high - low_i64)) + low_i64);
 }
@@ -85,9 +83,8 @@ uint64_t Random::NextOutput() {
   state_ ^= state_ >> 12;
   state_ ^= state_ << 25;
   state_ ^= state_ >> 27;
-  PPX_ASSERT(state_ != 0x0ULL);
+  AKALI_ASSERT(state_ != 0x0ULL);
   return state_ * 2685821657736338717ull;
 }
 
-} // namespace base
-} // namespace ppx
+} // namespace akali

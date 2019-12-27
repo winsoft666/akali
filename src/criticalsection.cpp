@@ -12,11 +12,10 @@
  * file.
  *******************************************************************************/
 
-#include "ppxbase/criticalsection.h"
+#include "akali/criticalsection.h"
 
 #if (defined _WIN32 || defined WIN32)
-namespace ppx {
-namespace base {
+namespace akali {
 CriticalSection::CriticalSection() { InitializeCriticalSection(&crit_); }
 CriticalSection::~CriticalSection() { DeleteCriticalSection(&crit_); }
 void CriticalSection::Enter() const { EnterCriticalSection(&crit_); }
@@ -27,7 +26,5 @@ bool CriticalSection::TryEnter() const { return TryEnterCriticalSection(&crit_) 
 CritScope::CritScope(const CriticalSection *pCS) : crit_(pCS) { crit_->Enter(); }
 
 CritScope::~CritScope() { crit_->Leave(); }
-} // namespace base
-} // namespace ppx
-
+} // namespace akali
 #endif

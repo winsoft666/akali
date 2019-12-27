@@ -15,7 +15,7 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 
-project(Akali CXX)
+project(akali CXX)
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/akali_config.h.in"
@@ -37,11 +37,11 @@ if(WIN32)
 endif()
 
 if(MSVC)
-  set(AKALI_INSTALL_CMAKE_DIR share/Akali)
+  set(AKALI_INSTALL_CMAKE_DIR share/akali)
 elseif(WIN32 AND NOT CYGWIN)
   set(AKALI_INSTALL_CMAKE_DIR CMake)
 else()
-  set(AKALI_INSTALL_CMAKE_DIR lib/cmake/Akali)
+  set(AKALI_INSTALL_CMAKE_DIR lib/cmake/akali)
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

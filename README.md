@@ -1,6 +1,6 @@
 [中文版](README_ch.md)
 # 1. Project Introduction
-[Akali](https://github.com/winsoft666/Akali) is a common C++ library that don't depends on other library.
+[akali](https://github.com/winsoft666/akali) is a common C++ library that don't depends on other library.
 
 # 2. Function Module
 |File|Function|Support Platform|

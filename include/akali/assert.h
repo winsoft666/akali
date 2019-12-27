@@ -74,7 +74,7 @@ extern void __cdecl __debugbreak(void);
 #define AKALI_ASSERT_3(expression, ...)                                                              \
   do {                                                                                             \
     if (!AKALI_ASSERT_LIKELY(expression))                                                            \
-      Internal::HandleAssert(AKALI_ASSERT_FILE, AKALI_ASSERT_LINE, AKALI_ASSERT_FUNCTION,         \
+      akali::Internal::HandleAssert(AKALI_ASSERT_FILE, AKALI_ASSERT_LINE, AKALI_ASSERT_FUNCTION,         \
                                     #expression, __VA_ARGS__);                                     \
   } while (false)
 
@@ -139,7 +139,7 @@ template <typename T> inline AssertUsedWrapper<T>::~AssertUsedWrapper() throw() 
 
 #if AKALI_ASSERT_ENABLED
 #define AKALI_ASSERT_2(expression, ...) AKALI_ASSERT_3(expression, __VA_ARGS__)
-#define AKALI_ASSERT_USED_1(type) Internal::AssertUsedWrapper<type>
+#define AKALI_ASSERT_USED_1(type) akali::Internal::AssertUsedWrapper<type>
 
 #else
 

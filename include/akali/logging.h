@@ -44,7 +44,8 @@ public:
   virtual void OnLogMessage(const std::string &message) = 0;
 };
 
-class AKALI_API LogMessage {
+class AKALI_API
+AKALI_DEPRECATED("LogMessage will be removed. Consider using spdlog instead.") LogMessage {
 public:
   LogMessage(const char *file, int line, LoggingSeverity sev, LogErrorContext err_ctx = ERRCTX_NONE,
              int err = 0);
@@ -108,17 +109,16 @@ public:
   void operator&(std::ostream &) {}
 };
 
-#define AKALI_LOG_SEVERITY_PRECONDITION(sev)                                                         \
+#define AKALI_LOG_SEVERITY_PRECONDITION(sev)                                                       \
   !(akali::LogMessage::Loggable(sev)) ? (void)0 : akali::LogMessageVoidify() &
 
-#define AKALI_LOG(sev)                                                                               \
-  AKALI_LOG_SEVERITY_PRECONDITION(akali::sev)                                                    \
+#define AKALI_LOG(sev)                                                                             \
+  AKALI_LOG_SEVERITY_PRECONDITION(akali::sev)                                                      \
   akali::LogMessage(__FILE__, __LINE__, akali::sev).stream()
 
-#define AKALI_LOG_E(sev, ctx, err, ...)                                                              \
-  AKALI_LOG_SEVERITY_PRECONDITION(akali::sev)                                                    \
-  akali::LogMessage(__FILE__, __LINE__, akali::sev, akali::##ctx, err, ##__VA_ARGS__)  \
-      .stream()
+#define AKALI_LOG_E(sev, ctx, err, ...)                                                            \
+  AKALI_LOG_SEVERITY_PRECONDITION(akali::sev)                                                      \
+  akali::LogMessage(__FILE__, __LINE__, akali::sev, akali::##ctx, err, ##__VA_ARGS__).stream()
 
 #define AKALI_LOG_ERRNO_EX(sev, err) AKALI_LOG_E(sev, ERRCTX_ERRNO, err)
 #define AKALI_LOG_ERRNO(sev) AKALI_LOG_ERRNO_EX(sev, errno)

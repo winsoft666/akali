@@ -23,7 +23,9 @@
 #include "akali_export.h"
 
 namespace akali {
-class AKALI_API LoggingFileSinkWin : public LogSink {
+class AKALI_API 
+  AKALI_DEPRECATED("LoggingFileSinkWin will be removed. Consider using spdlog instead.")
+  LoggingFileSinkWin : public LogSink {
 public:
   static LoggingFileSinkWin *GetSink();
 

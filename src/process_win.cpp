@@ -6,7 +6,6 @@
 #include <strsafe.h>
 #include <tchar.h>
 #include <windows.h>
-
 #include <cstring>
 #include <stdexcept>
 

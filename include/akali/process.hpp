@@ -7,6 +7,7 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include "akali/akali_export.h"
 #if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
 #include <sys/wait.h>
 #endif
@@ -28,7 +29,7 @@ struct Config {
 /// open_stdin==false, the stdout, stderr and stdin are sent to the parent
 /// process instead.
 //
-class Process {
+class AKALI_API Process {
 public:
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
   typedef unsigned long id_type; // Process id type
@@ -58,12 +59,12 @@ private:
   };
 
 public:
-  /// Starts a process with the environment of the calling process.
+  /// Starts a process.
   Process(const std::vector<string_type> &arguments, const string_type &path = string_type(),
           std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
           std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
           bool open_stdin = false, const Config &config = {}) noexcept;
-  /// Starts a process with the environment of the calling process.
+  /// Starts a process.
   Process(const string_type &command, const string_type &path = string_type(),
           std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
           std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,

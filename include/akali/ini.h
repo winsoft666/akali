@@ -16,47 +16,58 @@
 #define AKALI_INI_H_
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <tchar.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
-#include "akali/stringencode.h"
+#include <string>
+#include <vector>
 #include "akali_export.h"
 
 namespace akali {
+/// Ini file need saved as ANSI encoding.
+/// Ini will trim spaces around string value.
+///
 class AKALI_API Ini {
 public:
-  Ini();
-  virtual ~Ini();
+  Ini() noexcept;
+  Ini(const std::wstring &file_path) noexcept;
+  ~Ini() noexcept;
 
 public:
-  void SetIniFilePath(LPCWSTR pszIniFile);
-  LPCWSTR GetIniFilePath();
+  void SetIniFilePath(const std::wstring &file_path) noexcept;
+  std::wstring GetIniFilePath() const noexcept;
 
 public:
-  bool ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT &ValueRect);
-  bool ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE &ValueSize);
-  bool ReadPoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT &ValuePoint);
-  bool ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF &ValueColor);
-  bool ReadInt(LPCWSTR pszItem, LPCWSTR pszSubItem, UINT &ValueInt);
-  LPCWSTR ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR pszDefault, LPTSTR pszString,
-                     WORD wMaxCount);
-  bool ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strString);
-  bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR ValueString);
-  bool WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring &ValueString);
-  bool WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt);
-  bool WriteRGBColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF ValueColor);
-  bool WritePoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT ValuePoint);
-  bool WriteSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE ValueSize);
-  bool WriteRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT ValueRect);
+  bool ReadRect(const std::wstring &item, const std::wstring &sub_item, RECT *result) noexcept;
+  bool ReadSize(const std::wstring &item, const std::wstring &sub_item, SIZE *result) noexcept;
+  bool ReadPoint(const std::wstring &item, const std::wstring &sub_item, POINT *result) noexcept;
+  bool ReadColor(const std::wstring &item, const std::wstring &sub_item, COLORREF *result) noexcept;
+
+  bool ReadInt(const std::wstring &item, const std::wstring &sub_item, UINT *result) noexcept;
+  UINT ReadInt(const std::wstring &item, const std::wstring &sub_item, UINT default_value) noexcept;
+
+  std::wstring ReadString(const std::wstring &item, const std::wstring &sub_item,
+                          const std::wstring &default_value) noexcept;
+  bool ReadString(const std::wstring &item, const std::wstring &sub_item,
+                  std::wstring *result) noexcept;
+
+  bool WriteString(const std::wstring &item, const std::wstring &sub_item,
+                   const std::wstring &value) noexcept;
+  bool WriteInt(const std::wstring &item, const std::wstring &sub_item, LONG value) noexcept;
+  bool WriteColor(const std::wstring &item, const std::wstring &sub_item,
+                     COLORREF value) noexcept;
+  bool WritePoint(const std::wstring &item, const std::wstring &sub_item, POINT value) noexcept;
+  bool WriteSize(const std::wstring &item, const std::wstring &sub_item, SIZE value) noexcept;
+  bool WriteRect(const std::wstring &item, const std::wstring &sub_item, RECT value) noexcept;
 
 protected:
-  LONG SwitchStringToValue(LPCWSTR &pszSring);
+  LONG SwitchStringToValue(LPCWSTR &pszSring) noexcept;
 
 protected:
-  WCHAR m_szIniFile[MAX_PATH];
+  std::wstring ini_file_path_;
 };
 } // namespace akali
 #endif

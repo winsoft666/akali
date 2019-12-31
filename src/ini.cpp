@@ -13,55 +13,77 @@
  *******************************************************************************/
 
 #include "akali/ini.h"
-#if (defined _WIN32 || defined WIN32)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <strsafe.h>
 #include <assert.h>
-#include "akali/stringencode.h"
 
 namespace akali {
-Ini::Ini() { ZeroMemory(m_szIniFile, sizeof(m_szIniFile)); }
+Ini::Ini() noexcept {}
 
-Ini::~Ini() {}
+Ini::Ini(const std::wstring &file_path) noexcept
+    : ini_file_path_(file_path) {}
 
-void Ini::SetIniFilePath(LPCWSTR pszIniFile) { StringCchCopyW(m_szIniFile, MAX_PATH, pszIniFile); }
+Ini::~Ini() noexcept {}
 
-LPCWSTR Ini::GetIniFilePath() { return m_szIniFile; }
+void Ini::SetIniFilePath(const std::wstring &file_path) noexcept { ini_file_path_ = file_path; }
 
-bool Ini::ReadInt(LPCWSTR pszItem, LPCWSTR pszSubItem, UINT &ValueInt) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
+std::wstring Ini::GetIniFilePath() const noexcept { return ini_file_path_; }
+
+bool Ini::ReadInt(const std::wstring &item, const std::wstring &sub_item, UINT *result) noexcept {
+  if (ini_file_path_.length() == 0)
     return false;
   INT iDefault = 0;
   SetLastError(0);
-  UINT ret = GetPrivateProfileIntW(pszItem, pszSubItem, iDefault, m_szIniFile);
+  UINT ret =
+      GetPrivateProfileIntW(item.c_str(), sub_item.c_str(), iDefault, ini_file_path_.c_str());
   DWORD dwGLE = GetLastError();
   if (dwGLE == 0) {
-    ValueInt = ret;
+    if (result)
+      *result = ret;
     return true;
   }
   return false;
 }
 
-LPCWSTR Ini::ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR pszDefault, LPTSTR pszString,
-                        WORD wMaxCount) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
-    return false;
-  GetPrivateProfileStringW(pszItem, pszSubItem, pszDefault, pszString, wMaxCount, m_szIniFile);
-  return pszString;
+UINT Ini::ReadInt(const std::wstring &item, const std::wstring &sub_item,
+                  UINT default_value) noexcept {
+  if (ini_file_path_.length() == 0)
+    return default_value;
+
+  SetLastError(0);
+  return GetPrivateProfileIntW(item.c_str(), sub_item.c_str(), default_value,
+                               ini_file_path_.c_str());
 }
 
-bool Ini::ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strString) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
+std::wstring Ini::ReadString(const std::wstring &item, const std::wstring &sub_item,
+                             const std::wstring &default_value) noexcept {
+  if (ini_file_path_.length() == 0)
+    return default_value;
+
+  std::vector<wchar_t> buf(1024, 0);
+  DWORD read = GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), default_value.c_str(),
+                                        buf.data(), 1024, ini_file_path_.c_str());
+
+  std::wstring result;
+  result.assign(buf.data(), read);
+
+  return result;
+}
+
+bool Ini::ReadString(const std::wstring &item, const std::wstring &sub_item,
+                     std::wstring *result) noexcept {
+  if (ini_file_path_.length() == 0)
     return false;
+
   bool ret = false;
   int iBufSize = 255;
   WCHAR *pBuf = NULL;
   do {
     pBuf = (WCHAR *)malloc(iBufSize * sizeof(WCHAR));
+    memset(pBuf, 0, iBufSize * sizeof(WCHAR));
     SetLastError(0);
-    DWORD dwRet = GetPrivateProfileStringW(pszItem, pszSubItem, L"", pBuf, iBufSize, m_szIniFile);
+    DWORD dwRet = GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), L"", pBuf, iBufSize,
+                                           ini_file_path_.c_str());
     DWORD dwGLE = GetLastError();
     if (dwRet == 0) {
       ret = (dwGLE == 0);
@@ -79,79 +101,123 @@ bool Ini::ReadString(LPCWSTR pszItem, LPCWSTR pszSubItem, std::wstring &strStrin
   } while (true);
 
   if (ret) {
-    strString = pBuf;
+    if (result)
+      *result = pBuf;
   }
   free(pBuf);
 
   return ret;
 }
 
-bool Ini::WriteInt(LPCWSTR pszItem, LPCWSTR pszSubItem, LONG ValueInt) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0 || !pszItem || !pszSubItem)
-    return false;
-  WCHAR szValue[50];
-  StringCchPrintfW(szValue, 50, L"%ld", ValueInt);
-  return WriteString(pszItem, pszSubItem, szValue);
-}
-
-bool Ini::WriteRGBColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF ValueColor) {
-  WCHAR szValue[50];
-  StringCchPrintfW(szValue, 50, L"%d,%d,%d", GetRValue(ValueColor), GetGValue(ValueColor),
-                   GetBValue(ValueColor));
-
-  return WriteString(pszItem, pszSubItem, szValue);
-}
-
-bool Ini::WritePoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT ValuePoint) {
-  WCHAR szValue[50];
-  StringCchPrintfW(szValue, 50, L"%d,%d", ValuePoint.x, ValuePoint.y);
-
-  return WriteString(pszItem, pszSubItem, szValue);
-}
-
-bool Ini::WriteSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE ValueSize) {
-  WCHAR szValue[50];
-  StringCchPrintfW(szValue, 50, L"%d,%d", ValueSize.cx, ValueSize.cy);
-
-  return WriteString(pszItem, pszSubItem, szValue);
-}
-
-bool Ini::WriteRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT ValueRect) {
-  WCHAR szValue[50];
-  StringCchPrintfW(szValue, 50, L"%d,%d,%d,%d", ValueRect.left, ValueRect.top, ValueRect.right,
-                   ValueRect.bottom);
-
-  return WriteString(pszItem, pszSubItem, szValue);
-}
-
-bool Ini::WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, LPCWSTR ValueString) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0 || ValueString == NULL || !pszItem || !pszSubItem)
+bool Ini::WriteInt(const std::wstring &item, const std::wstring &sub_item, LONG value) noexcept {
+  if (ini_file_path_.length() == 0)
     return false;
 
-  return WritePrivateProfileString(pszItem, pszSubItem, ValueString, m_szIniFile) == TRUE;
+  WCHAR szValue[50];
+  StringCchPrintfW(szValue, 50, L"%ld", value);
+  return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::WriteString(LPCWSTR pszItem, LPCWSTR pszSubItem, const std::wstring &ValueString) {
-  return WriteString(pszItem, pszSubItem, ValueString.c_str());
+bool Ini::WriteColor(const std::wstring &item, const std::wstring &sub_item,
+                     COLORREF value) noexcept {
+  WCHAR szValue[60];
+  StringCchPrintfW(szValue, 60, L"%d,%d,%d,%d", (BYTE)(value >> 24), (BYTE)(value >> 16),
+                   (BYTE)(value >> 8), (BYTE)value);
+
+  return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT &ValueRect) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
+bool Ini::WritePoint(const std::wstring &item, const std::wstring &sub_item, POINT value) noexcept {
+  WCHAR szValue[50];
+  StringCchPrintfW(szValue, 50, L"%d,%d", value.x, value.y);
+
+  return WriteString(item, sub_item, szValue);
+}
+
+bool Ini::WriteSize(const std::wstring &item, const std::wstring &sub_item, SIZE value) noexcept {
+  WCHAR szValue[50];
+  StringCchPrintfW(szValue, 50, L"%d,%d", value.cx, value.cy);
+
+  return WriteString(item, sub_item, szValue);
+}
+
+bool Ini::WriteRect(const std::wstring &item, const std::wstring &sub_item, RECT value) noexcept {
+  WCHAR szValue[50];
+  StringCchPrintfW(szValue, 50, L"%d,%d,%d,%d", value.left, value.top, value.right, value.bottom);
+
+  return WriteString(item, sub_item, szValue);
+}
+
+bool Ini::WriteString(const std::wstring &item, const std::wstring &sub_item,
+                      const std::wstring &value) noexcept {
+  if (ini_file_path_.length() == 0)
     return false;
+
+  return !!WritePrivateProfileString(item.c_str(), sub_item.c_str(), value.c_str(),
+                                     ini_file_path_.c_str());
+}
+
+bool Ini::ReadRect(const std::wstring &item, const std::wstring &sub_item, RECT *result) noexcept {
+  if (ini_file_path_.length() == 0)
+    return false;
+
   WCHAR szReadData[64] = L"";
-  ZeroMemory(&ValueRect, sizeof(ValueRect));
+  ZeroMemory(result, sizeof(result));
 
-  GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
+  GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), L"", szReadData, 64,
+                           ini_file_path_.c_str());
 
   if (szReadData[0] != 0) {
     LPCWSTR pszString = szReadData;
-    ValueRect.left = SwitchStringToValue(pszString);
-    ValueRect.top = SwitchStringToValue(pszString);
-    ValueRect.right = SwitchStringToValue(pszString);
-    ValueRect.bottom = SwitchStringToValue(pszString);
+    if (result) {
+      result->left = SwitchStringToValue(pszString);
+      result->top = SwitchStringToValue(pszString);
+      result->right = SwitchStringToValue(pszString);
+      result->bottom = SwitchStringToValue(pszString);
+    }
+    return true;
+  }
+
+  return false;
+}
+
+bool Ini::ReadSize(const std::wstring &item, const std::wstring &sub_item, SIZE *result) noexcept {
+  if (ini_file_path_.length() == 0)
+    return false;
+  WCHAR szReadData[64] = L"";
+  ZeroMemory(result, sizeof(result));
+
+  GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), L"", szReadData, 64,
+                           ini_file_path_.c_str());
+
+  if (szReadData[0] != 0) {
+    LPCWSTR pszString = szReadData;
+    if (result) {
+      result->cx = SwitchStringToValue(pszString);
+      result->cy = SwitchStringToValue(pszString);
+    }
+    return true;
+  }
+
+  return false;
+}
+
+bool Ini::ReadPoint(const std::wstring &item, const std::wstring &sub_item,
+                    POINT *result) noexcept {
+  if (ini_file_path_.length() == 0)
+    return false;
+  WCHAR szReadData[64] = L"";
+  ZeroMemory(result, sizeof(result));
+
+  GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), L"", szReadData, 64,
+                           ini_file_path_.c_str());
+
+  if (szReadData[0] != 0) {
+    LPCWSTR pszString = szReadData;
+    if (result) {
+      result->x = SwitchStringToValue(pszString);
+      result->y = SwitchStringToValue(pszString);
+    }
 
     return true;
   }
@@ -159,19 +225,20 @@ bool Ini::ReadRect(LPCWSTR pszItem, LPCWSTR pszSubItem, RECT &ValueRect) {
   return false;
 }
 
-bool Ini::ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE &ValueSize) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
+bool Ini::ReadColor(const std::wstring &item, const std::wstring &sub_item,
+                    COLORREF *result) noexcept {
+  if (ini_file_path_.length() == 0)
     return false;
   WCHAR szReadData[64] = L"";
-  ZeroMemory(&ValueSize, sizeof(ValueSize));
-
-  GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
+  ZeroMemory(result, sizeof(result));
+  GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), L"", szReadData, 64,
+                           ini_file_path_.c_str());
 
   if (szReadData[0] != 0) {
     LPCWSTR pszString = szReadData;
-    ValueSize.cx = SwitchStringToValue(pszString);
-    ValueSize.cy = SwitchStringToValue(pszString);
+    if (result)
+      *result = SwitchStringToValue(pszString) << 24 | SwitchStringToValue(pszString) << 16 |
+                SwitchStringToValue(pszString) << 8 | SwitchStringToValue(pszString);
 
     return true;
   }
@@ -179,46 +246,7 @@ bool Ini::ReadSize(LPCWSTR pszItem, LPCWSTR pszSubItem, SIZE &ValueSize) {
   return false;
 }
 
-bool Ini::ReadPoint(LPCWSTR pszItem, LPCWSTR pszSubItem, POINT &ValuePoint) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
-    return false;
-  WCHAR szReadData[64] = L"";
-  ZeroMemory(&ValuePoint, sizeof(ValuePoint));
-
-  GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
-
-  if (szReadData[0] != 0) {
-    LPCWSTR pszString = szReadData;
-    ValuePoint.x = SwitchStringToValue(pszString);
-    ValuePoint.y = SwitchStringToValue(pszString);
-
-    return true;
-  }
-
-  return false;
-}
-
-bool Ini::ReadColor(LPCWSTR pszItem, LPCWSTR pszSubItem, COLORREF &ValueColor) {
-  assert(m_szIniFile[0] != 0);
-  if (wcslen(m_szIniFile) == 0)
-    return false;
-  WCHAR szReadData[64] = L"";
-  ZeroMemory(&ValueColor, sizeof(ValueColor));
-  GetPrivateProfileStringW(pszItem, pszSubItem, L"", szReadData, 64, m_szIniFile);
-
-  if (szReadData[0] != 0) {
-    LPCWSTR pszString = szReadData;
-    ValueColor = RGB(SwitchStringToValue(pszString), SwitchStringToValue(pszString),
-                     SwitchStringToValue(pszString));
-
-    return true;
-  }
-
-  return false;
-}
-
-LONG Ini::SwitchStringToValue(LPCWSTR &pszSring) {
+LONG Ini::SwitchStringToValue(LPCWSTR &pszSring) noexcept {
   assert((pszSring != NULL) && (pszSring[0] != 0));
   if ((pszSring == NULL) || (pszSring[0] == 0))
     return 0L;

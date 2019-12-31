@@ -18,9 +18,12 @@
 #include "akali_export.h"
 #include <map>
 #include <string>
+#include "akali/deprecation.h"
 
 namespace akali {
-class AKALI_API CmdLineParser {
+
+class AKALI_API AKALI_DEPRECATED(
+    "CmdLineParser will be removed. Consider using Google's Gflags instead.") CmdLineParser {
 public:
   typedef std::map<std::wstring, std::wstring> ValsMap;
   typedef ValsMap::const_iterator ITERPOS;

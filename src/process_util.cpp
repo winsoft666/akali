@@ -24,7 +24,6 @@
 #include <Psapi.h>
 #include <shellapi.h>
 #include "akali/safe_release_macro.h"
-#include "akali/logging.h"
 
 namespace akali {
 ProcessFinder::ProcessFinder(DWORD dwFlags /* = 0*/, DWORD dwProcessID /* = 0*/) {
@@ -320,7 +319,6 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
   PROCESSENTRY32 pe = {sizeof(pe)};
 
   if (!ph.ProcessFind(TEXT("winlogon.exe"), &pe)) {
-    TraceMsgA("CreateUserProcess: not find winlogon.exe \n");
     return FALSE;
   }
 
@@ -333,7 +331,6 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
   ProcessIdToSessionId(winlogon_process_id, &winlogon_session_id);
 
   if (winlogon_session_id != active_session_id) {
-    TraceMsgA("CreateUserProcess: winlogon_session_id != active_session_id\n");
     return FALSE;
   }
 
@@ -346,12 +343,10 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
                               TOKEN_ASSIGN_PRIMARY | TOKEN_ADJUST_SESSIONID | TOKEN_READ |
                               TOKEN_WRITE,
                           &hPToken)) {
-    TraceMsgA("CreateUserProcess: OpenProcessToken failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid)) {
-    TraceMsgA("CreateUserProcess: LookupPrivilegeValue failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
@@ -361,25 +356,21 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
 
   if (!DuplicateTokenEx(hPToken, MAXIMUM_ALLOWED, NULL, SecurityIdentification, TokenPrimary,
                         &hUserTokenDup)) {
-    TraceMsgA("CreateUserProcess: DuplicateTokenEx failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   // Adjust Token privilege
   if (!SetTokenInformation(hUserTokenDup, TokenSessionId, (LPVOID)active_session_id,
                            sizeof(DWORD))) {
-    TraceMsgA("CreateUserProcess: SetTokenInformation failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   if (!AdjustTokenPrivileges(hUserTokenDup, FALSE, &tp, sizeof(TOKEN_PRIVILEGES),
                              (PTOKEN_PRIVILEGES)NULL, NULL)) {
-    TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=%ld\n", GetLastError());
     return FALSE;
   }
 
   if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) {
-    TraceMsgA("CreateUserProcess: AdjustTokenPrivileges failed, gle=1300\n");
     return FALSE;
   }
 

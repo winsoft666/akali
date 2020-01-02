@@ -72,8 +72,15 @@ AKALI_DEPRECATED("This function will be removed. Consider using Process::Recursi
                "instead.")
 void RecursiveTerminateProcess(LPCTSTR szAppDir, bool exclude_self);
 
-AKALI_API std::wstring GetCurrentProcessDirectoryW();
-AKALI_API std::string GetCurrentProcessDirectoryA();
+AKALI_API
+AKALI_DEPRECATED("This function will be removed. Consider using Process::GetSelfDir "
+                 "instead.")
+std::wstring GetCurrentProcessDirectoryW();
+
+AKALI_API
+AKALI_DEPRECATED("This function will be removed. Consider using Process::GetSelfDir "
+                 "instead.")
+std::string GetCurrentProcessDirectoryA();
 #if defined(UNICODE) || defined(_UNICODE)
 #define GetCurrentProcessDirectory akali::GetCurrentProcessDirectoryW
 #else
@@ -84,9 +91,13 @@ AKALI_API BOOL MakesureProcessSingleInstance(LPCTSTR pszUniqueName);
 
 // 如果路径中含有空格，必须使用双引号引用
 //
-AKALI_API BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo,
+AKALI_API
+AKALI_DEPRECATED("This function will be removed. Consider using Process instead.")
+BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo,
                                    BOOL bInheritHandles = FALSE);
-AKALI_API BOOL EasyCreateProcess(const std::wstring &strCmdLine,
+AKALI_API
+AKALI_DEPRECATED("This function will be removed. Consider using Process instead.")
+BOOL EasyCreateProcess(const std::wstring &strCmdLine,
                                    LPPROCESS_INFORMATION lpProcessInfo,
                                    BOOL bInheritHandles = FALSE);
 AKALI_API

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iosfwd>
+#include <limits.h>
 
 // clang-format off
 #if (defined UNICODE) || (defined _UNICODE)
@@ -445,6 +446,29 @@ bool Process::Kill(const std::string &executed_file_name, bool force) noexcept {
   closedir(dp);
 
   return ret;
+}
+
+std::string Process::GetSelfPath() noexcept {
+  char buf[PATH_MAX] = {0};
+  ssize_t len = ::readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+  if (len == -1) {
+    return "";
+  }
+  return std::string(buf);
+}
+
+std::string Process::GetSelfDir() noexcept {
+  char buf[PATH_MAX] = {0};
+  ssize_t len = ::readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+  if (len == -1) {
+    return "";
+  }
+  std::string path = buf;
+  std::string::size_type pos = path.find_last_of("/");
+  if (pos != std::string::npos) {
+    path = path.substr(0, pos + 1);
+  }
+  return path;
 }
 } // namespace akali
 #endif

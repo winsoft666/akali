@@ -463,5 +463,19 @@ void Process::RecursiveKill(const string_type &dir, bool exclude_self) noexcept 
 
   FindClose(fhandle);
 }
+
+Process::string_type Process::GetSelfPath() noexcept {
+  TCHAR szPath[MAX_PATH] = {0};
+  GetModuleFileName(NULL, szPath, MAX_PATH);
+  return string_type(szPath);
+}
+
+Process::string_type Process::GetSelfDir() noexcept {
+  TCHAR szPath[MAX_PATH] = {0};
+  GetModuleFileName(NULL, szPath, MAX_PATH);
+  PathRemoveFileSpec(szPath);
+  PathAddBackslash(szPath);
+  return string_type(szPath);
+}
 } // namespace akali
 #endif

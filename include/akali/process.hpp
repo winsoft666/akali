@@ -132,12 +132,17 @@ public:
 
   /// terminate all process that EXE file in "dir" directory.
   static void RecursiveKill(const string_type &dir, bool exclude_self) noexcept;
+
+  static string_type GetSelfPath() noexcept;
+  static string_type GetSelfDir() noexcept;
 #else
   /// Kill all process that executed file name is executed_file_name.
   /// force=true is only supported on Unix-like systems.
   /// Return true when all process have been killed.
   /// Return false when have one or more process kill failed.
   static bool Kill(const std::string &executed_file_name, bool force = false) noexcept;
+  static std::string GetSelfPath() noexcept;
+  static std::string GetSelfDir() noexcept;
 #endif
 private:
   Data data_;

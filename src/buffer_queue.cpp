@@ -16,7 +16,6 @@
 #include <malloc.h>
 #include <stdio.h>
 #include "akali/buffer_queue.h"
-#include "akali/logging.h"
 #include "akali/safe_release_macro.h"
 
 namespace akali {
@@ -157,9 +156,6 @@ bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
     }
   }
 
-  TraceMsgA("Buffer Queue(%s): Add data to front element: data-size %d.\n",
-            impl_->queue_name_.c_str(), nSrcDataSize);
-
   return true;
 }
 
@@ -206,9 +202,6 @@ bool BufferQueue::AddToLast(void *pSrcData, unsigned int nSrcDataSize) {
       impl_->last_element_ = elem;
     }
   }
-
-  TraceMsgA("Buffer Queue(%s): Add data to last element: data-size %d.\n",
-            impl_->queue_name_.c_str(), nSrcDataSize);
 
   return true;
 }
@@ -258,9 +251,6 @@ unsigned int BufferQueue::PopFromFront(void *pDestData, unsigned int nSize) {
     rvalue = 0;
   }
 
-  TraceMsgA("Buffer Queue(%s): pop data from front element: data-size %d.\n",
-            impl_->queue_name_.c_str(), rvalue);
-
   return rvalue;
 }
 
@@ -307,9 +297,6 @@ unsigned int BufferQueue::PopFromLast(void *pDestData, unsigned int nSize) {
   else {
     rvalue = 0;
   }
-
-  TraceMsgA("Buffer Queue(%s): pop data from last element: data-size %d.\n",
-            impl_->queue_name_.c_str(), rvalue);
 
   return rvalue;
 }
@@ -373,9 +360,6 @@ unsigned int BufferQueue::PopDataCrossElement(void *pOutputBuffer, unsigned int 
     rvalue = 0;
   }
 
-  TraceMsgA("Buffer Queue(%s): pop data from %d element(s): data-size %d.\n",
-            impl_->queue_name_.c_str(), nOutBufferNum, rvalue);
-
   return rvalue;
 }
 
@@ -398,9 +382,6 @@ unsigned int BufferQueue::GetFromFront(void *pDestData, unsigned int nSize) {
   else {
     rvalue = 0;
   }
-
-  TraceMsgA("Buffer Queue(%s): get data from front element: data-size %d.\n",
-            impl_->queue_name_.c_str(), rvalue);
 
   return rvalue;
 }
@@ -425,9 +406,6 @@ unsigned int BufferQueue::GetFromLast(void *pDestData, unsigned int nSize) {
   else {
     rvalue = 0;
   }
-
-  TraceMsgA("Buffer Queue(%s): get data from last element: data-size %d.\n",
-            impl_->queue_name_.c_str(), rvalue);
 
   return rvalue;
 }
@@ -465,9 +443,6 @@ unsigned int BufferQueue::RemoveData(unsigned int nBytesToRemove) {
     rvalue = 0;
   }
 
-  TraceMsgA("Buffer Queue(%s): remove data from %d element(s): data-size %d.\n",
-            impl_->queue_name_.c_str(), rvalue, nBytesToRemove - nByteNeed);
-
   return rvalue;
 }
 
@@ -504,8 +479,6 @@ unsigned int BufferQueue::Clear() {
   impl_->last_element_ = NULL;
   impl_->element_num_ = 0;
   impl_->total_data_size_ = 0;
-
-  TraceMsgA("Buffer Queue(%s): clear all data\n", impl_->queue_name_.c_str());
 
   return rvalue;
 }

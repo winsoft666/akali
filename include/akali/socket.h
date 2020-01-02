@@ -19,7 +19,6 @@
 #include "akali/constructormagic.h"
 #include "akali/socketaddress.h"
 #include "akali/assert.h"
-#include "akali/logging.h"
 #include "akali_export.h"
 
 namespace akali {

@@ -15,7 +15,6 @@
 #include "akali/iocpserver.h"
 #if (defined _WIN32 || defined WIN32)
 #include "akali/timeutils.h"
-#include "akali/logging.h"
 #include "akali/overlappedsocket.h"
 #include "akali/criticalsection.h"
 
@@ -31,22 +30,18 @@ bool IOCPServer::Start(const SocketAddress &addr, int family, int type) {
   socket_->RegisterDelegate(this);
 
   if (!socket_->CreateT(family, type)) {
-    AKALI_LOG(LS_WARNING) << "CreateT: failed, error=" << socket_->GetError();
     return false;
   }
 
   if (socket_->Bind(addr) == SOCKET_ERROR) {
-    AKALI_LOG(LS_WARNING) << "Bind: failed, error=" << socket_->GetError();
     return false;
   }
 
   if (socket_->Listen(SOMAXCONN) == SOCKET_ERROR) {
-    AKALI_LOG(LS_WARNING) << "Listen: failed, error=" << socket_->GetError();
     return false;
   }
 
   if (!socket_->Accept()) {
-    AKALI_LOG(LS_WARNING) << "Accept: failed, error=" << socket_->GetError();
     return false;
   }
 
@@ -57,7 +52,6 @@ bool IOCPServer::Start(const SocketAddress &addr, int family, int type) {
 
 bool IOCPServer::Stop() {
   if (socket_->Close() == SOCKET_ERROR) {
-    AKALI_LOG(LS_WARNING) << "Close: failed, error=" << socket_->GetError();
     return false;
   }
 
@@ -83,7 +77,6 @@ int64_t IOCPServer::GetStartTime() const { return start_time_; }
 
 void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
   AKALI_ASSERT(socket);
-  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [Connected]";
   {
     CritScope cs(&crit_);
     client_list_.push_back(socket);
@@ -93,23 +86,17 @@ void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
 void IOCPServer::OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
   AKALI_ASSERT(socket);
   AKALI_ASSERT(io_ctx);
-  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [RECV] "
-                   << io_ctx->GetBuffer();
 }
 
 void IOCPServer::OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
   AKALI_ASSERT(socket);
   AKALI_ASSERT(io_ctx);
-  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString() << "] [SEND] "
-                   << io_ctx->GetBuffer();
 }
 
 void IOCPServer::OnConnectEvent(OverlappedSocket *socket) {}
 
 void IOCPServer::OnCloseEvent(OverlappedSocket *socket, int error) {
   AKALI_ASSERT(socket);
-  AKALI_LOG(LS_INFO) << "[" << socket->GetRemoteAddress().ToString()
-                   << "] [Disconnected] error=" << error;
   socket->Close();
   {
     CritScope cs(&crit_);

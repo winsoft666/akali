@@ -22,7 +22,6 @@
 #include <windows.h>
 #include <strsafe.h>
 #include <Shlwapi.h>
-#include "akali/logging.h"
 
 namespace akali {
 static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DATAW file,
@@ -153,9 +152,6 @@ bool DeleteDir(const wchar_t *pszDir) {
           SetFileAttributesW(szTemp, FILE_ATTRIBUTE_NORMAL);
           bRet = (DeleteFileW(szTemp) == TRUE);
         }
-      }
-      if (!bRet) {
-        TraceMsgW(L"DeleteFile failed: %s, GLE: %ld", szTemp, GetLastError());
       }
     }
 

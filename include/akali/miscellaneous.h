@@ -51,6 +51,9 @@ AKALI_API bool WindowToFile(HWND h, const std::wstring &file_path);
 
 AKALI_API void PrintConsoleProcess(double percentage);
 #endif
+
+AKALI_API void TraceMsgA(const char *lpFormat, ...);
+AKALI_API void TraceMsgW(const wchar_t *lpFormat, ...);
 } // namespace akali
 #endif
 #endif // AKALI_MISCELLANEOUS_SAF234_

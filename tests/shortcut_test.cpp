@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "gtest/gtest.h"
-#include "akali/process_util.h"
+#include "akali/process.hpp"
 #include "akali/shortcut.h"
 #include "akali/scoped_com_initializer.h"
 #include <strsafe.h>
@@ -16,7 +16,7 @@ TEST(ShortcutTest, WebLink) {
 
   akali::ShortcutProperties sp;
   sp.SetTarget(L"D:\\sourcecode\\XubeiSteamBox\\src\\Win32\\Debug\\Gogo.exe");
-  sp.SetIcon(akali::GetCurrentProcessDirectoryW() + L"Google.ico", 0);
+  sp.SetIcon(akali::Process::GetSelfDir() + L"Google.ico", 0);
   EXPECT_TRUE(
       akali::CreateOrUpdateShortcutLink(szLinkPath, sp, akali::SHORTCUT_CREATE_ALWAYS));
 }

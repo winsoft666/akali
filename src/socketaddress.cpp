@@ -15,7 +15,6 @@
 #include "akali/socketaddress.h"
 #include <sstream>
 #include "akali/byteorder.h"
-#include "akali/logging.h"
 
 namespace akali {
 SocketAddress::SocketAddress() { Clear(); }

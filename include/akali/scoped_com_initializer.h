@@ -19,7 +19,7 @@
 #if (defined _WIN32 || defined WIN32)
 #include <objbase.h>
 #include "akali/assert.h"
-#include "akali/logging.h"
+#include "akali/constructormagic.h"
 
 namespace akali {
 // Initializes COM in the constructor (STA or MTA), and uninitializes COM in the
@@ -53,9 +53,7 @@ private:
 #endif
     hr_ = CoInitializeEx(NULL, init);
 #ifndef NDEBUG
-    if (hr_ == S_FALSE)
-      TraceMsgA("Multiple CoInitialize() calls for thread %d", thread_id_);
-    else
+    if (hr_ != S_FALSE)
       AKALI_ASSERT(RPC_E_CHANGED_MODE != hr_, "Invalid COM thread model change");
 #endif
   }

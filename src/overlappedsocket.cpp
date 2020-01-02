@@ -15,7 +15,6 @@
 #include "akali/overlappedsocket.h"
 
 #if (defined _WIN32 || defined WIN32)
-#include "akali/logging.h"
 #include <process.h>
 #include "akali/timeutils.h"
 #include "akali/assert.h"
@@ -192,10 +191,6 @@ SocketAddress OverlappedSocket::GetLocalAddress() const {
   SocketAddress address;
   if (result >= 0) {
     SocketAddressFromSockAddrStorage(addr, &address);
-  }
-  else {
-    AKALI_LOG(LS_WARNING) << "GetLocalAddress: unable to get local addr, socket="
-                        << own_socket_ctx_->socket;
   }
   return address;
 }
@@ -380,7 +375,6 @@ int OverlappedSocket::TranslateOption(Option opt, int *slevel, int *sopt) {
     *sopt = TCP_NODELAY;
     break;
   case OPT_DSCP:
-    AKALI_LOG(LS_WARNING) << "Socket::OPT_DSCP not supported.";
     return -1;
   case OPT_BROADCAST:
     *slevel = SOL_SOCKET;

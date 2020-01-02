@@ -32,8 +32,6 @@
 #include "akali/file_info.h"
 #include "akali/file_util.h"
 #include "akali/ini.h"
-#include "akali/logging.h"
-#include "akali/logging_file_sink_win.h"
 #include "akali/md5.h"
 #include "akali/memory_pool.hpp"
 #include "akali/module_safe_string.h"

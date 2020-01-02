@@ -1,7 +1,6 @@
 #include "akali/directory_monitor.h"
 #if (defined _WIN32 || defined WIN32)
 #include "akali/safe_release_macro.h"
-#include "akali/logging.h"
 
 namespace akali {
 DirectoryMonitor::DirectoryMonitor() : directory_(INVALID_HANDLE_VALUE) {
@@ -79,7 +78,6 @@ bool DirectoryMonitor::StartMonitor(const std::wstring &direcotry, bool watch_su
         }
       }
       else {
-        TraceMsgW(L"ReadDirectoryChangesW failed, GLE: %ld", gle);
         if (watch_buffer)
           free(watch_buffer);
         break;

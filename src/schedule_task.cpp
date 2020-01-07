@@ -18,7 +18,7 @@
 #include <comdef.h>
 #include <taskschd.h>
 #include <strsafe.h>
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 #pragma comment(lib, "taskschd.lib")
 

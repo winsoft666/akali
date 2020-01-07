@@ -38,7 +38,7 @@
 #include "akali/process.hpp"
 #include "akali/registry.h"
 #include "akali/string_helper.hpp"
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 #include "akali/noncopyable.h"
 #include "akali/singleton.hpp"
 #include "akali/stringencode.h"

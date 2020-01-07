@@ -12,8 +12,8 @@
  * file.
  *******************************************************************************/
 
-#ifndef AKALI_SAFE_RELEASE_MACRO_H__
-#define AKALI_SAFE_RELEASE_MACRO_H__
+#ifndef AKALI_MACROS_H__
+#define AKALI_MACROS_H__
 
 #ifndef SAFE_FREE
 #define SAFE_FREE(p)                                                                               \
@@ -75,4 +75,4 @@
   } while (false)
 #endif
 
-#endif // ! AKALI_SAFE_RELEASE_MACRO_H__
+#endif // ! AKALI_MACROS_H__

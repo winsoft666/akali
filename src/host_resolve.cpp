@@ -14,7 +14,7 @@
 
 #include "akali/host_resolve.h"
 #if (defined _WIN32 || defined WIN32)
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 namespace akali {
 HostResolve::HostResolve() {

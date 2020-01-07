@@ -18,7 +18,7 @@
 #include <process.h>
 #include "akali/timeutils.h"
 #include <assert.h>
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 namespace akali {
 OverlappedSocket::CompletionIOHandler::CompletionIOHandler(OverlappedSocket *parent, int index)

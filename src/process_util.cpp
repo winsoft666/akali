@@ -23,7 +23,7 @@
 #include <UserEnv.h>
 #include <Psapi.h>
 #include <shellapi.h>
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 namespace akali {
 ProcessFinder::ProcessFinder(DWORD dwFlags /* = 0*/, DWORD dwProcessID /* = 0*/) {

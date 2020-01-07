@@ -16,7 +16,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include "akali/buffer_queue.h"
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 namespace akali {
 class BufferQueue::BufferQueueImpl {

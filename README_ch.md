@@ -1,15 +1,16 @@
-# 1. 项目介绍
-[akali](https://github.com/winsoft666/akali)是一个通用的C++功能库，不依赖任何第三方库。
+[>>> English Version](README.md)
 
-# 2. 功能模块
+# Akali
+C++基础库，不依赖任何第三方库。
+
+---
+
+# 模块
 |文件|功能|支持平台|
 |---|---|---|
-|assert.h <br/> assert.cpp|运行时断言，支持附加消息|Windows <br/> Linux|
 |base64.h <br/> base64.cpp|Base64编解码|Windows <br/> Linux|
 |buffer_queue.h <br/> buffer_queue.cpp|基于链表结构的，自动增长的缓冲队列，支持跨链表节点取数据|Windows <br/> Linux|
 |byteorder.h <br/> byteorder.cpp|字节序列判断与校验|Windows <br/> Linux|
-|cmdline_parse.h <br/> cmdline_parse.cpp|命令行参数解析|Windows <br/> Linux|
-|flags.h <br/> flags.cpp|命令行参数定义，解析|Windows <br/> Linux|
 |constructormagic.h|宏：禁用拷贝构造函数，赋值构造函数|Windows <br/> Linux|
 |criticalsection.h <br/> criticalsection.cpp|临界区功能|Windows|
 |deprecation.h|接口过时定义|Windows <br/> Linux|
@@ -21,24 +22,23 @@
 |ini.h <br/> ini.cpp|INI配置文件|Windows|
 |internet_availability_checker.h <br/> internet_availability_checker.cpp|检测网络是否可用|Windows|
 |ipc.h <br/> ipc.cpp|基于命名管道的进程间通信|Windows|
-|logging.h <br/> logging.cpp|日志|Windows <br/> Linux|
-|logging_file_sink_win.h <br/> logging_file_sink_win.cpp|结合logging将日志输出到文件|Windows|
 |md5.h <br/> md5.cpp|文件，字符串MD5编码|Windows <br/> Linux|
 |memory_pool.hpp|C++内存池实现|Windows <br/> Linux|
 |noncopyable.h|类不允许拷贝|Windows <br/> Linux|
 |os_ver.h <br/> os_ver.cpp|获取Windows系统版本|Windows|
 |pc_info.h <br/> pc_info.cpp|获取计算机信息(IP, MAC, CPU ID)|Windows|
-|process_util.h <br/> process_util.cpp|查找，关闭，启动进程，关闭进程，添加UIPI过滤等|Windows|
+|process_util.h <br/> process_util.cpp|查找，关闭，启动进程，添加UIPI过滤等|Windows|
+|process.hpp <br/> process_win.cpp <br/> process_unix.cpp|进程启动、关闭等|Windows <br/> Linux|
 |random.h <br/> random.cpp|随机数生成|Windows <br/> Linux|
 |registry.h <br/> registry.cpp|注册表读写|Windows|
-|safe_release_macro.h|宏：安全释放|Windows <br/> Linux|
+|macros.h|宏：安全释放等|Windows <br/> Linux|
 |schedule_task.h <br/> schedule_task.cpp|Windows计划任务|Windows|
 |scoped_com_initializer.h <br/> scoped_propvariant.h <br/> scoped_variant.h|COM, PROPVARIANT初始化、反初始化|Windows|
 |scoped_variant.h <br/> scoped_variant.cpp|VARIANT使用|Windows|
 |shortcut.h <br/> shortcut.cpp|创建、更新、删除快捷方式|Windows|
-|singleton.h|单实例|Windows <br/> Linux|
+|singleton.hpp|单实例类，单实例进程|Windows <br/> Linux|
 |stack_walker.h <br/> stack_walker.cpp|获取代码的调用堆栈|Windows|
-|string_helper.h <br/> string_helper.cpp|std::string辅助函数，如查找、截取等|Windows <br/> Linux|
+|string_helper.hpp |std::string辅助函数|Windows <br/> Linux|
 |stringencode.h <br/> stringencode.cpp|字符编码|Windows <br/> Linux|
 |thread.h <br/> thread.cpp|C++多线程|Windows <br/> Linux|
 |thread_pool.h|线程池|Windows <br/> Linux|
@@ -54,8 +54,11 @@
 |iocp_socket.h <br/> iocp_socket.cpp <br/> iocpserver.h <br/> iocpserver.cpp|Windows IOCP网络模型及IOCP服务端|Windows|
 |overlappedsocket.h <br/> overlappedsocket.cpp|Windows重叠Socket|Windows|
 |miscellaneous.h <br/> miscellaneous.cpp|未归类的小功能，如截屏、版本对比、控制台彩色进度等|Windows <br/> Linux|
+|filesystem.hpp|类似C++17的filesystem的实现|Windows <br/> Linux|
 
-# 3. 编译
+---
+
+# 编译
 使用cmake生成相应工程，然后编译。
 
 cmake参数：
@@ -70,4 +73,11 @@ cmake.exe -G "Visual Studio 15 2017" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -
 # Linux
 cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
 make
+```
+
+---
+
+# 通过vcpkg安装
+```bash
+vcpkg install akali
 ```

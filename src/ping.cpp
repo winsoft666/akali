@@ -16,7 +16,7 @@
 #if (defined _WIN32 || defined WIN32)
 #include <assert.h>
 #include "akali/timeutils.h"
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 namespace akali {
 Ping::Ping(int packet_size /*= 32*/, int send_timeout_ms /*= 3000*/, int recv_timeout_ms /*= 3000*/,

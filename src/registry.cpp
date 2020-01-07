@@ -16,7 +16,7 @@
 #include "akali/registry.h"
 #include <process.h>
 #include <strsafe.h>
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 #include "akali/os_ver.h"
 
 namespace akali {

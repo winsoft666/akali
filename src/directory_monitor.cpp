@@ -1,6 +1,6 @@
 #include "akali/directory_monitor.h"
 #if (defined _WIN32 || defined WIN32)
-#include "akali/safe_release_macro.h"
+#include "akali/macros.h"
 
 namespace akali {
 DirectoryMonitor::DirectoryMonitor() : directory_(INVALID_HANDLE_VALUE) {

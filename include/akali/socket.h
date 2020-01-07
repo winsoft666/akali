@@ -16,9 +16,9 @@
 #define AKALI_SOCKET_H_
 
 #include <errno.h>
+#include <assert.h>
 #include "akali/constructormagic.h"
 #include "akali/socketaddress.h"
-#include "akali/assert.h"
 #include "akali_export.h"
 
 namespace akali {

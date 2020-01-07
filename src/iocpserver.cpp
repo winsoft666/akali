@@ -25,7 +25,7 @@ IOCPServer::~IOCPServer() {}
 
 bool IOCPServer::Start(const SocketAddress &addr, int family, int type) {
   socket_ = new OverlappedSocket();
-  AKALI_ASSERT(socket_);
+  assert(socket_);
 
   socket_->RegisterDelegate(this);
 
@@ -58,7 +58,7 @@ bool IOCPServer::Stop() {
   {
     CritScope cs(&crit_);
     for (ClientList::iterator it = client_list_.begin(); it != client_list_.end(); it++) {
-      AKALI_ASSERT((*it) != NULL);
+      assert((*it) != NULL);
       (*it)->Close();
       delete (*it);
     }
@@ -76,7 +76,7 @@ bool IOCPServer::Stop() {
 int64_t IOCPServer::GetStartTime() const { return start_time_; }
 
 void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
-  AKALI_ASSERT(socket);
+  assert(socket);
   {
     CritScope cs(&crit_);
     client_list_.push_back(socket);
@@ -84,19 +84,19 @@ void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
 }
 
 void IOCPServer::OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
-  AKALI_ASSERT(socket);
-  AKALI_ASSERT(io_ctx);
+  assert(socket);
+  assert(io_ctx);
 }
 
 void IOCPServer::OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
-  AKALI_ASSERT(socket);
-  AKALI_ASSERT(io_ctx);
+  assert(socket);
+  assert(io_ctx);
 }
 
 void IOCPServer::OnConnectEvent(OverlappedSocket *socket) {}
 
 void IOCPServer::OnCloseEvent(OverlappedSocket *socket, int error) {
-  AKALI_ASSERT(socket);
+  assert(socket);
   socket->Close();
   {
     CritScope cs(&crit_);

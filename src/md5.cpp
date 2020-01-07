@@ -43,8 +43,17 @@ namespace libmd5_internal {
 
 #define HEX_STRING "0123456789abcdef" /* to convert to hex */
 
-int g_bigEndian = 0;
-int g_endianessDetected = 0;
+typedef unsigned int UWORD32;
+typedef unsigned char md5byte;
+
+struct MD5Context {
+  UWORD32 buf[4];
+  UWORD32 bytes[2];
+  UWORD32 in[16];
+};
+
+static int g_bigEndian = 0;
+static int g_endianessDetected = 0;
 
 void detectEndianess() {
   int nl = 0x12345678;
@@ -311,16 +320,6 @@ void MD5SigToString(unsigned char signature[16], char *str, int len) {
   }
 }
 } // namespace libmd5_internal
-
-std::string GetStringMd5(const std::string &str) {
-  unsigned char md5Sig[16] = {0};
-  char szMd5[33] = {0};
-
-  libmd5_internal::MD5Buffer((const unsigned char *)str.c_str(), str.length(), md5Sig);
-  libmd5_internal::MD5SigToString(md5Sig, szMd5, 33);
-
-  return szMd5;
-}
 
 std::string GetStringMd5(const void *buffer, unsigned int buffer_size) {
   unsigned char md5Sig[16] = {0};

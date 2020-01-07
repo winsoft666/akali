@@ -4,20 +4,20 @@
 #include <netlistmgr.h>
 #include <atlbase.h>
 #include <atlcom.h>
-#include "akali/assert.h"
+#include <assert.h>
 
 namespace akali {
 bool InternetAvailabilityChecker::InternetConnectionAvailable(bool &avaliable) {
   CComPtr<INetworkListManager> manager;
   HRESULT hr = manager.CoCreateInstance(CLSID_NetworkListManager);
-  AKALI_ASSERT(SUCCEEDED(hr), "initialize COM first, suggest akali::ScopedCOMInitializer");
+  assert(("initialize COM first, suggest akali::ScopedCOMInitializer", SUCCEEDED(hr)));
   if (FAILED(hr)) {
     return false;
   }
 
   VARIANT_BOOL is_connected;
   hr = manager->get_IsConnectedToInternet(&is_connected);
-  AKALI_ASSERT(SUCCEEDED(hr), "initialize COM first, suggest akali::ScopedCOMInitializer");
+  assert(("initialize COM first, suggest akali::ScopedCOMInitializer", SUCCEEDED(hr)));
   if (FAILED(hr)) {
     return false;
   }

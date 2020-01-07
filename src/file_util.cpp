@@ -107,12 +107,6 @@ void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource,
   FileSearch(szSource, szDest, pIgnoreNum);
 }
 
-AKALI_API bool PathIsExists(const wchar_t *pszPath) {
-  if (pszPath && _waccess_s(pszPath, 0) == 0)
-    return true;
-  return false;
-}
-
 bool DeleteDir(const char *pszDir) {
   if (!pszDir)
     return false;

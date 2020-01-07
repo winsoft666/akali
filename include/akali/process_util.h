@@ -58,52 +58,6 @@ AKALI_API BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, LPCTSTR szD
 AKALI_API BOOL EnablePrivilege(LPCTSTR szPrivilege, BOOL fEnable);
 AKALI_API BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin);
 
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process::Kill instead.")
-BOOL TerminateProcess(DWORD dwProcessId, DWORD dwExitCode);
-
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process::Kill instead.")
-BOOL TerminateProcess(LPCTSTR pszExeName, DWORD dwExitCode);
-
-// terminate all process that EXE file in szAppDir directory.
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process::RecursiveKill "
-               "instead.")
-void RecursiveTerminateProcess(LPCTSTR szAppDir, bool exclude_self);
-
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process::GetSelfDir "
-                 "instead.")
-std::wstring GetCurrentProcessDirectoryW();
-
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process::GetSelfDir "
-                 "instead.")
-std::string GetCurrentProcessDirectoryA();
-#if defined(UNICODE) || defined(_UNICODE)
-#define GetCurrentProcessDirectory akali::GetCurrentProcessDirectoryW
-#else
-#define GetCurrentProcessDirectory akali::GetCurrentProcessDirectoryA
-#endif
-
-AKALI_API BOOL MakesureProcessSingleInstance(LPCTSTR pszUniqueName);
-
-// 如果路径中含有空格，必须使用双引号引用
-//
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process instead.")
-BOOL EasyCreateProcess(LPCTSTR szCmdLine, LPPROCESS_INFORMATION lpProcessInfo,
-                                   BOOL bInheritHandles = FALSE);
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process instead.")
-BOOL EasyCreateProcess(const std::wstring &strCmdLine,
-                                   LPPROCESS_INFORMATION lpProcessInfo,
-                                   BOOL bInheritHandles = FALSE);
-AKALI_API
-AKALI_DEPRECATED("This function will be removed. Consider using Process instead.")
-BOOL EasyCreateProcessUntilExit(const std::wstring &strCmdLine, DWORD *pExitCode,
-                                BOOL bInheritHandles = FALSE);
 AKALI_API BOOL CreateUserProcess(PCTSTR pszFilePath);
 
 // Please see: https://blog.csdn.net/china_jeffery/article/details/88225810

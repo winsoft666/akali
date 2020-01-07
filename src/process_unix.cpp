@@ -470,5 +470,20 @@ std::string Process::GetSelfDir() noexcept {
   }
   return path;
 }
+
+std::string Process::GetProcessPath(Process::id_type id) noexcept {
+  std::string cmdPath = std::string("/proc/") + std::to_string(id) + std::string("/cmdline");
+  std::ifstream cmdFile(cmdPath.c_str());
+
+  std::string cmdLine;
+  std::getline(cmdFile, cmdLine);
+  if (!cmdLine.empty()) {
+    // Keep first cmdline item which contains the program path
+    size_t pos = cmdLine.find('\0');
+    if (pos != string_type::npos)
+      cmdLine = cmdLine.substr(0, pos);
+  }
+  return cmdLine;
+}
 } // namespace akali
 #endif

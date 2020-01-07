@@ -8,7 +8,9 @@
 #include <unordered_map>
 #include <vector>
 #include "akali/akali_export.h"
-#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#pragma comment(lib, "Psapi.lib")
+#else
 #include <sys/wait.h>
 #endif
 
@@ -122,7 +124,6 @@ public:
   /// force=true is only supported on Unix-like systems.
   static bool Kill(id_type id, bool force = false) noexcept;
 
-
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
   /// Kill all process that executed file name is executed_file_name.
   /// force=true is only supported on Unix-like systems.
@@ -135,6 +136,8 @@ public:
 
   static string_type GetSelfPath() noexcept;
   static string_type GetSelfDir() noexcept;
+
+  static string_type GetProcessPath(id_type id) noexcept;
 #else
   /// Kill all process that executed file name is executed_file_name.
   /// force=true is only supported on Unix-like systems.
@@ -143,6 +146,7 @@ public:
   static bool Kill(const std::string &executed_file_name, bool force = false) noexcept;
   static std::string GetSelfPath() noexcept;
   static std::string GetSelfDir() noexcept;
+  static std::string GetProcessPath(id_type id) noexcept;
 #endif
 private:
   Data data_;

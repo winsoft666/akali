@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
 #include "akali/ini.h"
+#include <akali/process.hpp>
 #include "akali/process_util.h"
 
 TEST(IniTest, Basic) {
-  std::wstring ini_path = akali::GetCurrentProcessDirectoryW() + L"test ≤‚ ‘.ini";
+  std::wstring ini_path = akali::Process::GetSelfDir() + L"test ≤‚ ‘.ini";
   akali::Ini ini(ini_path);
 
   std::wstring str_result;
@@ -31,7 +32,7 @@ TEST(IniTest, Basic) {
 }
 
 TEST(IniTest, Advance) {
-  std::wstring ini_path = akali::GetCurrentProcessDirectoryW() + L"test ≤‚ ‘.ini";
+  std::wstring ini_path = akali::Process::GetSelfDir() + L"test ≤‚ ‘.ini";
   akali::Ini ini(ini_path);
 
   RECT rc = {1, 2, 3, 4};

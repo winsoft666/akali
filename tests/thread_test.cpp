@@ -1,10 +1,8 @@
 #include <iostream>
 #include "gtest/gtest.h"
 #include "akali/thread.hpp"
-#include "akali/cmdline_parse.h"
 
 TEST(ThreadTest, test1) {
-  akali::CmdLineParser cmd(GetCommandLineW());
   long call_tid = akali::Thread::GetCurThreadId();
 
   std::string str_thread_name = "test-thread1";

@@ -18,7 +18,7 @@
 
 #if (defined _WIN32 || defined WIN32)
 #include <objbase.h>
-#include "akali/assert.h"
+#include <assert.h>
 #include "akali/constructormagic.h"
 
 namespace akali {
@@ -38,7 +38,7 @@ public:
   ~ScopedCOMInitializer() {
 #ifndef NDEBUG
     // Using the windows API directly to avoid dependency on platform_thread.
-    AKALI_ASSERT(GetCurrentThreadId() == thread_id_);
+    assert(GetCurrentThreadId() == thread_id_);
 #endif
     if (succeeded())
       CoUninitialize();
@@ -54,7 +54,7 @@ private:
     hr_ = CoInitializeEx(NULL, init);
 #ifndef NDEBUG
     if (hr_ != S_FALSE)
-      AKALI_ASSERT(RPC_E_CHANGED_MODE != hr_, "Invalid COM thread model change");
+      assert(("Invalid COM thread model change", RPC_E_CHANGED_MODE != hr_));
 #endif
   }
 

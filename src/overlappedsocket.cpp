@@ -17,7 +17,7 @@
 #if (defined _WIN32 || defined WIN32)
 #include <process.h>
 #include "akali/timeutils.h"
-#include "akali/assert.h"
+#include <assert.h>
 #include "akali/safe_release_macro.h"
 
 namespace akali {
@@ -33,7 +33,7 @@ OverlappedSocket::CompletionIOHandler::~CompletionIOHandler() {
 }
 
 void OverlappedSocket::CompletionIOHandler::Run() {
-  AKALI_ASSERT(parent_);
+  assert(parent_);
   DWORD transferred_bytes = 0;
   OverlappedSocket *overlapped_socket = NULL;
 
@@ -51,7 +51,7 @@ void OverlappedSocket::CompletionIOHandler::Run() {
     if (ret == FALSE) {
       gle = GetLastError();
       if (gle == WAIT_TIMEOUT) {
-        AKALI_NOT_REACHED("");
+        assert(false);
         continue;
       }
       else if (gle == ERROR_NETNAME_DELETED) {
@@ -110,7 +110,7 @@ void OverlappedSocket::CompletionIOHandler::Run() {
           new_overlapped_socket->connect_time_ = GetTimeStamp();
           // post new accept
           if (!parent_->PostAccept(io_ctx)) {
-            AKALI_NOT_REACHED("");
+            assert(false);
           }
 
           if (parent_ && parent_->delegate_)
@@ -148,7 +148,7 @@ void OverlappedSocket::CompletionIOHandler::Run() {
           parent_->delegate_->OnConnectEvent(overlapped_socket);
       }
       else {
-        AKALI_NOT_REACHED("");
+        assert(false);
       }
     }
   }
@@ -213,7 +213,7 @@ SocketAddress OverlappedSocket::GetRemoteAddress() const {
 }
 
 int OverlappedSocket::Bind(const SocketAddress &addr) {
-  AKALI_ASSERT(own_socket_ctx_->socket != INVALID_SOCKET);
+  assert(own_socket_ctx_->socket != INVALID_SOCKET);
   if (own_socket_ctx_->socket == INVALID_SOCKET)
     return SOCKET_ERROR;
 
@@ -226,7 +226,7 @@ int OverlappedSocket::Bind(const SocketAddress &addr) {
 }
 
 int OverlappedSocket::Connect(const SocketAddress &addr) {
-  AKALI_ASSERT(own_socket_ctx_ != NULL);
+  assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
   }
@@ -241,7 +241,7 @@ int OverlappedSocket::Connect(const SocketAddress &addr) {
 }
 
 int OverlappedSocket::Send(const void *buffer, size_t length, PER_IO_CONTEXT *io_ctx /* = NULL*/) {
-  AKALI_ASSERT(own_socket_ctx_ != NULL);
+  assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
   }
@@ -267,7 +267,7 @@ int OverlappedSocket::Listen(int backlog) {
 }
 
 int OverlappedSocket::RecvFrom(const SocketAddress &addr, PER_IO_CONTEXT *io_ctx /*= NULL*/) {
-  AKALI_ASSERT(own_socket_ctx_ != NULL);
+  assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
   }
@@ -284,7 +284,7 @@ int OverlappedSocket::RecvFrom(const SocketAddress &addr, PER_IO_CONTEXT *io_ctx
 
 int OverlappedSocket::SendTo(const void *buffer, size_t length, const SocketAddress &addr,
                              PER_IO_CONTEXT *io_ctx /*= NULL*/) {
-  AKALI_ASSERT(own_socket_ctx_ != NULL);
+  assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
   }
@@ -385,7 +385,7 @@ int OverlappedSocket::TranslateOption(Option opt, int *slevel, int *sopt) {
     *sopt = IP_ADD_MEMBERSHIP;
     break;
   default:
-    AKALI_NOT_REACHED("");
+    assert(false);
     return -1;
   }
   return 0;
@@ -440,13 +440,13 @@ bool OverlappedSocket::InitIOCP(SOCKET s) {
   }
 
   connectex_fn_ = GetConnectExFnPointer(own_socket_ctx_->socket);
-  AKALI_ASSERT(connectex_fn_);
+  assert(connectex_fn_);
 
   acceptex_fn_ = GetAcceptExFnPointer(own_socket_ctx_->socket);
-  AKALI_ASSERT(acceptex_fn_);
+  assert(acceptex_fn_);
 
   getacceptexsockaddrs_fn_ = GetAcceptExSockAddrsFnPointer(own_socket_ctx_->socket);
-  AKALI_ASSERT(getacceptexsockaddrs_fn_);
+  assert(getacceptexsockaddrs_fn_);
 
   return true;
 }
@@ -454,7 +454,7 @@ bool OverlappedSocket::InitIOCP(SOCKET s) {
 void OverlappedSocket::UpdateLastError() { error_ = WSAGetLastError(); }
 
 bool OverlappedSocket::PostAccept(PER_IO_CONTEXT *io_ctx) {
-  AKALI_ASSERT(io_ctx);
+  assert(io_ctx);
   if (io_ctx == NULL)
     return false;
 
@@ -484,7 +484,7 @@ bool OverlappedSocket::PostAccept(PER_IO_CONTEXT *io_ctx) {
 }
 
 bool OverlappedSocket::PostRecv(PER_IO_CONTEXT *io_ctx) {
-  AKALI_ASSERT(io_ctx);
+  assert(io_ctx);
   if (io_ctx == NULL)
     return false;
 
@@ -504,7 +504,7 @@ bool OverlappedSocket::PostRecv(PER_IO_CONTEXT *io_ctx) {
 }
 
 bool OverlappedSocket::PostSend(PER_IO_CONTEXT *io_ctx, const void *msg, size_t msg_len) {
-  AKALI_ASSERT(io_ctx);
+  assert(io_ctx);
   if (io_ctx == NULL)
     return false;
 
@@ -524,7 +524,7 @@ bool OverlappedSocket::PostSend(PER_IO_CONTEXT *io_ctx, const void *msg, size_t 
 }
 
 bool OverlappedSocket::PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr) {
-  AKALI_ASSERT(io_ctx);
+  assert(io_ctx);
   if (io_ctx == NULL)
     return false;
 
@@ -557,7 +557,7 @@ bool OverlappedSocket::PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &
 }
 
 bool OverlappedSocket::PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr) {
-  AKALI_ASSERT(io_ctx);
+  assert(io_ctx);
   if (io_ctx == NULL)
     return false;
 
@@ -584,15 +584,15 @@ bool OverlappedSocket::PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress 
 
 bool OverlappedSocket::PostSendTo(const void *buffer, size_t length, PER_IO_CONTEXT *io_ctx,
                                   const SocketAddress &addr) {
-  AKALI_ASSERT(io_ctx);
+  assert(io_ctx);
   if (io_ctx == NULL)
     return false;
 
-  AKALI_ASSERT(buffer);
+  assert(buffer);
   if (buffer == NULL)
     return false;
 
-  AKALI_ASSERT(length > 0);
+  assert(length > 0);
   if (length <= 0)
     return false;
 

@@ -1,7 +1,7 @@
 ﻿#include "akali/scoped_variant.h"
 
 #if (defined _WIN32 || defined WIN32)
-#include "akali/assert.h"
+#include <assert.h>
 
 namespace akali {
 // Global, const instance of an empty variant.
@@ -25,7 +25,7 @@ ScopedVariant::ScopedVariant(int value, VARTYPE vt) {
 }
 
 ScopedVariant::ScopedVariant(double value, VARTYPE vt) {
-  AKALI_ASSERT(vt == VT_R8 || vt == VT_DATE);
+  assert(vt == VT_R8 || vt == VT_DATE);
   var_.vt = vt;
   var_.dblVal = value;
 }
@@ -70,7 +70,7 @@ void ScopedVariant::Swap(ScopedVariant &var) {
 }
 
 VARIANT *ScopedVariant::Receive() {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "variant leak.type: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   return &var_;
 }
 
@@ -105,79 +105,79 @@ int ScopedVariant::Compare(const VARIANT &var, bool ignore_case) const {
 }
 
 void ScopedVariant::Set(const wchar_t *str) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_BSTR;
   var_.bstrVal = ::SysAllocString(str);
 }
 
 void ScopedVariant::Set(int8_t i8) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_I1;
   var_.cVal = i8;
 }
 
 void ScopedVariant::Set(uint8_t ui8) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_UI1;
   var_.bVal = ui8;
 }
 
 void ScopedVariant::Set(int16_t i16) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_I2;
   var_.iVal = i16;
 }
 
 void ScopedVariant::Set(uint16_t ui16) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_UI2;
   var_.uiVal = ui16;
 }
 
 void ScopedVariant::Set(int32_t i32) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_I4;
   var_.lVal = i32;
 }
 
 void ScopedVariant::Set(uint32_t ui32) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_UI4;
   var_.ulVal = ui32;
 }
 
 void ScopedVariant::Set(int64_t i64) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_I8;
   var_.llVal = i64;
 }
 
 void ScopedVariant::Set(uint64_t ui64) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_UI8;
   var_.ullVal = ui64;
 }
 
 void ScopedVariant::Set(float r32) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_R4;
   var_.fltVal = r32;
 }
 
 void ScopedVariant::Set(double r64) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_R8;
   var_.dblVal = r64;
 }
 
 void ScopedVariant::SetDate(DATE date) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_DATE;
   var_.date = date;
 }
 
 void ScopedVariant::Set(IDispatch *disp) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_DISPATCH;
   var_.pdispVal = disp;
   if (disp)
@@ -185,13 +185,13 @@ void ScopedVariant::Set(IDispatch *disp) {
 }
 
 void ScopedVariant::Set(bool b) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_BOOL;
   var_.boolVal = b ? VARIANT_TRUE : VARIANT_FALSE;
 }
 
 void ScopedVariant::Set(IUnknown *unk) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_UNKNOWN;
   var_.punkVal = unk;
   if (unk)
@@ -199,19 +199,19 @@ void ScopedVariant::Set(IUnknown *unk) {
 }
 
 void ScopedVariant::Set(SAFEARRAY *array) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   if (SUCCEEDED(::SafeArrayGetVartype(array, &var_.vt))) {
     var_.vt |= VT_ARRAY;
     var_.parray = array;
   }
   else {
-    AKALI_ASSERT(!array, "Unable to determine safearray vartype");
+    assert(("Unable to determine safearray vartype", !array));
     var_.vt = VT_EMPTY;
   }
 }
 
 void ScopedVariant::Set(const VARIANT &var) {
-  AKALI_ASSERT(!IsLeakableVarType(var_.vt), "leaking variant: %d", var_.vt);
+  assert(!IsLeakableVarType(var_.vt));
   if (FAILED(::VariantCopy(&var_, &var))) {
     var_.vt = VT_EMPTY;
   }

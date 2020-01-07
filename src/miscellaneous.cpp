@@ -14,7 +14,7 @@
 
 #include "akali/miscellaneous.h"
 #include <math.h>
-#include "akali/assert.h"
+#include <assert.h>
 #include <stdio.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)

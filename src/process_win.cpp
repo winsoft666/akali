@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <cstring>
 #include <stdexcept>
+#include <Psapi.h>
 
 namespace akali {
 Process::Data::Data() noexcept : id(0), handle(NULL) {}
@@ -476,6 +477,30 @@ Process::string_type Process::GetSelfDir() noexcept {
   PathRemoveFileSpec(szPath);
   PathAddBackslash(szPath);
   return string_type(szPath);
+}
+
+Process::string_type Process::GetProcessPath(Process::id_type id) noexcept {
+  Process::string_type strPath;
+  TCHAR Filename[MAX_PATH] = {0};
+  HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, id);
+  if (hProcess == NULL)
+    return strPath;
+  HMODULE hModule = NULL;
+  DWORD cbNeeded;
+  if (EnumProcessModules(hProcess, &hModule, sizeof(hModule), &cbNeeded)) {
+    if (GetModuleFileNameEx(hProcess, hModule, Filename, MAX_PATH)) {
+      strPath = Filename;
+    }
+  }
+  else {
+    DWORD size = MAX_PATH;
+    if (QueryFullProcessImageName(hProcess, 0, Filename, &size)) {
+      strPath = Filename;
+    }
+  }
+  CloseHandle(hProcess);
+
+  return strPath;
 }
 } // namespace akali
 #endif

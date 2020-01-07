@@ -32,8 +32,6 @@ AKALI_API bool CreateDir(const char *pszDir);
 //
 AKALI_API void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource,
                        int *pIgnoreNum);
-
-AKALI_API bool PathIsExists(const wchar_t *pszPath);
 } // namespace akali
 #endif // _WIN32
 

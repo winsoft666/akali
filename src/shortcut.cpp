@@ -20,9 +20,10 @@
 #include <propkey.h>
 #include <strsafe.h>
 #include "akali/os_ver.h"
-#include "akali/assert.h"
+#include <assert.h>
 #include "akali/file_util.h"
 #include "akali/miscellaneous.h"
+#include "akali/filesystem.hpp"
 
 namespace akali {
 namespace {
@@ -62,7 +63,8 @@ bool CreateOrUpdateShortcutLink(const std::wstring &shortcut_path,
     return false;
   }
 
-  bool shortcut_existed = PathIsExists(shortcut_path.c_str());
+  
+  bool shortcut_existed = filesystem::exists(shortcut_path);
 
   // Interfaces to the old shortcut when replacing an existing shortcut.
   IShellLink *old_i_shell_link = NULL;
@@ -88,7 +90,7 @@ bool CreateOrUpdateShortcutLink(const std::wstring &shortcut_path,
       InitializeShortcutInterfaces(NULL, &i_shell_link, &i_persist_file);
     break;
   default:
-    AKALI_NOT_REACHED("");
+    assert(false);
   }
 
   // Return false immediately upon failure to initialize shortcut interfaces.

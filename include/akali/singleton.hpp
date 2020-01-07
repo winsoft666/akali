@@ -17,6 +17,13 @@
 #pragma once
 
 #include <mutex>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
+#include "akali/constructormagic.h"
 #include "akali_export.h"
 
 namespace akali {
@@ -57,5 +64,54 @@ template <class T> void Singleton<T>::Release(void) {
 }
 
 #define SINGLETON_CLASS_DECLARE(class_name) friend class ::akali::Singleton<##class_name>;
+
+class SingletonProcess {
+public:
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+  SingletonProcess(const std::string &unique_name)
+      : unique_name_(unique_name) {}
+#else
+  SingletonProcess(const std::string &unique_pid_name)
+      : unique_pid_name_(unique_pid_name) {}
+#endif
+  ~SingletonProcess() = default;
+  bool operator()() {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    HANDLE mutex = CreateEventA(NULL, TRUE, FALSE, unique_name_.c_str());
+    DWORD gle = GetLastError();
+    bool ret = true;
+
+    if (mutex) {
+      if (gle == ERROR_ALREADY_EXISTS) {
+        CloseHandle(mutex);
+        ret = false;
+      }
+    }
+    else {
+      if (gle == ERROR_ACCESS_DENIED)
+        ret = false;
+    }
+
+    return ret;
+#else
+    int pid_file = open("/tmp/" + unique_pid_name_ + ".pid", O_CREAT | O_RDWR, 0666);
+    int rc = flock(pid_file, LOCK_EX | LOCK_NB);
+    if (rc) {
+      if (EWOULDBLOCK == errno)
+        return false;
+    }
+    return true;
+#endif
+  }
+
+private:
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+  std::string unique_name_;
+#else
+  std::string unique_pid_name_;
+#endif
+  AKALI_DISALLOW_IMPLICIT_CONSTRUCTORS(SingletonProcess);
+};
+
 } // namespace akali
 #endif // !AKALI_SINGLETON_H_

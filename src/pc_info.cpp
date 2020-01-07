@@ -17,7 +17,7 @@
 #include <WinSock2.h>
 #include <Iphlpapi.h>
 #include <thread>
-#include "akali/string_helper.h"
+#include "akali/string_helper.hpp"
 
 namespace akali {
 std::string GetLocalIP() {
@@ -224,7 +224,7 @@ AKALI_API int64_t GetValidMacInteger() {
 
   int64_t ret = 0L;
   std::vector<std::string> mac_values;
-  mac_values = StringSplit(strMac, "-");
+  mac_values = StringSplit<std::string>(strMac, "-");
 
   for (size_t i = 0; i < mac_values.size(); i++) {
     int64_t l = strtol(mac_values[i].c_str(), NULL, 16) * (long long)pow(10, i * 3);

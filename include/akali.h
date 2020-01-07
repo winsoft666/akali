@@ -16,14 +16,11 @@
 #define AKALI_H__
 #pragma once
 
-#include "akali/assert.h"
 #include "akali/base64.h"
 #include "akali/scoped_variant.h"
-#include "akali/scoped_propvariant.h"
 #include "akali/scoped_com_initializer.h"
 #include "akali/buffer_queue.h"
 #include "akali/byteorder.h"
-#include "akali/cmdline_parse.h"
 #include "akali/constructormagic.h"
 #include "akali/criticalsection.h"
 #include "akali/deprecation.h"
@@ -40,10 +37,10 @@
 #include "akali/process_util.h"
 #include "akali/process.hpp"
 #include "akali/registry.h"
-#include "akali/string_helper.h"
+#include "akali/string_helper.hpp"
 #include "akali/safe_release_macro.h"
 #include "akali/noncopyable.h"
-#include "akali/singleton.h"
+#include "akali/singleton.hpp"
 #include "akali/stringencode.h"
 #include "akali/timer.h"
 #include "akali/timeutils.h"
@@ -70,7 +67,19 @@
 #include "akali/thread.hpp"
 #include "akali/thread_pool.hpp"
 
-#if (defined WIN32 || defined _WIN32)
+#if defined(__cplusplus) && __cplusplus >= 201703L && defined(__has_include)
+#if __has_include(<filesystem>)
+#define GHC_USE_STD_FS
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
+#endif
+
+#ifndef GHC_USE_STD_FS
+#include "akali/filesystem.hpp"
+#endif
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "UserEnv.lib")
 #pragma comment(lib, "DbgHelp.lib")

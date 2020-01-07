@@ -1,7 +1,7 @@
 ﻿#include "akali.h"
 #include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #ifndef AKALI_STATIC
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID /*lpReserved*/) {
   switch (dwReason) {

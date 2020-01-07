@@ -1,7 +1,7 @@
 [>>> 中文版](README_ch.md)
 
 # Akali
-A common C++ library that don't depends on other library.
+A common C++ library that don't depends on any library.
 
 ---
 

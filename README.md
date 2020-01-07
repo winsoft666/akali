@@ -1,6 +1,6 @@
 [>>> 中文版](README_ch.md)
 
-# AkaliA
+# Akali
 A common C++ library that don't depends on other library.
 
 ---

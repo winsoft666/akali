@@ -59,9 +59,9 @@ A common C++ library that don't depends on any library.
 ---
 
 # Compile
-Use `cmake` to generate project appropriate <br/> then compile.
+Using `CMake` to generate visual studio project or makefile, then compile.
 
-cmake paramenters:
+CMake paramenters:
 
 - BUILD_SHARED_LIBS: whether dynamic library or not, `ON` or `OFF`.
 - BUILD_TESTS: whether compile test project or not, `ON` or `OFF`.

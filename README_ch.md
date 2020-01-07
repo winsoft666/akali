@@ -59,9 +59,9 @@ C++基础库，不依赖任何第三方库。
 ---
 
 # 编译
-使用cmake生成相应工程，然后编译。
+使用`CMake`生成Visual Studio工程或者makefile，然后编译。
 
-cmake参数：
+CMake参数：
 
 - BUILD_SHARED_LIBS: 是否编译动态库, `ON`或者`OFF`.
 - BUILD_TESTS: 是否编译测试工程, `ON`或者`OFF`.

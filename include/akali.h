@@ -50,7 +50,6 @@
 #include "akali/display_monitors.h"
 #include "akali/schedule_task.h"
 #include "akali/ipc.h"
-#include "akali/miscellaneous.h"
 #include "akali/shortcut.h"
 #include "akali/host_resolve.h"
 #include "akali/ipaddress.h"
@@ -64,6 +63,7 @@
 #include "akali/internet_availability_checker.h"
 #include "akali/stack_walker.h"
 #include "akali/directory_monitor.h"
+#include "akali/trace.h"
 #include "akali/thread.hpp"
 #include "akali/thread_pool.hpp"
 

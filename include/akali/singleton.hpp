@@ -25,6 +25,7 @@
 #else
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 #include <fcntl.h>
 #endif
 #include "akali/constructormagic.h"

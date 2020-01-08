@@ -22,7 +22,6 @@
 #include "akali/os_ver.h"
 #include <assert.h>
 #include "akali/file_util.h"
-#include "akali/miscellaneous.h"
 #include "akali/filesystem.hpp"
 
 namespace akali {

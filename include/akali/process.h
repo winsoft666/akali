@@ -1,5 +1,5 @@
-#ifndef AKALI_PROCESS_HPP_
-#define AKALI_PROCESS_HPP_
+#ifndef AKALI_PROCESS_H_
+#define AKALI_PROCESS_H_
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -66,6 +66,7 @@ public:
           std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
           std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
           bool open_stdin = false, const Config &config = {}) noexcept;
+
   /// Starts a process.
   Process(const string_type &command, const string_type &path = string_type(),
           std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
@@ -78,11 +79,13 @@ public:
           std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
           std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
           bool open_stdin = false, const Config &config = {}) noexcept;
+
   /// Starts a process with specified environment.
   Process(const string_type &command, const string_type &path, const environment_type &environment,
           std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
           std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
           bool open_stdin = false, const Config &config = {}) noexcept;
+
 #if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
   /// Starts a process with the environment of the calling process.
   /// Supported on Unix-like systems only.
@@ -95,6 +98,8 @@ public:
 
   /// Get the process id of the started process.
   id_type GetId() const noexcept;
+
+  bool Successed() const noexcept;
 
   /// Wait until process is finished, and return exit status.
   int GetExitStatus() noexcept;
@@ -181,4 +186,4 @@ private:
 };
 } // namespace akali
 
-#endif // AKALI_PROCESS_HPP_
+#endif // AKALI_PROCESS_H_

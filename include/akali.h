@@ -35,7 +35,7 @@
 #include "akali/os_ver.h"
 #include "akali/pc_info.h"
 #include "akali/process_util.h"
-#include "akali/process.hpp"
+#include "akali/process.h"
 #include "akali/registry.h"
 #include "akali/string_helper.hpp"
 #include "akali/macros.h"

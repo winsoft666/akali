@@ -1,4 +1,4 @@
-#include "akali/process.hpp"
+#include "akali/process.h"
 
 namespace akali {
 Process::Process(const std::vector<string_type> &arguments, const string_type &path,

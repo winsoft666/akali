@@ -1,4 +1,4 @@
-#include "akali/process.hpp"
+#include "akali/process.h"
 #if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
 
 #include <algorithm>
@@ -33,6 +33,10 @@
 namespace akali {
 Process::Data::Data() noexcept
     : id(-1) {}
+
+bool Process::Successed() const noexcept {
+  return (data_.id != -1);
+}
 
 Process::Process(const std::function<void()> &function,
                  std::function<void(const char *, size_t)> read_stdout,

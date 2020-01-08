@@ -1,4 +1,4 @@
-#include "akali/process.hpp"
+#include "akali/process.h"
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 
 #include <Shlwapi.h>
@@ -12,6 +12,10 @@
 
 namespace akali {
 Process::Data::Data() noexcept : id(0), handle(NULL) {}
+
+bool Process::Successed() const noexcept {
+  return (data_.id > 0);
+}
 
 // Simple HANDLE wrapper to close it automatically from the destructor.
 class Handle {

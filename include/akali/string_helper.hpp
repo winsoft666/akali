@@ -62,18 +62,18 @@ typename std::enable_if<
     std::vector<T>>::type
 StringSplit(const T &src, const T &delimiter, bool include_empty_string = true) {
   std::vector<T> fields;
-  T::size_type offset = 0;
-  T::size_type pos = src.find(delimiter, 0);
+  typename T::size_type offset = 0;
+  typename T::size_type pos = src.find(delimiter, 0);
 
-  while (pos != T::npos) {
-    T t = src.substr(offset, pos - offset);
+  while (pos != typename T::npos) {
+    typename T t = src.substr(offset, pos - offset);
     if ((t.length() > 0) || (t.length() == 0 && include_empty_string))
       fields.push_back(t);
     offset = pos + delimiter.length();
     pos = src.find(delimiter, offset);
   }
 
-  T t = src.substr(offset);
+  typename T t = src.substr(offset);
   if ((t.length() > 0) || (t.length() == 0 && include_empty_string))
     fields.push_back(t);
   return fields;

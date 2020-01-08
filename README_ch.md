@@ -28,7 +28,7 @@ C++基础库，不依赖任何第三方库。
 |os_ver.h <br/> os_ver.cpp|获取Windows系统版本|Windows|
 |pc_info.h <br/> pc_info.cpp|获取计算机信息(IP, MAC, CPU ID)|Windows|
 |process_util.h <br/> process_util.cpp|查找，关闭，启动进程，添加UIPI过滤等|Windows|
-|process.hpp <br/> process_win.cpp <br/> process_unix.cpp|进程启动、关闭等|Windows <br/> Linux|
+|process.h <br/> process_win.cpp <br/> process_unix.cpp|进程启动、关闭等|Windows <br/> Linux|
 |random.h <br/> random.cpp|随机数生成|Windows <br/> Linux|
 |registry.h <br/> registry.cpp|注册表读写|Windows|
 |macros.h|宏：安全释放等|Windows <br/> Linux|

@@ -66,7 +66,7 @@ StringSplit(const T &src, const T &delimiter, bool include_empty_string = true) 
   typename T::size_type pos = src.find(delimiter, 0);
 
   while (pos != T::npos) {
-    typename T t = src.substr(offset, pos - offset);
+    T t = src.substr(offset, pos - offset);
     if ((t.length() > 0) || (t.length() == 0 && include_empty_string))
       fields.push_back(t);
     offset = pos + delimiter.length();

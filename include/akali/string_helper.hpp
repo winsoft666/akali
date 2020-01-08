@@ -65,7 +65,7 @@ StringSplit(const T &src, const T &delimiter, bool include_empty_string = true) 
   typename T::size_type offset = 0;
   typename T::size_type pos = src.find(delimiter, 0);
 
-  while (pos != typename T::npos) {
+  while (pos != T::npos) {
     typename T t = src.substr(offset, pos - offset);
     if ((t.length() > 0) || (t.length() == 0 && include_empty_string))
       fields.push_back(t);
@@ -73,7 +73,7 @@ StringSplit(const T &src, const T &delimiter, bool include_empty_string = true) 
     pos = src.find(delimiter, offset);
   }
 
-  typename T t = src.substr(offset);
+  T t = src.substr(offset);
   if ((t.length() > 0) || (t.length() == 0 && include_empty_string))
     fields.push_back(t);
   return fields;

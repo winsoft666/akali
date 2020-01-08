@@ -99,7 +99,7 @@ public:
 
     return ret;
 #else
-    int pid_file = open("/tmp/" + unique_pid_name_ + ".pid", O_CREAT | O_RDWR, 0666);
+    int pid_file = open(("/tmp/" + unique_pid_name_ + ".pid").c_str(), O_CREAT | O_RDWR, 0666);
     int rc = flock(pid_file, LOCK_EX | LOCK_NB);
     if (rc) {
       if (EWOULDBLOCK == errno)

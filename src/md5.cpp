@@ -331,8 +331,18 @@ std::string GetStringMd5(const void *buffer, unsigned int buffer_size) {
   return szMd5;
 }
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+std::string GetFileMd5(const std::wstring &file_path) {
+#else
 std::string GetFileMd5(const std::string &file_path) {
+#endif
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+  FILE *f = _wfopen(file_path.c_str(), L"rb");
+#else
   FILE *f = fopen(file_path.c_str(), "rb");
+#endif
+
   if (!f)
     return "";
 
@@ -355,4 +365,5 @@ std::string GetFileMd5(const std::string &file_path) {
 
   return szMd5;
 }
+
 } // namespace akali

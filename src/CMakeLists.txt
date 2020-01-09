@@ -14,8 +14,10 @@
 
 if(BUILD_SHARED_LIBS)
 	set(LIB_NAME akali)
+	set(AKALI_STATIC NO)
 else()
 	set(LIB_NAME akali-static)
+	set(AKALI_STATIC YES)
 endif()
 
 if (MSVC AND USE_STATIC_CRT)
@@ -48,8 +50,7 @@ source_group("Header Files\\akali"   	FILES ${BASE_HEADER_FILES})
 
 if(BUILD_SHARED_LIBS)
 	add_definitions(-DAKALI_EXPORTS)
-	set(AKALI_STATIC NO)
-	
+
 	add_library(
 		${LIB_NAME}
 		SHARED
@@ -65,7 +66,6 @@ if(BUILD_SHARED_LIBS)
 
 else()
 	add_definitions(-DAKALI_STATIC)
-	set(AKALI_STATIC YES)
 	
 	add_library(
 		${LIB_NAME}

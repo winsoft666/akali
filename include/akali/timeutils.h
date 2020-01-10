@@ -21,6 +21,7 @@
 #include <ctime>
 #include <string>
 #include <sstream>
+#include <limits>
 #ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN

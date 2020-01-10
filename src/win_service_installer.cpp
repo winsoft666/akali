@@ -14,7 +14,7 @@
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 \***************************************************************************/
 
-#include "akali\win_service_installer.h"
+#include "akali/win_service_installer.h"
 #ifdef AKALI_WIN
 #pragma region "Includes"
 #include <stdio.h>

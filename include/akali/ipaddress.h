@@ -17,7 +17,8 @@
 #pragma once
 #include "akali/akali_export.h"
 
-#ifdef AKALI_WIN
+#if defined AKALI_WIN || defined AKALI_LINUX
+#ifdef AKALI_WIN 
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
@@ -171,4 +172,5 @@ AKALI_API IPAddress GetAnyIP(int family);
 // byte order, in this IPAddress. Bits after the first 0 encountered are not counted.
 AKALI_API int CountIPMaskBits(IPAddress mask);
 } // namespace akali
+#endif
 #endif // !AKALI_IP_ADDRESS_H_

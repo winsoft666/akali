@@ -13,6 +13,7 @@
  *******************************************************************************/
 
 #include "akali/ipaddress.h"
+#if defined AKALI_WIN || defined AKALI_LINUX
 #include "akali/byteorder.h"
 #include <stdio.h>
 #include <ios>
@@ -559,3 +560,4 @@ IPAddress GetAnyIP(int family) {
 }
 
 } // namespace akali
+#endif

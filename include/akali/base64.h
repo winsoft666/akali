@@ -19,8 +19,6 @@
 #include <vector>
 #include "akali_export.h"
 
-#if AKALI_SUPPORT
-
 namespace akali {
 class AKALI_API Base64 {
 public:
@@ -102,5 +100,4 @@ private:
                                       size_t *data_used);
 };
 } // namespace akali
-#endif
 #endif // AKALI_BASE64_H_

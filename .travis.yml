@@ -1,3 +1,13 @@
 language: cpp
-install: true
-script: true
+sudo: required
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+
+install: 
+  - cmake --version
+  
+script: 
+  - cmake .
+  - make

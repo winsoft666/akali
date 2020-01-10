@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/winsoft666/akali.svg?branch=master)](https://travis-ci.com/winsoft666/akali)
+
 [>>> English Version](README.md)
 
 # Akali

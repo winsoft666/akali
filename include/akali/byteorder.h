@@ -22,6 +22,9 @@
 #else
 #include <arpa/inet.h>
 #endif
+#if (defined __APPLE__)
+#include <libkern/OSByteOrder.h>
+#endif
 #include "akali/endianess_detect.h"
 #include "akali_export.h"
 
@@ -35,7 +38,22 @@ namespace akali {
 #define htobe32(v) htonl(v)
 #define be16toh(v) ntohs(v)
 #define be32toh(v) ntohl(v)
+#elif (defined __APPLE__)
+#define htobe16(v) OSSwapHostToBigInt16(v)
+#define htobe32(v) OSSwapHostToBigInt32(v)
+#define htobe64(v) OSSwapHostToBigInt64(v)
+#define be16toh(v) OSSwapBigToHostInt16(v)
+#define be32toh(v) OSSwapBigToHostInt32(v)
+#define be64toh(v) OSSwapBigToHostInt64(v)
+
+#define htole16(v) OSSwapHostToLittleInt16(v)
+#define htole32(v) OSSwapHostToLittleInt32(v)
+#define htole64(v) OSSwapHostToLittleInt64(v)
+#define le16toh(v) OSSwapLittleToHostInt16(v)
+#define le32toh(v) OSSwapLittleToHostInt32(v)
+#define le64toh(v) OSSwapLittleToHostInt64(v)
 #endif
+
 #if _WIN32_WINNT >= 0x0602 || WINVER >= 0x0602 // Win8
 #define htobe64(v) htonll((v))
 #define be64toh(v) ntohll((v))
@@ -48,7 +66,6 @@ namespace akali {
 #define le16toh(v) (v)
 #define le32toh(v) (v)
 #define le64toh(v) (v)
-
 #elif defined(ARCH_CPU_BIG_ENDIAN)
 #define htole16(v) __builtin_bswap16(v)
 #define htole32(v) __builtin_bswap32(v)

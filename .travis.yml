@@ -23,7 +23,7 @@ matrix:
         - make
 
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode10
       env:
         - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
       before_install:
@@ -35,9 +35,9 @@ matrix:
         - make
         
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode10
       env:
-        - MATRIX_EVAL="brew install gcc7 && CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="brew install gcc9 && CC=gcc-9 && CXX=g++-9"
       before_install:
         - eval "${MATRIX_EVAL}"
       install: 

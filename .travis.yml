@@ -11,7 +11,7 @@ matrix:
       install: 
         - cmake --version
       script: 
-        - cmake . -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=ON
+        - cmake . -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=OFF
         - make
 
     - os: linux
@@ -19,14 +19,14 @@ matrix:
       install: 
         - cmake --version
       script: 
-        - cmake . -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=ON
+        - cmake . -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
         - make
         
     - os: windows
       install: 
         - cmake --version
       script: 
-        - cmake.exe -G "Visual Studio 15 2017" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=ON -S .
+        - cmake.exe -G "Visual Studio 15 2017" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=OFF -S .
         - cmake.exe --build . --config Debug
         - cmake.exe --build . --config Release
         
@@ -34,18 +34,10 @@ matrix:
       install: 
         - cmake --version
       script: 
-        - cmake.exe -G "Visual Studio 15 2017" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=ON -S .
+        - cmake.exe -G "Visual Studio 15 2017" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -S .
         - cmake.exe --build . --config Debug
         - cmake.exe --build . --config Release
         
-    - os: linux
-      compiler: gcc
-      install: 
-        - cmake --version
-      script: 
-        - cmake . -DBUILD_SHARED_LIBS=OFF
-        - make
-
     - os: osx
       osx_image: xcode10
       env:
@@ -55,7 +47,7 @@ matrix:
       install: 
         - cmake --version
       script: 
-        - cmake . -DBUILD_SHARED_LIBS=ON
+        - cmake . -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=OFF
         - make
         
     - os: osx
@@ -67,7 +59,7 @@ matrix:
       install: 
         - cmake --version
       script: 
-        - cmake . -DBUILD_SHARED_LIBS=OFF
+        - cmake . -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
         - make
 
 notifications:

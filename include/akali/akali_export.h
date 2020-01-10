@@ -38,10 +38,4 @@
 #endif
 #endif
 
-#if (defined AKALI_WIN || defined AKALI_LINUX)
-#define AKALI_SUPPORT 1
-#else
-#define AKALI_SUPPORT 0
-#endif
-
 #endif // !AKALI_EXPORT_H_

@@ -4,7 +4,7 @@
 
 #include "akali/akali_export.h"
 
-#if AKALI_SUPPORT
+#if defined AKALI_WIN || defined AKALI_LINUX
 #include <atomic>
 #include <condition_variable>
 #include <functional>

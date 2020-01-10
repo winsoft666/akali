@@ -5,7 +5,7 @@ A common C++ library that don't depends on any library.
 
 ---
 
-# Functions
+# Features
 |File|Function|Support Platform|
 |---|---|---|
 |base64.h <br/> base64.cpp|Base64 encode, decode|Windows <br/> Linux|
@@ -53,7 +53,6 @@ A common C++ library that don't depends on any library.
 |socketaddress.h <br/> socketaddress.cpp|Socket address|Windows <br/> Linux|
 |iocp_socket.h <br/> iocp_socket.cpp <br/> iocpserver.h <br/> iocpserver.cpp|Windows IOCP network model, IOCP server|Windows|
 |overlappedsocket.h <br/> overlappedsocket.cpp|Windows Overlapped Socket|Windows|
-|miscellaneous.h <br/> miscellaneous.cpp|miscellaneous functions, such as screenshot, version string compare, console colorful progress bar|Windows <br/> Linux|
 |filesystem.hpp|An implementation of C++17 std::filesystem|Windows <br/> Linux|
 
 ---

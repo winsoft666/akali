@@ -5,7 +5,7 @@ C++基础库，不依赖任何第三方库。
 
 ---
 
-# 模块
+# 特性
 |文件|功能|支持平台|
 |---|---|---|
 |base64.h <br/> base64.cpp|Base64编解码|Windows <br/> Linux|
@@ -53,7 +53,6 @@ C++基础库，不依赖任何第三方库。
 |socketaddress.h <br/> socketaddress.cpp|Socket地址|Windows <br/> Linux|
 |iocp_socket.h <br/> iocp_socket.cpp <br/> iocpserver.h <br/> iocpserver.cpp|Windows IOCP网络模型及IOCP服务端|Windows|
 |overlappedsocket.h <br/> overlappedsocket.cpp|Windows重叠Socket|Windows|
-|miscellaneous.h <br/> miscellaneous.cpp|未归类的小功能，如截屏、版本对比、控制台彩色进度等|Windows <br/> Linux|
 |filesystem.hpp|类似C++17的filesystem的实现|Windows <br/> Linux|
 
 ---

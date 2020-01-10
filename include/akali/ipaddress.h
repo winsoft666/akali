@@ -107,8 +107,6 @@ public:
   // Whether this is an unspecified IP address.
   bool IsUnspecifiedIP() const;
 
-  bool IsValid() const;
-
 private:
   int family_;
   union {

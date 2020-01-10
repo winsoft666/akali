@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include "akali/buffer_queue.h"
 #include "akali/macros.h"

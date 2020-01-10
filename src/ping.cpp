@@ -92,7 +92,7 @@ bool Ping::DecodeIPPacket(__u8 *ip_packet, __u16 packet_size, PingRsp &rsp) {
 }
 
 bool Ping::SyncPing(const IPAddress &ip, unsigned short times, std::vector<PingRsp> &rsps) {
-  if (!ip.IsValid())
+  if (!ip.IsUnspecifiedIP())
     return false;
   if (times <= 0 || times > 0xFFFF)
     return false;

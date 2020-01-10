@@ -43,17 +43,6 @@ uint32_t IPAddress::v4AddressAsHostOrderInteger() const {
 
 bool IPAddress::IsUnspecifiedIP() const { return IPIsUnspec(*this); }
 
-bool IPAddress::IsValid() const {
-#if (defined _WIN32 || defined WIN32)
-  if (!IsUnspecifiedIP() && (u_.ip4.s_addr != 0 || u_.ip6.u.Word != 0))
-    return true;
-#else
-  if (!IsUnspecifiedIP() && (u_.ip4.s_addr != 0 || u_.ip6.__in6_u.__u6_addr16 != 0))
-    return true;
-#endif
-  return false;
-}
-
 size_t IPAddress::Size() const {
   switch (family_) {
   case AF_INET:

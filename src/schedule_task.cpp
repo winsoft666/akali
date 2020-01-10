@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include "akali/schedule_task.h"
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #include <Atlbase.h>
 #include <comdef.h>
 #include <taskschd.h>

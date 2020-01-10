@@ -19,7 +19,7 @@
 #include <assert.h>
 #include "akali/constructormagic.h"
 #include "akali/socketaddress.h"
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 namespace akali {
 AKALI_API inline bool IsBlockingError(int e) {

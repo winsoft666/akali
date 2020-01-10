@@ -14,7 +14,7 @@
 
 #include "akali/driver_info.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <assert.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN

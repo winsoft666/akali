@@ -15,11 +15,12 @@
 #ifndef AKALI_IOCP_H_
 #define AKALI_IOCP_H_
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <winsock2.h>
 #include <MSWSock.h>
 #include <vector>
-#include "akali_export.h"
 
 #define MAX_BUFFER_LEN 8192
 #define EXIT_CODE 0

@@ -18,7 +18,7 @@
 #include <mutex>
 #include <string>
 #include "akali/constructormagic.h"
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 namespace akali {
 typedef struct QueueElem {
@@ -70,5 +70,4 @@ private:
   AKALI_DISALLOW_COPY_AND_ASSIGN(BufferQueue);
 };
 } // namespace akali
-
 #endif //! AKALI_BUFFER_QUEUE_H__

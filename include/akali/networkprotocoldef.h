@@ -17,7 +17,7 @@
 #pragma once
 
 #include "akali/endianess_detect.h"
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 namespace akali {
 // in Unix os, see ip.h
@@ -31,12 +31,12 @@ typedef unsigned long __u32;
 // See: http://blog.csdn.net/china_jeffery/article/details/78984477#t0
 //
 struct iphdr {
-#if defined ARCH_CPU_LITTLE_ENDIAN
+#if defined AKALI_ARCH_LITTLE_ENDIAN
   __u8 ihl : 4, version : 4;
-#elif defined ARCH_CPU_BIG_ENDIAN
+#elif defined AKALI_ARCH_BIG_ENDIAN
   __u8 version : 4, ihl : 4;
 #else
-#error "please fix <rtc_base/basictypes.h>"
+#error "please fixed"
 #endif
   __u8 tos;
   __u16 tot_len;

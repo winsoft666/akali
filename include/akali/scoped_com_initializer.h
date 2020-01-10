@@ -16,7 +16,9 @@
 #define AKALI_SCOPED_COM_INITIALIZER_H_
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <objbase.h>
 #include <assert.h>
 #include "akali/constructormagic.h"
@@ -24,7 +26,7 @@
 namespace akali {
 // Initializes COM in the constructor (STA or MTA), and uninitializes COM in the
 // destructor.
-class ScopedCOMInitializer {
+class AKALI_API ScopedCOMInitializer {
 public:
   // Enum value provided to initialize the thread as an MTA instead of STA.
   enum SelectMTA { kMTA };

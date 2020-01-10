@@ -15,13 +15,14 @@
 #ifndef AKALI_OVERLAPPED_SOCKET_H_
 #define AKALI_OVERLAPPED_SOCKET_H_
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <memory>
 #include <thread>
 #include "akali/iocp_socket.h"
 #include "akali/socket.h"
 #include "akali/socketaddress.h"
-#include "akali_export.h"
 
 namespace akali {
 class AKALI_API OverlappedSocket : public Socket {

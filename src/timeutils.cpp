@@ -11,10 +11,11 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
+#include "akali/timeutils.h"
 
 #include <stdint.h>
 #include <limits>
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -25,11 +26,10 @@
 #else
 #include <sys/time.h>
 #endif
-#include "akali/timeutils.h"
 
 namespace akali {
 Time GetLocalTime() {
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
   Time t;
   SYSTEMTIME st;
   GetLocalTime(&st);
@@ -64,7 +64,7 @@ Time GetLocalTime() {
 }
 
 akali::Time GetUTCTime() {
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
   Time t;
   SYSTEMTIME st;
   GetSystemTime(&st);
@@ -100,7 +100,7 @@ akali::Time GetUTCTime() {
 }
 
 long long GetTimeStamp() {
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
   union {
     long long ns100;
     FILETIME ft;
@@ -120,7 +120,7 @@ long long GetTimeStamp() {
 #endif
 }
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 Time FILETIMEToUTC(FILETIME ft) {
   SYSTEMTIME st;
   Time t;

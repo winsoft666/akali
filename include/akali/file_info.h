@@ -16,7 +16,9 @@
 #define __FILE_INFO_SDFSDR54_H__
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #ifndef _INC_WINDOWS
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -25,7 +27,6 @@
 #endif
 #include <string>
 #include "akali/timeutils.h"
-#include "akali_export.h"
 
 namespace akali {
 class AKALI_API FileInfo {

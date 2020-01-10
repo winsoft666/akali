@@ -16,6 +16,8 @@
 #define AKALI_EXPORT_H_
 #pragma once
 
+#include "akali/arch.h"
+
 #ifdef AKALI_STATIC
 #define AKALI_API
 #else
@@ -34,6 +36,12 @@
 #define AKALI_API
 #endif
 #endif
+#endif
+
+#if (defined AKALI_WIN || defined AKALI_LINUX)
+#define AKALI_SUPPORT 1
+#else
+#define AKALI_SUPPORT 0
 #endif
 
 #endif // !AKALI_EXPORT_H_

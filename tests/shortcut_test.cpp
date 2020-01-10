@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "gtest/gtest.h"
-#include "akali/process.hpp"
+#include "akali/process.h"
 #include "akali/shortcut.h"
 #include "akali/filesystem.hpp"
 #include "akali/scoped_com_initializer.h"

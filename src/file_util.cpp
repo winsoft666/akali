@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "akali/file_util.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include "akali/stringencode.h"
 #include <io.h>
 #ifndef WIN32_LEAN_AND_MEAN

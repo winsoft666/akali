@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include "akali/ping.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <assert.h>
 #include "akali/timeutils.h"
 #include "akali/macros.h"

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "akali/ini.h"
-#include <akali/process.hpp>
+#include <akali/process.h>
 #include "akali/process_util.h"
 
 TEST(IniTest, Basic) {

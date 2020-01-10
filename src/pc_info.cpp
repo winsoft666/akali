@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include "akali/pc_info.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <WinSock2.h>
 #include <Iphlpapi.h>
 #include <thread>

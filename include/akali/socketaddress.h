@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 #include "akali/ipaddress.h"
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 #undef SetPort
 

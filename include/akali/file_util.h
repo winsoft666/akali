@@ -15,9 +15,9 @@
 #ifndef AKALI_FILE_UTIL_H_
 #define AKALI_FILE_UTIL_H_
 #pragma once
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 
 #pragma comment(lib, "Shlwapi.lib")
 
@@ -33,6 +33,6 @@ AKALI_API bool CreateDir(const char *pszDir);
 AKALI_API void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource,
                        int *pIgnoreNum);
 } // namespace akali
-#endif // _WIN32
+#endif // AKALI_WIN
 
 #endif // !AKALI_FILE_UTIL_H_

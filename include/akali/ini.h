@@ -16,7 +16,9 @@
 #define AKALI_INI_H_
 #pragma once
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <tchar.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -24,7 +26,6 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include "akali_export.h"
 
 namespace akali {
 /// Ini file need saved as ANSI encoding.

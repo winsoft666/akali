@@ -1,6 +1,6 @@
 #include "akali/internet_availability_checker.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <netlistmgr.h>
 #include <atlbase.h>
 #include <atlcom.h>

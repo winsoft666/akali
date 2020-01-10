@@ -15,15 +15,15 @@
 #ifndef AKALI_REGISTRY_H__
 #define AKALI_REGISTRY_H__
 #pragma once
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #include <vector>
 #include <string>
-#include "akali_export.h"
 
 namespace akali {
 class AKALI_API RegKey {

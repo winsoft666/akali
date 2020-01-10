@@ -15,8 +15,9 @@
 #ifndef AKALI_SCOPED_VARIANT_H__
 #define AKALI_SCOPED_VARIANT_H__
 #pragma once
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #ifndef _INC_WINDOWS
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -25,7 +26,6 @@
 #endif
 #include <oleauto.h>
 #include <cstdint>
-#include "akali_export.h"
 #include "akali/constructormagic.h"
 
 namespace akali {

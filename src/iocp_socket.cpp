@@ -14,7 +14,7 @@
 
 #include "akali/iocp_socket.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 
 namespace akali {
 int GetNumberOfProcesser() {

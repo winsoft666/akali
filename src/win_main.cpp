@@ -14,7 +14,7 @@
 
 #include "akali/win_main.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 
 #include <tchar.h>
 #include <DbgHelp.h>

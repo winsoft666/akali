@@ -1,6 +1,20 @@
+/*******************************************************************************
+ * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+ *
+ * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Expect bugs
+ *
+ * Please use and enjoy. Please let me know of any bugs/improvements
+ * that you have found/implemented and I will fix/incorporate them into this
+ * file.
+ *******************************************************************************/
+
 #include "akali/trace.h"
 #include <memory>
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #if !defined(WIN32_LEAN_AND_MEAN)
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -17,7 +31,7 @@ void TraceMsgW(const wchar_t *lpFormat, ...) {
   if (!lpFormat)
     return;
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
   wchar_t *pMsgBuffer = NULL;
   unsigned int iMsgBufCount = 0;
 
@@ -67,7 +81,7 @@ void TraceMsgA(const char *lpFormat, ...) {
   if (!lpFormat)
     return;
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
   char *pMsgBuffer = NULL;
   unsigned int iMsgBufCount = 0;
 

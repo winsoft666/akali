@@ -17,9 +17,9 @@
 #pragma once
 
 #include <string>
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 namespace akali {
 
 enum { DRIVE_HOST = 7 };

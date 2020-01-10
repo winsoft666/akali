@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include "akali/shortcut.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <windows.h>
 #include <shellapi.h>
 #include <shlobj.h>

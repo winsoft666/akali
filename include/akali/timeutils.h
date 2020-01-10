@@ -14,20 +14,19 @@
 
 #ifndef AKALI_TIMEUTILS_H_
 #define AKALI_TIMEUTILS_H_
-
+#include "akali_export.h"
 #include <stdint.h>
 #include <time.h>
 #include <assert.h>
 #include <ctime>
 #include <string>
 #include <sstream>
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #endif
-#include "akali_export.h"
 
 namespace akali {
 class AKALI_API Time {
@@ -65,7 +64,7 @@ AKALI_API Time GetLocalTime();
 // Windows: precision is milliseconds
 AKALI_API Time GetUTCTime();
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 AKALI_API Time FILETIMEToUTC(FILETIME ft);
 #endif
 AKALI_API long long UTCToTimeStamp(Time t);

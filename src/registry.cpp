@@ -11,9 +11,9 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-
-#if (defined _WIN32 || defined WIN32)
 #include "akali/registry.h"
+
+#ifdef AKALI_WIN
 #include <process.h>
 #include <strsafe.h>
 #include "akali/macros.h"

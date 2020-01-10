@@ -19,7 +19,7 @@
 #include <cstddef>
 #include <mutex>
 #include <memory.h>
-#include "akali_export.h"
+#include "akali/akali_export.h"
 /*
 MemoryPool is mostly compliant with the C++ Standard Library allocators.
 This means you can use it with `allocator_traits`

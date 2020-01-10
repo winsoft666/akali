@@ -15,10 +15,10 @@
 #ifndef AKALI_DISPLAY_MINITORS_H__
 #define AKALI_DISPLAY_MINITORS_H__
 #pragma once
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <vector>
-#include "akali_export.h"
 
 namespace akali {
 // 针对高DPI的显示环境，调用该方法的进程需要设置为PROCESS_PER_MONITOR_DPI_AWARE或PROCESS_SYSTEM_DPI_AWARE才能获取到正确的位置、尺寸、缩放

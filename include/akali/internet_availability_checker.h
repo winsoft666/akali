@@ -2,9 +2,9 @@
 #define AKALI_INTERNET_AVALIABILITY_CHECKER_H__
 #pragma once
 
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 namespace akali {
 class AKALI_API InternetAvailabilityChecker {
 public:

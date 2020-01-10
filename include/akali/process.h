@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+ *
+ * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Expect bugs
+ *
+ * Please use and enjoy. Please let me know of any bugs/improvements
+ * that you have found/implemented and I will fix/incorporate them into this
+ * file.
+ *******************************************************************************/
+
 #ifndef AKALI_PROCESS_H_
 #define AKALI_PROCESS_H_
 #include <functional>
@@ -8,7 +22,7 @@
 #include <unordered_map>
 #include <vector>
 #include "akali/akali_export.h"
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #pragma comment(lib, "Psapi.lib")
 #else
 #include <sys/wait.h>
@@ -33,7 +47,7 @@ struct Config {
 //
 class AKALI_API Process {
 public:
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
   typedef unsigned long id_type; // Process id type
   typedef void *fd_type;         // File descriptor type
 #if (defined UNICODE) || (defined _UNICODE)
@@ -53,7 +67,7 @@ private:
   public:
     Data() noexcept;
     id_type id;
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
     void *handle;
 #else
     int exit_status{-1};
@@ -86,7 +100,7 @@ public:
           std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
           bool open_stdin = false, const Config &config = {}) noexcept;
 
-#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
+#ifndef AKALI_WIN
   /// Starts a process with the environment of the calling process.
   /// Supported on Unix-like systems only.
   Process(const std::function<void()> &function,
@@ -129,7 +143,7 @@ public:
   /// force=true is only supported on Unix-like systems.
   static bool Kill(id_type id, bool force = false) noexcept;
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
   /// Kill all process that executed file name is executed_file_name.
   /// force=true is only supported on Unix-like systems.
   /// Return true when all process have been killed.
@@ -159,7 +173,7 @@ private:
   std::mutex close_mutex_;
   std::function<void(const char *bytes, size_t n)> read_stdout_;
   std::function<void(const char *bytes, size_t n)> read_stderr_;
-#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
+#ifndef AKALI_WIN
   std::thread stdout_stderr_thread_;
 #else
   std::thread stdout_thread_;
@@ -178,7 +192,7 @@ private:
                const environment_type *environment = nullptr) noexcept;
   id_type open(const string_type &command, const string_type &path,
                const environment_type *environment = nullptr) noexcept;
-#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32__) && !defined(__NT__)
+#ifndef AKALI_WIN
   id_type open(const std::function<void()> &function) noexcept;
 #endif
   void async_read() noexcept;

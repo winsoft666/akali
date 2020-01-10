@@ -18,7 +18,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 namespace akali {
 
@@ -49,7 +49,7 @@ AKALI_API size_t HexDecode(char *buffer, size_t buflen, const std::string &sourc
 AKALI_API size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const std::string &source,
                                           char delimiter);
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 // About code_page, see
 // https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
 //

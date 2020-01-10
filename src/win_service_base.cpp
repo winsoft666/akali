@@ -15,15 +15,13 @@
 * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 \***************************************************************************/
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-#pragma region Includes
 #include "akali/win_service_base.h"
 
+#ifdef AKALI_WIN
+#pragma region Includes
 #include <assert.h>
 #include <strsafe.h>
-
 #include <string>
-
 #include "akali/stringencode.h"
 #pragma endregion
 

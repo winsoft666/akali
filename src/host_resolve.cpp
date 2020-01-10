@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "akali/host_resolve.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include "akali/macros.h"
 
 namespace akali {

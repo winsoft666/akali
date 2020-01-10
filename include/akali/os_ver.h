@@ -16,14 +16,15 @@
 #define AKALI_OS_VER_H__
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 
 #include <string>
-#include "akali_export.h"
 
 #pragma warning(disable : 4996)
 

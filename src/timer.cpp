@@ -14,7 +14,7 @@
 
 #include "akali/timer.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 namespace akali {
 TimerBase::TimerBase() {
   m_hTimer = NULL;

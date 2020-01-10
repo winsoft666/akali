@@ -83,8 +83,7 @@
  **********************************************************************/
 
 #include "akali/stack_walker.h"
-#if (defined _WIN32 || defined WIN32)
-
+#ifdef AKALI_WIN
 #include <stdio.h>
 #include <stdlib.h>
 #include <tchar.h>

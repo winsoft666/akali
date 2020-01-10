@@ -15,8 +15,9 @@
 #ifndef AKALI_DIRECTORY_MONITOR_H__
 #define AKALI_DIRECTORY_MONITOR_H__
 #pragma once
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -25,7 +26,6 @@
 #include <functional>
 #include <future>
 #include <vector>
-#include "akali_export.h"
 
 namespace akali {
 class AKALI_API DirectoryMonitor {

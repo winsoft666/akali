@@ -15,9 +15,9 @@
 #define AKALI_SHORTCUT_H__
 #pragma once
 
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <string>
 
 namespace akali {

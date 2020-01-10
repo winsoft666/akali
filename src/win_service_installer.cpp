@@ -14,12 +14,12 @@
 * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 \***************************************************************************/
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali\win_service_installer.h"
+#ifdef AKALI_WIN
 #pragma region "Includes"
 #include <stdio.h>
 #include <windows.h>
 #include <strsafe.h>
-#include "akali\win_service_installer.h"
 #pragma endregion
 
 namespace akali {

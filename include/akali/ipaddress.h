@@ -15,8 +15,9 @@
 #ifndef AKALI_IP_ADDRESS_H_
 #define AKALI_IP_ADDRESS_H_
 #pragma once
+#include "akali/akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
@@ -29,9 +30,8 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include "akali_export.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #pragma comment(lib, "ws2_32.lib")
 #endif
 

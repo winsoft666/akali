@@ -15,7 +15,7 @@
 #include "akali/stringencode.h"
 #include <stdio.h>
 #include <stdlib.h>
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -220,7 +220,7 @@ size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const std::string &so
   return HexDecodeWithDelimiter(buffer, buflen, source.c_str(), source.length(), delimiter);
 }
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 
 std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page /*= 0*/) {
   std::string strRes;

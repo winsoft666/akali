@@ -16,10 +16,11 @@
 #define AKALI_PC_INFO_H_
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <string>
 #include <vector>
-#include "akali_export.h"
 
 namespace akali {
 AKALI_API std::string GetLocalIP();

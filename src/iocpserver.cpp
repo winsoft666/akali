@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "akali/iocpserver.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include "akali/timeutils.h"
 #include "akali/overlappedsocket.h"
 #include "akali/criticalsection.h"

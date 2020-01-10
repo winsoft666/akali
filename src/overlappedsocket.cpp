@@ -14,7 +14,7 @@
 
 #include "akali/overlappedsocket.h"
 
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <process.h>
 #include "akali/timeutils.h"
 #include <assert.h>

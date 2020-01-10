@@ -14,7 +14,7 @@
 
 #include "akali/process_util.h"
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #include <tchar.h>
 #include <shlobj.h> // for IsUserAnAdmin
 #include <Shlwapi.h>

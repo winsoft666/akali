@@ -16,8 +16,10 @@
 #define AKALI_SINGLETON_H_
 #pragma once
 
+#include "akali/akali_export.h"
+
 #include <mutex>
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -29,7 +31,6 @@
 #include <fcntl.h>
 #endif
 #include "akali/constructormagic.h"
-#include "akali_export.h"
 
 namespace akali {
 template <class T> class Singleton {
@@ -72,7 +73,7 @@ template <class T> void Singleton<T>::Release(void) {
 
 class SingletonProcess {
 public:
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
   SingletonProcess(const std::string &unique_name)
       : unique_name_(unique_name) {}
 #else
@@ -81,7 +82,7 @@ public:
 #endif
   ~SingletonProcess() = default;
   bool operator()() {
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
     HANDLE mutex = CreateEventA(NULL, TRUE, FALSE, unique_name_.c_str());
     DWORD gle = GetLastError();
     bool ret = true;
@@ -110,7 +111,7 @@ public:
   }
 
 private:
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
   std::string unique_name_;
 #else
   std::string unique_pid_name_;

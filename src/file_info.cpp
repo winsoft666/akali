@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "akali/file_info.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include <stdio.h>
 #include <tchar.h>
 #include <strsafe.h>

@@ -17,12 +17,12 @@
 #pragma once
 
 #include <string>
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 namespace akali {
 AKALI_API std::string GetStringMd5(const void *buffer, unsigned int buffer_size);
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 AKALI_API std::string GetFileMd5(const std::wstring &file_path);
 #else
 AKALI_API std::string GetFileMd5(const std::string &file_path);

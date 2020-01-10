@@ -16,9 +16,10 @@
 #define AKALI_IPC_H_
 #pragma once
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include "akali/constructormagic.h"
-#include "akali_export.h"
 #include <functional>
 #include <string>
 

@@ -1,5 +1,5 @@
 #include "akali/directory_monitor.h"
-#if (defined _WIN32 || defined WIN32)
+#ifdef AKALI_WIN
 #include "akali/macros.h"
 
 namespace akali {

@@ -15,13 +15,15 @@
 #ifndef AKALI_CRITICAL_SECTION_H__
 #define AKALI_CRITICAL_SECTION_H__
 #pragma once
-#include "constructormagic.h"
-#include "akali_export.h"
-#if (defined _WIN32 || defined WIN32)
+
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include "constructormagic.h"
 
 namespace akali {
 class AKALI_API CriticalSection {

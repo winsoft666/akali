@@ -31,7 +31,6 @@
 #include "akali/ini.h"
 #include "akali/md5.h"
 #include "akali/memory_pool.hpp"
-#include "akali/module_safe_string.h"
 #include "akali/os_ver.h"
 #include "akali/pc_info.h"
 #include "akali/process_util.h"

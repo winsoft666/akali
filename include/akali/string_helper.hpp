@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "akali_export.h"
+#include "akali/akali_export.h"
 
 namespace akali {
 inline char EasyCharToLowerA(char in) {

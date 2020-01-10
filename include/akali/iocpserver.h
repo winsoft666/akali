@@ -16,10 +16,11 @@
 #define AKALI_IOCP_SERVER_H_
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <list>
 #include "akali/iocp_socket.h"
-#include "akali_export.h"
 #include "akali/criticalsection.h"
 #include "akali/socketaddress.h"
 #include "akali/overlappedsocket.h"

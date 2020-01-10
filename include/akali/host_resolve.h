@@ -16,13 +16,14 @@
 #define AKALI_HOST_RESOLVE_H_
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #include <string>
 #include <functional>
 #include <thread>
 #include <vector>
 #include "akali/ipaddress.h"
-#include "akali_export.h"
 
 #pragma comment(lib, "ws2_32.lib")
 

@@ -1,7 +1,9 @@
 #ifndef __STACKWALKER_H__
 #define __STACKWALKER_H__
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 
 /**********************************************************************
  *
@@ -44,8 +46,6 @@
 #pragma once
 
 #include <windows.h>
-
-#include "akali_export.h"
 
 #if _MSC_VER >= 1900
 #pragma warning(disable : 4091)
@@ -226,6 +226,6 @@ protected:
   } while (0);
 #endif
 } // namespace akali
-#endif // defined(_WIN32)
+#endif
 
 #endif // __STACKWALKER_H__

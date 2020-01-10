@@ -19,12 +19,13 @@
 #define AKALI_WIN_SERVICE_BASE_H_
 #pragma once
 
-#if (defined _WIN32 || defined WIN32)
+#include "akali/akali_export.h"
+
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
-#include "akali_export.h"
 
 namespace akali {
 class AKALI_API WinServiceBase {

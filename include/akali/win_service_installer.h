@@ -16,9 +16,9 @@
 #ifndef AKALI_WIN_SERVICE_INSTALLER_H_
 #define AKALI_WIN_SERVICE_INSTALLER_H_
 #pragma once
-
-#if (defined _WIN32 || defined WIN32)
-#include "akali_export.h"
+#include "akali/akali_export.h"
+#ifdef AKALI_WIN
+#include <windows.h>
 
 namespace akali {
 //

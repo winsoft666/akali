@@ -15,8 +15,9 @@
 #ifndef AKALI_PROCESS_UTIL_H_
 #define AKALI_PROCESS_UTIL_H_
 #pragma once
+#include "akali/akali_export.h"
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -26,7 +27,6 @@
 #include <string>
 
 #include "akali/deprecation.h"
-#include "akali_export.h"
 
 #pragma comment(lib, "Userenv.lib")
 

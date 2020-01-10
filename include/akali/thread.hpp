@@ -2,6 +2,9 @@
 #define AKALI_THREAD_H__
 #pragma once
 
+#include "akali/akali_export.h"
+
+#if AKALI_SUPPORT
 #include <atomic>
 #include <condition_variable>
 #include <functional>
@@ -10,18 +13,18 @@
 #include <mutex>
 #include <queue>
 #include <string>
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
-#else
+#elif (defined AKALI_LINUX)
 #include <sys/prctl.h>
 #include <unistd.h>
 #include <sys/syscall.h>
 #endif
+
 #include "akali/constructormagic.h"
-#include "akali/akali_export.h"
 
 namespace akali {
 class Thread {
@@ -107,7 +110,7 @@ public:
   }
 
   static void SetCurrentThreadName(const char *name) {
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
     struct {
       DWORD dwType;
       LPCSTR szName;
@@ -120,16 +123,15 @@ public:
                        reinterpret_cast<ULONG_PTR *>(&threadname_info));
     } __except (EXCEPTION_EXECUTE_HANDLER) { // NOLINT
     }
-
-#else
+#elif defined AKALI_LINUX
     prctl(PR_SET_NAME, reinterpret_cast<unsigned long>(name)); // NOLINT
 #endif
   }
 
   static long GetCurThreadId() {
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#ifdef AKALI_WIN
     return GetCurrentThreadId();
-#else
+#elif defined AKALI_LINUX
     return static_cast<long>(syscall(__NR_gettid));
 #endif
   }
@@ -146,4 +148,5 @@ protected:
   AKALI_DISALLOW_COPY_AND_ASSIGN(Thread);
 };
 } // namespace akali
+#endif
 #endif // !AKALI_THREAD_H__

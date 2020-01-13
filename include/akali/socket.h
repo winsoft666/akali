@@ -27,7 +27,7 @@ AKALI_API inline bool IsBlockingError(int e) {
 }
 
 class AKALI_API Socket {
-public:
+ public:
   virtual ~Socket() {}
 
   enum ConnState { CS_CLOSED, CS_CONNECTING, CS_CONNECTED };
@@ -40,19 +40,19 @@ public:
 
   enum Option {
     OPT_DONTFRAGMENT,
-    OPT_RCVBUF,               // receive buffer size
-    OPT_SNDBUF,               // send buffer size
-    OPT_NODELAY,              // whether Nagle algorithm is enabled
-    OPT_IPV6_V6ONLY,          // Whether the socket is IPv6 only.
-    OPT_DSCP,                 // DSCP code
-    OPT_RTP_SENDTIME_EXTN_ID, // This is a non-traditional socket option param.
+    OPT_RCVBUF,                // receive buffer size
+    OPT_SNDBUF,                // send buffer size
+    OPT_NODELAY,               // whether Nagle algorithm is enabled
+    OPT_IPV6_V6ONLY,           // Whether the socket is IPv6 only.
+    OPT_DSCP,                  // DSCP code
+    OPT_RTP_SENDTIME_EXTN_ID,  // This is a non-traditional socket option param.
     // This is specific to libjingle and will be used
     // if SendTime option is needed at socket level.
     OPT_BROADCAST,
     OPT_ADD_MEMBERSHIP
   };
 
-protected:
+ protected:
   Socket() : error_(0), connect_time_(0), state_(Socket::CS_CLOSED), family_(AF_UNSPEC), type_(0) {
     error_ = 0;
     connect_time_ = 0;
@@ -64,8 +64,8 @@ protected:
   int error_;
   int64_t connect_time_;
 
-private:
+ private:
   AKALI_DISALLOW_COPY_AND_ASSIGN(Socket);
 };
-} // namespace akali
+}  // namespace akali
 #endif

@@ -33,4 +33,4 @@
 #define AKALI_DEPRECATED
 #endif
 
-#endif // AKALI_DEPRECATION_H_
+#endif  // AKALI_DEPRECATION_H_

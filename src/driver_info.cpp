@@ -135,7 +135,7 @@ int DriveInfo::GetType(int nDrive) {
   return ::GetDriveTypeW(GetRoot(nDrive).c_str());
 }
 
-int DriveInfo::GetPathType(const wchar_t *szPathName) {
+int DriveInfo::GetPathType(const wchar_t* szPathName) {
   int nDrive = GetDrive(szPathName);
 
   if (nDrive >= 0)
@@ -148,7 +148,7 @@ int DriveInfo::GetPathType(const wchar_t *szPathName) {
     return DRIVE_UNKNOWN;
 }
 
-void DriveInfo::FormatName(std::wstring &sFilename) {
+void DriveInfo::FormatName(std::wstring& sFilename) {
   // std::wstring sTemp, sChar;
   // int nLen, nChar;
   // wchar_t cChar, cLastChar = ' '; // space
@@ -191,11 +191,11 @@ bool DriveInfo::IsDriveAvailable(int nDrive) {
   return (nRes == 0) ? true : false;
 }
 
-bool DriveInfo::IsUNCPath(const wchar_t *szPathName) {
+bool DriveInfo::IsUNCPath(const wchar_t* szPathName) {
   return (wcsstr(szPathName, L"\\\\") == szPathName);
 }
 
-int DriveInfo::GetDrive(const wchar_t *szPathName) {
+int DriveInfo::GetDrive(const wchar_t* szPathName) {
   int nDrive = 0;
 
   if (wcsstr(szPathName, L":") == szPathName + 1) {
@@ -207,7 +207,7 @@ int DriveInfo::GetDrive(const wchar_t *szPathName) {
   return nDrive ? nDrive : -1;
 }
 
-bool DriveInfo::IsMappedPath(const wchar_t *szPathName) {
+bool DriveInfo::IsMappedPath(const wchar_t* szPathName) {
   int nDrive;
 
   nDrive = GetDrive(szPathName);
@@ -218,7 +218,7 @@ bool DriveInfo::IsMappedPath(const wchar_t *szPathName) {
   return (GetType(nDrive) == DRIVE_REMOTE);
 }
 
-int DriveInfo::IsRemotePath(const wchar_t *szPathName, bool bAllowFileCheck) {
+int DriveInfo::IsRemotePath(const wchar_t* szPathName, bool bAllowFileCheck) {
   if (bAllowFileCheck) {
     DWORD dwAttr = ::GetFileAttributesW(szPathName);
 
@@ -229,25 +229,25 @@ int DriveInfo::IsRemotePath(const wchar_t *szPathName, bool bAllowFileCheck) {
   return (IsUNCPath(szPathName) || IsMappedPath(szPathName));
 }
 
-bool DriveInfo::IsFixedPath(const wchar_t *szPathName) {
+bool DriveInfo::IsFixedPath(const wchar_t* szPathName) {
   int nDrive = GetDrive(szPathName);
 
-  if (nDrive == -1) // unknown
+  if (nDrive == -1)  // unknown
     return FALSE;
 
   return (GetType(nDrive) == DRIVE_FIXED);
 }
 
-bool DriveInfo::IsRemovablePath(const wchar_t *szPathName) {
+bool DriveInfo::IsRemovablePath(const wchar_t* szPathName) {
   int nDrive = GetDrive(szPathName);
 
-  if (nDrive == -1) // unknown
+  if (nDrive == -1)  // unknown
     return FALSE;
 
   return (GetType(nDrive) == DRIVE_REMOVABLE);
 }
 
-int DriveInfo::IsReadonlyPath(const wchar_t *szPathName) {
+int DriveInfo::IsReadonlyPath(const wchar_t* szPathName) {
   DWORD dwAttr = ::GetFileAttributesW(szPathName);
 
   if (dwAttr == 0xffffffff)
@@ -269,5 +269,5 @@ unsigned long DriveInfo::GetSerialNumber(int nDrive) {
 
   return dwHDSerialNum;
 }
-} // namespace akali
+}  // namespace akali
 #endif

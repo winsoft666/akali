@@ -27,7 +27,8 @@ HANDLE CreateNewCompletionPort() {
   return CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 }
 
-BOOL AssociateDeviceWithCompletionPort(HANDLE completion_port, HANDLE device,
+BOOL AssociateDeviceWithCompletionPort(HANDLE completion_port,
+                                       HANDLE device,
                                        DWORD completion_key) {
   HANDLE h = CreateIoCompletionPort(device, completion_port, completion_key, 0);
   return (h == completion_port);
@@ -72,5 +73,5 @@ LPFN_GETACCEPTEXSOCKADDRS GetAcceptExSockAddrsFnPointer(SOCKET s) {
 
   return fn;
 }
-} // namespace akali
+}  // namespace akali
 #endif

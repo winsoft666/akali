@@ -59,12 +59,12 @@ typedef unsigned __int64 SIZE_T, *PSIZE_T;
 #else
 typedef unsigned long SIZE_T, *PSIZE_T;
 #endif
-#endif // _MSC_VER < 1300
+#endif  // _MSC_VER < 1300
 
 namespace akali {
-class StackWalkerInternal; // forward
+class StackWalkerInternal;  // forward
 class AKALI_API StackWalker {
-public:
+ public:
   typedef enum StackWalkOptions {
     // No addition info will be retrieved
     // (only the address is available)
@@ -98,24 +98,29 @@ public:
     OptionsAll = 0x3F
   } StackWalkOptions;
 
-  StackWalker(int options = OptionsAll, // 'int' is by design, to combine the enum-flags
-              LPCSTR szSymPath = NULL, DWORD dwProcessId = GetCurrentProcessId(),
+  StackWalker(int options = OptionsAll,  // 'int' is by design, to combine the enum-flags
+              LPCSTR szSymPath = NULL,
+              DWORD dwProcessId = GetCurrentProcessId(),
               HANDLE hProcess = GetCurrentProcess());
   StackWalker(DWORD dwProcessId, HANDLE hProcess);
   virtual ~StackWalker();
 
-  typedef BOOL(__stdcall *PReadProcessMemoryRoutine)(
-      HANDLE hProcess, DWORD64 qwBaseAddress, PVOID lpBuffer, DWORD nSize,
+  typedef BOOL(__stdcall* PReadProcessMemoryRoutine)(
+      HANDLE hProcess,
+      DWORD64 qwBaseAddress,
+      PVOID lpBuffer,
+      DWORD nSize,
       LPDWORD lpNumberOfBytesRead,
-      LPVOID pUserData // optional data, which was passed in "ShowCallstack"
+      LPVOID pUserData  // optional data, which was passed in "ShowCallstack"
   );
 
   BOOL LoadModules();
 
-  BOOL ShowCallstack(HANDLE hThread = GetCurrentThread(), const CONTEXT *context = NULL,
+  BOOL ShowCallstack(HANDLE hThread = GetCurrentThread(),
+                     const CONTEXT* context = NULL,
                      PReadProcessMemoryRoutine readMemoryFunction = NULL,
-                     LPVOID pUserData = NULL // optional to identify some data in the
-                                             // 'readMemoryFunction'-callback
+                     LPVOID pUserData = NULL  // optional to identify some data in the
+                                              // 'readMemoryFunction'-callback
   );
 
   BOOL ShowObject(LPVOID pObject);
@@ -124,14 +129,14 @@ public:
   // due to some reasons, the "STACKWALK_MAX_NAMELEN" must be declared as
   // "public" in older compilers in order to use it... starting with VC7 we can
   // declare it as "protected"
-protected:
+ protected:
 #endif
-  enum { STACKWALK_MAX_NAMELEN = 1024 }; // max name length for found symbols
+  enum { STACKWALK_MAX_NAMELEN = 1024 };  // max name length for found symbols
 
-protected:
+ protected:
   // Entry for each Callstack-Entry
   typedef struct CallstackEntry {
-    DWORD64 offset; // if 0, we have no valid entry
+    DWORD64 offset;  // if 0, we have no valid entry
     CHAR name[STACKWALK_MAX_NAMELEN];
     CHAR undName[STACKWALK_MAX_NAMELEN];
     CHAR undFullName[STACKWALK_MAX_NAMELEN];
@@ -149,13 +154,19 @@ protected:
   typedef enum CallstackEntryType { firstEntry, nextEntry, lastEntry } CallstackEntryType;
 
   virtual void OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUserName);
-  virtual void OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD size, DWORD result,
-                            LPCSTR symType, LPCSTR pdbName, ULONGLONG fileVersion);
-  virtual void OnCallstackEntry(CallstackEntryType eType, CallstackEntry &entry);
+  virtual void OnLoadModule(LPCSTR img,
+                            LPCSTR mod,
+                            DWORD64 baseAddr,
+                            DWORD size,
+                            DWORD result,
+                            LPCSTR symType,
+                            LPCSTR pdbName,
+                            ULONGLONG fileVersion);
+  virtual void OnCallstackEntry(CallstackEntryType eType, CallstackEntry& entry);
   virtual void OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr);
   virtual void OnOutput(LPCSTR szText);
 
-  StackWalkerInternal *m_sw;
+  StackWalkerInternal* m_sw;
   HANDLE m_hProcess;
   DWORD m_dwProcessId;
   BOOL m_modulesLoaded;
@@ -164,11 +175,14 @@ protected:
   int m_options;
   int m_MaxRecursionCount;
 
-  static BOOL __stdcall myReadProcMem(HANDLE hProcess, DWORD64 qwBaseAddress, PVOID lpBuffer,
-                                      DWORD nSize, LPDWORD lpNumberOfBytesRead);
+  static BOOL __stdcall myReadProcMem(HANDLE hProcess,
+                                      DWORD64 qwBaseAddress,
+                                      PVOID lpBuffer,
+                                      DWORD nSize,
+                                      LPDWORD lpNumberOfBytesRead);
 
   friend StackWalkerInternal;
-}; // class StackWalker
+};  // class StackWalker
 
 // The "ugly" assembler-implementation is needed for systems before XP
 // If you have a new PSDK and you only compile for XP and later, then you can
@@ -185,18 +199,18 @@ protected:
 #ifdef CURRENT_THREAD_VIA_EXCEPTION
 // TODO: The following is not a "good" implementation,
 // because the callstack is only valid in the "__except" block...
-#define GET_CURRENT_CONTEXT_STACKWALKER_CODEPLEX(c, contextFlags)                                  \
-  do {                                                                                             \
-    memset(&c, 0, sizeof(CONTEXT));                                                                \
-    EXCEPTION_POINTERS *pExp = NULL;                                                               \
-    __try {                                                                                        \
-      throw 0;                                                                                     \
-    } __except (((pExp = GetExceptionInformation()) ? EXCEPTION_EXECUTE_HANDLER                    \
-                                                    : EXCEPTION_EXECUTE_HANDLER)) {                \
-    }                                                                                              \
-    if (pExp != NULL)                                                                              \
-      memcpy(&c, pExp->ContextRecord, sizeof(CONTEXT));                                            \
-    c.ContextFlags = contextFlags;                                                                 \
+#define GET_CURRENT_CONTEXT_STACKWALKER_CODEPLEX(c, contextFlags)                   \
+  do {                                                                              \
+    memset(&c, 0, sizeof(CONTEXT));                                                 \
+    EXCEPTION_POINTERS* pExp = NULL;                                                \
+    __try {                                                                         \
+      throw 0;                                                                      \
+    } __except (((pExp = GetExceptionInformation()) ? EXCEPTION_EXECUTE_HANDLER     \
+                                                    : EXCEPTION_EXECUTE_HANDLER)) { \
+    }                                                                               \
+    if (pExp != NULL)                                                               \
+      memcpy(&c, pExp->ContextRecord, sizeof(CONTEXT));                             \
+    c.ContextFlags = contextFlags;                                                  \
   } while (0);
 #else
 // clang-format off
@@ -218,14 +232,14 @@ protected:
 #else
 
 // The following is defined for x86 (XP and higher), x64 and IA64:
-#define GET_CURRENT_CONTEXT_STACKWALKER_CODEPLEX(c, contextFlags)                                  \
-  do {                                                                                             \
-    memset(&c, 0, sizeof(CONTEXT));                                                                \
-    c.ContextFlags = contextFlags;                                                                 \
-    RtlCaptureContext(&c);                                                                         \
+#define GET_CURRENT_CONTEXT_STACKWALKER_CODEPLEX(c, contextFlags) \
+  do {                                                            \
+    memset(&c, 0, sizeof(CONTEXT));                               \
+    c.ContextFlags = contextFlags;                                \
+    RtlCaptureContext(&c);                                        \
   } while (0);
 #endif
-} // namespace akali
+}  // namespace akali
 #endif
 
-#endif // __STACKWALKER_H__
+#endif  // __STACKWALKER_H__

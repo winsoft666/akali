@@ -27,7 +27,7 @@
 
 namespace akali {
 class AKALI_API RegKey {
-public:
+ public:
   // hkeyRoot can be one of :
   // HKEY_CLASSES_ROOT
   // HKEY_CURRENT_CONFIG
@@ -53,24 +53,24 @@ public:
   HRESULT WaitForChange(DWORD dwChangeFilter, bool bWatchSubtree);
   static bool DeleteKey(HKEY hKey, LPCWSTR pszSubKey, LPCWSTR pszValName, bool bPrefer64View);
   static bool DeleteSubKeys(HKEY hKeyRoot, LPCTSTR lpSubKey, bool bPrefer64View);
-  HRESULT GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const;
+  HRESULT GetDWORDValue(LPCWSTR pszValueName, DWORD* pdwDataOut) const;
   HRESULT GetBINARYValue(LPCWSTR pszValueName, LPBYTE pbDataOut, int cbDataOut) const;
-  HRESULT GetSZValue(LPCWSTR pszValueName, OUT std::wstring &strValue) const;
-  HRESULT GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<std::wstring> &vStrValues) const;
+  HRESULT GetSZValue(LPCWSTR pszValueName, OUT std::wstring& strValue) const;
+  HRESULT GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<std::wstring>& vStrValues) const;
   int GetValueBufferSize(LPCWSTR pszValueName) const;
   HRESULT SetDWORDValue(LPCWSTR pszValueName, DWORD dwData);
   HRESULT SetBINARYValue(LPCWSTR pszValueName, const LPBYTE pbData, int cbData);
-  HRESULT SetSZValue(LPCWSTR pszValueName, const std::wstring &strData);
-  HRESULT SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring> &vStrValues);
+  HRESULT SetSZValue(LPCWSTR pszValueName, const std::wstring& strData);
+  HRESULT SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring>& vStrValues);
 
-  HRESULT GetSubKeys(std::vector<std::wstring> &subKeys);
+  HRESULT GetSubKeys(std::vector<std::wstring>& subKeys);
 
-protected:
+ protected:
   void OnChange(HKEY hkey);
 
-private:
-  RegKey(const RegKey &rhs);
-  RegKey &operator=(const RegKey &rhs);
+ private:
+  RegKey(const RegKey& rhs);
+  RegKey& operator=(const RegKey& rhs);
   HKEY m_hkeyRoot;
   mutable HKEY m_hkey;
   HANDLE m_hChangeEvent;
@@ -81,12 +81,12 @@ private:
 
   HRESULT GetValue(LPCWSTR pszValueName, DWORD dwTypeExpected, LPBYTE pbData, DWORD cbData) const;
   HRESULT SetValue(LPCWSTR pszValueName, DWORD dwValueType, const LPBYTE pbData, int cbData);
-  LPWSTR CreateDoubleNulTermList(const std::vector<std::wstring> &vStrValues) const;
+  LPWSTR CreateDoubleNulTermList(const std::vector<std::wstring>& vStrValues) const;
   static unsigned int _stdcall NotifyWaitThreadProc(LPVOID pvParam);
   static bool RegDeleteKey32_64(HKEY hKey, LPCWSTR pszSubKey, bool bPrefer64View);
   static bool RegDeleteSubKeys(HKEY hKey, bool bPrefer64View);
   static BOOL RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64View);
 };
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // ! AKALI_REGISTRY_H__
+#endif  // ! AKALI_REGISTRY_H__

@@ -21,9 +21,8 @@
 #include "akali/macros.h"
 
 namespace akali {
-OverlappedSocket::CompletionIOHandler::CompletionIOHandler(OverlappedSocket *parent, int index)
+OverlappedSocket::CompletionIOHandler::CompletionIOHandler(OverlappedSocket* parent, int index)
     : parent_(parent) {
-
   thread_ = std::thread([this, index]() { this->Run(); });
 }
 
@@ -35,9 +34,9 @@ OverlappedSocket::CompletionIOHandler::~CompletionIOHandler() {
 void OverlappedSocket::CompletionIOHandler::Run() {
   assert(parent_);
   DWORD transferred_bytes = 0;
-  OverlappedSocket *overlapped_socket = NULL;
+  OverlappedSocket* overlapped_socket = NULL;
 
-  OVERLAPPED *overlapped = NULL;
+  OVERLAPPED* overlapped = NULL;
   DWORD gle = 0;
 
   while (WaitForSingleObject(parent_->exit_, 0) != WAIT_OBJECT_0) {
@@ -66,7 +65,7 @@ void OverlappedSocket::CompletionIOHandler::Run() {
       }
     }
     else {
-      PER_IO_CONTEXT *io_ctx = CONTAINING_RECORD(overlapped, PER_IO_CONTEXT, overlapped);
+      PER_IO_CONTEXT* io_ctx = CONTAINING_RECORD(overlapped, PER_IO_CONTEXT, overlapped);
 
       if ((transferred_bytes == 0) &&
           (io_ctx->operation_type == RECV_POSTED || io_ctx->operation_type == SEND_POSTED)) {
@@ -76,23 +75,23 @@ void OverlappedSocket::CompletionIOHandler::Run() {
       }
 
       if (io_ctx->operation_type == ACCEPT_POSTED) {
-        sockaddr_storage *ClientAddr = NULL;
-        sockaddr_storage *LocalAddr = NULL;
+        sockaddr_storage* ClientAddr = NULL;
+        sockaddr_storage* LocalAddr = NULL;
         int remoteLen = sizeof(sockaddr_storage);
         int localLen = sizeof(sockaddr_storage);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms738516(v=vs.85).aspx
         parent_->getacceptexsockaddrs_fn_(io_ctx->wsa_buffer.buf, 0, sizeof(sockaddr_storage) + 16,
-                                          sizeof(sockaddr_storage) + 16, (LPSOCKADDR *)&LocalAddr,
-                                          &localLen, (LPSOCKADDR *)&ClientAddr, &remoteLen);
+                                          sizeof(sockaddr_storage) + 16, (LPSOCKADDR*)&LocalAddr,
+                                          &localLen, (LPSOCKADDR*)&ClientAddr, &remoteLen);
 
         SocketAddress remote_addr;
         SocketAddressFromSockAddrStorage(*ClientAddr, &remote_addr);
 
-        OverlappedSocket *new_overlapped_socket = new OverlappedSocket();
+        OverlappedSocket* new_overlapped_socket = new OverlappedSocket();
         new_overlapped_socket->remote_addr_ = remote_addr;
 
-        PER_SOCKET_CONTEXT *new_socket_ctx = new PER_SOCKET_CONTEXT();
+        PER_SOCKET_CONTEXT* new_socket_ctx = new PER_SOCKET_CONTEXT();
         new_socket_ctx->socket = io_ctx->socket;
 
         new_overlapped_socket->own_socket_ctx_ = new_socket_ctx;
@@ -117,7 +116,7 @@ void OverlappedSocket::CompletionIOHandler::Run() {
             parent_->delegate_->OnAcceptEvent(new_overlapped_socket);
 
           // post recv
-          PER_IO_CONTEXT *new_io_ctx = new_socket_ctx->GetNewIoContext();
+          PER_IO_CONTEXT* new_io_ctx = new_socket_ctx->GetNewIoContext();
           new_io_ctx->socket = new_socket_ctx->socket;
           if (!parent_->PostRecv(new_io_ctx)) {
             new_socket_ctx->RemoveContext(new_io_ctx);
@@ -125,8 +124,8 @@ void OverlappedSocket::CompletionIOHandler::Run() {
         }
       }
       else if (io_ctx->operation_type == RECV_POSTED) {
-        if (parent_->state_ != Socket::CS_CONNECTED) { // connectionless
-          sockaddr_storage *addr = reinterpret_cast<sockaddr_storage *>(&parent_->remote_addrin_);
+        if (parent_->state_ != Socket::CS_CONNECTED) {  // connectionless
+          sockaddr_storage* addr = reinterpret_cast<sockaddr_storage*>(&parent_->remote_addrin_);
           SocketAddressFromSockAddrStorage(*addr, &parent_->remote_addr_);
         }
 
@@ -155,9 +154,15 @@ void OverlappedSocket::CompletionIOHandler::Run() {
 }
 
 OverlappedSocket::OverlappedSocket()
-    : close_error_(0), workthread_num_(0), own_socket_ctx_(NULL), iocp_(INVALID_HANDLE_VALUE),
-      exit_(CreateEvent(NULL, TRUE, FALSE, NULL)), closing_(false), connectex_fn_(NULL),
-      acceptex_fn_(NULL), getacceptexsockaddrs_fn_(NULL) {}
+    : close_error_(0)
+    , workthread_num_(0)
+    , own_socket_ctx_(NULL)
+    , iocp_(INVALID_HANDLE_VALUE)
+    , exit_(CreateEvent(NULL, TRUE, FALSE, NULL))
+    , closing_(false)
+    , connectex_fn_(NULL)
+    , acceptex_fn_(NULL)
+    , getacceptexsockaddrs_fn_(NULL) {}
 
 OverlappedSocket::~OverlappedSocket() {
   Close();
@@ -186,8 +191,7 @@ bool OverlappedSocket::CreateT(int family, int type) {
 SocketAddress OverlappedSocket::GetLocalAddress() const {
   sockaddr_storage addr = {0};
   socklen_t addrlen = sizeof(addr);
-  int result =
-      ::getsockname(own_socket_ctx_->socket, reinterpret_cast<sockaddr *>(&addr), &addrlen);
+  int result = ::getsockname(own_socket_ctx_->socket, reinterpret_cast<sockaddr*>(&addr), &addrlen);
   SocketAddress address;
   if (result >= 0) {
     SocketAddressFromSockAddrStorage(addr, &address);
@@ -212,7 +216,7 @@ SocketAddress OverlappedSocket::GetRemoteAddress() const {
   return remote_addr_;
 }
 
-int OverlappedSocket::Bind(const SocketAddress &addr) {
+int OverlappedSocket::Bind(const SocketAddress& addr) {
   assert(own_socket_ctx_->socket != INVALID_SOCKET);
   if (own_socket_ctx_->socket == INVALID_SOCKET)
     return SOCKET_ERROR;
@@ -220,18 +224,18 @@ int OverlappedSocket::Bind(const SocketAddress &addr) {
   sockaddr_storage saddr;
   size_t len = addr.ToSockAddrStorage(&saddr);
   int err =
-      ::bind(own_socket_ctx_->socket, reinterpret_cast<sockaddr *>(&saddr), static_cast<int>(len));
+      ::bind(own_socket_ctx_->socket, reinterpret_cast<sockaddr*>(&saddr), static_cast<int>(len));
   UpdateLastError();
   return err;
 }
 
-int OverlappedSocket::Connect(const SocketAddress &addr) {
+int OverlappedSocket::Connect(const SocketAddress& addr) {
   assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
   }
 
-  PER_IO_CONTEXT *io_ctx = own_socket_ctx_->GetNewIoContext();
+  PER_IO_CONTEXT* io_ctx = own_socket_ctx_->GetNewIoContext();
   io_ctx->socket = own_socket_ctx_->socket;
   if (!PostConnect(io_ctx, addr)) {
     own_socket_ctx_->RemoveContext(io_ctx);
@@ -240,7 +244,7 @@ int OverlappedSocket::Connect(const SocketAddress &addr) {
   return 0;
 }
 
-int OverlappedSocket::Send(const void *buffer, size_t length, PER_IO_CONTEXT *io_ctx /* = NULL*/) {
+int OverlappedSocket::Send(const void* buffer, size_t length, PER_IO_CONTEXT* io_ctx /* = NULL*/) {
   assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
@@ -266,7 +270,7 @@ int OverlappedSocket::Listen(int backlog) {
   return err;
 }
 
-int OverlappedSocket::RecvFrom(const SocketAddress &addr, PER_IO_CONTEXT *io_ctx /*= NULL*/) {
+int OverlappedSocket::RecvFrom(const SocketAddress& addr, PER_IO_CONTEXT* io_ctx /*= NULL*/) {
   assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
@@ -282,8 +286,10 @@ int OverlappedSocket::RecvFrom(const SocketAddress &addr, PER_IO_CONTEXT *io_ctx
   return 0;
 }
 
-int OverlappedSocket::SendTo(const void *buffer, size_t length, const SocketAddress &addr,
-                             PER_IO_CONTEXT *io_ctx /*= NULL*/) {
+int OverlappedSocket::SendTo(const void* buffer,
+                             size_t length,
+                             const SocketAddress& addr,
+                             PER_IO_CONTEXT* io_ctx /*= NULL*/) {
   assert(own_socket_ctx_ != NULL);
   if (own_socket_ctx_ == NULL) {
     return SOCKET_ERROR;
@@ -303,7 +309,7 @@ int OverlappedSocket::SendTo(const void *buffer, size_t length, const SocketAddr
 bool OverlappedSocket::Accept() {
   int success = 0;
   for (int i = 0; i < workthread_num_; i++) {
-    PER_IO_CONTEXT *io_ctx = own_socket_ctx_->GetNewIoContext();
+    PER_IO_CONTEXT* io_ctx = own_socket_ctx_->GetNewIoContext();
     if (!PostAccept(io_ctx)) {
       own_socket_ctx_->RemoveContext(io_ctx);
     }
@@ -356,53 +362,53 @@ int OverlappedSocket::Close() {
   return err;
 }
 
-int OverlappedSocket::TranslateOption(Option opt, int *slevel, int *sopt) {
+int OverlappedSocket::TranslateOption(Option opt, int* slevel, int* sopt) {
   switch (opt) {
-  case OPT_DONTFRAGMENT:
-    *slevel = IPPROTO_IP;
-    *sopt = IP_DONTFRAGMENT;
-    break;
-  case OPT_RCVBUF:
-    *slevel = SOL_SOCKET;
-    *sopt = SO_RCVBUF;
-    break;
-  case OPT_SNDBUF:
-    *slevel = SOL_SOCKET;
-    *sopt = SO_SNDBUF;
-    break;
-  case OPT_NODELAY:
-    *slevel = IPPROTO_TCP;
-    *sopt = TCP_NODELAY;
-    break;
-  case OPT_DSCP:
-    return -1;
-  case OPT_BROADCAST:
-    *slevel = SOL_SOCKET;
-    *sopt = SO_BROADCAST;
-    break;
-  case OPT_ADD_MEMBERSHIP:
-    *slevel = IPPROTO_IP;
-    *sopt = IP_ADD_MEMBERSHIP;
-    break;
-  default:
-    assert(false);
-    return -1;
+    case OPT_DONTFRAGMENT:
+      *slevel = IPPROTO_IP;
+      *sopt = IP_DONTFRAGMENT;
+      break;
+    case OPT_RCVBUF:
+      *slevel = SOL_SOCKET;
+      *sopt = SO_RCVBUF;
+      break;
+    case OPT_SNDBUF:
+      *slevel = SOL_SOCKET;
+      *sopt = SO_SNDBUF;
+      break;
+    case OPT_NODELAY:
+      *slevel = IPPROTO_TCP;
+      *sopt = TCP_NODELAY;
+      break;
+    case OPT_DSCP:
+      return -1;
+    case OPT_BROADCAST:
+      *slevel = SOL_SOCKET;
+      *sopt = SO_BROADCAST;
+      break;
+    case OPT_ADD_MEMBERSHIP:
+      *slevel = IPPROTO_IP;
+      *sopt = IP_ADD_MEMBERSHIP;
+      break;
+    default:
+      assert(false);
+      return -1;
   }
   return 0;
 }
 
-int OverlappedSocket::GetOption(Socket::Option opt, int *value) {
+int OverlappedSocket::GetOption(Socket::Option opt, int* value) {
   int slevel;
   int sopt;
   if (TranslateOption(opt, &slevel, &sopt) == -1)
     return -1;
 
-  char *p = reinterpret_cast<char *>(value);
+  char* p = reinterpret_cast<char*>(value);
   int optlen = sizeof(value);
   return ::getsockopt(own_socket_ctx_->socket, slevel, sopt, p, &optlen);
 }
 
-int OverlappedSocket::SetOption(Socket::Option opt, const char *value, int value_len) {
+int OverlappedSocket::SetOption(Socket::Option opt, const char* value, int value_len) {
   int slevel;
   int sopt;
   if (TranslateOption(opt, &slevel, &sopt) == -1)
@@ -411,7 +417,7 @@ int OverlappedSocket::SetOption(Socket::Option opt, const char *value, int value
   return ::setsockopt(own_socket_ctx_->socket, slevel, sopt, value, value_len);
 }
 
-void OverlappedSocket::Clone(OverlappedSocket *socket) {
+void OverlappedSocket::Clone(OverlappedSocket* socket) {
   socket->family_ = this->family_;
   socket->type_ = this->type_;
 }
@@ -451,9 +457,11 @@ bool OverlappedSocket::InitIOCP(SOCKET s) {
   return true;
 }
 
-void OverlappedSocket::UpdateLastError() { error_ = WSAGetLastError(); }
+void OverlappedSocket::UpdateLastError() {
+  error_ = WSAGetLastError();
+}
 
-bool OverlappedSocket::PostAccept(PER_IO_CONTEXT *io_ctx) {
+bool OverlappedSocket::PostAccept(PER_IO_CONTEXT* io_ctx) {
   assert(io_ctx);
   if (io_ctx == NULL)
     return false;
@@ -483,7 +491,7 @@ bool OverlappedSocket::PostAccept(PER_IO_CONTEXT *io_ctx) {
   return true;
 }
 
-bool OverlappedSocket::PostRecv(PER_IO_CONTEXT *io_ctx) {
+bool OverlappedSocket::PostRecv(PER_IO_CONTEXT* io_ctx) {
   assert(io_ctx);
   if (io_ctx == NULL)
     return false;
@@ -503,7 +511,7 @@ bool OverlappedSocket::PostRecv(PER_IO_CONTEXT *io_ctx) {
   return true;
 }
 
-bool OverlappedSocket::PostSend(PER_IO_CONTEXT *io_ctx, const void *msg, size_t msg_len) {
+bool OverlappedSocket::PostSend(PER_IO_CONTEXT* io_ctx, const void* msg, size_t msg_len) {
   assert(io_ctx);
   if (io_ctx == NULL)
     return false;
@@ -523,7 +531,7 @@ bool OverlappedSocket::PostSend(PER_IO_CONTEXT *io_ctx, const void *msg, size_t 
   return true;
 }
 
-bool OverlappedSocket::PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr) {
+bool OverlappedSocket::PostConnect(PER_IO_CONTEXT* io_ctx, const SocketAddress& addr) {
   assert(io_ctx);
   if (io_ctx == NULL)
     return false;
@@ -536,7 +544,7 @@ bool OverlappedSocket::PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &
   addr0.sin_family = family_;
   addr0.sin_addr.s_addr = INADDR_ANY;
   addr0.sin_port = 0;
-  int ret = bind(io_ctx->socket, (SOCKADDR *)&addr0, sizeof(addr0));
+  int ret = bind(io_ctx->socket, (SOCKADDR*)&addr0, sizeof(addr0));
   if (ret != 0) {
     UpdateLastError();
     return false;
@@ -545,8 +553,8 @@ bool OverlappedSocket::PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &
   sockaddr_storage saddr;
   size_t len = addr.ToSockAddrStorage(&saddr);
 
-  ret = connectex_fn_(io_ctx->socket, reinterpret_cast<const sockaddr *>(&saddr), len, NULL, 0,
-                      NULL, &io_ctx->overlapped);
+  ret = connectex_fn_(io_ctx->socket, reinterpret_cast<const sockaddr*>(&saddr), len, NULL, 0, NULL,
+                      &io_ctx->overlapped);
   int gle = WSAGetLastError();
   if (ret == SOCKET_ERROR && gle != WSA_IO_PENDING) {
     UpdateLastError();
@@ -556,7 +564,7 @@ bool OverlappedSocket::PostConnect(PER_IO_CONTEXT *io_ctx, const SocketAddress &
   return true;
 }
 
-bool OverlappedSocket::PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress &addr) {
+bool OverlappedSocket::PostRecvFrom(PER_IO_CONTEXT* io_ctx, const SocketAddress& addr) {
   assert(io_ctx);
   if (io_ctx == NULL)
     return false;
@@ -571,9 +579,9 @@ bool OverlappedSocket::PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress 
   DWORD bytes_recv = 0;
   DWORD flags = 0;
 
-  int ret = WSARecvFrom(io_ctx->socket, &io_ctx->wsa_buffer, 1, &bytes_recv, &flags,
-                        reinterpret_cast<sockaddr *>(&remote_addrin_), &sizein, &io_ctx->overlapped,
-                        NULL);
+  int ret =
+      WSARecvFrom(io_ctx->socket, &io_ctx->wsa_buffer, 1, &bytes_recv, &flags,
+                  reinterpret_cast<sockaddr*>(&remote_addrin_), &sizein, &io_ctx->overlapped, NULL);
   if (ret == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING) {
     UpdateLastError();
     return false;
@@ -582,8 +590,10 @@ bool OverlappedSocket::PostRecvFrom(PER_IO_CONTEXT *io_ctx, const SocketAddress 
   return true;
 }
 
-bool OverlappedSocket::PostSendTo(const void *buffer, size_t length, PER_IO_CONTEXT *io_ctx,
-                                  const SocketAddress &addr) {
+bool OverlappedSocket::PostSendTo(const void* buffer,
+                                  size_t length,
+                                  PER_IO_CONTEXT* io_ctx,
+                                  const SocketAddress& addr) {
   assert(io_ctx);
   if (io_ctx == NULL)
     return false;
@@ -609,7 +619,7 @@ bool OverlappedSocket::PostSendTo(const void *buffer, size_t length, PER_IO_CONT
   DWORD bytes_sent = 0;
   DWORD flags = 0;
   int ret = WSASendTo(io_ctx->socket, &io_ctx->wsa_buffer, 1, &bytes_sent, flags,
-                      reinterpret_cast<sockaddr *>(&addr_in), sizeTo, &io_ctx->overlapped, NULL);
+                      reinterpret_cast<sockaddr*>(&addr_in), sizeTo, &io_ctx->overlapped, NULL);
   if (ret == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING) {
     UpdateLastError();
     return false;
@@ -617,5 +627,5 @@ bool OverlappedSocket::PostSendTo(const void *buffer, size_t length, PER_IO_CONT
   UpdateLastError();
   return true;
 }
-} // namespace akali
+}  // namespace akali
 #endif

@@ -58,7 +58,7 @@ bool OSVersion::AtLeastWinVista(void) {
   return (osvi.dwMajorVersion >= 6);
 }
 
-void OSVersion::GetMajorMinorBuild(DWORD &dwMajor, DWORD &dwMinor, DWORD &dwBuild) {
+void OSVersion::GetMajorMinorBuild(DWORD& dwMajor, DWORD& dwMinor, DWORD& dwBuild) {
   ____Init();
   dwMajor = osvi.dwMajorVersion;
   dwMinor = osvi.dwMinorVersion;
@@ -174,5 +174,5 @@ bool OSVersion::IsWin64() {
   return bIsWow64 == 1;
 }
 #endif
-} // namespace akali
+}  // namespace akali
 #endif

@@ -22,46 +22,54 @@
 
 namespace akali {
 
-AKALI_API size_t UrlDecode(char *buffer, size_t buflen, const char *source, size_t srclen);
-AKALI_API std::string UrlDecode(const std::string &source);
-AKALI_API std::string UrlEncode(const std::string &str);
+AKALI_API size_t UrlDecode(char* buffer, size_t buflen, const char* source, size_t srclen);
+AKALI_API std::string UrlDecode(const std::string& source);
+AKALI_API std::string UrlEncode(const std::string& str);
 
 // Convert an unsigned value from 0 to 15 to the hex character equivalent...
 AKALI_API char HexEncode(unsigned char val);
 // ...and vice-versa.
-AKALI_API bool HexDecode(char ch, unsigned char *val);
+AKALI_API bool HexDecode(char ch, unsigned char* val);
 
 // hex_encode, but separate each byte representation with a delimiter.
 // delimiter == 0 means no delimiter. If the buffer is too short, we return 0
-AKALI_API size_t HexEncodeWithDelimiter(char *buffer, size_t buflen, const char *source,
-                                          size_t srclen, char delimiter);
+AKALI_API size_t HexEncodeWithDelimiter(char* buffer,
+                                        size_t buflen,
+                                        const char* source,
+                                        size_t srclen,
+                                        char delimiter);
 
-AKALI_API std::string HexEncode(const std::string &str);
-AKALI_API std::string HexEncode(const char *source, size_t srclen);
-AKALI_API std::string HexEncodeWithDelimiter(const char *source, size_t srclen, char delimiter);
+AKALI_API std::string HexEncode(const std::string& str);
+AKALI_API std::string HexEncode(const char* source, size_t srclen);
+AKALI_API std::string HexEncodeWithDelimiter(const char* source, size_t srclen, char delimiter);
 
 // hex_decode, assuming that there is a delimiter between every byte pair.
 // delimiter == 0 means no delimiter. If the buffer is too short or the data is invalid, we return 0.
-AKALI_API size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const char *source,
-                                          size_t srclen, char delimiter);
+AKALI_API size_t HexDecodeWithDelimiter(char* buffer,
+                                        size_t buflen,
+                                        const char* source,
+                                        size_t srclen,
+                                        char delimiter);
 
-AKALI_API size_t HexDecode(char *buffer, size_t buflen, const std::string &source);
-AKALI_API size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const std::string &source,
-                                          char delimiter);
+AKALI_API size_t HexDecode(char* buffer, size_t buflen, const std::string& source);
+AKALI_API size_t HexDecodeWithDelimiter(char* buffer,
+                                        size_t buflen,
+                                        const std::string& source,
+                                        char delimiter);
 
 #ifdef AKALI_WIN
 // About code_page, see
 // https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
 //
-AKALI_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
-AKALI_API std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
-AKALI_API std::string UnicodeToUtf8(const std::wstring &str);
-AKALI_API std::wstring Utf8ToUnicode(const std::string &str);
-AKALI_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
-AKALI_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
+AKALI_API std::string UnicodeToAnsi(const std::wstring& str, unsigned int code_page = 0);
+AKALI_API std::wstring AnsiToUnicode(const std::string& str, unsigned int code_page = 0);
+AKALI_API std::string UnicodeToUtf8(const std::wstring& str);
+AKALI_API std::wstring Utf8ToUnicode(const std::string& str);
+AKALI_API std::string AnsiToUtf8(const std::string& str, unsigned int code_page = 0);
+AKALI_API std::string Utf8ToAnsi(const std::string& str, unsigned int code_page = 0);
 
-AKALI_API std::string UnicodeToUtf8BOM(const std::wstring &str);
-AKALI_API std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_page = 0);
+AKALI_API std::string UnicodeToUtf8BOM(const std::wstring& str);
+AKALI_API std::string AnsiToUtf8BOM(const std::string& str, unsigned int code_page = 0);
 
 #if (defined UNICODE || defined _UNICODE)
 #define TCHARToAnsi(str) akali::UnicodeToAnsi((str), 0)
@@ -80,5 +88,5 @@ AKALI_API std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_pa
 #endif
 
 #endif
-} // namespace akali
-#endif // AKALI_STRINGENCODE_H_
+}  // namespace akali
+#endif  // AKALI_STRINGENCODE_H_

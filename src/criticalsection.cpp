@@ -16,15 +16,29 @@
 
 #ifdef AKALI_WIN
 namespace akali {
-CriticalSection::CriticalSection() { InitializeCriticalSection(&crit_); }
-CriticalSection::~CriticalSection() { DeleteCriticalSection(&crit_); }
-void CriticalSection::Enter() const { EnterCriticalSection(&crit_); }
-void CriticalSection::Leave() const { LeaveCriticalSection(&crit_); }
+CriticalSection::CriticalSection() {
+  InitializeCriticalSection(&crit_);
+}
+CriticalSection::~CriticalSection() {
+  DeleteCriticalSection(&crit_);
+}
+void CriticalSection::Enter() const {
+  EnterCriticalSection(&crit_);
+}
+void CriticalSection::Leave() const {
+  LeaveCriticalSection(&crit_);
+}
 
-bool CriticalSection::TryEnter() const { return TryEnterCriticalSection(&crit_) != FALSE; }
+bool CriticalSection::TryEnter() const {
+  return TryEnterCriticalSection(&crit_) != FALSE;
+}
 
-CritScope::CritScope(const CriticalSection *pCS) : crit_(pCS) { crit_->Enter(); }
+CritScope::CritScope(const CriticalSection* pCS) : crit_(pCS) {
+  crit_->Enter();
+}
 
-CritScope::~CritScope() { crit_->Leave(); }
-} // namespace akali
+CritScope::~CritScope() {
+  crit_->Leave();
+}
+}  // namespace akali
 #endif

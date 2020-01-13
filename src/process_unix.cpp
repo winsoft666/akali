@@ -44,17 +44,17 @@
 // clang-format on
 
 namespace akali {
-Process::Data::Data() noexcept
-    : id(-1) {}
+Process::Data::Data() noexcept : id(-1) {}
 
 bool Process::Successed() const noexcept {
   return (data_.id != -1);
 }
 
-Process::Process(const std::function<void()> &function,
-                 std::function<void(const char *, size_t)> read_stdout,
-                 std::function<void(const char *, size_t)> read_stderr, bool open_stdin,
-                 const Config &config) noexcept
+Process::Process(const std::function<void()>& function,
+                 std::function<void(const char*, size_t)> read_stdout,
+                 std::function<void(const char*, size_t)> read_stderr,
+                 bool open_stdin,
+                 const Config& config) noexcept
     : closed_(true)
     , read_stdout_(std::move(read_stdout))
     , read_stderr_(std::move(read_stderr))
@@ -64,7 +64,7 @@ Process::Process(const std::function<void()> &function,
   async_read();
 }
 
-Process::id_type Process::open(const std::function<void()> &function) noexcept {
+Process::id_type Process::open(const std::function<void()>& function) noexcept {
   if (open_stdin_)
     stdin_fd_ = std::unique_ptr<fd_type>(new fd_type);
   if (read_stdout_)
@@ -136,7 +136,7 @@ Process::id_type Process::open(const std::function<void()> &function) noexcept {
       // Optimization on some systems: using 8 * 1024 (Debian's default
       // _SC_OPEN_MAX) as fd_max limit
       int fd_max = std::min(8192,
-                            static_cast<int>(sysconf(_SC_OPEN_MAX))); // Truncation is safe
+                            static_cast<int>(sysconf(_SC_OPEN_MAX)));  // Truncation is safe
       if (fd_max < 0)
         fd_max = 8192;
       for (int fd = 3; fd < fd_max; fd++)
@@ -173,15 +173,16 @@ Process::id_type Process::open(const std::function<void()> &function) noexcept {
   return pid;
 }
 
-Process::id_type Process::open(const std::vector<string_type> &arguments, const string_type &path,
-                               const environment_type *environment) noexcept {
+Process::id_type Process::open(const std::vector<string_type>& arguments,
+                               const string_type& path,
+                               const environment_type* environment) noexcept {
   return open([&arguments, &path, &environment] {
     if (arguments.empty())
       exit(127);
 
-    std::vector<const char *> argv_ptrs;
+    std::vector<const char*> argv_ptrs;
     argv_ptrs.reserve(arguments.size() + 1);
-    for (auto &argument : arguments)
+    for (auto& argument : arguments)
       argv_ptrs.emplace_back(argument.c_str());
     argv_ptrs.emplace_back(nullptr);
 
@@ -191,26 +192,27 @@ Process::id_type Process::open(const std::vector<string_type> &arguments, const 
     }
 
     if (!environment)
-      execv(arguments[0].c_str(), const_cast<char *const *>(argv_ptrs.data()));
+      execv(arguments[0].c_str(), const_cast<char* const*>(argv_ptrs.data()));
     else {
       std::vector<std::string> env_strs;
-      std::vector<const char *> env_ptrs;
+      std::vector<const char*> env_ptrs;
       env_strs.reserve(environment->size());
       env_ptrs.reserve(environment->size() + 1);
-      for (const auto &e : *environment) {
+      for (const auto& e : *environment) {
         env_strs.emplace_back(e.first + '=' + e.second);
         env_ptrs.emplace_back(env_strs.back().c_str());
       }
       env_ptrs.emplace_back(nullptr);
 
-      execve(arguments[0].c_str(), const_cast<char *const *>(argv_ptrs.data()),
-             const_cast<char *const *>(env_ptrs.data()));
+      execve(arguments[0].c_str(), const_cast<char* const*>(argv_ptrs.data()),
+             const_cast<char* const*>(env_ptrs.data()));
     }
   });
 }
 
-Process::id_type Process::open(const std::string &command, const std::string &path,
-                               const environment_type *environment) noexcept {
+Process::id_type Process::open(const std::string& command,
+                               const std::string& path,
+                               const environment_type* environment) noexcept {
   return open([&command, &path, &environment] {
     if (!path.empty()) {
       if (chdir(path.c_str()) != 0)
@@ -221,10 +223,10 @@ Process::id_type Process::open(const std::string &command, const std::string &pa
       execl("/bin/sh", "/bin/sh", "-c", command.c_str(), nullptr);
     else {
       std::vector<std::string> env_strs;
-      std::vector<const char *> env_ptrs;
+      std::vector<const char*> env_ptrs;
       env_strs.reserve(environment->size());
       env_ptrs.reserve(environment->size() + 1);
-      for (const auto &e : *environment) {
+      for (const auto& e : *environment) {
         env_strs.emplace_back(e.first + '=' + e.second);
         env_ptrs.emplace_back(env_strs.back().c_str());
       }
@@ -317,7 +319,7 @@ int Process::GetExitStatus() noexcept {
   return exit_status;
 }
 
-bool Process::TryGetExitStatus(int &exit_status) noexcept {
+bool Process::TryGetExitStatus(int& exit_status) noexcept {
   if (data_.id <= 0)
     return false;
 
@@ -365,10 +367,11 @@ void Process::close_fds() noexcept {
   }
 }
 
-bool Process::Write(const char *bytes, size_t n) {
+bool Process::Write(const char* bytes, size_t n) {
   if (!open_stdin_)
-    throw std::invalid_argument("Can't write to an unopened stdin pipe. Please set open_stdin=true "
-                                "when constructing the process.");
+    throw std::invalid_argument(
+        "Can't write to an unopened stdin pipe. Please set open_stdin=true "
+        "when constructing the process.");
 
   std::lock_guard<std::mutex> lock(stdin_mutex_);
   if (stdin_fd_) {
@@ -417,7 +420,7 @@ bool Process::Kill(id_type id, bool force) noexcept {
   return ::kill(id, SIGINT) == 0;
 }
 
-bool Process::Kill(const std::string &executed_file_name, bool force) noexcept {
+bool Process::Kill(const std::string& executed_file_name, bool force) noexcept {
   if (executed_file_name.length() == 0)
     return false;
 
@@ -426,10 +429,10 @@ bool Process::Kill(const std::string &executed_file_name, bool force) noexcept {
   int pid = -1;
 
   // Open the /proc directory
-  DIR *dp = opendir("/proc");
+  DIR* dp = opendir("/proc");
   if (dp != NULL) {
     // Enumerate all entries in directory until process found
-    struct dirent *dirp;
+    struct dirent* dirp;
     while (pid < 0 && (dirp = readdir(dp))) {
       // Skip non-numeric entries
       int id = atoi(dirp->d_name);
@@ -502,5 +505,5 @@ std::string Process::GetProcessPath(Process::id_type id) noexcept {
   }
   return cmdLine;
 }
-} // namespace akali
+}  // namespace akali
 #endif

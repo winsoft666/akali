@@ -31,7 +31,7 @@ namespace akali {
 #pragma region Static Members
 
 // Initialize the singleton service instance.
-WinServiceBase *WinServiceBase::s_service = NULL;
+WinServiceBase* WinServiceBase::s_service = NULL;
 
 //
 //   FUNCTION: CServiceBase::Run(CServiceBase &)
@@ -49,7 +49,7 @@ WinServiceBase *WinServiceBase::s_service = NULL;
 //   function fails, the return value is FALSE. To get extended error
 //   information, call GetLastError.
 //
-BOOL WinServiceBase::Run(WinServiceBase &service) {
+BOOL WinServiceBase::Run(WinServiceBase& service) {
   s_service = &service;
 
   SERVICE_TABLE_ENTRY serviceTable[] = {{service.m_name, ServiceMain}, {NULL, NULL}};
@@ -71,7 +71,7 @@ BOOL WinServiceBase::Run(WinServiceBase &service) {
 //   * dwArgc   - number of command line arguments
 //   * lpszArgv - array of command line arguments
 //
-void WINAPI WinServiceBase::ServiceMain(DWORD dwArgc, PWSTR *pszArgv) {
+void WINAPI WinServiceBase::ServiceMain(DWORD dwArgc, PWSTR* pszArgv) {
   assert(s_service != NULL);
 
   // Register the handler function for the service
@@ -109,22 +109,22 @@ void WINAPI WinServiceBase::ServiceMain(DWORD dwArgc, PWSTR *pszArgv) {
 //
 void WINAPI WinServiceBase::ServiceCtrlHandler(DWORD dwCtrl) {
   switch (dwCtrl) {
-  case SERVICE_CONTROL_STOP:
-    s_service->Stop();
-    break;
-  case SERVICE_CONTROL_PAUSE:
-    s_service->Pause();
-    break;
-  case SERVICE_CONTROL_CONTINUE:
-    s_service->Continue();
-    break;
-  case SERVICE_CONTROL_SHUTDOWN:
-    s_service->Shutdown();
-    break;
-  case SERVICE_CONTROL_INTERROGATE:
-    break;
-  default:
-    break;
+    case SERVICE_CONTROL_STOP:
+      s_service->Stop();
+      break;
+    case SERVICE_CONTROL_PAUSE:
+      s_service->Pause();
+      break;
+    case SERVICE_CONTROL_CONTINUE:
+      s_service->Continue();
+      break;
+    case SERVICE_CONTROL_SHUTDOWN:
+      s_service->Shutdown();
+      break;
+    case SERVICE_CONTROL_INTERROGATE:
+      break;
+    default:
+      break;
   }
 }
 
@@ -147,7 +147,9 @@ void WINAPI WinServiceBase::ServiceCtrlHandler(DWORD dwCtrl) {
 //   * fCanShutdown - the service is notified when system shutdown occurs
 //   * fCanPauseContinue - the service can be paused and continued
 //
-WinServiceBase::WinServiceBase(PWSTR pszServiceName, BOOL fCanStop, BOOL fCanShutdown,
+WinServiceBase::WinServiceBase(PWSTR pszServiceName,
+                               BOOL fCanStop,
+                               BOOL fCanShutdown,
                                BOOL fCanPauseContinue) {
   // Service name must be a valid string and cannot be NULL.
   m_name = (pszServiceName == NULL) ? L"" : pszServiceName;
@@ -199,7 +201,7 @@ WinServiceBase::~WinServiceBase(void) {}
 //   * dwArgc   - number of command line arguments
 //   * lpszArgv - array of command line arguments
 //
-void WinServiceBase::Start(DWORD dwArgc, PWSTR *pszArgv) {
+void WinServiceBase::Start(DWORD dwArgc, PWSTR* pszArgv) {
   try {
     // Tell SCM that the service is starting.
     SetServiceStatus(SERVICE_START_PENDING);
@@ -239,7 +241,7 @@ void WinServiceBase::Start(DWORD dwArgc, PWSTR *pszArgv) {
 //   * dwArgc   - number of command line arguments
 //   * lpszArgv - array of command line arguments
 //
-void WinServiceBase::OnStart(DWORD dwArgc, PWSTR *pszArgv) {}
+void WinServiceBase::OnStart(DWORD dwArgc, PWSTR* pszArgv) {}
 
 //
 //   FUNCTION: CServiceBase::Stop()
@@ -420,7 +422,8 @@ void WinServiceBase::OnShutdown() {}
 //   * dwWin32ExitCode - error code to report
 //   * dwWaitHint - estimated time for pending operation, in milliseconds
 //
-void WinServiceBase::SetServiceStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode,
+void WinServiceBase::SetServiceStatus(DWORD dwCurrentState,
+                                      DWORD dwWin32ExitCode,
                                       DWORD dwWaitHint) {
   static DWORD dwCheckPoint = 1;
 
@@ -464,15 +467,15 @@ void WinServiceBase::WriteEventLogEntry(PWSTR pszMessage, WORD wType) {
     lpszStrings[0] = m_name;
     lpszStrings[1] = pszMessage;
 
-    ReportEvent(hEventSource, // Event log handle
-                wType,        // Event type
-                0,            // Event category
-                0,            // Event identifier
-                NULL,         // No security identifier
-                2,            // Size of lpszStrings array
-                0,            // No binary data
-                lpszStrings,  // Array of strings
-                NULL          // No binary data
+    ReportEvent(hEventSource,  // Event log handle
+                wType,         // Event type
+                0,             // Event category
+                0,             // Event identifier
+                NULL,          // No security identifier
+                2,             // Size of lpszStrings array
+                0,             // No binary data
+                lpszStrings,   // Array of strings
+                NULL           // No binary data
     );
 
     DeregisterEventSource(hEventSource);
@@ -504,7 +507,7 @@ void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...) {
   if (!lpFormat)
     return;
 
-  wchar_t *pMsgBuffer = NULL;
+  wchar_t* pMsgBuffer = NULL;
   unsigned int iMsgBufCount = 0;
 
   va_list arglist;
@@ -519,7 +522,7 @@ void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...) {
       pMsgBuffer = NULL;
     }
 
-    pMsgBuffer = (wchar_t *)malloc(iMsgBufCount * sizeof(wchar_t));
+    pMsgBuffer = (wchar_t*)malloc(iMsgBufCount * sizeof(wchar_t));
 
     if (!pMsgBuffer) {
       break;
@@ -540,15 +543,15 @@ void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...) {
         lpszStrings[0] = pszServiceName;
         lpszStrings[1] = pMsgBuffer;
 
-        ReportEvent(hEventSource, // Event log handle
-                    wType,        // Event type
-                    0,            // Event category
-                    0,            // Event identifier
-                    NULL,         // No security identifier
-                    2,            // Size of lpszStrings array
-                    0,            // No binary data
-                    lpszStrings,  // Array of strings
-                    NULL          // No binary data
+        ReportEvent(hEventSource,  // Event log handle
+                    wType,         // Event type
+                    0,             // Event category
+                    0,             // Event identifier
+                    NULL,          // No security identifier
+                    2,             // Size of lpszStrings array
+                    0,             // No binary data
+                    lpszStrings,   // Array of strings
+                    NULL           // No binary data
         );
 
         DeregisterEventSource(hEventSource);
@@ -566,7 +569,7 @@ void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...) {
   if (!lpFormat)
     return;
 
-  char *pMsgBuffer = NULL;
+  char* pMsgBuffer = NULL;
   unsigned int iMsgBufCount = 0;
 
   va_list arglist;
@@ -581,7 +584,7 @@ void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...) {
       pMsgBuffer = NULL;
     }
 
-    pMsgBuffer = (char *)malloc(iMsgBufCount * sizeof(char));
+    pMsgBuffer = (char*)malloc(iMsgBufCount * sizeof(char));
 
     if (!pMsgBuffer) {
       break;
@@ -602,15 +605,15 @@ void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...) {
         lpszStrings[0] = pszServiceName;
         lpszStrings[1] = pMsgBuffer;
 
-        ReportEventA(hEventSource, // Event log handle
-                     wType,        // Event type
-                     0,            // Event category
-                     0,            // Event identifier
-                     NULL,         // No security identifier
-                     2,            // Size of lpszStrings array
-                     0,            // No binary data
-                     lpszStrings,  // Array of strings
-                     NULL          // No binary data
+        ReportEventA(hEventSource,  // Event log handle
+                     wType,         // Event type
+                     0,             // Event category
+                     0,             // Event identifier
+                     NULL,          // No security identifier
+                     2,             // Size of lpszStrings array
+                     0,             // No binary data
+                     lpszStrings,   // Array of strings
+                     NULL           // No binary data
         );
 
         DeregisterEventSource(hEventSource);
@@ -625,5 +628,5 @@ void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...) {
 }
 
 #pragma endregion
-} // namespace akali
+}  // namespace akali
 #endif

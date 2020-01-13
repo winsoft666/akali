@@ -18,8 +18,8 @@
 #include "akali/akali_export.h"
 
 #include <stdlib.h>
-#include <stddef.h> // for NULL, size_t
-#include <stdint.h> // for uintptr_t and (u)int_t types.
+#include <stddef.h>  // for NULL, size_t
+#include <stdint.h>  // for uintptr_t and (u)int_t types.
 #ifdef AKALI_WIN
 #include <winsock2.h>
 #else
@@ -58,7 +58,7 @@ namespace akali {
 #define le64toh(v) OSSwapLittleToHostInt64(v)
 #endif
 
-#if _WIN32_WINNT >= 0x0602 || WINVER >= 0x0602 // Win8
+#if _WIN32_WINNT >= 0x0602 || WINVER >= 0x0602  // Win8
 #define htobe64(v) htonll((v))
 #define be64toh(v) ntohll((v))
 #endif
@@ -80,33 +80,33 @@ namespace akali {
 #endif
 
 // Reading and writing of little and big-endian numbers from memory
-AKALI_API void Set8(void *memory, size_t offset, uint8_t v);
+AKALI_API void Set8(void* memory, size_t offset, uint8_t v);
 
-AKALI_API uint8_t Get8(const void *memory, size_t offset);
+AKALI_API uint8_t Get8(const void* memory, size_t offset);
 
-AKALI_API void SetBE16(void *memory, uint16_t v);
+AKALI_API void SetBE16(void* memory, uint16_t v);
 
-AKALI_API void SetBE32(void *memory, uint32_t v);
-#if _WIN32_WINNT >= 0x0602 || WINVER >= 0x0602 // Win8
-AKALI_API void SetBE64(void *memory, uint64_t v);
-AKALI_API uint64_t GetBE64(const void *memory);
+AKALI_API void SetBE32(void* memory, uint32_t v);
+#if _WIN32_WINNT >= 0x0602 || WINVER >= 0x0602  // Win8
+AKALI_API void SetBE64(void* memory, uint64_t v);
+AKALI_API uint64_t GetBE64(const void* memory);
 AKALI_API uint64_t HostToNetwork64(uint64_t n);
 AKALI_API uint64_t NetworkToHost64(uint64_t n);
 #endif
-AKALI_API void SetLE64(void *memory, uint64_t v);
-AKALI_API uint16_t GetBE16(const void *memory);
+AKALI_API void SetLE64(void* memory, uint64_t v);
+AKALI_API uint16_t GetBE16(const void* memory);
 
-AKALI_API uint32_t GetBE32(const void *memory);
+AKALI_API uint32_t GetBE32(const void* memory);
 
-AKALI_API void SetLE16(void *memory, uint16_t v);
+AKALI_API void SetLE16(void* memory, uint16_t v);
 
-AKALI_API void SetLE32(void *memory, uint32_t v);
+AKALI_API void SetLE32(void* memory, uint32_t v);
 
-AKALI_API uint16_t GetLE16(const void *memory);
+AKALI_API uint16_t GetLE16(const void* memory);
 
-AKALI_API uint32_t GetLE32(const void *memory);
+AKALI_API uint32_t GetLE32(const void* memory);
 
-AKALI_API uint64_t GetLE64(const void *memory);
+AKALI_API uint64_t GetLE64(const void* memory);
 
 AKALI_API uint16_t HostToNetwork16(uint16_t n);
 
@@ -116,6 +116,6 @@ AKALI_API uint16_t NetworkToHost16(uint16_t n);
 
 AKALI_API uint32_t NetworkToHost32(uint32_t n);
 
-} // namespace akali
+}  // namespace akali
 
-#endif // !AKALI_BYTE_ORDER_H_
+#endif  // !AKALI_BYTE_ORDER_H_

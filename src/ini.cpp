@@ -20,16 +20,19 @@
 namespace akali {
 Ini::Ini() noexcept {}
 
-Ini::Ini(const std::wstring &file_path) noexcept
-    : ini_file_path_(file_path) {}
+Ini::Ini(const std::wstring& file_path) noexcept : ini_file_path_(file_path) {}
 
 Ini::~Ini() noexcept {}
 
-void Ini::SetIniFilePath(const std::wstring &file_path) noexcept { ini_file_path_ = file_path; }
+void Ini::SetIniFilePath(const std::wstring& file_path) noexcept {
+  ini_file_path_ = file_path;
+}
 
-std::wstring Ini::GetIniFilePath() const noexcept { return ini_file_path_; }
+std::wstring Ini::GetIniFilePath() const noexcept {
+  return ini_file_path_;
+}
 
-bool Ini::ReadInt(const std::wstring &item, const std::wstring &sub_item, UINT *result) noexcept {
+bool Ini::ReadInt(const std::wstring& item, const std::wstring& sub_item, UINT* result) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
   INT iDefault = 0;
@@ -45,7 +48,8 @@ bool Ini::ReadInt(const std::wstring &item, const std::wstring &sub_item, UINT *
   return false;
 }
 
-UINT Ini::ReadInt(const std::wstring &item, const std::wstring &sub_item,
+UINT Ini::ReadInt(const std::wstring& item,
+                  const std::wstring& sub_item,
                   UINT default_value) noexcept {
   if (ini_file_path_.length() == 0)
     return default_value;
@@ -55,8 +59,9 @@ UINT Ini::ReadInt(const std::wstring &item, const std::wstring &sub_item,
                                ini_file_path_.c_str());
 }
 
-std::wstring Ini::ReadString(const std::wstring &item, const std::wstring &sub_item,
-                             const std::wstring &default_value) noexcept {
+std::wstring Ini::ReadString(const std::wstring& item,
+                             const std::wstring& sub_item,
+                             const std::wstring& default_value) noexcept {
   if (ini_file_path_.length() == 0)
     return default_value;
 
@@ -70,16 +75,17 @@ std::wstring Ini::ReadString(const std::wstring &item, const std::wstring &sub_i
   return result;
 }
 
-bool Ini::ReadString(const std::wstring &item, const std::wstring &sub_item,
-                     std::wstring *result) noexcept {
+bool Ini::ReadString(const std::wstring& item,
+                     const std::wstring& sub_item,
+                     std::wstring* result) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
 
   bool ret = false;
   int iBufSize = 255;
-  WCHAR *pBuf = NULL;
+  WCHAR* pBuf = NULL;
   do {
-    pBuf = (WCHAR *)malloc(iBufSize * sizeof(WCHAR));
+    pBuf = (WCHAR*)malloc(iBufSize * sizeof(WCHAR));
     memset(pBuf, 0, iBufSize * sizeof(WCHAR));
     SetLastError(0);
     DWORD dwRet = GetPrivateProfileStringW(item.c_str(), sub_item.c_str(), L"", pBuf, iBufSize,
@@ -109,7 +115,7 @@ bool Ini::ReadString(const std::wstring &item, const std::wstring &sub_item,
   return ret;
 }
 
-bool Ini::WriteInt(const std::wstring &item, const std::wstring &sub_item, LONG value) noexcept {
+bool Ini::WriteInt(const std::wstring& item, const std::wstring& sub_item, LONG value) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
 
@@ -118,7 +124,8 @@ bool Ini::WriteInt(const std::wstring &item, const std::wstring &sub_item, LONG 
   return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::WriteColor(const std::wstring &item, const std::wstring &sub_item,
+bool Ini::WriteColor(const std::wstring& item,
+                     const std::wstring& sub_item,
                      COLORREF value) noexcept {
   WCHAR szValue[60];
   StringCchPrintfW(szValue, 60, L"%d,%d,%d,%d", (BYTE)(value >> 24), (BYTE)(value >> 16),
@@ -127,29 +134,30 @@ bool Ini::WriteColor(const std::wstring &item, const std::wstring &sub_item,
   return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::WritePoint(const std::wstring &item, const std::wstring &sub_item, POINT value) noexcept {
+bool Ini::WritePoint(const std::wstring& item, const std::wstring& sub_item, POINT value) noexcept {
   WCHAR szValue[50];
   StringCchPrintfW(szValue, 50, L"%d,%d", value.x, value.y);
 
   return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::WriteSize(const std::wstring &item, const std::wstring &sub_item, SIZE value) noexcept {
+bool Ini::WriteSize(const std::wstring& item, const std::wstring& sub_item, SIZE value) noexcept {
   WCHAR szValue[50];
   StringCchPrintfW(szValue, 50, L"%d,%d", value.cx, value.cy);
 
   return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::WriteRect(const std::wstring &item, const std::wstring &sub_item, RECT value) noexcept {
+bool Ini::WriteRect(const std::wstring& item, const std::wstring& sub_item, RECT value) noexcept {
   WCHAR szValue[50];
   StringCchPrintfW(szValue, 50, L"%d,%d,%d,%d", value.left, value.top, value.right, value.bottom);
 
   return WriteString(item, sub_item, szValue);
 }
 
-bool Ini::WriteString(const std::wstring &item, const std::wstring &sub_item,
-                      const std::wstring &value) noexcept {
+bool Ini::WriteString(const std::wstring& item,
+                      const std::wstring& sub_item,
+                      const std::wstring& value) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
 
@@ -157,7 +165,7 @@ bool Ini::WriteString(const std::wstring &item, const std::wstring &sub_item,
                                      ini_file_path_.c_str());
 }
 
-bool Ini::ReadRect(const std::wstring &item, const std::wstring &sub_item, RECT *result) noexcept {
+bool Ini::ReadRect(const std::wstring& item, const std::wstring& sub_item, RECT* result) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
 
@@ -181,7 +189,7 @@ bool Ini::ReadRect(const std::wstring &item, const std::wstring &sub_item, RECT 
   return false;
 }
 
-bool Ini::ReadSize(const std::wstring &item, const std::wstring &sub_item, SIZE *result) noexcept {
+bool Ini::ReadSize(const std::wstring& item, const std::wstring& sub_item, SIZE* result) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
   WCHAR szReadData[64] = L"";
@@ -202,8 +210,9 @@ bool Ini::ReadSize(const std::wstring &item, const std::wstring &sub_item, SIZE 
   return false;
 }
 
-bool Ini::ReadPoint(const std::wstring &item, const std::wstring &sub_item,
-                    POINT *result) noexcept {
+bool Ini::ReadPoint(const std::wstring& item,
+                    const std::wstring& sub_item,
+                    POINT* result) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
   WCHAR szReadData[64] = L"";
@@ -225,8 +234,9 @@ bool Ini::ReadPoint(const std::wstring &item, const std::wstring &sub_item,
   return false;
 }
 
-bool Ini::ReadColor(const std::wstring &item, const std::wstring &sub_item,
-                    COLORREF *result) noexcept {
+bool Ini::ReadColor(const std::wstring& item,
+                    const std::wstring& sub_item,
+                    COLORREF* result) noexcept {
   if (ini_file_path_.length() == 0)
     return false;
   WCHAR szReadData[64] = L"";
@@ -246,7 +256,7 @@ bool Ini::ReadColor(const std::wstring &item, const std::wstring &sub_item,
   return false;
 }
 
-LONG Ini::SwitchStringToValue(LPCWSTR &pszSring) noexcept {
+LONG Ini::SwitchStringToValue(LPCWSTR& pszSring) noexcept {
   assert((pszSring != NULL) && (pszSring[0] != 0));
   if ((pszSring == NULL) || (pszSring[0] == 0))
     return 0L;
@@ -262,5 +272,5 @@ LONG Ini::SwitchStringToValue(LPCWSTR &pszSring) noexcept {
 
   return lValue;
 }
-} // namespace akali
+}  // namespace akali
 #endif

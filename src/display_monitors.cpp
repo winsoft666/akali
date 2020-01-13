@@ -5,7 +5,7 @@
 
 namespace akali {
 static BOOL CALLBACK Monitorenumproc(HMONITOR hMonitor, HDC hdc, LPRECT pRect, LPARAM arg) {
-  std::vector<HMONITOR> *monitors = (std::vector<HMONITOR> *)arg;
+  std::vector<HMONITOR>* monitors = (std::vector<HMONITOR>*)arg;
   monitors->push_back(hMonitor);
 
   return TRUE;
@@ -13,7 +13,9 @@ static BOOL CALLBACK Monitorenumproc(HMONITOR hMonitor, HDC hdc, LPRECT pRect, L
 
 DisplayMonitors::DisplayMonitors() {}
 
-DisplayMonitors::~DisplayMonitors() { dsp_list_.clear(); }
+DisplayMonitors::~DisplayMonitors() {
+  dsp_list_.clear();
+}
 
 typedef enum MONITOR_DPI_TYPE {
   MDT_EFFECTIVE_DPI = 0,
@@ -22,8 +24,10 @@ typedef enum MONITOR_DPI_TYPE {
   MDT_DEFAULT = MDT_EFFECTIVE_DPI
 } MONITOR_DPI_TYPE;
 
-typedef HRESULT(WINAPI *LPGetDpiForMonitor)(_In_ HMONITOR hmonitor, _In_ MONITOR_DPI_TYPE dpiType,
-                                            _Out_ UINT *dpiX, _Out_ UINT *dpiY);
+typedef HRESULT(WINAPI* LPGetDpiForMonitor)(_In_ HMONITOR hmonitor,
+                                            _In_ MONITOR_DPI_TYPE dpiType,
+                                            _Out_ UINT* dpiX,
+                                            _Out_ UINT* dpiY);
 
 int GetDPIOfMonitor(HMONITOR hMonitor) {
   UINT dpix = 96, dpiy = 96;
@@ -81,9 +85,11 @@ bool DisplayMonitors::EnumDisplayMonitors() {
   return true;
 }
 
-int DisplayMonitors::GetCount() const { return (int)dsp_list_.size(); }
+int DisplayMonitors::GetCount() const {
+  return (int)dsp_list_.size();
+}
 
-bool DisplayMonitors::GetDspInfo(const int index, DSPMONITOR *dsp) {
+bool DisplayMonitors::GetDspInfo(const int index, DSPMONITOR* dsp) {
   if (index >= 0 && index < (int)dsp_list_.size()) {
     if (dsp != NULL) {
       *dsp = dsp_list_[index];
@@ -93,7 +99,7 @@ bool DisplayMonitors::GetDspInfo(const int index, DSPMONITOR *dsp) {
   return false;
 }
 
-bool DisplayMonitors::GetPrimaryDspInfo(DSPMONITOR *dsp) {
+bool DisplayMonitors::GetPrimaryDspInfo(DSPMONITOR* dsp) {
   for (size_t i = 0; i < dsp_list_.size(); i++) {
     if (dsp_list_[i].primary) {
       *dsp = dsp_list_[i];
@@ -102,5 +108,5 @@ bool DisplayMonitors::GetPrimaryDspInfo(DSPMONITOR *dsp) {
   }
   return false;
 }
-} // namespace akali
+}  // namespace akali
 #endif

@@ -7,10 +7,10 @@
 #ifdef AKALI_WIN
 namespace akali {
 class AKALI_API InternetAvailabilityChecker {
-public:
-  static bool InternetConnectionAvailable(bool &avaliable);
+ public:
+  static bool InternetConnectionAvailable(bool& avaliable);
 };
-} // namespace akali
+}  // namespace akali
 #endif
 
-#endif // !AKALI_INTERNET_AVALIABILITY_CHECKER_H__
+#endif  // !AKALI_INTERNET_AVALIABILITY_CHECKER_H__

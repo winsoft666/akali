@@ -24,12 +24,16 @@
 #include <Shlwapi.h>
 
 namespace akali {
-static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DATAW file,
-                    int *pIgnoreNum);
-static void FileSearch(const wchar_t *szPath, const wchar_t *szDest, int *pIgnoreNum);
+static void AddFile(const wchar_t* szPath,
+                    const wchar_t* szDest,
+                    WIN32_FIND_DATAW file,
+                    int* pIgnoreNum);
+static void FileSearch(const wchar_t* szPath, const wchar_t* szDest, int* pIgnoreNum);
 
-static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DATAW file,
-                    int *pIgnoreNum) {
+static void AddFile(const wchar_t* szPath,
+                    const wchar_t* szDest,
+                    WIN32_FIND_DATAW file,
+                    int* pIgnoreNum) {
   if (file.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
     if (((wcscmp(file.cFileName, L".") != 0) && (wcscmp(file.cFileName, L"..") != 0))) {
       wchar_t szTemp[MAX_PATH] = {0};
@@ -67,7 +71,7 @@ static void AddFile(const wchar_t *szPath, const wchar_t *szDest, WIN32_FIND_DAT
   }
 }
 
-static void FileSearch(const wchar_t *szPath, const wchar_t *szDest, int *pIgnoreNum) {
+static void FileSearch(const wchar_t* szPath, const wchar_t* szDest, int* pIgnoreNum) {
   wchar_t szTemp[MAX_PATH] = {0};
   wcscpy_s(szTemp, MAX_PATH, szPath);
 
@@ -88,7 +92,7 @@ static void FileSearch(const wchar_t *szPath, const wchar_t *szDest, int *pIgnor
   FindClose(fhandle);
 }
 
-void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource, int *pIgnoreNum) {
+void CopyDir(const wchar_t* pszSource, const wchar_t* pszDest, bool bCopySource, int* pIgnoreNum) {
   wchar_t szSource[MAX_PATH] = {0};
   wchar_t szDest[MAX_PATH] = {0};
   wcscpy_s(szSource, MAX_PATH, pszSource);
@@ -107,13 +111,13 @@ void CopyDir(const wchar_t *pszSource, const wchar_t *pszDest, bool bCopySource,
   FileSearch(szSource, szDest, pIgnoreNum);
 }
 
-bool DeleteDir(const char *pszDir) {
+bool DeleteDir(const char* pszDir) {
   if (!pszDir)
     return false;
   return DeleteDir(AnsiToUnicode(pszDir).c_str());
 }
 
-bool DeleteDir(const wchar_t *pszDir) {
+bool DeleteDir(const wchar_t* pszDir) {
   if (!pszDir)
     return false;
   bool bRet = true;
@@ -168,16 +172,16 @@ bool DeleteDir(const wchar_t *pszDir) {
   return bRet;
 }
 
-bool CreateDir(const wchar_t *pszDir) {
+bool CreateDir(const wchar_t* pszDir) {
   if (!pszDir)
     return false;
-  wchar_t *p = NULL;
-  wchar_t *szDirBuf = NULL;
+  wchar_t* p = NULL;
+  wchar_t* szDirBuf = NULL;
   DWORD dwAttributes;
   size_t iLen = wcslen(pszDir);
 
   __try {
-    szDirBuf = (wchar_t *)malloc((iLen + 1) * sizeof(wchar_t));
+    szDirBuf = (wchar_t*)malloc((iLen + 1) * sizeof(wchar_t));
     if (szDirBuf == NULL)
       return false;
 
@@ -235,10 +239,10 @@ bool CreateDir(const wchar_t *pszDir) {
   return true;
 }
 
-bool CreateDir(const char *pszDir) {
+bool CreateDir(const char* pszDir) {
   if (!pszDir)
     return false;
   return CreateDir(AnsiToUnicode(pszDir).c_str());
 }
-} // namespace akali
+}  // namespace akali
 #endif

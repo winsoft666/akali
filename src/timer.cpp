@@ -23,15 +23,17 @@ TimerBase::TimerBase() {
 
 TimerBase::~TimerBase() {}
 
-void CALLBACK TimerBase::TimerProc(void *param, BOOLEAN timerCalled) {
+void CALLBACK TimerBase::TimerProc(void* param, BOOLEAN timerCalled) {
   UNREFERENCED_PARAMETER(timerCalled);
-  TimerBase *timer = static_cast<TimerBase *>(param);
+  TimerBase* timer = static_cast<TimerBase*>(param);
 
   timer->OnTimedEvent();
 }
 
-BOOL TimerBase::Start(DWORD ulInterval, // ulInterval in ms
-                      BOOL bImmediately, BOOL bOnce, ULONG dwFlags /* = WT_EXECUTELONGFUNCTION */) {
+BOOL TimerBase::Start(DWORD ulInterval,  // ulInterval in ms
+                      BOOL bImmediately,
+                      BOOL bOnce,
+                      ULONG dwFlags /* = WT_EXECUTELONGFUNCTION */) {
   BOOL bRet = FALSE;
 
   if (!m_hTimer) {
@@ -50,5 +52,5 @@ void TimerBase::Stop(bool bWait) {
 }
 
 void TimerBase::OnTimedEvent() {}
-} // namespace akali
+}  // namespace akali
 #endif

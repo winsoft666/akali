@@ -32,7 +32,7 @@ bool Process::Successed() const noexcept {
 
 // Simple HANDLE wrapper to close it automatically from the destructor.
 class Handle {
-public:
+ public:
   Handle() noexcept : handle(INVALID_HANDLE_VALUE) {}
   ~Handle() noexcept { close(); }
   void close() noexcept {
@@ -45,9 +45,9 @@ public:
     return old_handle;
   }
   operator HANDLE() const noexcept { return handle; }
-  HANDLE *operator&() noexcept { return &handle; }
+  HANDLE* operator&() noexcept { return &handle; }
 
-private:
+ private:
   HANDLE handle;
 };
 
@@ -55,10 +55,11 @@ private:
 // https://www.reddit.com/r/cpp/comments/3vpjqg/a_new_platform_independent_process_library_for_c11/cxq1wsj
 std::mutex create_process_mutex;
 
-Process::id_type Process::open(const std::vector<string_type> &arguments, const string_type &path,
-                               const environment_type *environment) noexcept {
+Process::id_type Process::open(const std::vector<string_type>& arguments,
+                               const string_type& path,
+                               const environment_type* environment) noexcept {
   string_type command;
-  for (auto &argument : arguments)
+  for (auto& argument : arguments)
 #if (defined UNICODE) || (defined _UNICODE)
     command += (command.empty() ? L"" : L" ") + argument;
 #else
@@ -69,8 +70,9 @@ Process::id_type Process::open(const std::vector<string_type> &arguments, const 
 
 // Based on the example at
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682499(v=vs.85).aspx.
-Process::id_type Process::open(const string_type &command, const string_type &path,
-                               const environment_type *environment) noexcept {
+Process::id_type Process::open(const string_type& command,
+                               const string_type& path,
+                               const environment_type* environment) noexcept {
   if (open_stdin_)
     stdin_fd_ = std::unique_ptr<fd_type>(new fd_type(NULL));
   if (read_stdout_)
@@ -142,11 +144,11 @@ Process::id_type Process::open(const string_type &command, const string_type &pa
   string_type environment_str;
   if (environment) {
 #if (defined UNICODE) || (defined _UNICODE)
-    for (const auto &e : *environment)
+    for (const auto& e : *environment)
       environment_str += e.first + L'=' + e.second + L'\0';
     environment_str += L'\0';
 #else
-    for (const auto &e : *environment)
+    for (const auto& e : *environment)
       environment_str += e.first + '=' + e.second + '\0';
     environment_str += '\0';
 #endif
@@ -154,11 +156,11 @@ Process::id_type Process::open(const string_type &command, const string_type &pa
   BOOL bSuccess = CreateProcess(
       nullptr, process_command.empty() ? nullptr : &process_command[0], nullptr, nullptr,
       stdin_fd_ || stdout_fd_ || stderr_fd_ ||
-          config_.inherit_file_descriptors, // Cannot be false when stdout,
-                                            // stderr or stdin is used
+          config_.inherit_file_descriptors,  // Cannot be false when stdout,
+                                             // stderr or stdin is used
       stdin_fd_ || stdout_fd_ || stderr_fd_ ? CREATE_NO_WINDOW
-                                            : 0, // CREATE_NO_WINDOW cannot be used when stdout or
-                                                 // stderr is redirected to parent process
+                                            : 0,  // CREATE_NO_WINDOW cannot be used when stdout or
+                                                  // stderr is redirected to parent process
       environment_str.empty() ? nullptr : &environment_str[0],
       path.empty() ? nullptr : path.c_str(), &startup_info, &process_info);
 
@@ -189,7 +191,7 @@ void Process::async_read() noexcept {
       DWORD n;
       std::unique_ptr<char[]> buffer(new char[config_.buffer_size]);
       for (;;) {
-        BOOL bSuccess = ReadFile(*stdout_fd_, static_cast<CHAR *>(buffer.get()),
+        BOOL bSuccess = ReadFile(*stdout_fd_, static_cast<CHAR*>(buffer.get()),
                                  static_cast<DWORD>(config_.buffer_size), &n, nullptr);
         if (!bSuccess || n == 0)
           break;
@@ -202,7 +204,7 @@ void Process::async_read() noexcept {
       DWORD n;
       std::unique_ptr<char[]> buffer(new char[config_.buffer_size]);
       for (;;) {
-        BOOL bSuccess = ReadFile(*stderr_fd_, static_cast<CHAR *>(buffer.get()),
+        BOOL bSuccess = ReadFile(*stderr_fd_, static_cast<CHAR*>(buffer.get()),
                                  static_cast<DWORD>(config_.buffer_size), &n, nullptr);
         if (!bSuccess || n == 0)
           break;
@@ -230,7 +232,7 @@ int Process::GetExitStatus() noexcept {
   return static_cast<int>(exit_status);
 }
 
-bool Process::TryGetExitStatus(int &exit_status) noexcept {
+bool Process::TryGetExitStatus(int& exit_status) noexcept {
   if (data_.id == 0)
     return false;
 
@@ -273,10 +275,11 @@ void Process::close_fds() noexcept {
   }
 }
 
-bool Process::Write(const char *bytes, size_t n) {
+bool Process::Write(const char* bytes, size_t n) {
   if (!open_stdin_)
-    throw std::invalid_argument("Can't write to an unopened stdin pipe. Please set open_stdin=true "
-                                "when constructing the process.");
+    throw std::invalid_argument(
+        "Can't write to an unopened stdin pipe. Please set open_stdin=true "
+        "when constructing the process.");
 
   std::lock_guard<std::mutex> lock(stdin_mutex_);
   if (stdin_fd_) {
@@ -365,7 +368,7 @@ bool Process::Kill(id_type id, bool /*force*/) noexcept {
   return !!TerminateProcess(process_handle, 2);
 }
 
-bool Process::Kill(const string_type &executed_file_name, bool /*force*/) noexcept {
+bool Process::Kill(const string_type& executed_file_name, bool /*force*/) noexcept {
   if (executed_file_name.length() == 0)
     return false;
 
@@ -395,7 +398,7 @@ bool Process::Kill(const string_type &executed_file_name, bool /*force*/) noexce
   return ret;
 }
 
-void Process::RecursiveKill(const string_type &dir, bool exclude_self) noexcept {
+void Process::RecursiveKill(const string_type& dir, bool exclude_self) noexcept {
   size_t len = dir.length();
   TCHAR szTemp[MAX_PATH] = {0};
 
@@ -424,7 +427,7 @@ void Process::RecursiveKill(const string_type &dir, bool exclude_self) noexcept 
       }
     }
     else {
-      TCHAR *p = _tcsrchr(filedata.cFileName, TEXT('.'));
+      TCHAR* p = _tcsrchr(filedata.cFileName, TEXT('.'));
 
       if (p) {
         if (_tcscmp(p, TEXT(".exe")) == 0) {
@@ -458,7 +461,7 @@ void Process::RecursiveKill(const string_type &dir, bool exclude_self) noexcept 
         }
       }
       else {
-        TCHAR *p = _tcsrchr(filedata.cFileName, TEXT('.'));
+        TCHAR* p = _tcsrchr(filedata.cFileName, TEXT('.'));
 
         if (p) {
           if (_tcscmp(p, TEXT(".exe")) == 0) {
@@ -519,5 +522,5 @@ Process::string_type Process::GetProcessPath(Process::id_type id) noexcept {
 
   return strPath;
 }
-} // namespace akali
+}  // namespace akali
 #endif

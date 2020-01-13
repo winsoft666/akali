@@ -27,28 +27,28 @@
 
 namespace akali {
 class AKALI_API CriticalSection {
-public:
+ public:
   CriticalSection();
   ~CriticalSection();
   void Enter() const;
   void Leave() const;
   bool TryEnter() const;
 
-private:
-  CriticalSection(const CriticalSection &refCritSec);
-  CriticalSection &operator=(const CriticalSection &refCritSec);
+ private:
+  CriticalSection(const CriticalSection& refCritSec);
+  CriticalSection& operator=(const CriticalSection& refCritSec);
   mutable CRITICAL_SECTION crit_;
 };
 
 class AKALI_API CritScope {
-public:
-  explicit CritScope(const CriticalSection *pCS);
+ public:
+  explicit CritScope(const CriticalSection* pCS);
   ~CritScope();
 
-private:
-  const CriticalSection *const crit_;
+ private:
+  const CriticalSection* const crit_;
   AKALI_DISALLOW_COPY_AND_ASSIGN(CritScope);
 };
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // !AKALI_CRITICAL_SECTION_H__
+#endif  // !AKALI_CRITICAL_SECTION_H__

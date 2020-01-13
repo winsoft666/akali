@@ -19,6 +19,6 @@
 
 namespace akali {
 AKALI_API bool IsHostBigEndian();
-} // namespace akali
+}  // namespace akali
 
-#endif // !AKALI_ENDIANESS_DETECT_H_
+#endif  // !AKALI_ENDIANESS_DETECT_H_

@@ -29,14 +29,14 @@ struct sockaddr_storage;
 namespace akali {
 // Records an IP address and port.
 class AKALI_API SocketAddress {
-public:
+ public:
   // Creates a nil address.
   SocketAddress();
 
   // Creates the address with the given host and port. Host may be a
   // literal IP string or a hostname to be resolved later.
   // DCHECKs that port is in valid range (0 to 2^16-1).
-  SocketAddress(const std::string &hostname, int port);
+  SocketAddress(const std::string& hostname, int port);
 
   // Creates the address with the given IP and port.
   // IP is given as an integer in host byte order. V4 only, to be deprecated.
@@ -45,10 +45,10 @@ public:
 
   // Creates the address with the given IP and port.
   // DCHECKs that port is in valid range (0 to 2^16-1).
-  SocketAddress(const IPAddress &ip, int port);
+  SocketAddress(const IPAddress& ip, int port);
 
   // Creates a copy of the given address.
-  SocketAddress(const SocketAddress &addr);
+  SocketAddress(const SocketAddress& addr);
 
   // Resets to the nil address.
   void Clear();
@@ -60,18 +60,18 @@ public:
   bool IsComplete() const;
 
   // Replaces our address with the given one.
-  SocketAddress &operator=(const SocketAddress &addr);
+  SocketAddress& operator=(const SocketAddress& addr);
 
   // Changes the IP of this address to the given one, and clears the hostname
   // IP is given as an integer in host byte order. V4 only, to be deprecated..
   void SetIP(uint32_t ip_as_host_order_integer);
 
   // Changes the IP of this address to the given one, and clears the hostname.
-  void SetIP(const IPAddress &ip);
+  void SetIP(const IPAddress& ip);
 
   // Changes the hostname of this address to the given one.
   // Does not resolve the address; use Resolve to do so.
-  void SetIP(const std::string &hostname);
+  void SetIP(const std::string& hostname);
 
   // Sets the IP address while retaining the hostname.  Useful for bypassing
   // DNS for a pre-resolved IP.
@@ -80,20 +80,20 @@ public:
 
   // Sets the IP address while retaining the hostname.  Useful for bypassing
   // DNS for a pre-resolved IP.
-  void SetResolvedIP(const IPAddress &ip);
+  void SetResolvedIP(const IPAddress& ip);
 
   // Changes the port of this address to the given one.
   // DCHECKs that port is in valid range (0 to 2^16-1).
   void SetPort(int port);
 
   // Returns the hostname.
-  const std::string &hostname() const { return hostname_; }
+  const std::string& hostname() const { return hostname_; }
 
   // Returns the IP address as a host byte order integer.
   // Returns 0 for non-v4 addresses.
   uint32_t ip() const;
 
-  const IPAddress &ipaddr() const;
+  const IPAddress& ipaddr() const;
 
   int GetFamily() const { return ip_.GetFamily(); }
 
@@ -127,9 +127,9 @@ public:
   std::string ToSensitiveString() const;
 
   // Parses hostname:port and [hostname]:port.
-  bool FromString(const std::string &str);
+  bool FromString(const std::string& str);
 
-  friend std::ostream &operator<<(std::ostream &os, const SocketAddress &addr);
+  friend std::ostream& operator<<(std::ostream& os, const SocketAddress& addr);
 
   // Determines whether this represents a missing / any IP address.
   // That is, 0.0.0.0 or ::.
@@ -150,27 +150,27 @@ public:
   bool IsUnresolvedIP() const;
 
   // Determines whether this address is identical to the given one.
-  bool operator==(const SocketAddress &addr) const;
-  inline bool operator!=(const SocketAddress &addr) const { return !this->operator==(addr); }
+  bool operator==(const SocketAddress& addr) const;
+  inline bool operator!=(const SocketAddress& addr) const { return !this->operator==(addr); }
 
   // Compares based on IP and then port.
-  bool operator<(const SocketAddress &addr) const;
+  bool operator<(const SocketAddress& addr) const;
 
   // Determines whether this address has the same IP as the one given.
-  bool EqualIPs(const SocketAddress &addr) const;
+  bool EqualIPs(const SocketAddress& addr) const;
 
   // Determines whether this address has the same port as the one given.
-  bool EqualPorts(const SocketAddress &addr) const;
+  bool EqualPorts(const SocketAddress& addr) const;
 
   // Hashes this address into a small number.
   size_t Hash() const;
 
   // Write this address to a sockaddr_in.
   // If IPv6, will zero out the sockaddr_in and sets family to AF_UNSPEC.
-  void ToSockAddr(sockaddr_in *saddr) const;
+  void ToSockAddr(sockaddr_in* saddr) const;
 
   // Read this address from a sockaddr_in.
-  bool FromSockAddr(const sockaddr_in &saddr);
+  bool FromSockAddr(const sockaddr_in& saddr);
 
   // Read and write the address to/from a sockaddr_storage.
   // Dual stack version always sets family to AF_INET6, and maps v4 addresses.
@@ -178,19 +178,18 @@ public:
   // v4 or mapped addresses, and AF_INET6 addresses for others.
   // Returns the size of the sockaddr_in or sockaddr_in6 structure that is
   // written to the sockaddr_storage, or zero on failure.
-  size_t ToDualStackSockAddrStorage(sockaddr_storage *saddr) const;
-  size_t ToSockAddrStorage(sockaddr_storage *saddr) const;
+  size_t ToDualStackSockAddrStorage(sockaddr_storage* saddr) const;
+  size_t ToSockAddrStorage(sockaddr_storage* saddr) const;
 
-private:
+ private:
   std::string hostname_;
   IPAddress ip_;
   uint16_t port_;
   int scope_id_;
-  bool literal_; // Indicates that 'hostname_' contains a literal IP string.
+  bool literal_;  // Indicates that 'hostname_' contains a literal IP string.
 };
 
-AKALI_API bool SocketAddressFromSockAddrStorage(const sockaddr_storage &saddr,
-                                                  SocketAddress *out);
+AKALI_API bool SocketAddressFromSockAddrStorage(const sockaddr_storage& saddr, SocketAddress* out);
 AKALI_API SocketAddress EmptySocketAddressWithFamily(int family);
-} // namespace akali
-#endif // AKALI_SOCKETADDRESS_H_
+}  // namespace akali
+#endif  // AKALI_SOCKETADDRESS_H_

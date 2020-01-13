@@ -29,18 +29,20 @@
 
 namespace akali {
 class AKALI_API WinServiceBase {
-public:
+ public:
   // Register the executable for a service with the Service Control Manager
   // (SCM). After you call Run(ServiceBase), the SCM issues a Start command,
   // which results in a call to the OnStart method in the service. This
   // method blocks until the service has stopped.
-  static BOOL Run(WinServiceBase &service);
+  static BOOL Run(WinServiceBase& service);
 
   // Service object constructor. The optional parameters (fCanStop,
   // fCanShutdown and fCanPauseContinue) allow you to specify whether the
   // service can be stopped, paused and continued, or be notified when
   // system shutdown occurs.
-  WinServiceBase(PWSTR pszServiceName, BOOL fCanStop = TRUE, BOOL fCanShutdown = TRUE,
+  WinServiceBase(PWSTR pszServiceName,
+                 BOOL fCanStop = TRUE,
+                 BOOL fCanShutdown = TRUE,
                  BOOL fCanPauseContinue = FALSE);
 
   // Service object destructor.
@@ -49,12 +51,12 @@ public:
   // Stop the service.
   void Stop();
 
-protected:
+ protected:
   // When implemented in a derived class, executes when a Start command is
   // sent to the service by the SCM or when the operating system starts
   // (for a service that starts automatically). Specifies actions to take
   // when the service starts.
-  virtual void OnStart(DWORD dwArgc, PWSTR *pszArgv);
+  virtual void OnStart(DWORD dwArgc, PWSTR* pszArgv);
 
   // When implemented in a derived class, executes when a Stop command is
   // sent to the service by the SCM. Specifies actions to take when a
@@ -77,7 +79,8 @@ protected:
   virtual void OnShutdown();
 
   // Set the service status and report the status to the SCM.
-  void SetServiceStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode = NO_ERROR,
+  void SetServiceStatus(DWORD dwCurrentState,
+                        DWORD dwWin32ExitCode = NO_ERROR,
                         DWORD dwWaitHint = 0);
 
   // Log a message to the Application event log.
@@ -88,17 +91,17 @@ protected:
   // Log an error message to the Application event log.
   void WriteErrorLogEntry(PWSTR pszFunction, DWORD dwError = GetLastError());
 
-private:
+ private:
   // Entry point for the service. It registers the handler function for the
   // service and starts the service.
-  static void WINAPI ServiceMain(DWORD dwArgc, LPWSTR *lpszArgv);
+  static void WINAPI ServiceMain(DWORD dwArgc, LPWSTR* lpszArgv);
 
   // The function is called by the SCM whenever a control code is sent to
   // the service.
   static void WINAPI ServiceCtrlHandler(DWORD dwCtrl);
 
   // Start the service.
-  void Start(DWORD dwArgc, PWSTR *pszArgv);
+  void Start(DWORD dwArgc, PWSTR* pszArgv);
 
   // Pause the service.
   void Pause();
@@ -110,7 +113,7 @@ private:
   void Shutdown();
 
   // The singleton service instance.
-  static WinServiceBase *s_service;
+  static WinServiceBase* s_service;
 
   // The name of the service
   PWSTR m_name;
@@ -130,7 +133,7 @@ private:
 AKALI_API void EventLogTraceW(LPCWSTR pszServiceName, WORD wType, LPCWSTR lpFormat, ...);
 
 AKALI_API void EventLogTraceA(LPCSTR pszServiceName, WORD wType, LPCSTR lpFormat, ...);
-} // namespace akali
+}  // namespace akali
 #endif
 
-#endif // ! AKALI_WIN_SERVICE_BASE_H_
+#endif  // ! AKALI_WIN_SERVICE_BASE_H_

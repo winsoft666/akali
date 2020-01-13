@@ -27,26 +27,29 @@
 
 namespace akali {
 class AKALI_API TimerBase {
-public:
+ public:
   TimerBase();
   virtual ~TimerBase();
-  static void CALLBACK TimerProc(void *param, BOOLEAN timerCalled);
+  static void CALLBACK TimerProc(void* param, BOOLEAN timerCalled);
 
   // About dwFlags, see:
   // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682485(v=vs.85).aspx
   //
-  BOOL Start(DWORD ulInterval, // ulInterval in ms
-             BOOL bImmediately, BOOL bOnce, ULONG dwFlags = WT_EXECUTELONGFUNCTION);
+  BOOL Start(DWORD ulInterval,  // ulInterval in ms
+             BOOL bImmediately,
+             BOOL bOnce,
+             ULONG dwFlags = WT_EXECUTELONGFUNCTION);
   void Stop(bool bWait);
   virtual void OnTimedEvent();
 
-private:
+ private:
   HANDLE m_hTimer;
   PTP_TIMER m_pTimer;
 };
 
-template <class T> class TTimer : public TimerBase {
-public:
+template <class T>
+class TTimer : public TimerBase {
+ public:
   typedef private void (T::*POnTimer)(void);
 
   TTimer() {
@@ -54,25 +57,25 @@ public:
     m_pfnOnTimer = NULL;
   }
 
-  void SetTimedEvent(T *pClass, POnTimer pFunc) {
+  void SetTimedEvent(T* pClass, POnTimer pFunc) {
     m_pClass = pClass;
     m_pfnOnTimer = pFunc;
   }
 
-protected:
+ protected:
   void OnTimedEvent() override {
     if (m_pfnOnTimer && m_pClass) {
       (m_pClass->*m_pfnOnTimer)();
     }
   }
 
-private:
-  T *m_pClass;
+ private:
+  T* m_pClass;
   POnTimer m_pfnOnTimer;
 };
 
 class AKALI_API Timer : public TimerBase {
-public:
+ public:
   typedef std::function<void()> FN_CB;
   Timer() {}
 
@@ -80,16 +83,16 @@ public:
 
   void SetTimedEvent(FN_CB cb) { m_cb = cb; }
 
-protected:
+ protected:
   void OnTimedEvent() override {
     if (m_cb) {
       m_cb();
     }
   }
 
-private:
+ private:
   FN_CB m_cb;
 };
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // !AKALI_WIN_TIMER_H_
+#endif  // !AKALI_WIN_TIMER_H_

@@ -44,8 +44,13 @@ namespace akali {
 //   NOTE: If the function fails to install the service, it prints the error
 //   in the standard output stream for users to diagnose the problem.
 //
-void InstallService(PWSTR pszServiceName, PWSTR pszDisplayName, PWSTR pszDecription,
-                    DWORD dwStartType, PWSTR pszDependencies, PWSTR pszAccount, PWSTR pszPassword) {
+void InstallService(PWSTR pszServiceName,
+                    PWSTR pszDisplayName,
+                    PWSTR pszDecription,
+                    DWORD dwStartType,
+                    PWSTR pszDependencies,
+                    PWSTR pszAccount,
+                    PWSTR pszPassword) {
   wchar_t szPath[MAX_PATH];
   SC_HANDLE schSCManager = NULL;
   SC_HANDLE schService = NULL;
@@ -63,20 +68,21 @@ void InstallService(PWSTR pszServiceName, PWSTR pszDisplayName, PWSTR pszDecript
   }
 
   // Install the service into SCM by calling CreateService
-  schService = CreateService(schSCManager,       // SCManager database
-                             pszServiceName,     // Name of service
-                             pszDisplayName,     // Name to display
-                             SERVICE_ALL_ACCESS, //SERVICE_QUERY_STATUS,           // Desired access
-                             SERVICE_WIN32_OWN_PROCESS, // Service type
-                             dwStartType,               // Service start type
-                             SERVICE_ERROR_NORMAL,      // Error control type
-                             szPath,                    // Service's binary
-                             NULL,                      // No load ordering group
-                             NULL,                      // No tag identifier
-                             NULL, //pszDependencies,                // Dependencies
-                             NULL, //pszAccount,                     // Service running account
-                             NULL  //pszPassword                     // Password of the account
-  );
+  schService =
+      CreateService(schSCManager,               // SCManager database
+                    pszServiceName,             // Name of service
+                    pszDisplayName,             // Name to display
+                    SERVICE_ALL_ACCESS,         //SERVICE_QUERY_STATUS,           // Desired access
+                    SERVICE_WIN32_OWN_PROCESS,  // Service type
+                    dwStartType,                // Service start type
+                    SERVICE_ERROR_NORMAL,       // Error control type
+                    szPath,                     // Service's binary
+                    NULL,                       // No load ordering group
+                    NULL,                       // No tag identifier
+                    NULL,                       //pszDependencies,                // Dependencies
+                    NULL,  //pszAccount,                     // Service running account
+                    NULL   //pszPassword                     // Password of the account
+      );
   if (schService == NULL) {
     wprintf(L"CreateService failed w/err 0x%08lx\n", GetLastError());
     goto Cleanup;
@@ -221,5 +227,5 @@ void StopService(PWSTR pszServiceName) {
   CloseServiceHandle(schSCManager);
   CloseServiceHandle(schService);
 }
-} // namespace akali
+}  // namespace akali
 #endif

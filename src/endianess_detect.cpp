@@ -20,8 +20,8 @@ bool IsHostBigEndian() {
   short ns = 0x1234;
   bool big_endian = false;
 
-  unsigned char *p = (unsigned char *)(&nl);
-  unsigned char *sp = (unsigned char *)(&ns);
+  unsigned char* p = (unsigned char*)(&nl);
+  unsigned char* sp = (unsigned char*)(&ns);
 
   if (p[0] == 0x12 && p[1] == 0x34 && p[2] == 0x56 && p[3] == 0x78) {
     big_endian = true;
@@ -35,4 +35,4 @@ bool IsHostBigEndian() {
 
   return big_endian;
 }
-} // namespace akali
+}  // namespace akali

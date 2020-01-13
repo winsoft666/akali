@@ -23,7 +23,7 @@ IOCPServer::IOCPServer() : start_time_(0) {}
 
 IOCPServer::~IOCPServer() {}
 
-bool IOCPServer::Start(const SocketAddress &addr, int family, int type) {
+bool IOCPServer::Start(const SocketAddress& addr, int family, int type) {
   socket_ = new OverlappedSocket();
   assert(socket_);
 
@@ -73,9 +73,11 @@ bool IOCPServer::Stop() {
   return true;
 }
 
-int64_t IOCPServer::GetStartTime() const { return start_time_; }
+int64_t IOCPServer::GetStartTime() const {
+  return start_time_;
+}
 
-void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
+void IOCPServer::OnAcceptEvent(OverlappedSocket* socket) {
   assert(socket);
   {
     CritScope cs(&crit_);
@@ -83,19 +85,19 @@ void IOCPServer::OnAcceptEvent(OverlappedSocket *socket) {
   }
 }
 
-void IOCPServer::OnReadEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
+void IOCPServer::OnReadEvent(OverlappedSocket* socket, const PER_IO_CONTEXT* io_ctx) {
   assert(socket);
   assert(io_ctx);
 }
 
-void IOCPServer::OnWriteEvent(OverlappedSocket *socket, const PER_IO_CONTEXT *io_ctx) {
+void IOCPServer::OnWriteEvent(OverlappedSocket* socket, const PER_IO_CONTEXT* io_ctx) {
   assert(socket);
   assert(io_ctx);
 }
 
-void IOCPServer::OnConnectEvent(OverlappedSocket *socket) {}
+void IOCPServer::OnConnectEvent(OverlappedSocket* socket) {}
 
-void IOCPServer::OnCloseEvent(OverlappedSocket *socket, int error) {
+void IOCPServer::OnCloseEvent(OverlappedSocket* socket, int error) {
   assert(socket);
   socket->Close();
   {
@@ -105,5 +107,5 @@ void IOCPServer::OnCloseEvent(OverlappedSocket *socket, int error) {
   delete socket;
   socket = NULL;
 }
-} // namespace akali
+}  // namespace akali
 #endif

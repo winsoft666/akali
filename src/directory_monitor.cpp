@@ -16,7 +16,9 @@ DirectoryMonitor::~DirectoryMonitor() {
   ::ZeroMemory(&overlapped_, sizeof(OVERLAPPED));
 }
 
-bool DirectoryMonitor::StartMonitor(const std::wstring &direcotry, bool watch_sub_dir, DWORD filter,
+bool DirectoryMonitor::StartMonitor(const std::wstring& direcotry,
+                                    bool watch_sub_dir,
+                                    DWORD filter,
                                     ChangeNotify cn) {
   std::wstring str_direcotry = direcotry;
   if (str_direcotry.length() > 0) {
@@ -36,7 +38,7 @@ bool DirectoryMonitor::StartMonitor(const std::wstring &direcotry, bool watch_su
   }
 
   int watch_buffer_size = 1024;
-  void *watch_buffer = malloc(watch_buffer_size);
+  void* watch_buffer = malloc(watch_buffer_size);
   memset(watch_buffer, 0, watch_buffer_size);
 
   DWORD has_read = 0;
@@ -55,9 +57,9 @@ bool DirectoryMonitor::StartMonitor(const std::wstring &direcotry, bool watch_su
       BOOL bret = GetOverlappedResult(directory_, &overlapped_, &transferred, TRUE);
       DWORD gle = GetLastError();
       if (bret && gle == 0) {
-        BYTE *base = (BYTE *)watch_buffer;
+        BYTE* base = (BYTE*)watch_buffer;
         for (;;) {
-          FILE_NOTIFY_INFORMATION *fni = (FILE_NOTIFY_INFORMATION *)base;
+          FILE_NOTIFY_INFORMATION* fni = (FILE_NOTIFY_INFORMATION*)base;
           if (cn) {
             std::wstring str_path;
             str_path.assign(fni->FileName, fni->FileNameLength / sizeof(WCHAR));
@@ -95,5 +97,5 @@ void DirectoryMonitor::StopMonitor() {
     directory_ = INVALID_HANDLE_VALUE;
   }
 }
-} // namespace akali
+}  // namespace akali
 #endif

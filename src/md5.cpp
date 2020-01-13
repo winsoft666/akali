@@ -59,8 +59,8 @@ void detectEndianess() {
   int nl = 0x12345678;
   short ns = 0x1234;
 
-  unsigned char *p = (unsigned char *)(&nl);
-  unsigned char *sp = (unsigned char *)(&ns);
+  unsigned char* p = (unsigned char*)(&nl);
+  unsigned char* sp = (unsigned char*)(&ns);
 
   if (g_endianessDetected)
     return;
@@ -78,13 +78,13 @@ void detectEndianess() {
   g_endianessDetected = 1;
 }
 
-void byteSwap(UWORD32 *buf, unsigned words) {
-  md5byte *p;
+void byteSwap(UWORD32* buf, unsigned words) {
+  md5byte* p;
 
   if (!g_bigEndian)
     return;
 
-  p = (md5byte *)buf;
+  p = (md5byte*)buf;
 
   do {
     *buf++ = (UWORD32)((unsigned)p[3] << 8 | p[2]) << 16 | ((unsigned)p[1] << 8 | p[0]);
@@ -198,7 +198,7 @@ void MD5Transform(UWORD32 buf[4], UWORD32 const in[16]) {
  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
  * initialization constants.
  */
-void MD5Init(struct MD5Context *ctx) {
+void MD5Init(struct MD5Context* ctx) {
   detectEndianess();
 
   ctx->buf[0] = 0x67452301;
@@ -214,7 +214,7 @@ void MD5Init(struct MD5Context *ctx) {
  * Update context to reflect the concatenation of another buffer full
  * of bytes.
  */
-void MD5Update(struct MD5Context *ctx, md5byte const *buf, unsigned len) {
+void MD5Update(struct MD5Context* ctx, md5byte const* buf, unsigned len) {
   UWORD32 t;
 
   /* Update byte count */
@@ -227,12 +227,12 @@ void MD5Update(struct MD5Context *ctx, md5byte const *buf, unsigned len) {
   t = 64 - (t & 0x3f); /* Space available in ctx->in (at least 1) */
 
   if (t > len) {
-    memcpy((md5byte *)ctx->in + 64 - t, buf, len);
+    memcpy((md5byte*)ctx->in + 64 - t, buf, len);
     return;
   }
 
   /* First chunk is an odd size */
-  memcpy((md5byte *)ctx->in + 64 - t, buf, t);
+  memcpy((md5byte*)ctx->in + 64 - t, buf, t);
   byteSwap(ctx->in, 16);
   MD5Transform(ctx->buf, ctx->in);
   buf += t;
@@ -255,9 +255,9 @@ void MD5Update(struct MD5Context *ctx, md5byte const *buf, unsigned len) {
  * Final wrapup - pad to 64-byte boundary with the bit pattern
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
-void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
+void MD5Final(md5byte digest[16], struct MD5Context* ctx) {
   int count = ctx->bytes[0] & 0x3f; /* Number of bytes in ctx->in */
-  md5byte *p = (md5byte *)ctx->in + count;
+  md5byte* p = (md5byte*)ctx->in + count;
 
   /* Set the first char of padding to 0x80.  There is always room. */
   *p++ = 0x80;
@@ -269,7 +269,7 @@ void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
     memset(p, 0, count + 8);
     byteSwap(ctx->in, 16);
     MD5Transform(ctx->buf, ctx->in);
-    p = (md5byte *)ctx->in;
+    p = (md5byte*)ctx->in;
     count = 56;
   }
 
@@ -286,22 +286,22 @@ void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
   memset(ctx, 0, sizeof(*ctx)); /* In case it's sensitive */
 }
 
-void MD5Buffer(const unsigned char *buf, unsigned int len, unsigned char sig[16]) {
+void MD5Buffer(const unsigned char* buf, unsigned int len, unsigned char sig[16]) {
   struct MD5Context md5;
   MD5Init(&md5);
   MD5Update(&md5, buf, len);
   MD5Final(sig, &md5);
 }
 
-void MD5SigToString(unsigned char signature[16], char *str, int len) {
-  unsigned char *sig_p;
+void MD5SigToString(unsigned char signature[16], char* str, int len) {
+  unsigned char* sig_p;
   char *str_p, *max_p;
   unsigned int high, low;
 
   str_p = str;
   max_p = str + len;
 
-  for (sig_p = (unsigned char *)signature; sig_p < (unsigned char *)signature + 16; sig_p++) {
+  for (sig_p = (unsigned char*)signature; sig_p < (unsigned char*)signature + 16; sig_p++) {
     high = *sig_p / 16;
     low = *sig_p % 16;
 
@@ -319,28 +319,28 @@ void MD5SigToString(unsigned char signature[16], char *str, int len) {
     *str_p++ = '\0';
   }
 }
-} // namespace libmd5_internal
+}  // namespace libmd5_internal
 
-std::string GetStringMd5(const void *buffer, unsigned int buffer_size) {
+std::string GetStringMd5(const void* buffer, unsigned int buffer_size) {
   unsigned char md5Sig[16] = {0};
   char szMd5[33] = {0};
 
-  libmd5_internal::MD5Buffer((const unsigned char *)buffer, buffer_size, md5Sig);
+  libmd5_internal::MD5Buffer((const unsigned char*)buffer, buffer_size, md5Sig);
   libmd5_internal::MD5SigToString(md5Sig, szMd5, 33);
 
   return szMd5;
 }
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-std::string GetFileMd5(const std::wstring &file_path) {
+std::string GetFileMd5(const std::wstring& file_path) {
 #else
-std::string GetFileMd5(const std::string &file_path) {
+std::string GetFileMd5(const std::string& file_path) {
 #endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-  FILE *f = _wfopen(file_path.c_str(), L"rb");
+  FILE* f = _wfopen(file_path.c_str(), L"rb");
 #else
-  FILE *f = fopen(file_path.c_str(), "rb");
+  FILE* f = fopen(file_path.c_str(), "rb");
 #endif
 
   if (!f)
@@ -366,4 +366,4 @@ std::string GetFileMd5(const std::string &file_path) {
   return szMd5;
 }
 
-} // namespace akali
+}  // namespace akali

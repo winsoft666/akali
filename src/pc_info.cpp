@@ -33,13 +33,13 @@ std::string GetLocalIP() {
   if (ret == SOCKET_ERROR)
     return "";
 
-  HOSTENT *host = gethostbyname(hostname);
+  HOSTENT* host = gethostbyname(hostname);
 
   if (host == NULL)
     return "";
 
   char ip[30] = {0};
-  in_addr *addr = (in_addr *)*host->h_addr_list;
+  in_addr* addr = (in_addr*)*host->h_addr_list;
   strcpy_s(ip, 30, inet_ntoa(addr[0]));
 
   WSACleanup();
@@ -47,10 +47,10 @@ std::string GetLocalIP() {
   return ip;
 }
 
-void GetLocalIPList(std::vector<std::string> &ip_list, std::vector<std::string> &gateway_ip_list) {
+void GetLocalIPList(std::vector<std::string>& ip_list, std::vector<std::string>& gateway_ip_list) {
   unsigned long stSize = 0;
-  IP_ADAPTER_INFO *pIpAdapterInfo = NULL;
-  IP_ADAPTER_INFO *pIpAdapterInfoBak = NULL;
+  IP_ADAPTER_INFO* pIpAdapterInfo = NULL;
+  IP_ADAPTER_INFO* pIpAdapterInfoBak = NULL;
   int nRel = GetAdaptersInfo(NULL, &stSize);
   if (ERROR_BUFFER_OVERFLOW == nRel) {
     pIpAdapterInfo = (PIP_ADAPTER_INFO)malloc(stSize);
@@ -60,7 +60,7 @@ void GetLocalIPList(std::vector<std::string> &ip_list, std::vector<std::string> 
 
   if (ERROR_SUCCESS == nRel) {
     while (pIpAdapterInfo) {
-      IP_ADDR_STRING *pIpAddrString = &(pIpAdapterInfo->IpAddressList);
+      IP_ADDR_STRING* pIpAddrString = &(pIpAdapterInfo->IpAddressList);
       do {
         std::string ip;
         ip = pIpAddrString->IpAddress.String;
@@ -69,7 +69,7 @@ void GetLocalIPList(std::vector<std::string> &ip_list, std::vector<std::string> 
         pIpAddrString = pIpAddrString->Next;
       } while (pIpAddrString);
 
-      IP_ADDR_STRING *pIpAddrString2 = &(pIpAdapterInfo->GatewayList);
+      IP_ADDR_STRING* pIpAddrString2 = &(pIpAdapterInfo->GatewayList);
       do {
         std::string ip;
         ip = pIpAddrString2->IpAddress.String;
@@ -87,7 +87,7 @@ void GetLocalIPList(std::vector<std::string> &ip_list, std::vector<std::string> 
   }
 }
 
-std::string GetMACThroughIP(const std::string &ip) {
+std::string GetMACThroughIP(const std::string& ip) {
   if (ip.length() == 0)
     return "";
 
@@ -128,9 +128,9 @@ std::string GetPCName() {
   return pc_name;
 }
 
-void GetMACList(std::vector<std::string> &mac_list) {
+void GetMACList(std::vector<std::string>& mac_list) {
   ULONG outBufLen = sizeof(IP_ADAPTER_ADDRESSES);
-  PIP_ADAPTER_ADDRESSES pAddresses = (IP_ADAPTER_ADDRESSES *)malloc(outBufLen);
+  PIP_ADAPTER_ADDRESSES pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(outBufLen);
 
   if (pAddresses == NULL)
     return;
@@ -138,7 +138,7 @@ void GetMACList(std::vector<std::string> &mac_list) {
   // Make an initial call to GetAdaptersAddresses to get the necessary size into the ulOutBufLen variable
   if (GetAdaptersAddresses(AF_UNSPEC, 0, NULL, pAddresses, &outBufLen) == ERROR_BUFFER_OVERFLOW) {
     free(pAddresses);
-    pAddresses = (IP_ADAPTER_ADDRESSES *)malloc(outBufLen);
+    pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(outBufLen);
 
     if (pAddresses == NULL)
       return;
@@ -167,8 +167,8 @@ void GetMACList(std::vector<std::string> &mac_list) {
 std::string GetValidMAC() {
   std::string mac_ret;
   unsigned long stSize = 0;
-  IP_ADAPTER_INFO *pIpAdapterInfo = NULL;
-  IP_ADAPTER_INFO *pIpAdapterInfoBak = NULL;
+  IP_ADAPTER_INFO* pIpAdapterInfo = NULL;
+  IP_ADAPTER_INFO* pIpAdapterInfoBak = NULL;
   int nRel = GetAdaptersInfo(NULL, &stSize);
   if (ERROR_BUFFER_OVERFLOW == nRel) {
     pIpAdapterInfo = (PIP_ADAPTER_INFO)malloc(stSize);
@@ -184,7 +184,7 @@ std::string GetValidMAC() {
       }
 
       std::string ip;
-      IP_ADDR_STRING *pIpAddrString = &(pIpAdapterInfo->IpAddressList);
+      IP_ADDR_STRING* pIpAddrString = &(pIpAdapterInfo->IpAddressList);
       do {
         std::string tmp = pIpAddrString->IpAddress.String;
         if (tmp.length() > 0 && tmp != "0.0.0.0") {
@@ -233,5 +233,5 @@ AKALI_API int64_t GetValidMacInteger() {
 
   return ret;
 }
-} // namespace akali
+}  // namespace akali
 #endif

@@ -21,8 +21,13 @@
 
 namespace akali {
 RegKey::RegKey(HKEY hkeyRoot, LPCWSTR pszSubKey)
-    : m_hkeyRoot(hkeyRoot), m_hkey(NULL), m_hChangeEvent(NULL), m_hNotifyThr(NULL),
-      m_bWatchSubtree(false), m_dwChangeFilter(0), m_strSubKey(pszSubKey) {}
+    : m_hkeyRoot(hkeyRoot)
+    , m_hkey(NULL)
+    , m_hChangeEvent(NULL)
+    , m_hNotifyThr(NULL)
+    , m_bWatchSubtree(false)
+    , m_dwChangeFilter(0)
+    , m_strSubKey(pszSubKey) {}
 
 RegKey::~RegKey(void) {
   Close();
@@ -47,9 +52,13 @@ LSTATUS RegKey::Open(REGSAM samDesired, bool bCreate) {
   return dwResult;
 }
 
-bool RegKey::IsOpen(void) const { return NULL != m_hkey; }
+bool RegKey::IsOpen(void) const {
+  return NULL != m_hkey;
+}
 
-HKEY RegKey::GetHandle(void) const { return m_hkey; }
+HKEY RegKey::GetHandle(void) const {
+  return m_hkey;
+}
 
 void RegKey::Attach(HKEY hkey) {
   Close();
@@ -59,7 +68,9 @@ void RegKey::Attach(HKEY hkey) {
   m_hkey = hkey;
 }
 
-void RegKey::Detach(void) { m_hkey = NULL; }
+void RegKey::Detach(void) {
+  m_hkey = NULL;
+}
 
 void RegKey::Close(void) {
   if (NULL != m_hkey) {
@@ -167,7 +178,7 @@ bool RegKey::DeleteSubKeys(HKEY hKeyRoot, LPCTSTR lpSubKey, bool bPrefer64View) 
   return RegDelSubKeysRecurse(hKeyRoot, szDelKey, bPrefer64View) == TRUE;
 }
 
-HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD *pdwDataOut) const {
+HRESULT RegKey::GetDWORDValue(LPCWSTR pszValueName, DWORD* pdwDataOut) const {
   return GetValue(pszValueName, REG_DWORD, (LPBYTE)pdwDataOut, sizeof(DWORD));
 }
 
@@ -175,14 +186,14 @@ HRESULT RegKey::GetBINARYValue(LPCWSTR pszValueName, LPBYTE pbDataOut, int cbDat
   return GetValue(pszValueName, REG_BINARY, pbDataOut, cbDataOut);
 }
 
-HRESULT RegKey::GetSZValue(LPCWSTR pszValueName, OUT std::wstring &strValue) const {
+HRESULT RegKey::GetSZValue(LPCWSTR pszValueName, OUT std::wstring& strValue) const {
   HRESULT hr = E_FAIL;
   int cb = GetValueBufferSize(pszValueName);
 
   if (cb <= 0)
     return hr;
 
-  WCHAR *szTemp = new WCHAR[cb / sizeof(WCHAR)];
+  WCHAR* szTemp = new WCHAR[cb / sizeof(WCHAR)];
   memset(szTemp, 0, cb);
 
   if (NULL != szTemp && 0 < cb) {
@@ -196,11 +207,11 @@ HRESULT RegKey::GetSZValue(LPCWSTR pszValueName, OUT std::wstring &strValue) con
 }
 
 HRESULT RegKey::GetMultiSZValue(LPCWSTR pszValueName,
-                                OUT std::vector<std::wstring> &vStrValues) const {
+                                OUT std::vector<std::wstring>& vStrValues) const {
   HRESULT hr = E_FAIL;
   int cb = GetValueBufferSize(pszValueName);
-  WCHAR *szTemp = new WCHAR[cb / sizeof(WCHAR)];
-  WCHAR *szBegin = szTemp;
+  WCHAR* szTemp = new WCHAR[cb / sizeof(WCHAR)];
+  WCHAR* szBegin = szTemp;
 
   if (NULL != szTemp && 0 < cb) {
     hr = GetValue(pszValueName, REG_MULTI_SZ, (LPBYTE)szTemp, cb);
@@ -233,13 +244,13 @@ HRESULT RegKey::SetBINARYValue(LPCWSTR pszValueName, const LPBYTE pbData, int cb
   return SetValue(pszValueName, REG_BINARY, pbData, cbData);
 }
 
-HRESULT RegKey::SetSZValue(LPCWSTR pszValueName, const std::wstring &strData) {
+HRESULT RegKey::SetSZValue(LPCWSTR pszValueName, const std::wstring& strData) {
   return SetValue(pszValueName, REG_SZ, (const LPBYTE)strData.c_str(),
                   (strData.length()) * sizeof(WCHAR));
 }
 
-HRESULT RegKey::SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring> &vStrValues) {
-  WCHAR *ptrValues = CreateDoubleNulTermList(vStrValues);
+HRESULT RegKey::SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring>& vStrValues) {
+  WCHAR* ptrValues = CreateDoubleNulTermList(vStrValues);
   int cch = 1;
   int n = vStrValues.size();
 
@@ -253,32 +264,32 @@ HRESULT RegKey::SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wst
   return hr;
 }
 
-HRESULT RegKey::GetSubKeys(std::vector<std::wstring> &subKeys) {
-  WCHAR achKey[256];                   // buffer for subkey name
-  DWORD cbName = 255;                  // size of name string
-  WCHAR achClass[MAX_PATH] = TEXT(""); // buffer for class name
-  DWORD cchClassName = MAX_PATH;       // size of class string
-  DWORD cSubKeys = 0;                  // number of subkeys
-  DWORD cbMaxSubKey;                   // longest subkey size
-  DWORD cchMaxClass;                   // longest class string
-  DWORD cValues;                       // number of values for key
-  DWORD cchMaxValue;                   // longest value name
-  DWORD cbMaxValueData;                // longest value data
-  DWORD cbSecurityDescriptor;          // size of security descriptor
-  FILETIME ftLastWriteTime;            // last write time
+HRESULT RegKey::GetSubKeys(std::vector<std::wstring>& subKeys) {
+  WCHAR achKey[256];                    // buffer for subkey name
+  DWORD cbName = 255;                   // size of name string
+  WCHAR achClass[MAX_PATH] = TEXT("");  // buffer for class name
+  DWORD cchClassName = MAX_PATH;        // size of class string
+  DWORD cSubKeys = 0;                   // number of subkeys
+  DWORD cbMaxSubKey;                    // longest subkey size
+  DWORD cchMaxClass;                    // longest class string
+  DWORD cValues;                        // number of values for key
+  DWORD cchMaxValue;                    // longest value name
+  DWORD cbMaxValueData;                 // longest value data
+  DWORD cbSecurityDescriptor;           // size of security descriptor
+  FILETIME ftLastWriteTime;             // last write time
 
-  DWORD retCode = RegQueryInfoKeyW(m_hkey,                // key handle
-                                   achClass,              // buffer for class name
-                                   &cchClassName,         // size of class string
-                                   NULL,                  // reserved
-                                   &cSubKeys,             // number of subkeys
-                                   &cbMaxSubKey,          // longest subkey size
-                                   &cchMaxClass,          // longest class string
-                                   &cValues,              // number of values for this key
-                                   &cchMaxValue,          // longest value name
-                                   &cbMaxValueData,       // longest value data
-                                   &cbSecurityDescriptor, // security descriptor
-                                   &ftLastWriteTime);     // last write time
+  DWORD retCode = RegQueryInfoKeyW(m_hkey,                 // key handle
+                                   achClass,               // buffer for class name
+                                   &cchClassName,          // size of class string
+                                   NULL,                   // reserved
+                                   &cSubKeys,              // number of subkeys
+                                   &cbMaxSubKey,           // longest subkey size
+                                   &cchMaxClass,           // longest class string
+                                   &cValues,               // number of values for this key
+                                   &cchMaxValue,           // longest value name
+                                   &cbMaxValueData,        // longest value data
+                                   &cbSecurityDescriptor,  // security descriptor
+                                   &ftLastWriteTime);      // last write time
 
   if (retCode != ERROR_SUCCESS)
     return retCode;
@@ -301,7 +312,9 @@ void RegKey::OnChange(HKEY hkey) {
   //
 }
 
-HRESULT RegKey::GetValue(LPCWSTR pszValueName, DWORD dwTypeExpected, LPBYTE pbData,
+HRESULT RegKey::GetValue(LPCWSTR pszValueName,
+                         DWORD dwTypeExpected,
+                         LPBYTE pbData,
                          DWORD cbData) const {
   DWORD dwType;
   HRESULT hr = RegQueryValueExW(m_hkey, pszValueName, 0, &dwType, pbData, (LPDWORD)&cbData);
@@ -318,9 +331,9 @@ HRESULT RegKey::SetValue(LPCWSTR pszValueName, DWORD dwValueType, const LPBYTE p
   return hr;
 }
 
-LPWSTR RegKey::CreateDoubleNulTermList(const std::vector<std::wstring> &vStrValues) const {
+LPWSTR RegKey::CreateDoubleNulTermList(const std::vector<std::wstring>& vStrValues) const {
   size_t cEntries = vStrValues.size();
-  size_t cch = 1; // Account for 2nd null terminate.
+  size_t cch = 1;  // Account for 2nd null terminate.
 
   for (size_t i = 0; i < cEntries; i++)
     cch += vStrValues[i].length() + 1;
@@ -329,17 +342,17 @@ LPWSTR RegKey::CreateDoubleNulTermList(const std::vector<std::wstring> &vStrValu
   LPWSTR pszWrite = pszBuf;
 
   for (size_t i = 0; i < cEntries; i++) {
-    const std::wstring &s = vStrValues[i];
+    const std::wstring& s = vStrValues[i];
     StringCchCopyW(pszWrite, cch, s.c_str());
     pszWrite += s.length() + 1;
   }
 
-  *pszWrite = L'\0'; // Double null terminate.
+  *pszWrite = L'\0';  // Double null terminate.
   return pszBuf;
 }
 
 unsigned int _stdcall RegKey::NotifyWaitThreadProc(LPVOID pvParam) {
-  RegKey *pThis = (RegKey *)pvParam;
+  RegKey* pThis = (RegKey*)pvParam;
 
   while (NULL != pThis->m_hkey) {
     LONG lResult = RegNotifyChangeKeyValue(pThis->m_hkey, pThis->m_bWatchSubtree,
@@ -350,18 +363,18 @@ unsigned int _stdcall RegKey::NotifyWaitThreadProc(LPVOID pvParam) {
     }
     else {
       switch (WaitForSingleObject(pThis->m_hChangeEvent, INFINITE)) {
-      case WAIT_OBJECT_0:
-        if (NULL != pThis->m_hkey) {
-          pThis->OnChange(pThis->m_hkey);
-        }
+        case WAIT_OBJECT_0:
+          if (NULL != pThis->m_hkey) {
+            pThis->OnChange(pThis->m_hkey);
+          }
 
-        break;
+          break;
 
-      case WAIT_FAILED:
-        break;
+        case WAIT_FAILED:
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
     }
   }
@@ -512,5 +525,5 @@ BOOL RegKey::RegDelSubKeysRecurse(HKEY hKeyRoot, LPTSTR lpSubKey, bool bPrefer64
 
   return FALSE;
 }
-} // namespace akali
+}  // namespace akali
 #endif

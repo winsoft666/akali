@@ -21,8 +21,8 @@
 #include <strsafe.h>
 
 namespace akali {
-static TCHAR *lstrrchr(LPCTSTR string, int ch) {
-  TCHAR *start = (TCHAR *)string;
+static TCHAR* lstrrchr(LPCTSTR string, int ch) {
+  TCHAR* start = (TCHAR*)string;
 
   while (*string++)
     ;
@@ -31,7 +31,7 @@ static TCHAR *lstrrchr(LPCTSTR string, int ch) {
     ;
 
   if (*string == (TCHAR)ch)
-    return (TCHAR *)string;
+    return (TCHAR*)string;
 
   return NULL;
 }
@@ -59,7 +59,7 @@ void DumpMiniDump(HANDLE hFile, PEXCEPTION_POINTERS excpInfo) {
   }
 }
 
-int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR *szDumpNamePrefix) {
+int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR* szDumpNamePrefix) {
   static bool bFirstTime = true;
 
   if (!bFirstTime)
@@ -79,7 +79,7 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR *sz
 
   GetModuleFileName(NULL, szExeDir, MAX_PATH);
 
-  if (TCHAR *p = lstrrchr(szExeDir, TEXT('\\'))) {
+  if (TCHAR* p = lstrrchr(szExeDir, TEXT('\\'))) {
     *(p + 1) = 0;
   }
 
@@ -101,5 +101,5 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs, const TCHAR *sz
 
   return EXCEPTION_EXECUTE_HANDLER;
 }
-} // namespace akali
+}  // namespace akali
 #endif

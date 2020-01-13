@@ -24,15 +24,16 @@
 
 namespace akali {
 class IPC::IPCImpl {
-public:
+ public:
   IPCImpl() : buffer_size_(4096), exit_(false) {}
 
   ~IPCImpl() {}
 
-  bool SyncSend(const std::string &target_ipc_name, const void *msg, unsigned int msg_size,
+  bool SyncSend(const std::string& target_ipc_name,
+                const void* msg,
+                unsigned int msg_size,
                 unsigned int timeout) {
-
-    unsigned char *full_data = nullptr;
+    unsigned char* full_data = nullptr;
     unsigned int full_data_size = 0;
 
     std::string strPipeName = "\\\\.\\pipe\\" + target_ipc_name;
@@ -96,7 +97,7 @@ public:
     return true;
   }
 
-  bool AsyncSend(const void *msg, unsigned int msg_size) { return true; }
+  bool AsyncSend(const void* msg, unsigned int msg_size) { return true; }
 
   void ListenThreadPro() {
     std::string strPipeName = "\\\\.\\pipe\\" + ipc_name_;
@@ -144,14 +145,14 @@ public:
     }
   }
 
-  void OnRecvMsg(const void *buffer, unsigned int buffer_size) {
+  void OnRecvMsg(const void* buffer, unsigned int buffer_size) {
     if (cb_) {
       cb_(buffer, buffer_size);
     }
   }
 
   void InstanceThrProc(HANDLE hPipe) {
-    char *pRequest = (char *)malloc(buffer_size_ + 1);
+    char* pRequest = (char*)malloc(buffer_size_ + 1);
     if (!pRequest) {
       return;
     }
@@ -170,7 +171,7 @@ public:
       if (!fSuccess) {
         if (dwGLE == ERROR_MORE_DATA) {
           unsigned int max_buf_size = buffer_size_ * 4;
-          char *pNewRequest = (char *)malloc(max_buf_size + 1);
+          char* pNewRequest = (char*)malloc(max_buf_size + 1);
           if (!pNewRequest)
             break;
           memset(pNewRequest, 0, max_buf_size + 1);
@@ -212,8 +213,8 @@ public:
     return;
   }
 
-  bool StartListen(const std::string &ipc_name,
-                   std::function<void(const void *data, unsigned int data_size)> cb) {
+  bool StartListen(const std::string& ipc_name,
+                   std::function<void(const void* data, unsigned int data_size)> cb) {
     if (listen_thr_.valid() &&
         listen_thr_.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
       return false;
@@ -241,16 +242,18 @@ public:
     instance_thrs_.clear();
   }
 
-public:
+ public:
   std::string ipc_name_;
-  std::function<void(const void *data, unsigned int data_size)> cb_;
+  std::function<void(const void* data, unsigned int data_size)> cb_;
   std::future<void> listen_thr_;
   std::vector<std::future<void>> instance_thrs_;
   std::atomic_bool exit_;
   unsigned int buffer_size_;
 };
 
-IPC::IPC() { impl_ = new IPCImpl(); }
+IPC::IPC() {
+  impl_ = new IPCImpl();
+}
 
 IPC::~IPC() {
   if (impl_) {
@@ -259,19 +262,22 @@ IPC::~IPC() {
   }
 }
 
-bool IPC::StartListen(const std::string &ipc_name,
-                      std::function<void(const void *data, unsigned int data_size)> cb) {
+bool IPC::StartListen(const std::string& ipc_name,
+                      std::function<void(const void* data, unsigned int data_size)> cb) {
   return impl_->StartListen(ipc_name, cb);
 }
 
-void IPC::StopListen() { impl_->StopListen(); }
+void IPC::StopListen() {
+  impl_->StopListen();
+}
 
-bool IPC::SyncSend(const std::string &target_ipc_name, const void *data, unsigned int data_size,
+bool IPC::SyncSend(const std::string& target_ipc_name,
+                   const void* data,
+                   unsigned int data_size,
                    unsigned int timeout_ms) {
-
   bool ret = impl_->SyncSend(target_ipc_name, data, data_size, timeout_ms);
 
   return ret;
 }
-} // namespace akali
+}  // namespace akali
 #endif

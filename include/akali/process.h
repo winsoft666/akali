@@ -46,10 +46,10 @@ struct Config {
 /// process instead.
 //
 class AKALI_API Process {
-public:
+ public:
 #ifdef AKALI_WIN
-  typedef unsigned long id_type; // Process id type
-  typedef void *fd_type;         // File descriptor type
+  typedef unsigned long id_type;  // Process id type
+  typedef void* fd_type;          // File descriptor type
 #if (defined UNICODE) || (defined _UNICODE)
   typedef std::wstring string_type;
 #else
@@ -62,51 +62,61 @@ public:
 #endif
   typedef std::unordered_map<string_type, string_type> environment_type;
 
-private:
+ private:
   class Data {
-  public:
+   public:
     Data() noexcept;
     id_type id;
 #ifdef AKALI_WIN
-    void *handle;
+    void* handle;
 #else
     int exit_status{-1};
 #endif
   };
 
-public:
+ public:
   /// Starts a process.
-  Process(const std::vector<string_type> &arguments, const string_type &path = string_type(),
-          std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
-          std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
-          bool open_stdin = false, const Config &config = {}) noexcept;
+  Process(const std::vector<string_type>& arguments,
+          const string_type& path = string_type(),
+          std::function<void(const char* bytes, size_t n)> read_stdout = nullptr,
+          std::function<void(const char* bytes, size_t n)> read_stderr = nullptr,
+          bool open_stdin = false,
+          const Config& config = {}) noexcept;
 
   /// Starts a process.
-  Process(const string_type &command, const string_type &path = string_type(),
-          std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
-          std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
-          bool open_stdin = false, const Config &config = {}) noexcept;
+  Process(const string_type& command,
+          const string_type& path = string_type(),
+          std::function<void(const char* bytes, size_t n)> read_stdout = nullptr,
+          std::function<void(const char* bytes, size_t n)> read_stderr = nullptr,
+          bool open_stdin = false,
+          const Config& config = {}) noexcept;
 
   /// Starts a process with specified environment.
-  Process(const std::vector<string_type> &arguments, const string_type &path,
-          const environment_type &environment,
-          std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
-          std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
-          bool open_stdin = false, const Config &config = {}) noexcept;
+  Process(const std::vector<string_type>& arguments,
+          const string_type& path,
+          const environment_type& environment,
+          std::function<void(const char* bytes, size_t n)> read_stdout = nullptr,
+          std::function<void(const char* bytes, size_t n)> read_stderr = nullptr,
+          bool open_stdin = false,
+          const Config& config = {}) noexcept;
 
   /// Starts a process with specified environment.
-  Process(const string_type &command, const string_type &path, const environment_type &environment,
-          std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
-          std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
-          bool open_stdin = false, const Config &config = {}) noexcept;
+  Process(const string_type& command,
+          const string_type& path,
+          const environment_type& environment,
+          std::function<void(const char* bytes, size_t n)> read_stdout = nullptr,
+          std::function<void(const char* bytes, size_t n)> read_stderr = nullptr,
+          bool open_stdin = false,
+          const Config& config = {}) noexcept;
 
 #ifndef AKALI_WIN
   /// Starts a process with the environment of the calling process.
   /// Supported on Unix-like systems only.
-  Process(const std::function<void()> &function,
-          std::function<void(const char *bytes, size_t n)> read_stdout = nullptr,
-          std::function<void(const char *bytes, size_t n)> read_stderr = nullptr,
-          bool open_stdin = false, const Config &config = {}) noexcept;
+  Process(const std::function<void()>& function,
+          std::function<void(const char* bytes, size_t n)> read_stdout = nullptr,
+          std::function<void(const char* bytes, size_t n)> read_stderr = nullptr,
+          bool open_stdin = false,
+          const Config& config = {}) noexcept;
 #endif
   ~Process() noexcept;
 
@@ -120,13 +130,13 @@ public:
 
   /// If process is finished, returns true and sets the exit status. Returns
   /// false otherwise.
-  bool TryGetExitStatus(int &exit_status) noexcept;
+  bool TryGetExitStatus(int& exit_status) noexcept;
 
   /// Write to stdin.
-  bool Write(const char *bytes, size_t n);
+  bool Write(const char* bytes, size_t n);
 
   /// Write to stdin. Convenience function using write(const char *, size_t).
-  bool Write(const std::string &data);
+  bool Write(const std::string& data);
 
   /// Close stdin. If the process takes parameters from stdin, use this to
   /// notify that all parameters have been sent.
@@ -148,10 +158,10 @@ public:
   /// force=true is only supported on Unix-like systems.
   /// Return true when all process have been killed.
   /// Return false when have one or more process kill failed.
-  static bool Kill(const string_type &executed_file_name, bool force = false) noexcept;
+  static bool Kill(const string_type& executed_file_name, bool force = false) noexcept;
 
   /// terminate all process that EXE file in "dir" directory.
-  static void RecursiveKill(const string_type &dir, bool exclude_self) noexcept;
+  static void RecursiveKill(const string_type& dir, bool exclude_self) noexcept;
 
   static string_type GetSelfPath() noexcept;
   static string_type GetSelfDir() noexcept;
@@ -162,17 +172,17 @@ public:
   /// force=true is only supported on Unix-like systems.
   /// Return true when all process have been killed.
   /// Return false when have one or more process kill failed.
-  static bool Kill(const std::string &executed_file_name, bool force = false) noexcept;
+  static bool Kill(const std::string& executed_file_name, bool force = false) noexcept;
   static std::string GetSelfPath() noexcept;
   static std::string GetSelfDir() noexcept;
   static std::string GetProcessPath(id_type id) noexcept;
 #endif
-private:
+ private:
   Data data_;
   bool closed_;
   std::mutex close_mutex_;
-  std::function<void(const char *bytes, size_t n)> read_stdout_;
-  std::function<void(const char *bytes, size_t n)> read_stderr_;
+  std::function<void(const char* bytes, size_t n)> read_stdout_;
+  std::function<void(const char* bytes, size_t n)> read_stderr_;
 #ifndef AKALI_WIN
   std::thread stdout_stderr_thread_;
 #else
@@ -188,16 +198,18 @@ private:
   std::unique_ptr<fd_type> stderr_fd_;
   std::unique_ptr<fd_type> stdin_fd_;
 
-  id_type open(const std::vector<string_type> &arguments, const string_type &path,
-               const environment_type *environment = nullptr) noexcept;
-  id_type open(const string_type &command, const string_type &path,
-               const environment_type *environment = nullptr) noexcept;
+  id_type open(const std::vector<string_type>& arguments,
+               const string_type& path,
+               const environment_type* environment = nullptr) noexcept;
+  id_type open(const string_type& command,
+               const string_type& path,
+               const environment_type* environment = nullptr) noexcept;
 #ifndef AKALI_WIN
-  id_type open(const std::function<void()> &function) noexcept;
+  id_type open(const std::function<void()>& function) noexcept;
 #endif
   void async_read() noexcept;
   void close_fds() noexcept;
 };
-} // namespace akali
+}  // namespace akali
 
-#endif // AKALI_PROCESS_H_
+#endif  // AKALI_PROCESS_H_

@@ -43,7 +43,7 @@ typedef struct _DSPMONITOR {
 } DSPMONITOR;
 
 class AKALI_API DisplayMonitors {
-public:
+ public:
   DisplayMonitors();
   ~DisplayMonitors();
 
@@ -54,14 +54,14 @@ public:
   int GetCount() const;
 
   // Get the device configuration depending the requesting index.
-  bool GetDspInfo(const int index, DSPMONITOR *dsp);
+  bool GetDspInfo(const int index, DSPMONITOR* dsp);
 
-  bool GetPrimaryDspInfo(DSPMONITOR *dsp);
+  bool GetPrimaryDspInfo(DSPMONITOR* dsp);
 
-private:
+ private:
   std::vector<DSPMONITOR> dsp_list_;
 };
-} // namespace akali
+}  // namespace akali
 #endif
 
-#endif //! AKALI_DISPLAY_MINITORS_H__
+#endif  //! AKALI_DISPLAY_MINITORS_H__

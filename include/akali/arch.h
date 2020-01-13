@@ -40,8 +40,7 @@
 #error "Unknown compiler"
 #endif
 
-
-// Processor architecture detection.  
+// Processor architecture detection.
 // For more info on what's defined, see:
 //   http://msdn.microsoft.com/en-us/library/b0084kay.aspx
 //   http://www.agner.org/optimize/calling_conventions.pdf
@@ -86,4 +85,4 @@
 #error Define either AKALI_ARCH_LITTLE_ENDIAN or AKALI_ARCH_BIG_ENDIAN
 #endif
 
-#endif // !AKALI_ARCH_H__
+#endif  // !AKALI_ARCH_H__

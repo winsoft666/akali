@@ -24,28 +24,25 @@
 
 #pragma warning(disable : 4309)
 
-#define STACK_ARRAY(TYPE, LEN) static_cast<TYPE *>(::alloca((LEN) * sizeof(TYPE)))
+#define STACK_ARRAY(TYPE, LEN) static_cast<TYPE*>(::alloca((LEN) * sizeof(TYPE)))
 
 namespace akali {
 // Apply any suitable string transform (including the ones above) to an STL
 // string. Stack-allocated temporary space is used for the transformation, so
 // value and source may refer to the same string.
-typedef size_t (*Transform)(char *buffer, size_t buflen, const char *source, size_t srclen);
-
-
+typedef size_t (*Transform)(char* buffer, size_t buflen, const char* source, size_t srclen);
 
 // Return the result of applying transform t to source.
-std::string s_transform(const std::string &source, Transform t) {
+std::string s_transform(const std::string& source, Transform t) {
   // Ask transformation function to approximate the destination size (returns upper bound)
   size_t maxlen = t(nullptr, 0, source.data(), source.length());
-  char *buffer = STACK_ARRAY(char, maxlen);
+  char* buffer = STACK_ARRAY(char, maxlen);
   size_t len = t(buffer, maxlen, source.data(), source.length());
   std::string result(buffer, len);
   return result;
 }
 
-
-std::string UrlEncode(const std::string &str) {
+std::string UrlEncode(const std::string& str) {
   char hex[] = "0123456789ABCDEF";
   std::string dst;
 
@@ -67,7 +64,7 @@ std::string UrlEncode(const std::string &str) {
   return dst;
 }
 
-size_t UrlDecode(char *buffer, size_t buflen, const char *source, size_t srclen) {
+size_t UrlDecode(char* buffer, size_t buflen, const char* source, size_t srclen) {
   if (nullptr == buffer)
     return srclen + 1;
 
@@ -97,7 +94,9 @@ size_t UrlDecode(char *buffer, size_t buflen, const char *source, size_t srclen)
   return bufpos;
 }
 
-std::string UrlDecode(const std::string &source) { return s_transform(source, UrlDecode); }
+std::string UrlDecode(const std::string& source) {
+  return s_transform(source, UrlDecode);
+}
 
 static const char HEX[] = "0123456789abcdef";
 
@@ -106,7 +105,7 @@ char HexEncode(unsigned char val) {
   return (val < 16) ? HEX[val] : '!';
 }
 
-bool HexDecode(char ch, unsigned char *val) {
+bool HexDecode(char ch, unsigned char* val) {
   if ((ch >= '0') && (ch <= '9')) {
     *val = ch - '0';
   }
@@ -123,7 +122,10 @@ bool HexDecode(char ch, unsigned char *val) {
   return true;
 }
 
-size_t HexEncodeWithDelimiter(char *buffer, size_t buflen, const char *csource, size_t srclen,
+size_t HexEncodeWithDelimiter(char* buffer,
+                              size_t buflen,
+                              const char* csource,
+                              size_t srclen,
                               char delimiter) {
   assert(buffer);
 
@@ -131,7 +133,7 @@ size_t HexEncodeWithDelimiter(char *buffer, size_t buflen, const char *csource, 
     return 0;
 
   // Init and check bounds.
-  const unsigned char *bsource = reinterpret_cast<const unsigned char *>(csource);
+  const unsigned char* bsource = reinterpret_cast<const unsigned char*>(csource);
   size_t srcpos = 0, bufpos = 0;
   size_t needed = delimiter ? (srclen * 3) : (srclen * 2 + 1);
 
@@ -156,21 +158,26 @@ size_t HexEncodeWithDelimiter(char *buffer, size_t buflen, const char *csource, 
   return bufpos;
 }
 
-std::string HexEncode(const std::string &str) { return HexEncode(str.c_str(), str.size()); }
+std::string HexEncode(const std::string& str) {
+  return HexEncode(str.c_str(), str.size());
+}
 
-std::string HexEncode(const char *source, size_t srclen) {
+std::string HexEncode(const char* source, size_t srclen) {
   return HexEncodeWithDelimiter(source, srclen, 0);
 }
 
-std::string HexEncodeWithDelimiter(const char *source, size_t srclen, char delimiter) {
+std::string HexEncodeWithDelimiter(const char* source, size_t srclen, char delimiter) {
   const size_t kBufferSize = srclen * 3;
-  char *buffer = STACK_ARRAY(char, kBufferSize);
+  char* buffer = STACK_ARRAY(char, kBufferSize);
   size_t length = HexEncodeWithDelimiter(buffer, kBufferSize, source, srclen, delimiter);
   assert(srclen == 0 || length > 0);
   return std::string(buffer, length);
 }
 
-size_t HexDecodeWithDelimiter(char *cbuffer, size_t buflen, const char *source, size_t srclen,
+size_t HexDecodeWithDelimiter(char* cbuffer,
+                              size_t buflen,
+                              const char* source,
+                              size_t srclen,
                               char delimiter) {
   assert(cbuffer);
 
@@ -178,7 +185,7 @@ size_t HexDecodeWithDelimiter(char *cbuffer, size_t buflen, const char *source, 
     return 0;
 
   // Init and bounds check.
-  unsigned char *bbuffer = reinterpret_cast<unsigned char *>(cbuffer);
+  unsigned char* bbuffer = reinterpret_cast<unsigned char*>(cbuffer);
   size_t srcpos = 0, bufpos = 0;
   size_t needed = (delimiter) ? (srclen + 1) / 3 : srclen / 2;
 
@@ -211,25 +218,27 @@ size_t HexDecodeWithDelimiter(char *cbuffer, size_t buflen, const char *source, 
   return bufpos;
 }
 
-size_t HexDecode(char *buffer, size_t buflen, const std::string &source) {
+size_t HexDecode(char* buffer, size_t buflen, const std::string& source) {
   return HexDecodeWithDelimiter(buffer, buflen, source, 0);
 }
 
-size_t HexDecodeWithDelimiter(char *buffer, size_t buflen, const std::string &source,
+size_t HexDecodeWithDelimiter(char* buffer,
+                              size_t buflen,
+                              const std::string& source,
                               char delimiter) {
   return HexDecodeWithDelimiter(buffer, buflen, source.c_str(), source.length(), delimiter);
 }
 
 #ifdef AKALI_WIN
 
-std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page /*= 0*/) {
+std::string UnicodeToAnsi(const std::wstring& str, unsigned int code_page /*= 0*/) {
   std::string strRes;
   int iSize = ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
 
   if (iSize == 0)
     return strRes;
 
-  char *szBuf = new (std::nothrow) char[iSize];
+  char* szBuf = new (std::nothrow) char[iSize];
 
   if (!szBuf)
     return strRes;
@@ -244,7 +253,7 @@ std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page /*= 0*
   return strRes;
 }
 
-std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page /*= 0*/) {
+std::wstring AnsiToUnicode(const std::string& str, unsigned int code_page /*= 0*/) {
   std::wstring strRes;
 
   int iSize = ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, NULL, 0);
@@ -252,7 +261,7 @@ std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page /*= 0*
   if (iSize == 0)
     return strRes;
 
-  wchar_t *szBuf = new (std::nothrow) wchar_t[iSize];
+  wchar_t* szBuf = new (std::nothrow) wchar_t[iSize];
 
   if (!szBuf)
     return strRes;
@@ -267,7 +276,7 @@ std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page /*= 0*
   return strRes;
 }
 
-std::string UnicodeToUtf8(const std::wstring &str) {
+std::string UnicodeToUtf8(const std::wstring& str) {
   std::string strRes;
 
   int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
@@ -275,7 +284,7 @@ std::string UnicodeToUtf8(const std::wstring &str) {
   if (iSize == 0)
     return strRes;
 
-  char *szBuf = new (std::nothrow) char[iSize];
+  char* szBuf = new (std::nothrow) char[iSize];
 
   if (!szBuf)
     return strRes;
@@ -290,7 +299,7 @@ std::string UnicodeToUtf8(const std::wstring &str) {
   return strRes;
 }
 
-std::string UnicodeToUtf8BOM(const std::wstring &str) {
+std::string UnicodeToUtf8BOM(const std::wstring& str) {
   std::string strRes;
 
   int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
@@ -298,7 +307,7 @@ std::string UnicodeToUtf8BOM(const std::wstring &str) {
   if (iSize == 0)
     return strRes;
 
-  char *szBuf = new (std::nothrow) char[iSize + 3];
+  char* szBuf = new (std::nothrow) char[iSize + 3];
 
   if (!szBuf)
     return strRes;
@@ -316,14 +325,14 @@ std::string UnicodeToUtf8BOM(const std::wstring &str) {
   return strRes;
 }
 
-std::wstring Utf8ToUnicode(const std::string &str) {
+std::wstring Utf8ToUnicode(const std::string& str) {
   std::wstring strRes;
   int iSize = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
 
   if (iSize == 0)
     return strRes;
 
-  wchar_t *szBuf = new (std::nothrow) wchar_t[iSize];
+  wchar_t* szBuf = new (std::nothrow) wchar_t[iSize];
 
   if (!szBuf)
     return strRes;
@@ -337,17 +346,17 @@ std::wstring Utf8ToUnicode(const std::string &str) {
   return strRes;
 }
 
-std::string AnsiToUtf8(const std::string &str, unsigned int code_page /*= 0*/) {
+std::string AnsiToUtf8(const std::string& str, unsigned int code_page /*= 0*/) {
   return UnicodeToUtf8(AnsiToUnicode(str, code_page));
 }
 
-std::string AnsiToUtf8BOM(const std::string &str, unsigned int code_page /* = 0*/) {
+std::string AnsiToUtf8BOM(const std::string& str, unsigned int code_page /* = 0*/) {
   return UnicodeToUtf8BOM(AnsiToUnicode(str, code_page));
 }
 
-std::string Utf8ToAnsi(const std::string &str, unsigned int code_page /*= 0*/) {
+std::string Utf8ToAnsi(const std::string& str, unsigned int code_page /*= 0*/) {
   return UnicodeToAnsi(Utf8ToUnicode(str), code_page);
 }
 
 #endif
-} // namespace akali
+}  // namespace akali

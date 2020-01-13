@@ -27,7 +27,7 @@
 
 namespace akali {
 class AKALI_API ScheduleTask {
-public:
+ public:
   ScheduleTask();
   virtual ~ScheduleTask();
 
@@ -38,8 +38,11 @@ public:
   // ITrigger type is TASK_TRIGGER_LOGON
   // Action number is 1
   //
-  bool NewLoginTriggerTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath, LPCTSTR pszParameters,
-                           LPCTSTR pszDescription, LPCTSTR pszAuthor);
+  bool NewLoginTriggerTask(LPCTSTR pszTaskName,
+                           LPCTSTR pszProgramPath,
+                           LPCTSTR pszParameters,
+                           LPCTSTR pszDescription,
+                           LPCTSTR pszAuthor);
 
   bool IsExist(LPCTSTR pszTaskName);
 
@@ -55,11 +58,11 @@ public:
 
   bool GetParameters(LPCTSTR pszTaskName, long lActionIndex, LPTSTR pszParameters);
 
-private:
+ private:
   class ScheduleTaskImpl;
-  ScheduleTaskImpl *impl_;
+  ScheduleTaskImpl* impl_;
 };
-} // namespace akali
+}  // namespace akali
 #endif
 
-#endif // !AKALI_SCHEDULE_TASK_H__
+#endif  // !AKALI_SCHEDULE_TASK_H__

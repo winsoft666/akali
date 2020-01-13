@@ -24,13 +24,13 @@
 
 namespace akali {
 AKALI_API std::string GetLocalIP();
-AKALI_API void GetLocalIPList(std::vector<std::string> &ip_list,
-                                std::vector<std::string> &gateway_ip_list);
-AKALI_API std::string GetMACThroughIP(const std::string &ip);
+AKALI_API void GetLocalIPList(std::vector<std::string>& ip_list,
+                              std::vector<std::string>& gateway_ip_list);
+AKALI_API std::string GetMACThroughIP(const std::string& ip);
 AKALI_API std::string GetPCName();
-AKALI_API void GetMACList(std::vector<std::string> &mac_list);
+AKALI_API void GetMACList(std::vector<std::string>& mac_list);
 AKALI_API std::string GetValidMAC();
 AKALI_API int64_t GetValidMacInteger();
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // !AKALI_PC_INFO_H_
+#endif  // !AKALI_PC_INFO_H_

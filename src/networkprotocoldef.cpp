@@ -15,7 +15,7 @@
 #include "akali/networkprotocoldef.h"
 
 namespace akali {
-__u16 GetCheckSum(__u16 *header, __u32 size) {
+__u16 GetCheckSum(__u16* header, __u32 size) {
   unsigned long checksum = 0;
 
   while (size > 1) {
@@ -25,7 +25,7 @@ __u16 GetCheckSum(__u16 *header, __u32 size) {
   }
 
   if (size == 1) {
-    checksum += *(unsigned char *)header;
+    checksum += *(unsigned char*)header;
   }
   checksum = (checksum >> 16) + (checksum & 0xffff);
 
@@ -33,4 +33,4 @@ __u16 GetCheckSum(__u16 *header, __u32 size) {
 
   return (unsigned short)(~checksum);
 }
-} // namespace akali
+}  // namespace akali

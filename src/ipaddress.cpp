@@ -30,7 +30,7 @@ static const in6_addr kV4CompatibilityPrefix = {{{0}}};
 static const in6_addr k6BonePrefix = {{{0x3f, 0xfe, 0}}};
 
 static bool IsPrivateV4(uint32_t ip);
-static in_addr ExtractMappedAddress(const in6_addr &addr);
+static in_addr ExtractMappedAddress(const in6_addr& addr);
 
 uint32_t IPAddress::v4AddressAsHostOrderInteger() const {
   if (family_ == AF_INET) {
@@ -41,21 +41,23 @@ uint32_t IPAddress::v4AddressAsHostOrderInteger() const {
   }
 }
 
-bool IPAddress::IsUnspecifiedIP() const { return IPIsUnspec(*this); }
+bool IPAddress::IsUnspecifiedIP() const {
+  return IPIsUnspec(*this);
+}
 
 size_t IPAddress::Size() const {
   switch (family_) {
-  case AF_INET:
-    return sizeof(in_addr);
+    case AF_INET:
+      return sizeof(in_addr);
 
-  case AF_INET6:
-    return sizeof(in6_addr);
+    case AF_INET6:
+      return sizeof(in6_addr);
   }
 
   return 0;
 }
 
-bool IPAddress::operator==(const IPAddress &other) const {
+bool IPAddress::operator==(const IPAddress& other) const {
   if (family_ != other.family_) {
     return false;
   }
@@ -71,9 +73,11 @@ bool IPAddress::operator==(const IPAddress &other) const {
   return family_ == AF_UNSPEC;
 }
 
-bool IPAddress::operator!=(const IPAddress &other) const { return !((*this) == other); }
+bool IPAddress::operator!=(const IPAddress& other) const {
+  return !((*this) == other);
+}
 
-bool IPAddress::operator>(const IPAddress &other) const {
+bool IPAddress::operator>(const IPAddress& other) const {
   return (*this) != other && !((*this) < other);
 }
 
@@ -82,7 +86,7 @@ IPAddress::IPAddress(uint32_t ip_in_host_byte_order) : family_(AF_INET) {
   u_.ip4.s_addr = HostToNetwork32(ip_in_host_byte_order);
 }
 
-bool IPAddress::operator<(const IPAddress &other) const {
+bool IPAddress::operator<(const IPAddress& other) const {
   // IPv4 is 'less than' IPv6
   if (family_ != other.family_) {
     if (family_ == AF_UNSPEC) {
@@ -98,27 +102,31 @@ bool IPAddress::operator<(const IPAddress &other) const {
 
   // Comparing addresses of the same family.
   switch (family_) {
-  case AF_INET: {
-    return NetworkToHost32(u_.ip4.s_addr) < NetworkToHost32(other.u_.ip4.s_addr);
-  }
+    case AF_INET: {
+      return NetworkToHost32(u_.ip4.s_addr) < NetworkToHost32(other.u_.ip4.s_addr);
+    }
 
-  case AF_INET6: {
-    return memcmp(&u_.ip6.s6_addr, &other.u_.ip6.s6_addr, 16) < 0;
-  }
+    case AF_INET6: {
+      return memcmp(&u_.ip6.s6_addr, &other.u_.ip6.s6_addr, 16) < 0;
+    }
   }
 
   // Catches AF_UNSPEC and invalid addresses.
   return false;
 }
 
-std::ostream &operator<<(std::ostream &os, const IPAddress &ip) {
+std::ostream& operator<<(std::ostream& os, const IPAddress& ip) {
   os << ip.ToString();
   return os;
 }
 
-in6_addr IPAddress::GetIPv6Address() const { return u_.ip6; }
+in6_addr IPAddress::GetIPv6Address() const {
+  return u_.ip6;
+}
 
-in_addr IPAddress::GetIPv4Address() const { return u_.ip4; }
+in_addr IPAddress::GetIPv4Address() const {
+  return u_.ip4;
+}
 
 std::string IPAddress::ToString() const {
   if (family_ != AF_INET && family_ != AF_INET6) {
@@ -126,13 +134,13 @@ std::string IPAddress::ToString() const {
   }
 
   char buf[INET6_ADDRSTRLEN] = {0};
-  const void *src = &u_.ip4;
+  const void* src = &u_.ip4;
 
   if (family_ == AF_INET6) {
     src = &u_.ip6;
   }
 
-  if (!inet_ntop(family_, (void *)src, buf, sizeof(buf))) {
+  if (!inet_ntop(family_, (void*)src, buf, sizeof(buf))) {
     return std::string();
   }
 
@@ -146,28 +154,29 @@ std::string IPAddress::ToSensitiveString() const {
 #else
 
   switch (family_) {
-  case AF_INET: {
-    std::string address = ToString();
-    size_t find_pos = address.rfind('.');
+    case AF_INET: {
+      std::string address = ToString();
+      size_t find_pos = address.rfind('.');
 
-    if (find_pos == std::string::npos)
-      return std::string();
+      if (find_pos == std::string::npos)
+        return std::string();
 
-    address.resize(find_pos);
-    address += ".x";
-    return address;
-  }
+      address.resize(find_pos);
+      address += ".x";
+      return address;
+    }
 
-  case AF_INET6: {
-    std::string result;
-    result.resize(INET6_ADDRSTRLEN);
-    in6_addr addr = GetIPv6Address();
-    size_t len = snprintf(
-        &(result[0]), result.size(), "%x:%x:%x:x:x:x:x:x", (addr.s6_addr[0] << 8) + addr.s6_addr[1],
-        (addr.s6_addr[2] << 8) + addr.s6_addr[3], (addr.s6_addr[4] << 8) + addr.s6_addr[5]);
-    result.resize(len);
-    return result;
-  }
+    case AF_INET6: {
+      std::string result;
+      result.resize(INET6_ADDRSTRLEN);
+      in6_addr addr = GetIPv6Address();
+      size_t len = snprintf(&(result[0]), result.size(), "%x:%x:%x:x:x:x:x:x",
+                            (addr.s6_addr[0] << 8) + addr.s6_addr[1],
+                            (addr.s6_addr[2] << 8) + addr.s6_addr[3],
+                            (addr.s6_addr[4] << 8) + addr.s6_addr[5]);
+      result.resize(len);
+      return result;
+    }
   }
 
   return std::string();
@@ -197,17 +206,17 @@ IPAddress IPAddress::AsIPv6Address() const {
   return IPAddress(v6addr);
 }
 
-bool InterfaceAddress::operator==(const InterfaceAddress &other) const {
-  return ipv6_flags_ == other.ipv6_flags() && static_cast<const IPAddress &>(*this) == other;
+bool InterfaceAddress::operator==(const InterfaceAddress& other) const {
+  return ipv6_flags_ == other.ipv6_flags() && static_cast<const IPAddress&>(*this) == other;
 }
 
-bool InterfaceAddress::operator!=(const InterfaceAddress &other) const {
+bool InterfaceAddress::operator!=(const InterfaceAddress& other) const {
   return !((*this) == other);
 }
 
-const InterfaceAddress &InterfaceAddress::operator=(const InterfaceAddress &other) {
+const InterfaceAddress& InterfaceAddress::operator=(const InterfaceAddress& other) {
   ipv6_flags_ = other.ipv6_flags_;
-  static_cast<IPAddress &>(*this) = other;
+  static_cast<IPAddress&>(*this) = other;
   return *this;
 }
 
@@ -218,24 +227,24 @@ bool IsPrivateV4(uint32_t ip_in_host_order) {
          ((ip_in_host_order >> 16) == ((169 << 8) | 254));
 }
 
-in_addr ExtractMappedAddress(const in6_addr &in6) {
+in_addr ExtractMappedAddress(const in6_addr& in6) {
   in_addr ipv4;
   ::memcpy(&ipv4.s_addr, &in6.s6_addr[12], sizeof(ipv4.s_addr));
   return ipv4;
 }
 
-bool IPFromAddrInfo(struct addrinfo *info, IPAddress *out) {
+bool IPFromAddrInfo(struct addrinfo* info, IPAddress* out) {
   if (!info || !info->ai_addr) {
     return false;
   }
 
   if (info->ai_addr->sa_family == AF_INET) {
-    sockaddr_in *addr = reinterpret_cast<sockaddr_in *>(info->ai_addr);
+    sockaddr_in* addr = reinterpret_cast<sockaddr_in*>(info->ai_addr);
     *out = IPAddress(addr->sin_addr);
     return true;
   }
   else if (info->ai_addr->sa_family == AF_INET6) {
-    sockaddr_in6 *addr = reinterpret_cast<sockaddr_in6 *>(info->ai_addr);
+    sockaddr_in6* addr = reinterpret_cast<sockaddr_in6*>(info->ai_addr);
     *out = IPAddress(addr->sin6_addr);
     return true;
   }
@@ -243,7 +252,7 @@ bool IPFromAddrInfo(struct addrinfo *info, IPAddress *out) {
   return false;
 }
 
-bool IPFromString(const std::string &str, IPAddress *out) {
+bool IPFromString(const std::string& str, IPAddress* out) {
   if (!out) {
     return false;
   }
@@ -267,7 +276,7 @@ bool IPFromString(const std::string &str, IPAddress *out) {
   return true;
 }
 
-bool IPFromString(const std::string &str, int flags, InterfaceAddress *out) {
+bool IPFromString(const std::string& str, int flags, InterfaceAddress* out) {
   IPAddress ip;
 
   if (!IPFromString(str, &ip)) {
@@ -278,68 +287,70 @@ bool IPFromString(const std::string &str, int flags, InterfaceAddress *out) {
   return true;
 }
 
-bool IPIsAny(const IPAddress &ip) {
+bool IPIsAny(const IPAddress& ip) {
   switch (ip.GetFamily()) {
-  case AF_INET:
-    return ip == IPAddress(INADDR_ANY);
+    case AF_INET:
+      return ip == IPAddress(INADDR_ANY);
 
-  case AF_INET6:
-    return ip == IPAddress(in6addr_any) || ip == IPAddress(kV4MappedPrefix);
+    case AF_INET6:
+      return ip == IPAddress(in6addr_any) || ip == IPAddress(kV4MappedPrefix);
 
-  case AF_UNSPEC:
-    return false;
+    case AF_UNSPEC:
+      return false;
   }
 
   return false;
 }
 
-bool IPIsLoopback(const IPAddress &ip) {
+bool IPIsLoopback(const IPAddress& ip) {
   switch (ip.GetFamily()) {
-  case AF_INET: {
-    return (ip.v4AddressAsHostOrderInteger() >> 24) == 127;
-  }
+    case AF_INET: {
+      return (ip.v4AddressAsHostOrderInteger() >> 24) == 127;
+    }
 
-  case AF_INET6: {
-    return ip == IPAddress(in6addr_loopback);
-  }
+    case AF_INET6: {
+      return ip == IPAddress(in6addr_loopback);
+    }
   }
 
   return false;
 }
 
-bool IPIsPrivate(const IPAddress &ip) {
+bool IPIsPrivate(const IPAddress& ip) {
   switch (ip.GetFamily()) {
-  case AF_INET: {
-    return IsPrivateV4(ip.v4AddressAsHostOrderInteger());
-  }
+    case AF_INET: {
+      return IsPrivateV4(ip.v4AddressAsHostOrderInteger());
+    }
 
-  case AF_INET6: {
-    return IPIsLinkLocal(ip) || IPIsLoopback(ip);
-  }
+    case AF_INET6: {
+      return IPIsLinkLocal(ip) || IPIsLoopback(ip);
+    }
   }
 
   return false;
 }
 
-bool IPIsUnspec(const IPAddress &ip) { return ip.GetFamily() == AF_UNSPEC; }
+bool IPIsUnspec(const IPAddress& ip) {
+  return ip.GetFamily() == AF_UNSPEC;
+}
 
-size_t HashIP(const IPAddress &ip) {
+size_t HashIP(const IPAddress& ip) {
   switch (ip.GetFamily()) {
-  case AF_INET: {
-    return ip.GetIPv4Address().s_addr;
-  }
+    case AF_INET: {
+      return ip.GetIPv4Address().s_addr;
+    }
 
-  case AF_INET6: {
-    in6_addr v6addr = ip.GetIPv6Address();
-    const uint32_t *v6_as_ints = reinterpret_cast<const uint32_t *>(&v6addr.s6_addr);
-    return v6_as_ints[0] ^ v6_as_ints[1] ^ v6_as_ints[2] ^ v6_as_ints[3];
-  }
+    case AF_INET6: {
+      in6_addr v6addr = ip.GetIPv6Address();
+      const uint32_t* v6_as_ints = reinterpret_cast<const uint32_t*>(&v6addr.s6_addr);
+      return v6_as_ints[0] ^ v6_as_ints[1] ^ v6_as_ints[2] ^ v6_as_ints[3];
+    }
   }
 
   return 0;
 }
 
-IPAddress TruncateIP(const IPAddress &ip, int length) {
+IPAddress TruncateIP(const IPAddress& ip, int length) {
   if (length < 0) {
     return IPAddress();
   }
@@ -373,7 +384,7 @@ IPAddress TruncateIP(const IPAddress &ip, int length) {
     int inner_length = 32 - (length - (position * 32));
     // Note: 64bit mask constant needed to allow possible 32-bit left shift.
     uint32_t inner_mask = 0xFFFFFFFFLL << inner_length;
-    uint32_t *v6_as_ints = reinterpret_cast<uint32_t *>(&v6addr.s6_addr);
+    uint32_t* v6_as_ints = reinterpret_cast<uint32_t*>(&v6addr.s6_addr);
 
     for (int i = 0; i < 4; ++i) {
       if (i == position) {
@@ -396,33 +407,33 @@ int CountIPMaskBits(IPAddress mask) {
   int bits = 0;
 
   switch (mask.GetFamily()) {
-  case AF_INET: {
-    word_to_count = NetworkToHost32(mask.GetIPv4Address().s_addr);
-    break;
-  }
+    case AF_INET: {
+      word_to_count = NetworkToHost32(mask.GetIPv4Address().s_addr);
+      break;
+    }
 
-  case AF_INET6: {
-    in6_addr v6addr = mask.GetIPv6Address();
-    const uint32_t *v6_as_ints = reinterpret_cast<const uint32_t *>(&v6addr.s6_addr);
-    int i = 0;
+    case AF_INET6: {
+      in6_addr v6addr = mask.GetIPv6Address();
+      const uint32_t* v6_as_ints = reinterpret_cast<const uint32_t*>(&v6addr.s6_addr);
+      int i = 0;
 
-    for (; i < 4; ++i) {
-      if (v6_as_ints[i] != 0xFFFFFFFF) {
-        break;
+      for (; i < 4; ++i) {
+        if (v6_as_ints[i] != 0xFFFFFFFF) {
+          break;
+        }
       }
+
+      if (i < 4) {
+        word_to_count = NetworkToHost32(v6_as_ints[i]);
+      }
+
+      bits = (i * 32);
+      break;
     }
 
-    if (i < 4) {
-      word_to_count = NetworkToHost32(v6_as_ints[i]);
+    default: {
+      return 0;
     }
-
-    bits = (i * 32);
-    break;
-  }
-
-  default: {
-    return 0;
-  }
   }
 
   if (word_to_count == 0) {
@@ -435,7 +446,7 @@ int CountIPMaskBits(IPAddress mask) {
   unsigned int zeroes = 32;
   // This could also be written word_to_count &= -word_to_count, but
   // MSVC emits warning C4146 when negating an unsigned number.
-  word_to_count &= ~word_to_count + 1; // Isolate lowest set bit.
+  word_to_count &= ~word_to_count + 1;  // Isolate lowest set bit.
 
   if (word_to_count)
     zeroes--;
@@ -458,18 +469,22 @@ int CountIPMaskBits(IPAddress mask) {
   return bits + (32 - zeroes);
 }
 
-bool IPIsHelper(const IPAddress &ip, const in6_addr &tomatch, int length) {
+bool IPIsHelper(const IPAddress& ip, const in6_addr& tomatch, int length) {
   // Helper method for checking IP prefix matches (but only on whole byte lengths). Length is in
   // bits.
   in6_addr addr = ip.GetIPv6Address();
   return memcmp(&addr, &tomatch, (length >> 3)) == 0;
 }
 
-bool IPIs6Bone(const IPAddress &ip) { return IPIsHelper(ip, k6BonePrefix, 16); }
+bool IPIs6Bone(const IPAddress& ip) {
+  return IPIsHelper(ip, k6BonePrefix, 16);
+}
 
-bool IPIs6To4(const IPAddress &ip) { return IPIsHelper(ip, k6To4Prefix, 16); }
+bool IPIs6To4(const IPAddress& ip) {
+  return IPIsHelper(ip, k6To4Prefix, 16);
+}
 
-bool IPIsLinkLocal(const IPAddress &ip) {
+bool IPIsLinkLocal(const IPAddress& ip) {
   // Can't use the helper because the prefix is 10 bits.
   in6_addr addr = ip.GetIPv6Address();
   return addr.s6_addr[0] == 0xFE && addr.s6_addr[1] == 0x80;
@@ -478,30 +493,36 @@ bool IPIsLinkLocal(const IPAddress &ip) {
 // According to http://www.ietf.org/rfc/rfc2373.txt, Appendix A, page 19.  An
 // address which contains MAC will have its 11th and 12th bytes as FF:FE as well
 // as the U/L bit as 1.
-bool IPIsMacBased(const IPAddress &ip) {
+bool IPIsMacBased(const IPAddress& ip) {
   in6_addr addr = ip.GetIPv6Address();
   return ((addr.s6_addr[8] & 0x02) && addr.s6_addr[11] == 0xFF && addr.s6_addr[12] == 0xFE);
 }
 
-bool IPIsSiteLocal(const IPAddress &ip) {
+bool IPIsSiteLocal(const IPAddress& ip) {
   // Can't use the helper because the prefix is 10 bits.
   in6_addr addr = ip.GetIPv6Address();
   return addr.s6_addr[0] == 0xFE && (addr.s6_addr[1] & 0xC0) == 0xC0;
 }
 
-bool IPIsULA(const IPAddress &ip) {
+bool IPIsULA(const IPAddress& ip) {
   // Can't use the helper because the prefix is 7 bits.
   in6_addr addr = ip.GetIPv6Address();
   return (addr.s6_addr[0] & 0xFE) == 0xFC;
 }
 
-bool IPIsTeredo(const IPAddress &ip) { return IPIsHelper(ip, kTeredoPrefix, 32); }
+bool IPIsTeredo(const IPAddress& ip) {
+  return IPIsHelper(ip, kTeredoPrefix, 32);
+}
 
-bool IPIsV4Compatibility(const IPAddress &ip) { return IPIsHelper(ip, kV4CompatibilityPrefix, 96); }
+bool IPIsV4Compatibility(const IPAddress& ip) {
+  return IPIsHelper(ip, kV4CompatibilityPrefix, 96);
+}
 
-bool IPIsV4Mapped(const IPAddress &ip) { return IPIsHelper(ip, kV4MappedPrefix, 96); }
+bool IPIsV4Mapped(const IPAddress& ip) {
+  return IPIsHelper(ip, kV4MappedPrefix, 96);
+}
 
-int IPAddressPrecedence(const IPAddress &ip) {
+int IPAddressPrecedence(const IPAddress& ip) {
   // Precedence values from RFC 3484-bis. Prefers native v4 over 6to4/Teredo.
   if (ip.GetFamily() == AF_INET) {
     return 30;
@@ -558,4 +579,4 @@ IPAddress GetAnyIP(int family) {
   return IPAddress();
 }
 
-} // namespace akali
+}  // namespace akali

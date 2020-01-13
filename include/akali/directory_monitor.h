@@ -29,20 +29,23 @@
 
 namespace akali {
 class AKALI_API DirectoryMonitor {
-public:
+ public:
   typedef std::function<void(DWORD /*action*/, std::wstring /*path*/)> ChangeNotify;
   DirectoryMonitor();
   virtual ~DirectoryMonitor();
 
-  bool StartMonitor(const std::wstring &direcotry, bool watch_sub_dir, DWORD filter,
+  bool StartMonitor(const std::wstring& direcotry,
+                    bool watch_sub_dir,
+                    DWORD filter,
                     ChangeNotify cn);
   void StopMonitor();
-private:
+
+ private:
   HANDLE directory_;
   OVERLAPPED overlapped_;
   std::future<void> monitor_task_;
 };
-} // namespace akali
+}  // namespace akali
 #endif
 
-#endif // !AKALI_DIRECTORY_MONITOR_H__
+#endif  // !AKALI_DIRECTORY_MONITOR_H__

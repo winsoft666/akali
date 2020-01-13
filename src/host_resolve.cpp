@@ -23,13 +23,15 @@ HostResolve::HostResolve() {
   WSAStartup(wVersionRequested, &wsaData);
 }
 
-HostResolve::~HostResolve() { WSACleanup(); }
+HostResolve::~HostResolve() {
+  WSACleanup();
+}
 
-bool HostResolve::Resolve(const std::string &host, std::vector<IPAddress> &ip_list) {
+bool HostResolve::Resolve(const std::string& host, std::vector<IPAddress>& ip_list) {
   if (host.length() == 0)
     return false;
 
-  struct addrinfo *result = nullptr;
+  struct addrinfo* result = nullptr;
   struct addrinfo hints = {0};
   hints.ai_family = AF_UNSPEC;
 
@@ -39,10 +41,10 @@ bool HostResolve::Resolve(const std::string &host, std::vector<IPAddress> &ip_li
     return false;
   }
 
-  struct addrinfo *cursor = result;
+  struct addrinfo* cursor = result;
   bool flag = false;
   for (; cursor; cursor = cursor->ai_next) {
-    sockaddr_in *paddr_in = reinterpret_cast<sockaddr_in *>(cursor->ai_addr);
+    sockaddr_in* paddr_in = reinterpret_cast<sockaddr_in*>(cursor->ai_addr);
 
     IPAddress ip(paddr_in->sin_addr);
 
@@ -60,5 +62,5 @@ bool HostResolve::Resolve(const std::string &host, std::vector<IPAddress> &ip_li
 
   return true;
 }
-} // namespace akali
+}  // namespace akali
 #endif

@@ -28,74 +28,76 @@ namespace akali {
 typedef struct _EXCEPTION_POINTERS EXCEPTION_POINTERS, *PEXCEPTION_POINTERS;
 
 AKALI_API int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS pExceptPtrs,
-                                            const TCHAR *szDumpNamePrefix);
+                                          const TCHAR* szDumpNamePrefix);
 AKALI_API void DumpMiniDump(HANDLE hFile, PEXCEPTION_POINTERS excpInfo);
-} // namespace akali
+}  // namespace akali
 
-#define WINMAIN_BEGIN(szDumpNamePrefix)                                                            \
-  int __96A9695E_RUN_WINMAIN_FUNC(HINSTANCE hInstance, LPTSTR lpCmdLine);                          \
-  LONG WINAPI __96A9695E_UnhandledExceptionHandler(_EXCEPTION_POINTERS *pExceptionInfo) {          \
-    OutputDebugString(TEXT("Create a dump file sine an exception occurred in sub-thread.\n"));     \
-    int iRet = akali::RecordExceptionInfo(pExceptionInfo, szDumpNamePrefix);                   \
-    return iRet;                                                                                   \
-  }                                                                                                \
-  int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine,           \
-                         int nCmdShow) {                                                           \
-    UNREFERENCED_PARAMETER(hPrevInstance);                                                         \
-    UNREFERENCED_PARAMETER(nCmdShow);                                                              \
-    ::SetUnhandledExceptionFilter(__96A9695E_UnhandledExceptionHandler);                           \
-    int ret = 0;                                                                                   \
-    __try {                                                                                        \
-      ret = __96A9695E_RUN_WINMAIN_FUNC(hInstance, lpCmdLine);                                     \
-    } __except (akali::RecordExceptionInfo(GetExceptionInformation(), szDumpNamePrefix)) {     \
-      OutputDebugString(TEXT("Create a dump file sine an exception occurred in main-thread.\n"));  \
-    }                                                                                              \
-    return ret;                                                                                    \
-  }                                                                                                \
+#define WINMAIN_BEGIN(szDumpNamePrefix)                                                           \
+  int __96A9695E_RUN_WINMAIN_FUNC(HINSTANCE hInstance, LPTSTR lpCmdLine);                         \
+  LONG WINAPI __96A9695E_UnhandledExceptionHandler(_EXCEPTION_POINTERS* pExceptionInfo) {         \
+    OutputDebugString(TEXT("Create a dump file sine an exception occurred in sub-thread.\n"));    \
+    int iRet = akali::RecordExceptionInfo(pExceptionInfo, szDumpNamePrefix);                      \
+    return iRet;                                                                                  \
+  }                                                                                               \
+  int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine,          \
+                         int nCmdShow) {                                                          \
+    UNREFERENCED_PARAMETER(hPrevInstance);                                                        \
+    UNREFERENCED_PARAMETER(nCmdShow);                                                             \
+    ::SetUnhandledExceptionFilter(__96A9695E_UnhandledExceptionHandler);                          \
+    int ret = 0;                                                                                  \
+    __try {                                                                                       \
+      ret = __96A9695E_RUN_WINMAIN_FUNC(hInstance, lpCmdLine);                                    \
+    } __except (akali::RecordExceptionInfo(GetExceptionInformation(), szDumpNamePrefix)) {        \
+      OutputDebugString(TEXT("Create a dump file sine an exception occurred in main-thread.\n")); \
+    }                                                                                             \
+    return ret;                                                                                   \
+  }                                                                                               \
   int __96A9695E_RUN_WINMAIN_FUNC(HINSTANCE hInstance, LPTSTR lpCmdLine) {
 #define WINMAIN_END }
 
-#define WMAIN_BEGIN(szDumpName)                                                                    \
-  int __96A9695E_RUN_MAIN_FUNC(int argc, wchar_t *argv[]);                                         \
-  LONG WINAPI __96A9695E_UnhandledExceptionHandler(_EXCEPTION_POINTERS *pExceptionInfo) {          \
-    OutputDebugString(TEXT("Create a dump file since an exception occurred in sub-thread.\n"));    \
-    int iRet = akali::RecordExceptionInfo(pExceptionInfo, szDumpName);                         \
-    return iRet;                                                                                   \
-  }                                                                                                \
-  int wmain(int argc, wchar_t *argv[]) {                                                           \
-    ::SetUnhandledExceptionFilter(__96A9695E_UnhandledExceptionHandler);                           \
-    int ret = 0;                                                                                   \
-    __try {                                                                                        \
-      ret = __96A9695E_RUN_MAIN_FUNC(argc, argv);                                                  \
-    } __except (akali::RecordExceptionInfo(GetExceptionInformation(), szDumpName)) {           \
-      OutputDebugString(TEXT("Create a dump file since an exception occurred in "                  \
-                             "main-thread.\n"));                                                   \
-    }                                                                                              \
-    return ret;                                                                                    \
-  }                                                                                                \
-  int __96A9695E_RUN_MAIN_FUNC(int argc, wchar_t *argv[]) {
-#define MAIN_BEGIN(szDumpName)                                                                     \
-  int __96A9695E_RUN_MAIN_FUNC(int argc, char *argv[]);                                            \
-  LONG WINAPI __96A9695E_UnhandledExceptionHandler(_EXCEPTION_POINTERS *pExceptionInfo) {          \
-    OutputDebugString(TEXT("Create a dump file since an exception occurred in sub-thread.\n"));    \
-    int iRet = akali::RecordExceptionInfo(pExceptionInfo, szDumpName);                         \
-    return iRet;                                                                                   \
-  }                                                                                                \
-  int main(int argc, char *argv[]) {                                                               \
-    ::SetUnhandledExceptionFilter(__96A9695E_UnhandledExceptionHandler);                           \
-    int ret = 0;                                                                                   \
-    __try {                                                                                        \
-      ret = __96A9695E_RUN_MAIN_FUNC(argc, argv);                                                  \
-    } __except (akali::RecordExceptionInfo(GetExceptionInformation(), szDumpName)) {           \
-      OutputDebugString(TEXT("Create a dump file since an exception occurred in "                  \
-                             "main-thread.\n"));                                                   \
-    }                                                                                              \
-    return ret;                                                                                    \
-  }                                                                                                \
-  int __96A9695E_RUN_MAIN_FUNC(int argc, char *argv[]) {
+#define WMAIN_BEGIN(szDumpName)                                                                 \
+  int __96A9695E_RUN_MAIN_FUNC(int argc, wchar_t* argv[]);                                      \
+  LONG WINAPI __96A9695E_UnhandledExceptionHandler(_EXCEPTION_POINTERS* pExceptionInfo) {       \
+    OutputDebugString(TEXT("Create a dump file since an exception occurred in sub-thread.\n")); \
+    int iRet = akali::RecordExceptionInfo(pExceptionInfo, szDumpName);                          \
+    return iRet;                                                                                \
+  }                                                                                             \
+  int wmain(int argc, wchar_t* argv[]) {                                                        \
+    ::SetUnhandledExceptionFilter(__96A9695E_UnhandledExceptionHandler);                        \
+    int ret = 0;                                                                                \
+    __try {                                                                                     \
+      ret = __96A9695E_RUN_MAIN_FUNC(argc, argv);                                               \
+    } __except (akali::RecordExceptionInfo(GetExceptionInformation(), szDumpName)) {            \
+      OutputDebugString(                                                                        \
+          TEXT("Create a dump file since an exception occurred in "                             \
+               "main-thread.\n"));                                                              \
+    }                                                                                           \
+    return ret;                                                                                 \
+  }                                                                                             \
+  int __96A9695E_RUN_MAIN_FUNC(int argc, wchar_t* argv[]) {
+#define MAIN_BEGIN(szDumpName)                                                                  \
+  int __96A9695E_RUN_MAIN_FUNC(int argc, char* argv[]);                                         \
+  LONG WINAPI __96A9695E_UnhandledExceptionHandler(_EXCEPTION_POINTERS* pExceptionInfo) {       \
+    OutputDebugString(TEXT("Create a dump file since an exception occurred in sub-thread.\n")); \
+    int iRet = akali::RecordExceptionInfo(pExceptionInfo, szDumpName);                          \
+    return iRet;                                                                                \
+  }                                                                                             \
+  int main(int argc, char* argv[]) {                                                            \
+    ::SetUnhandledExceptionFilter(__96A9695E_UnhandledExceptionHandler);                        \
+    int ret = 0;                                                                                \
+    __try {                                                                                     \
+      ret = __96A9695E_RUN_MAIN_FUNC(argc, argv);                                               \
+    } __except (akali::RecordExceptionInfo(GetExceptionInformation(), szDumpName)) {            \
+      OutputDebugString(                                                                        \
+          TEXT("Create a dump file since an exception occurred in "                             \
+               "main-thread.\n"));                                                              \
+    }                                                                                           \
+    return ret;                                                                                 \
+  }                                                                                             \
+  int __96A9695E_RUN_MAIN_FUNC(int argc, char* argv[]) {
 #define WMAIN_END }
 #define MAIN_END }
 
 #endif
 
-#endif // !AKALI_WIN_MAIN_H_
+#endif  // !AKALI_WIN_MAIN_H_

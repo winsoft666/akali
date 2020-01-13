@@ -16,63 +16,63 @@
 #define AKALI_MACROS_H__
 
 #ifndef SAFE_FREE
-#define SAFE_FREE(p)                                                                               \
-  do {                                                                                             \
-    if ((p) != NULL) {                                                                             \
-      free(p);                                                                                     \
-      (p) = NULL;                                                                                  \
-    }                                                                                              \
+#define SAFE_FREE(p)   \
+  do {                 \
+    if ((p) != NULL) { \
+      free(p);         \
+      (p) = NULL;      \
+    }                  \
   } while (false)
 #endif
 
 #ifndef SAFE_CLOSE_ON_NONULL
-#define SAFE_CLOSE(p)                                                                              \
-  do {                                                                                             \
-    if ((p) != NULL) {                                                                             \
-      CloseHandle((p));                                                                            \
-      (p) = NULL;                                                                                  \
-    }                                                                                              \
+#define SAFE_CLOSE(p)   \
+  do {                  \
+    if ((p) != NULL) {  \
+      CloseHandle((p)); \
+      (p) = NULL;       \
+    }                   \
   } while (false)
 #endif
 
 #ifndef SAFE_CLOSE_ON_VALID_HANDLE
-#define SAFE_CLOSE_ON_VALID_HANDLE(p)                                                              \
-  do {                                                                                             \
-    if ((p) != INVALID_HANDLE_VALUE) {                                                             \
-      CloseHandle((p));                                                                            \
-      (p) = INVALID_HANDLE_VALUE;                                                                  \
-    }                                                                                              \
+#define SAFE_CLOSE_ON_VALID_HANDLE(p)  \
+  do {                                 \
+    if ((p) != INVALID_HANDLE_VALUE) { \
+      CloseHandle((p));                \
+      (p) = INVALID_HANDLE_VALUE;      \
+    }                                  \
   } while (false)
 #endif
 
 #ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p)                                                                       \
-  do {                                                                                             \
-    if ((p) != NULL) {                                                                             \
-      delete[](p);                                                                                 \
-      (p) = NULL;                                                                                  \
-    }                                                                                              \
+#define SAFE_DELETE_ARRAY(p) \
+  do {                       \
+    if ((p) != NULL) {       \
+      delete[](p);           \
+      (p) = NULL;            \
+    }                        \
   } while (false)
 #endif
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)                                                                             \
-  do {                                                                                             \
-    if ((p) != NULL) {                                                                             \
-      delete (p);                                                                                  \
-      (p) = NULL;                                                                                  \
-    }                                                                                              \
+#define SAFE_DELETE(p) \
+  do {                 \
+    if ((p) != NULL) { \
+      delete (p);      \
+      (p) = NULL;      \
+    }                  \
   } while (false)
 #endif
 
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)                                                                            \
-  do {                                                                                             \
-    if ((p)) {                                                                                     \
-      (p)->Release();                                                                              \
-      (p) = NULL;                                                                                  \
-    }                                                                                              \
+#define SAFE_RELEASE(p) \
+  do {                  \
+    if ((p)) {          \
+      (p)->Release();   \
+      (p) = NULL;       \
+    }                   \
   } while (false)
 #endif
 
-#endif // ! AKALI_MACROS_H__
+#endif  // ! AKALI_MACROS_H__

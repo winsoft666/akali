@@ -32,7 +32,7 @@
 
 namespace akali {
 class AKALI_API ProcessFinder {
-public:
+ public:
   // If use default param, CreateToolhelp32Snapshot With dwFlags =
   // TH32CS_SNAPALL, th32ProcessID = 0
   //
@@ -49,20 +49,22 @@ public:
   BOOL ModuleFind(PVOID pvBaseAddr, PMODULEENTRY32 pme) const;
   BOOL ModuleFind(PTSTR pszModName, PMODULEENTRY32 pme) const;
 
-private:
+ private:
   HANDLE m_hSnapShot;
 };
 
-AKALI_API BOOL RunAsAdministrator(LPCTSTR szCommand, LPCTSTR szArgs, LPCTSTR szDir,
-                                    BOOL bWaitProcess);
+AKALI_API BOOL RunAsAdministrator(LPCTSTR szCommand,
+                                  LPCTSTR szArgs,
+                                  LPCTSTR szDir,
+                                  BOOL bWaitProcess);
 AKALI_API BOOL EnablePrivilege(LPCTSTR szPrivilege, BOOL fEnable);
-AKALI_API BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin);
+AKALI_API BOOL CheckProcessUserIsAdmin(BOOL* pIsAdmin);
 
 AKALI_API BOOL CreateUserProcess(PCTSTR pszFilePath);
 
 // Please see: https://blog.csdn.net/china_jeffery/article/details/88225810
 //
 AKALI_API BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow);
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // AKALI_WIN_PROCESS_H_
+#endif  // AKALI_WIN_PROCESS_H_

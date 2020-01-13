@@ -17,13 +17,13 @@
 
 namespace akali {
 class ThreadPool {
-public:
+ public:
   ThreadPool(size_t);
   template <class F, class... Args>
-  auto enqueue(F &&f, Args &&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
+  auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
   ~ThreadPool();
 
-private:
+ private:
   // need to keep track of threads so we can join them
   std::vector<std::thread> workers;
   // the task queue
@@ -58,7 +58,7 @@ inline ThreadPool::ThreadPool(size_t threads) : stop(false) {
 
 // add new work item to the pool
 template <class F, class... Args>
-auto ThreadPool::enqueue(F &&f, Args &&... args)
+auto ThreadPool::enqueue(F&& f, Args&&... args)
     -> std::future<typename std::result_of<F(Args...)>::type> {
   using return_type = typename std::result_of<F(Args...)>::type;
 
@@ -86,9 +86,9 @@ inline ThreadPool::~ThreadPool() {
     stop = true;
   }
   condition.notify_all();
-  for (std::thread &worker : workers)
+  for (std::thread& worker : workers)
     worker.join();
 }
-} // namespace akali
+}  // namespace akali
 
 #endif

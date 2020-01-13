@@ -33,26 +33,30 @@
 #include "akali/constructormagic.h"
 
 namespace akali {
-template <class T> class Singleton {
-public:
-  static T *Instance();
+template <class T>
+class Singleton {
+ public:
+  static T* Instance();
   static void Release();
 
-protected:
+ protected:
   Singleton() {}
-  Singleton(const Singleton &) {}
-  Singleton &operator=(const Singleton &) {}
+  Singleton(const Singleton&) {}
+  Singleton& operator=(const Singleton&) {}
 
-private:
-  static T *this_;
+ private:
+  static T* this_;
   static std::mutex m_;
 };
 
-template <class T> T *Singleton<T>::this_ = nullptr;
+template <class T>
+T* Singleton<T>::this_ = nullptr;
 
-template <class T> std::mutex Singleton<T>::m_;
+template <class T>
+std::mutex Singleton<T>::m_;
 
-template <class T> T *Singleton<T>::Instance(void) {
+template <class T>
+T* Singleton<T>::Instance(void) {
   // double-check
   if (this_ == nullptr) {
     std::lock_guard<std::mutex> lg(m_);
@@ -63,7 +67,8 @@ template <class T> T *Singleton<T>::Instance(void) {
   return this_;
 }
 
-template <class T> void Singleton<T>::Release(void) {
+template <class T>
+void Singleton<T>::Release(void) {
   if (this_) {
     delete this_;
   }
@@ -72,13 +77,11 @@ template <class T> void Singleton<T>::Release(void) {
 #define SINGLETON_CLASS_DECLARE(class_name) friend class ::akali::Singleton<##class_name>;
 
 class SingletonProcess {
-public:
+ public:
 #ifdef AKALI_WIN
-  SingletonProcess(const std::string &unique_name)
-      : unique_name_(unique_name) {}
+  SingletonProcess(const std::string& unique_name) : unique_name_(unique_name) {}
 #else
-  SingletonProcess(const std::string &unique_pid_name)
-      : unique_pid_name_(unique_pid_name) {}
+  SingletonProcess(const std::string& unique_pid_name) : unique_pid_name_(unique_pid_name) {}
 #endif
   ~SingletonProcess() = default;
   bool operator()() {
@@ -110,7 +113,7 @@ public:
 #endif
   }
 
-private:
+ private:
 #ifdef AKALI_WIN
   std::string unique_name_;
 #else
@@ -119,5 +122,5 @@ private:
   AKALI_DISALLOW_IMPLICIT_CONSTRUCTORS(SingletonProcess);
 };
 
-} // namespace akali
-#endif // !AKALI_SINGLETON_H_
+}  // namespace akali
+#endif  // !AKALI_SINGLETON_H_

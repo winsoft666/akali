@@ -36,7 +36,7 @@ namespace akali {
 // in order to have more control over the usage of the variant and guard
 // against memory leaks.
 class AKALI_API ScopedVariant {
-public:
+ public:
   // Declaration of a global variant variable that's always VT_EMPTY
   static const VARIANT kEmptyVariant;
 
@@ -49,10 +49,10 @@ public:
   // Constructor to create a new VT_BSTR VARIANT.
   // NOTE: Do not pass a BSTR to this constructor expecting ownership to
   // be transferred
-  explicit ScopedVariant(const wchar_t *str);
+  explicit ScopedVariant(const wchar_t* str);
 
   // Creates a new VT_BSTR variant of a specified length.
-  ScopedVariant(const wchar_t *str, UINT length);
+  ScopedVariant(const wchar_t* str, UINT length);
 
   // Creates a new integral type variant and assigns the value to
   // VARIANT.lVal (32 bit sized field).
@@ -63,44 +63,44 @@ public:
   explicit ScopedVariant(double value, VARTYPE vt = VT_R8);
 
   // VT_DISPATCH
-  explicit ScopedVariant(IDispatch *dispatch);
+  explicit ScopedVariant(IDispatch* dispatch);
 
   // VT_UNKNOWN
-  explicit ScopedVariant(IUnknown *unknown);
+  explicit ScopedVariant(IUnknown* unknown);
 
   // SAFEARRAY
-  explicit ScopedVariant(SAFEARRAY *safearray);
+  explicit ScopedVariant(SAFEARRAY* safearray);
 
   // Copies the variant.
-  explicit ScopedVariant(const VARIANT &var);
+  explicit ScopedVariant(const VARIANT& var);
 
   ~ScopedVariant();
 
   inline VARTYPE type() const { return var_.vt; }
 
   // Give ScopedVariant ownership over an already allocated VARIANT.
-  void Reset(const VARIANT &var = kEmptyVariant);
+  void Reset(const VARIANT& var = kEmptyVariant);
 
   // Releases ownership of the VARIANT to the caller.
   VARIANT Release();
 
   // Swap two ScopedVariant's.
-  void Swap(ScopedVariant &var);
+  void Swap(ScopedVariant& var);
 
   // Returns a copy of the variant.
   VARIANT Copy() const;
 
   // The return value is 0 if the variants are equal, 1 if this object is
   // greater than |var|, -1 if it is smaller.
-  int Compare(const VARIANT &var, bool ignore_case = false) const;
+  int Compare(const VARIANT& var, bool ignore_case = false) const;
 
   // Retrieves the pointer address.
   // Used to receive a VARIANT as an out argument (and take ownership).
   // The function DCHECKs on the current value being empty/null.
   // Usage: GetVariant(var.receive());
-  VARIANT *Receive();
+  VARIANT* Receive();
 
-  void Set(const wchar_t *str);
+  void Set(const wchar_t* str);
 
   // Setters for simple types.
   void Set(int8_t i8);
@@ -118,14 +118,14 @@ public:
   // Creates a copy of |var| and assigns as this instance's value.
   // Note that this is different from the Reset() method that's used to
   // free the current value and assume ownership.
-  void Set(const VARIANT &var);
+  void Set(const VARIANT& var);
 
   // COM object setters
-  void Set(IDispatch *disp);
-  void Set(IUnknown *unk);
+  void Set(IDispatch* disp);
+  void Set(IUnknown* unk);
 
   // SAFEARRAY support
-  void Set(SAFEARRAY *array);
+  void Set(SAFEARRAY* array);
 
   // Special setter for DATE since DATE is a double and we already have
   // a setter for double.
@@ -135,39 +135,39 @@ public:
   // This support is necessary for the V_XYZ (e.g. V_BSTR) set of macros to
   // work properly but still doesn't allow modifications since we want control
   // over that.
-  const VARIANT *operator&() const { return &var_; }
+  const VARIANT* operator&() const { return &var_; }
 
   // Like other scoped classes (e.g scoped_refptr, ScopedComPtr, ScopedBstr)
   // we support the assignment operator for the type we wrap.
-  ScopedVariant &operator=(const VARIANT &var);
+  ScopedVariant& operator=(const VARIANT& var);
 
   // A hack to pass a pointer to the variant where the accepting
   // function treats the variant as an input-only, read-only value
   // but the function prototype requires a non const variant pointer.
   // There's no DCHECK or anything here.  Callers must know what they're doing.
-  VARIANT *AsInput() const {
+  VARIANT* AsInput() const {
     // The nature of this function is const, so we declare
     // it as such and cast away the constness here.
-    return const_cast<VARIANT *>(&var_);
+    return const_cast<VARIANT*>(&var_);
   }
 
   // Allows the ScopedVariant instance to be passed to functions either by value
   // or by const reference.
-  operator const VARIANT &() const { return var_; }
+  operator const VARIANT&() const { return var_; }
 
   // Used as a debug check to see if we're leaking anything.
   static bool IsLeakableVarType(VARTYPE vt);
 
-protected:
+ protected:
   VARIANT var_;
 
-private:
+ private:
   // Comparison operators for ScopedVariant are not supported at this point.
   // Use the Compare method instead.
-  bool operator==(const ScopedVariant &var) const;
-  bool operator!=(const ScopedVariant &var) const;
+  bool operator==(const ScopedVariant& var) const;
+  bool operator!=(const ScopedVariant& var) const;
   AKALI_DISALLOW_COPY_AND_ASSIGN(ScopedVariant);
 };
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // !AKALI_SCOPED_VARIANT_H__
+#endif  // !AKALI_SCOPED_VARIANT_H__

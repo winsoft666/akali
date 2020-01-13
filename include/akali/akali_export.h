@@ -38,4 +38,4 @@
 #endif
 #endif
 
-#endif // !AKALI_EXPORT_H_
+#endif  // !AKALI_EXPORT_H_

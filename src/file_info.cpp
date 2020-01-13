@@ -20,17 +20,22 @@
 #pragma comment(lib, "Version.lib")
 
 namespace akali {
-FileInfo::FileInfo() { Reset(); }
+FileInfo::FileInfo() {
+  Reset();
+}
 
 FileInfo::~FileInfo() {}
 
-bool FileInfo::GetTranslationId(LPVOID lpData, UINT unBlockSize, WORD wLangId, DWORD &dwId,
+bool FileInfo::GetTranslationId(LPVOID lpData,
+                                UINT unBlockSize,
+                                WORD wLangId,
+                                DWORD& dwId,
                                 BOOL bPrimaryEnough /*= FALSE*/) {
   LPWORD lpwData;
 
   for (lpwData = (LPWORD)lpData; (LPBYTE)lpwData < ((LPBYTE)lpData) + unBlockSize; lpwData += 2) {
     if (*lpwData == wLangId) {
-      dwId = *((DWORD *)lpwData);
+      dwId = *((DWORD*)lpwData);
       return true;
     }
   }
@@ -40,7 +45,7 @@ bool FileInfo::GetTranslationId(LPVOID lpData, UINT unBlockSize, WORD wLangId, D
 
   for (lpwData = (LPWORD)lpData; (LPBYTE)lpwData < ((LPBYTE)lpData) + unBlockSize; lpwData += 2) {
     if (((*lpwData) & 0x00FF) == (wLangId & 0x00FF)) {
-      dwId = *((DWORD *)lpwData);
+      dwId = *((DWORD*)lpwData);
       return true;
     }
   }
@@ -55,7 +60,7 @@ bool FileInfo::Create(HMODULE hModule) {
   return Create(szBuf);
 }
 
-bool FileInfo::Create(const std::wstring &strFileName) {
+bool FileInfo::Create(const std::wstring& strFileName) {
   Reset();
 
   HANDLE hFile = CreateFileW(strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -106,7 +111,7 @@ bool FileInfo::Create(const std::wstring &strFileName) {
           if (!GetTranslationId(lpInfo, unInfoLen, MAKELANGID(LANG_ENGLISH, SUBLANG_NEUTRAL),
                                 dwLangCode, TRUE))
             // use the first one we can get
-            dwLangCode = *((DWORD *)lpInfo);
+            dwLangCode = *((DWORD*)lpInfo);
         }
       }
     }
@@ -190,57 +195,73 @@ bool FileInfo::Create(const std::wstring &strFileName) {
 
 WORD FileInfo::GetFileVersion(int nIndex) const {
   switch (nIndex) {
-  case 0:
-    return (WORD)(m_FileInfo.dwFileVersionLS & 0x0000FFFF);
+    case 0:
+      return (WORD)(m_FileInfo.dwFileVersionLS & 0x0000FFFF);
 
-  case 1:
-    return (WORD)((m_FileInfo.dwFileVersionLS & 0xFFFF0000) >> 16);
+    case 1:
+      return (WORD)((m_FileInfo.dwFileVersionLS & 0xFFFF0000) >> 16);
 
-  case 2:
-    return (WORD)(m_FileInfo.dwFileVersionMS & 0x0000FFFF);
+    case 2:
+      return (WORD)(m_FileInfo.dwFileVersionMS & 0x0000FFFF);
 
-  case 3:
-    return (WORD)((m_FileInfo.dwFileVersionMS & 0xFFFF0000) >> 16);
+    case 3:
+      return (WORD)((m_FileInfo.dwFileVersionMS & 0xFFFF0000) >> 16);
 
-  default:
-    return 0;
+    default:
+      return 0;
   }
 }
 
 WORD FileInfo::GetProductVersion(int nIndex) const {
   switch (nIndex) {
-  case 0:
-    return (WORD)(m_FileInfo.dwProductVersionLS & 0x0000FFFF);
+    case 0:
+      return (WORD)(m_FileInfo.dwProductVersionLS & 0x0000FFFF);
 
-  case 1:
-    return (WORD)((m_FileInfo.dwProductVersionLS & 0xFFFF0000) >> 16);
+    case 1:
+      return (WORD)((m_FileInfo.dwProductVersionLS & 0xFFFF0000) >> 16);
 
-  case 2:
-    return (WORD)(m_FileInfo.dwProductVersionMS & 0x0000FFFF);
+    case 2:
+      return (WORD)(m_FileInfo.dwProductVersionMS & 0x0000FFFF);
 
-  case 3:
-    return (WORD)((m_FileInfo.dwProductVersionMS & 0xFFFF0000) >> 16);
+    case 3:
+      return (WORD)((m_FileInfo.dwProductVersionMS & 0xFFFF0000) >> 16);
 
-  default:
-    return 0;
+    default:
+      return 0;
   }
 }
 
-DWORD FileInfo::GetFileFlagsMask() const { return m_FileInfo.dwFileFlagsMask; }
+DWORD FileInfo::GetFileFlagsMask() const {
+  return m_FileInfo.dwFileFlagsMask;
+}
 
-DWORD FileInfo::GetFileFlags() const { return m_FileInfo.dwFileFlags; }
+DWORD FileInfo::GetFileFlags() const {
+  return m_FileInfo.dwFileFlags;
+}
 
-DWORD FileInfo::GetFileOs() const { return m_FileInfo.dwFileOS; }
+DWORD FileInfo::GetFileOs() const {
+  return m_FileInfo.dwFileOS;
+}
 
-DWORD FileInfo::GetFileType() const { return m_FileInfo.dwFileType; }
+DWORD FileInfo::GetFileType() const {
+  return m_FileInfo.dwFileType;
+}
 
-DWORD FileInfo::GetFileSubtype() const { return m_FileInfo.dwFileSubtype; }
+DWORD FileInfo::GetFileSubtype() const {
+  return m_FileInfo.dwFileSubtype;
+}
 
-std::wstring FileInfo::GetCompanyName() { return m_strCompanyName; }
+std::wstring FileInfo::GetCompanyName() {
+  return m_strCompanyName;
+}
 
-std::wstring FileInfo::GetFileDescription() { return m_strFileDescription; }
+std::wstring FileInfo::GetFileDescription() {
+  return m_strFileDescription;
+}
 
-std::wstring FileInfo::GetFileVersion() { return m_strFileVersion; }
+std::wstring FileInfo::GetFileVersion() {
+  return m_strFileVersion;
+}
 
 std::wstring FileInfo::GetFileVersionEx() {
   wchar_t strTemp[MAX_PATH * 2] = {0};
@@ -253,29 +274,53 @@ std::wstring FileInfo::GetFileVersionEx() {
   return strTemp;
 }
 
-std::wstring FileInfo::GetInternalName() { return m_strInternalName; }
+std::wstring FileInfo::GetInternalName() {
+  return m_strInternalName;
+}
 
-std::wstring FileInfo::GetLegalCopyright() { return m_strLegalCopyright; }
+std::wstring FileInfo::GetLegalCopyright() {
+  return m_strLegalCopyright;
+}
 
-std::wstring FileInfo::GetOriginalFileName() { return m_strOriginalFileName; }
+std::wstring FileInfo::GetOriginalFileName() {
+  return m_strOriginalFileName;
+}
 
-std::wstring FileInfo::GetProductName() { return m_strProductName; }
+std::wstring FileInfo::GetProductName() {
+  return m_strProductName;
+}
 
-std::wstring FileInfo::GetProductVersion() { return m_strProductVersion; }
+std::wstring FileInfo::GetProductVersion() {
+  return m_strProductVersion;
+}
 
-std::wstring FileInfo::GetComments() { return m_strComments; }
+std::wstring FileInfo::GetComments() {
+  return m_strComments;
+}
 
-std::wstring FileInfo::GetLegalTrademarks() { return m_strLegalTrademarks; }
+std::wstring FileInfo::GetLegalTrademarks() {
+  return m_strLegalTrademarks;
+}
 
-std::wstring FileInfo::GetPrivateBuild() { return m_strPrivateBuild; }
+std::wstring FileInfo::GetPrivateBuild() {
+  return m_strPrivateBuild;
+}
 
-std::wstring FileInfo::GetSpecialBuild() { return m_strSpecialBuild; }
+std::wstring FileInfo::GetSpecialBuild() {
+  return m_strSpecialBuild;
+}
 
-FILETIME FileInfo::GetCreationTime() const { return m_ftCreationTime; }
+FILETIME FileInfo::GetCreationTime() const {
+  return m_ftCreationTime;
+}
 
-FILETIME FileInfo::GetLastAccessTime() const { return m_ftLastAccessTime; }
+FILETIME FileInfo::GetLastAccessTime() const {
+  return m_ftLastAccessTime;
+}
 
-FILETIME FileInfo::GetLastWriteTime() const { return m_ftLastWriteTime; }
+FILETIME FileInfo::GetLastWriteTime() const {
+  return m_ftLastWriteTime;
+}
 
 void FileInfo::Reset() {
   ZeroMemory(&m_FileInfo, sizeof(m_FileInfo));
@@ -296,5 +341,5 @@ void FileInfo::Reset() {
   m_ftLastAccessTime.dwHighDateTime = m_ftLastAccessTime.dwLowDateTime = 0;
   m_ftLastWriteTime.dwHighDateTime = m_ftLastWriteTime.dwLowDateTime = 0;
 }
-} // namespace akali
+}  // namespace akali
 #endif

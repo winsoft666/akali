@@ -69,6 +69,6 @@ struct ping_hdr {
 
 // See: http://blog.csdn.net/china_jeffery/article/details/78984477#t2
 //
-AKALI_API __u16 GetCheckSum(__u16 *header, __u32 size);
-} // namespace akali
-#endif // !AKALI_NETWORK_PROTOCOLDEF_H__
+AKALI_API __u16 GetCheckSum(__u16* header, __u32 size);
+}  // namespace akali
+#endif  // !AKALI_NETWORK_PROTOCOLDEF_H__

@@ -21,14 +21,16 @@ namespace akali {
 // Global, const instance of an empty variant.
 const VARIANT ScopedVariant::kEmptyVariant = {VT_EMPTY};
 
-ScopedVariant::~ScopedVariant() { ::VariantClear(&var_); }
+ScopedVariant::~ScopedVariant() {
+  ::VariantClear(&var_);
+}
 
-ScopedVariant::ScopedVariant(const wchar_t *str) {
+ScopedVariant::ScopedVariant(const wchar_t* str) {
   var_.vt = VT_EMPTY;
   Set(str);
 }
 
-ScopedVariant::ScopedVariant(const wchar_t *str, UINT length) {
+ScopedVariant::ScopedVariant(const wchar_t* str, UINT length) {
   var_.vt = VT_BSTR;
   var_.bstrVal = ::SysAllocStringLen(str, length);
 }
@@ -44,27 +46,27 @@ ScopedVariant::ScopedVariant(double value, VARTYPE vt) {
   var_.dblVal = value;
 }
 
-ScopedVariant::ScopedVariant(IDispatch *dispatch) {
+ScopedVariant::ScopedVariant(IDispatch* dispatch) {
   var_.vt = VT_EMPTY;
   Set(dispatch);
 }
 
-ScopedVariant::ScopedVariant(IUnknown *unknown) {
+ScopedVariant::ScopedVariant(IUnknown* unknown) {
   var_.vt = VT_EMPTY;
   Set(unknown);
 }
 
-ScopedVariant::ScopedVariant(SAFEARRAY *safearray) {
+ScopedVariant::ScopedVariant(SAFEARRAY* safearray) {
   var_.vt = VT_EMPTY;
   Set(safearray);
 }
 
-ScopedVariant::ScopedVariant(const VARIANT &var) {
+ScopedVariant::ScopedVariant(const VARIANT& var) {
   var_.vt = VT_EMPTY;
   Set(var);
 }
 
-void ScopedVariant::Reset(const VARIANT &var) {
+void ScopedVariant::Reset(const VARIANT& var) {
   if (&var != &var_) {
     ::VariantClear(&var_);
     var_ = var;
@@ -77,13 +79,13 @@ VARIANT ScopedVariant::Release() {
   return var;
 }
 
-void ScopedVariant::Swap(ScopedVariant &var) {
+void ScopedVariant::Swap(ScopedVariant& var) {
   VARIANT tmp = var_;
   var_ = var.var_;
   var.var_ = tmp;
 }
 
-VARIANT *ScopedVariant::Receive() {
+VARIANT* ScopedVariant::Receive() {
   assert(!IsLeakableVarType(var_.vt));
   return &var_;
 }
@@ -94,31 +96,31 @@ VARIANT ScopedVariant::Copy() const {
   return ret;
 }
 
-int ScopedVariant::Compare(const VARIANT &var, bool ignore_case) const {
+int ScopedVariant::Compare(const VARIANT& var, bool ignore_case) const {
   ULONG flags = ignore_case ? NORM_IGNORECASE : 0;
-  HRESULT hr = ::VarCmp(const_cast<VARIANT *>(&var_), const_cast<VARIANT *>(&var),
-                        LOCALE_USER_DEFAULT, flags);
+  HRESULT hr =
+      ::VarCmp(const_cast<VARIANT*>(&var_), const_cast<VARIANT*>(&var), LOCALE_USER_DEFAULT, flags);
   int ret = 0;
 
   switch (hr) {
-  case VARCMP_LT:
-    ret = -1;
-    break;
+    case VARCMP_LT:
+      ret = -1;
+      break;
 
-  case VARCMP_GT:
-  case VARCMP_NULL:
-    ret = 1;
-    break;
+    case VARCMP_GT:
+    case VARCMP_NULL:
+      ret = 1;
+      break;
 
-  default:
-    // Equal.
-    break;
+    default:
+      // Equal.
+      break;
   }
 
   return ret;
 }
 
-void ScopedVariant::Set(const wchar_t *str) {
+void ScopedVariant::Set(const wchar_t* str) {
   assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_BSTR;
   var_.bstrVal = ::SysAllocString(str);
@@ -190,7 +192,7 @@ void ScopedVariant::SetDate(DATE date) {
   var_.date = date;
 }
 
-void ScopedVariant::Set(IDispatch *disp) {
+void ScopedVariant::Set(IDispatch* disp) {
   assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_DISPATCH;
   var_.pdispVal = disp;
@@ -204,7 +206,7 @@ void ScopedVariant::Set(bool b) {
   var_.boolVal = b ? VARIANT_TRUE : VARIANT_FALSE;
 }
 
-void ScopedVariant::Set(IUnknown *unk) {
+void ScopedVariant::Set(IUnknown* unk) {
   assert(!IsLeakableVarType(var_.vt));
   var_.vt = VT_UNKNOWN;
   var_.punkVal = unk;
@@ -212,7 +214,7 @@ void ScopedVariant::Set(IUnknown *unk) {
     unk->AddRef();
 }
 
-void ScopedVariant::Set(SAFEARRAY *array) {
+void ScopedVariant::Set(SAFEARRAY* array) {
   assert(!IsLeakableVarType(var_.vt));
   if (SUCCEEDED(::SafeArrayGetVartype(array, &var_.vt))) {
     var_.vt |= VT_ARRAY;
@@ -224,14 +226,14 @@ void ScopedVariant::Set(SAFEARRAY *array) {
   }
 }
 
-void ScopedVariant::Set(const VARIANT &var) {
+void ScopedVariant::Set(const VARIANT& var) {
   assert(!IsLeakableVarType(var_.vt));
   if (FAILED(::VariantCopy(&var_, &var))) {
     var_.vt = VT_EMPTY;
   }
 }
 
-ScopedVariant &ScopedVariant::operator=(const VARIANT &var) {
+ScopedVariant& ScopedVariant::operator=(const VARIANT& var) {
   if (&var != &var_) {
     VariantClear(&var_);
     Set(var);
@@ -242,34 +244,34 @@ ScopedVariant &ScopedVariant::operator=(const VARIANT &var) {
 bool ScopedVariant::IsLeakableVarType(VARTYPE vt) {
   bool leakable = false;
   switch (vt & VT_TYPEMASK) {
-  case VT_BSTR:
-  case VT_DISPATCH:
-  // we treat VT_VARIANT as leakable to err on the safe side.
-  case VT_VARIANT:
-  case VT_UNKNOWN:
-  case VT_SAFEARRAY:
+    case VT_BSTR:
+    case VT_DISPATCH:
+    // we treat VT_VARIANT as leakable to err on the safe side.
+    case VT_VARIANT:
+    case VT_UNKNOWN:
+    case VT_SAFEARRAY:
 
-  // very rarely used stuff (if ever):
-  case VT_VOID:
-  case VT_PTR:
-  case VT_CARRAY:
-  case VT_USERDEFINED:
-  case VT_LPSTR:
-  case VT_LPWSTR:
-  case VT_RECORD:
-  case VT_INT_PTR:
-  case VT_UINT_PTR:
-  case VT_FILETIME:
-  case VT_BLOB:
-  case VT_STREAM:
-  case VT_STORAGE:
-  case VT_STREAMED_OBJECT:
-  case VT_STORED_OBJECT:
-  case VT_BLOB_OBJECT:
-  case VT_VERSIONED_STREAM:
-  case VT_BSTR_BLOB:
-    leakable = true;
-    break;
+    // very rarely used stuff (if ever):
+    case VT_VOID:
+    case VT_PTR:
+    case VT_CARRAY:
+    case VT_USERDEFINED:
+    case VT_LPSTR:
+    case VT_LPWSTR:
+    case VT_RECORD:
+    case VT_INT_PTR:
+    case VT_UINT_PTR:
+    case VT_FILETIME:
+    case VT_BLOB:
+    case VT_STREAM:
+    case VT_STORAGE:
+    case VT_STREAMED_OBJECT:
+    case VT_STORED_OBJECT:
+    case VT_BLOB_OBJECT:
+    case VT_VERSIONED_STREAM:
+    case VT_BSTR_BLOB:
+      leakable = true;
+      break;
   }
 
   if (!leakable && (vt & VT_ARRAY) != 0) {
@@ -278,5 +280,5 @@ bool ScopedVariant::IsLeakableVarType(VARTYPE vt) {
 
   return leakable;
 }
-} // namespace akali
+}  // namespace akali
 #endif

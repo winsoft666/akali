@@ -20,7 +20,7 @@
 
 namespace akali {
 class BufferQueue::BufferQueueImpl {
-public:
+ public:
   BufferQueueImpl() {
     first_element_ = 0;
     last_element_ = 0;
@@ -30,15 +30,15 @@ public:
 
   ~BufferQueueImpl() {}
 
-  QUEUE_ELEMENT *first_element_;
-  QUEUE_ELEMENT *last_element_;
+  QUEUE_ELEMENT* first_element_;
+  QUEUE_ELEMENT* last_element_;
   unsigned int element_num_;
   unsigned int total_data_size_;
   std::string queue_name_;
   std::recursive_mutex queue_mutex_;
 };
 
-BufferQueue::BufferQueue(const std::string &queue_name) {
+BufferQueue::BufferQueue(const std::string& queue_name) {
   impl_ = new BufferQueueImpl();
 
   impl_->queue_name_ = queue_name;
@@ -60,21 +60,21 @@ unsigned int BufferQueue::GetLastDataSize() {
   return impl_->last_element_->size;
 }
 
-int64_t BufferQueue::ToOneBuffer(char **ppBuf) const {
+int64_t BufferQueue::ToOneBuffer(char** ppBuf) const {
   std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
   if (ppBuf == NULL)
     return -1;
 
   const unsigned int iBufSize = GetTotalDataSize();
 
-  *ppBuf = (char *)malloc(iBufSize);
+  *ppBuf = (char*)malloc(iBufSize);
 
   if (*ppBuf == NULL)
     return -1;
 
-  QUEUE_ELEMENT *p = impl_->first_element_;
+  QUEUE_ELEMENT* p = impl_->first_element_;
   unsigned int remaind = iBufSize;
-  char *pB = *ppBuf;
+  char* pB = *ppBuf;
   while (p && remaind > 0) {
     memcpy(pB, p->dataReadAddress, p->size);
     remaind -= p->size;
@@ -86,23 +86,23 @@ int64_t BufferQueue::ToOneBuffer(char **ppBuf) const {
   return iBufSize;
 }
 
-int64_t BufferQueue::ToOneBufferWithNullEnding(char **ppBuf) const {
+int64_t BufferQueue::ToOneBufferWithNullEnding(char** ppBuf) const {
   std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
   if (ppBuf == NULL)
     return -1;
 
   const unsigned int iBufSize = GetTotalDataSize();
 
-  *ppBuf = (char *)malloc(iBufSize + 1);
+  *ppBuf = (char*)malloc(iBufSize + 1);
 
   if (*ppBuf == NULL)
     return -1;
 
   (*ppBuf)[iBufSize] = 0;
 
-  QUEUE_ELEMENT *p = impl_->first_element_;
+  QUEUE_ELEMENT* p = impl_->first_element_;
   unsigned int remaind = iBufSize;
-  char *pB = *ppBuf;
+  char* pB = *ppBuf;
   while (p && remaind > 0) {
     memcpy(pB, p->dataReadAddress, p->size);
     remaind -= p->size;
@@ -114,16 +114,16 @@ int64_t BufferQueue::ToOneBufferWithNullEnding(char **ppBuf) const {
   return iBufSize + 1;
 }
 
-bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
+bool BufferQueue::AddToFront(void* pSrcData, unsigned int nSrcDataSize) {
   if (pSrcData == 0 || nSrcDataSize == 0)
     return false;
 
-  QUEUE_ELEMENT *elem = (QUEUE_ELEMENT *)malloc(sizeof(QUEUE_ELEMENT));
+  QUEUE_ELEMENT* elem = (QUEUE_ELEMENT*)malloc(sizeof(QUEUE_ELEMENT));
 
   if (!elem)
     return false;
 
-  void *data = malloc(nSrcDataSize);
+  void* data = malloc(nSrcDataSize);
 
   if (!data) {
     free(elem);
@@ -141,7 +141,7 @@ bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
     impl_->total_data_size_ += nSrcDataSize;
     impl_->element_num_++;
 
-    if (impl_->first_element_ == 0) { // Add first element in queue.
+    if (impl_->first_element_ == 0) {  // Add first element in queue.
       // Now,no element in queue.
       elem->prev = 0;
       elem->next = 0;
@@ -159,16 +159,16 @@ bool BufferQueue::AddToFront(void *pSrcData, unsigned int nSrcDataSize) {
   return true;
 }
 
-bool BufferQueue::AddToLast(void *pSrcData, unsigned int nSrcDataSize) {
+bool BufferQueue::AddToLast(void* pSrcData, unsigned int nSrcDataSize) {
   if (pSrcData == 0 || nSrcDataSize == 0)
     return false;
 
-  QUEUE_ELEMENT *elem = (QUEUE_ELEMENT *)malloc(sizeof(QUEUE_ELEMENT));
+  QUEUE_ELEMENT* elem = (QUEUE_ELEMENT*)malloc(sizeof(QUEUE_ELEMENT));
 
   if (!elem)
     return false;
 
-  void *data = malloc(nSrcDataSize);
+  void* data = malloc(nSrcDataSize);
 
   if (!data) {
     free(elem);
@@ -206,7 +206,7 @@ bool BufferQueue::AddToLast(void *pSrcData, unsigned int nSrcDataSize) {
   return true;
 }
 
-unsigned int BufferQueue::PopFromFront(void *pDestData, unsigned int nSize) {
+unsigned int BufferQueue::PopFromFront(void* pDestData, unsigned int nSize) {
   unsigned int rvalue = 0;
   unsigned int size;
 
@@ -222,7 +222,7 @@ unsigned int BufferQueue::PopFromFront(void *pDestData, unsigned int nSize) {
     impl_->element_num_--;
     impl_->total_data_size_ -= impl_->first_element_->size;
 
-    QUEUE_ELEMENT *next = impl_->first_element_->next;
+    QUEUE_ELEMENT* next = impl_->first_element_->next;
 
     if (next != 0) {
       next->prev = 0;
@@ -254,7 +254,7 @@ unsigned int BufferQueue::PopFromFront(void *pDestData, unsigned int nSize) {
   return rvalue;
 }
 
-unsigned int BufferQueue::PopFromLast(void *pDestData, unsigned int nSize) {
+unsigned int BufferQueue::PopFromLast(void* pDestData, unsigned int nSize) {
   std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
   unsigned int rvalue = 0;
   unsigned int size;
@@ -269,7 +269,7 @@ unsigned int BufferQueue::PopFromLast(void *pDestData, unsigned int nSize) {
     impl_->element_num_--;
     impl_->total_data_size_ -= impl_->last_element_->size;
 
-    QUEUE_ELEMENT *prev = impl_->last_element_->prev;
+    QUEUE_ELEMENT* prev = impl_->last_element_->prev;
 
     if (prev) {
       prev->next = 0;
@@ -301,18 +301,19 @@ unsigned int BufferQueue::PopFromLast(void *pDestData, unsigned int nSize) {
   return rvalue;
 }
 
-unsigned int BufferQueue::PopDataCrossElement(void *pOutputBuffer, unsigned int nBytesToRead,
-                                              int *pBufferIsThrown) {
+unsigned int BufferQueue::PopDataCrossElement(void* pOutputBuffer,
+                                              unsigned int nBytesToRead,
+                                              int* pBufferIsThrown) {
   std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
   unsigned int nOutBufferNum = 0;
   unsigned int rvalue = 0;
-  unsigned int nBytesRead = 0; // how much bytes has been read.
+  unsigned int nBytesRead = 0;  // how much bytes has been read.
   unsigned int nByteNeed = nBytesToRead;
-  char *pBuffer = (char *)pOutputBuffer;
+  char* pBuffer = (char*)pOutputBuffer;
 
   if (impl_->element_num_ != 0 && impl_->total_data_size_ > 0 && nBytesToRead > 0) {
     while (true) {
-      if (impl_->first_element_->size >= nByteNeed) { // we have enough data.
+      if (impl_->first_element_->size >= nByteNeed) {  // we have enough data.
         memcpy(pBuffer, impl_->first_element_->dataReadAddress, nByteNeed);
 
         nBytesRead += nByteNeed;
@@ -323,13 +324,13 @@ unsigned int BufferQueue::PopDataCrossElement(void *pOutputBuffer, unsigned int 
         if (impl_->first_element_->size == 0) {
           // remove this element from queue.
           nOutBufferNum++;
-          PopFromFront((void *)1, 0);
+          PopFromFront((void*)1, 0);
         }
         else {
           // element isn't empty, but we have removed some data from
           // element.
           impl_->first_element_->dataReadAddress =
-              (char *)impl_->first_element_->dataReadAddress + nByteNeed;
+              (char*)impl_->first_element_->dataReadAddress + nByteNeed;
         }
 
         nByteNeed = 0;
@@ -344,7 +345,7 @@ unsigned int BufferQueue::PopDataCrossElement(void *pOutputBuffer, unsigned int 
         impl_->first_element_->size = 0;
         nOutBufferNum++;
 
-        PopFromFront((void *)1, 0);
+        PopFromFront((void*)1, 0);
       }
 
       if (nByteNeed == 0 || impl_->element_num_ == 0) {
@@ -363,7 +364,7 @@ unsigned int BufferQueue::PopDataCrossElement(void *pOutputBuffer, unsigned int 
   return rvalue;
 }
 
-unsigned int BufferQueue::GetFromFront(void *pDestData, unsigned int nSize) {
+unsigned int BufferQueue::GetFromFront(void* pDestData, unsigned int nSize) {
   std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
   unsigned int rvalue;
   unsigned int size;
@@ -386,7 +387,7 @@ unsigned int BufferQueue::GetFromFront(void *pDestData, unsigned int nSize) {
   return rvalue;
 }
 
-unsigned int BufferQueue::GetFromLast(void *pDestData, unsigned int nSize) {
+unsigned int BufferQueue::GetFromLast(void* pDestData, unsigned int nSize) {
   std::lock_guard<std::recursive_mutex> lg(impl_->queue_mutex_);
 
   unsigned int rvalue;
@@ -417,24 +418,24 @@ unsigned int BufferQueue::RemoveData(unsigned int nBytesToRemove) {
 
   if (impl_->element_num_ > 0 && impl_->total_data_size_ > 0 && nBytesToRemove > 0) {
     while (impl_->total_data_size_ > 0) {
-      if (impl_->first_element_->size >= nByteNeed) { // we have enough data.
+      if (impl_->first_element_->size >= nByteNeed) {  // we have enough data.
         // check if buffer is empty
-        if (impl_->first_element_->size == nByteNeed) { // remove this element from queue
-          PopFromFront((void *)1, 0);
+        if (impl_->first_element_->size == nByteNeed) {  // remove this element from queue
+          PopFromFront((void*)1, 0);
         }
-        else { // element isn't empty, but we have removed some data
-               // from element
+        else {  // element isn't empty, but we have removed some data
+                // from element
           impl_->total_data_size_ -= nByteNeed;
           impl_->first_element_->size -= nByteNeed;
           impl_->first_element_->dataReadAddress =
-              (char *)impl_->first_element_->dataReadAddress + nByteNeed;
+              (char*)impl_->first_element_->dataReadAddress + nByteNeed;
         }
 
         break;
       }
       else {
         nByteNeed -= impl_->first_element_->size;
-        PopFromFront((void *)1, 0);
+        PopFromFront((void*)1, 0);
         rvalue++;
       }
     }
@@ -461,9 +462,9 @@ unsigned int BufferQueue::Clear() {
   unsigned int rvalue;
   rvalue = impl_->element_num_;
 
-  if (impl_->element_num_ > 0) { // free memory.
-    QUEUE_ELEMENT *elem = impl_->first_element_;
-    QUEUE_ELEMENT *next = impl_->first_element_;
+  if (impl_->element_num_ > 0) {  // free memory.
+    QUEUE_ELEMENT* elem = impl_->first_element_;
+    QUEUE_ELEMENT* next = impl_->first_element_;
 
     while (next) {
       if (next->dataStartAddress)
@@ -482,4 +483,4 @@ unsigned int BufferQueue::Clear() {
 
   return rvalue;
 }
-} // namespace akali
+}  // namespace akali

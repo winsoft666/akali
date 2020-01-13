@@ -27,7 +27,7 @@ namespace akali {
 // Initializes COM in the constructor (STA or MTA), and uninitializes COM in the
 // destructor.
 class AKALI_API ScopedCOMInitializer {
-public:
+ public:
   // Enum value provided to initialize the thread as an MTA instead of STA.
   enum SelectMTA { kMTA };
 
@@ -48,7 +48,7 @@ public:
 
   bool succeeded() const { return SUCCEEDED(hr_); }
 
-private:
+ private:
   void Initialize(COINIT init) {
 #ifndef NDEBUG
     thread_id_ = GetCurrentThreadId();
@@ -71,6 +71,6 @@ private:
   AKALI_DISALLOW_COPY_AND_ASSIGN(ScopedCOMInitializer);
 };
 
-} // namespace akali
+}  // namespace akali
 #endif
 #endif

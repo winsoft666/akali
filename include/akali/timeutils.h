@@ -31,12 +31,13 @@
 
 namespace akali {
 class AKALI_API Time {
-public:
+ public:
   Time();
-  std::string ToString(bool mill_precision = false, bool micro_precision = false,
+  std::string ToString(bool mill_precision = false,
+                       bool micro_precision = false,
                        bool nano_precision = false);
 
-public:
+ public:
   int year;
   int month;
   int day;
@@ -71,7 +72,7 @@ AKALI_API Time FILETIMEToUTC(FILETIME ft);
 AKALI_API long long UTCToTimeStamp(Time t);
 
 class AKALI_API TimerMeter {
-public:
+ public:
   TimerMeter() { lStartTime_ = std::clock(); }
 
   void Restart() { lStartTime_ = std::clock(); }
@@ -83,8 +84,8 @@ public:
 
   long ElapsedMin() const { return 1L; }
 
-private:
+ private:
   std::clock_t lStartTime_;
 };
-} // namespace akali
-#endif // AKALI_TIMEUTILS_H_
+}  // namespace akali
+#endif  // AKALI_TIMEUTILS_H_

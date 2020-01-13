@@ -42,9 +42,13 @@ namespace akali {
 //   NOTE: If the function fails to install the service, it prints the error
 //   in the standard output stream for users to diagnose the problem.
 //
-AKALI_API void InstallService(PWSTR pszServiceName, PWSTR pszDisplayName, PWSTR pszDecription,
-                                DWORD dwStartType, PWSTR pszDependencies, PWSTR pszAccount,
-                                PWSTR pszPassword);
+AKALI_API void InstallService(PWSTR pszServiceName,
+                              PWSTR pszDisplayName,
+                              PWSTR pszDecription,
+                              DWORD dwStartType,
+                              PWSTR pszDependencies,
+                              PWSTR pszAccount,
+                              PWSTR pszPassword);
 
 //
 //   FUNCTION: UninstallService
@@ -63,6 +67,6 @@ AKALI_API void UninstallService(PWSTR pszServiceName);
 AKALI_API void StartService(PWSTR pszServiceName);
 
 AKALI_API void StopService(PWSTR pszServiceName);
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // !AKALI_WIN_SERVICE_INSTALLER_H_
+#endif  // !AKALI_WIN_SERVICE_INSTALLER_H_

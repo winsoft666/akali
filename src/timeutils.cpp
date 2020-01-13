@@ -139,7 +139,6 @@ Time FILETIMEToUTC(FILETIME ft) {
 #endif
 
 long long UTCToTimeStamp(Time t) {
-
   struct tm tmUTC;
   tmUTC.tm_year = t.year - 1900;
   tmUTC.tm_mon = t.month - 1;
@@ -185,4 +184,4 @@ std::string Time::ToString(bool mill_precision, bool micro_precision, bool nano_
 
   return szString;
 }
-} // namespace akali
+}  // namespace akali

@@ -7,7 +7,7 @@
 #include <assert.h>
 
 namespace akali {
-bool InternetAvailabilityChecker::InternetConnectionAvailable(bool &avaliable) {
+bool InternetAvailabilityChecker::InternetConnectionAvailable(bool& avaliable) {
   CComPtr<INetworkListManager> manager;
   HRESULT hr = manager.CoCreateInstance(CLSID_NetworkListManager);
   assert(("initialize COM first, suggest akali::ScopedCOMInitializer", SUCCEEDED(hr)));
@@ -29,5 +29,5 @@ bool InternetAvailabilityChecker::InternetConnectionAvailable(bool &avaliable) {
   avaliable = (is_connected != FALSE);
   return true;
 }
-} // namespace akali
+}  // namespace akali
 #endif

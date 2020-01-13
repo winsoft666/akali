@@ -84,4 +84,4 @@ namespace fs = std::filesystem;
 #pragma comment(lib, "DbgHelp.lib")
 #endif
 
-#endif // !AKALI_H__
+#endif  // !AKALI_H__

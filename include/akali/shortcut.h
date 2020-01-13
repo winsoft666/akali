@@ -43,29 +43,29 @@ struct ShortcutProperties {
 
   ShortcutProperties() : icon_index(-1), options(0U) {}
 
-  void SetTarget(const std::wstring &target_in) {
+  void SetTarget(const std::wstring& target_in) {
     target = target_in;
     options |= PROPERTIES_TARGET;
   }
 
-  void SetWorkingDir(const std::wstring &working_dir_in) {
+  void SetWorkingDir(const std::wstring& working_dir_in) {
     working_dir = working_dir_in;
     options |= PROPERTIES_WORKING_DIR;
   }
 
-  void SetArguments(const std::wstring &arguments_in) {
+  void SetArguments(const std::wstring& arguments_in) {
     // Size restriction as per MSDN at http://goo.gl/TJ7q5.
     arguments = arguments_in;
     options |= PROPERTIES_ARGUMENTS;
   }
 
-  void SetDescription(const std::wstring &description_in) {
+  void SetDescription(const std::wstring& description_in) {
     // Size restriction as per MSDN at http://goo.gl/OdNQq.
     description = description_in;
     options |= PROPERTIES_DESCRIPTION;
   }
 
-  void SetIcon(const std::wstring &icon_in, int icon_index_in) {
+  void SetIcon(const std::wstring& icon_in, int icon_index_in) {
     icon = icon_in;
     icon_index = icon_index_in;
     options |= PROPERTIES_ICON;
@@ -90,19 +90,19 @@ struct ShortcutProperties {
   uint32_t options;
 };
 
-AKALI_API bool CreateOrUpdateShortcutLink(const std::wstring &shortcut_path,
-                                            const ShortcutProperties &properties,
-                                            ShortcutOperation operation);
+AKALI_API bool CreateOrUpdateShortcutLink(const std::wstring& shortcut_path,
+                                          const ShortcutProperties& properties,
+                                          ShortcutOperation operation);
 
-AKALI_API bool ResolveShortcut(const std::wstring &shortcut_path, ShortcutProperties &properties);
+AKALI_API bool ResolveShortcut(const std::wstring& shortcut_path, ShortcutProperties& properties);
 
 // Pins a shortcut to the Windows 7 taskbar. The shortcut file must already
 // exist and be a shortcut that points to an executable.
-AKALI_API bool TaskbarPinShortcutLink(const wchar_t *shortcut);
+AKALI_API bool TaskbarPinShortcutLink(const wchar_t* shortcut);
 
 // Unpins a shortcut from the Windows 7 taskbar. The shortcut must exist and
 // already be pinned to the taskbar.
-AKALI_API bool TaskbarUnpinShortcutLink(const wchar_t *shortcut);
-} // namespace akali
+AKALI_API bool TaskbarUnpinShortcutLink(const wchar_t* shortcut);
+}  // namespace akali
 #endif
-#endif // !AKALI_SHORTCUT_H__
+#endif  // !AKALI_SHORTCUT_H__

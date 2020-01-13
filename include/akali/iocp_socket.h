@@ -56,7 +56,7 @@ typedef struct _PER_IO_CONTEXT {
 
   void ResetBuffer() { ZeroMemory(buffer, MAX_BUFFER_LEN); }
 
-  const char *GetBuffer() const { return wsa_buffer.buf; }
+  const char* GetBuffer() const { return wsa_buffer.buf; }
 
   ULONG GetBufferLength() const { return wsa_buffer.len; }
 
@@ -65,7 +65,7 @@ typedef struct _PER_IO_CONTEXT {
 typedef struct _PER_SOCKET_CONTEXT {
   SOCKET socket;
   SOCKADDR_IN client_addr;
-  std::vector<_PER_IO_CONTEXT *> io_ctx_array;
+  std::vector<_PER_IO_CONTEXT*> io_ctx_array;
 
   _PER_SOCKET_CONTEXT() {
     socket = INVALID_SOCKET;
@@ -85,16 +85,16 @@ typedef struct _PER_SOCKET_CONTEXT {
     io_ctx_array.clear();
   }
 
-  _PER_IO_CONTEXT *GetNewIoContext() {
-    _PER_IO_CONTEXT *p = new _PER_IO_CONTEXT;
+  _PER_IO_CONTEXT* GetNewIoContext() {
+    _PER_IO_CONTEXT* p = new _PER_IO_CONTEXT;
 
     io_ctx_array.push_back(p);
 
     return p;
   }
 
-  void RemoveContext(_PER_IO_CONTEXT *pContext) {
-    for (std::vector<_PER_IO_CONTEXT *>::iterator it = io_ctx_array.begin();
+  void RemoveContext(_PER_IO_CONTEXT* pContext) {
+    for (std::vector<_PER_IO_CONTEXT*>::iterator it = io_ctx_array.begin();
          it != io_ctx_array.end(); it++) {
       if (pContext == *it) {
         delete pContext;
@@ -108,12 +108,13 @@ typedef struct _PER_SOCKET_CONTEXT {
 
 AKALI_API int GetNumberOfProcesser();
 AKALI_API HANDLE CreateNewCompletionPort();
-AKALI_API BOOL AssociateDeviceWithCompletionPort(HANDLE completion_port, HANDLE device,
-                                                   DWORD completion_key);
+AKALI_API BOOL AssociateDeviceWithCompletionPort(HANDLE completion_port,
+                                                 HANDLE device,
+                                                 DWORD completion_key);
 
 AKALI_API LPFN_ACCEPTEX GetAcceptExFnPointer(SOCKET s);
 AKALI_API LPFN_CONNECTEX GetConnectExFnPointer(SOCKET s);
 AKALI_API LPFN_GETACCEPTEXSOCKADDRS GetAcceptExSockAddrsFnPointer(SOCKET s);
-} // namespace akali
+}  // namespace akali
 #endif
-#endif // AKALI_IOCP_H_
+#endif  // AKALI_IOCP_H_

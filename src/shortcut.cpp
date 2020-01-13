@@ -26,20 +26,21 @@
 
 namespace akali {
 namespace {
-void InitializeShortcutInterfaces(const wchar_t *shortcut, IShellLink **i_shell_link,
-                                  IPersistFile **i_persist_file) {
+void InitializeShortcutInterfaces(const wchar_t* shortcut,
+                                  IShellLink** i_shell_link,
+                                  IPersistFile** i_persist_file) {
   if ((*i_shell_link))
     (*i_shell_link)->Release();
   if ((*i_persist_file))
     (*i_persist_file)->Release();
 
   HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
-                                  (void **)i_shell_link);
+                                  (void**)i_shell_link);
   if (FAILED(hres)) {
     return;
   }
 
-  hres = (*i_shell_link)->QueryInterface(IID_IPersistFile, (void **)i_persist_file);
+  hres = (*i_shell_link)->QueryInterface(IID_IPersistFile, (void**)i_persist_file);
   if (FAILED(hres)) {
     (*i_shell_link)->Release();
     return;
@@ -52,44 +53,44 @@ void InitializeShortcutInterfaces(const wchar_t *shortcut, IShellLink **i_shell_
     }
   }
 }
-} // namespace
+}  // namespace
 
-bool CreateOrUpdateShortcutLink(const std::wstring &shortcut_path,
-                                const ShortcutProperties &properties, ShortcutOperation operation) {
+bool CreateOrUpdateShortcutLink(const std::wstring& shortcut_path,
+                                const ShortcutProperties& properties,
+                                ShortcutOperation operation) {
   // A target is required unless |operation| is SHORTCUT_UPDATE_EXISTING.
   if (operation != SHORTCUT_UPDATE_EXISTING &&
       !(properties.options & ShortcutProperties::PROPERTIES_TARGET)) {
     return false;
   }
 
-  
   bool shortcut_existed = filesystem::exists(shortcut_path);
 
   // Interfaces to the old shortcut when replacing an existing shortcut.
-  IShellLink *old_i_shell_link = NULL;
-  IPersistFile *old_i_persist_file = NULL;
+  IShellLink* old_i_shell_link = NULL;
+  IPersistFile* old_i_persist_file = NULL;
 
   // Interfaces to the shortcut being created/updated.
-  IShellLink *i_shell_link = NULL;
-  IPersistFile *i_persist_file = NULL;
+  IShellLink* i_shell_link = NULL;
+  IPersistFile* i_persist_file = NULL;
   switch (operation) {
-  case SHORTCUT_CREATE_ALWAYS:
-    InitializeShortcutInterfaces(NULL, &i_shell_link, &i_persist_file);
-    break;
-  case SHORTCUT_UPDATE_EXISTING:
-    InitializeShortcutInterfaces(shortcut_path.c_str(), &i_shell_link, &i_persist_file);
-    break;
-  case SHORTCUT_REPLACE_EXISTING:
-    InitializeShortcutInterfaces(shortcut_path.c_str(), &old_i_shell_link, &old_i_persist_file);
-    // Confirm |shortcut_path| exists and is a shortcut by verifying
-    // |old_i_persist_file| was successfully initialized in the call above. If
-    // so, initialize the interfaces to begin writing a new shortcut (to
-    // overwrite the current one if successful).
-    if (old_i_persist_file)
+    case SHORTCUT_CREATE_ALWAYS:
       InitializeShortcutInterfaces(NULL, &i_shell_link, &i_persist_file);
-    break;
-  default:
-    assert(false);
+      break;
+    case SHORTCUT_UPDATE_EXISTING:
+      InitializeShortcutInterfaces(shortcut_path.c_str(), &i_shell_link, &i_persist_file);
+      break;
+    case SHORTCUT_REPLACE_EXISTING:
+      InitializeShortcutInterfaces(shortcut_path.c_str(), &old_i_shell_link, &old_i_persist_file);
+      // Confirm |shortcut_path| exists and is a shortcut by verifying
+      // |old_i_persist_file| was successfully initialized in the call above. If
+      // so, initialize the interfaces to begin writing a new shortcut (to
+      // overwrite the current one if successful).
+      if (old_i_persist_file)
+        InitializeShortcutInterfaces(NULL, &i_shell_link, &i_persist_file);
+      break;
+    default:
+      assert(false);
   }
 
   // Return false immediately upon failure to initialize shortcut interfaces.
@@ -158,18 +159,18 @@ bool CreateOrUpdateShortcutLink(const std::wstring &shortcut_path,
   return succeeded;
 }
 
-bool ResolveShortcut(const std::wstring &shortcut_path, ShortcutProperties &properties) {
+bool ResolveShortcut(const std::wstring& shortcut_path, ShortcutProperties& properties) {
   HRESULT result;
-  IShellLink *i_shell_link = NULL;
-  IPersistFile *persist = NULL;
+  IShellLink* i_shell_link = NULL;
+  IPersistFile* persist = NULL;
 
   HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
-                                  (void **)&i_shell_link);
+                                  (void**)&i_shell_link);
   if (FAILED(hres)) {
     return false;
   }
 
-  hres = i_shell_link->QueryInterface(IID_IPersistFile, (void **)&persist);
+  hres = i_shell_link->QueryInterface(IID_IPersistFile, (void**)&persist);
   if (FAILED(hres)) {
     i_shell_link->Release();
     return false;
@@ -222,7 +223,7 @@ bool ResolveShortcut(const std::wstring &shortcut_path, ShortcutProperties &prop
   return true;
 }
 
-bool TaskbarPinShortcutLink(const wchar_t *shortcut) {
+bool TaskbarPinShortcutLink(const wchar_t* shortcut) {
   OSVersion osver;
   if (!osver.AtLeastWinVista())
     return false;
@@ -231,7 +232,7 @@ bool TaskbarPinShortcutLink(const wchar_t *shortcut) {
   return result > 32;
 }
 
-bool TaskbarUnpinShortcutLink(const wchar_t *shortcut) {
+bool TaskbarUnpinShortcutLink(const wchar_t* shortcut) {
   OSVersion osver;
   if (!osver.AtLeastWinVista())
     return false;
@@ -239,5 +240,5 @@ bool TaskbarUnpinShortcutLink(const wchar_t *shortcut) {
   int result = reinterpret_cast<int>(ShellExecute(NULL, L"taskbarunpin", shortcut, NULL, NULL, 0));
   return result > 32;
 }
-} // namespace akali
+}  // namespace akali
 #endif

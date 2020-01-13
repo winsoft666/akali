@@ -24,7 +24,7 @@
 
 namespace akali {
 class ScheduleTask::ScheduleTaskImpl {
-public:
+ public:
   ScheduleTaskImpl() {
     m_lpITS = NULL;
     m_lpRootFolder = NULL;
@@ -33,7 +33,7 @@ public:
     }
 
     hr = ::CoCreateInstance(CLSID_TaskScheduler, NULL, CLSCTX_INPROC_SERVER, IID_ITaskService,
-                            (LPVOID *)(&m_lpITS));
+                            (LPVOID*)(&m_lpITS));
     if (FAILED(hr)) {
     }
 
@@ -56,21 +56,24 @@ public:
     ::CoUninitialize();
   }
 
-  BOOL NewLoginTriggerTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath, LPCTSTR pszParameters,
-                           LPCTSTR pszDescription, LPCTSTR pszAuthor) {
+  BOOL NewLoginTriggerTask(LPCTSTR pszTaskName,
+                           LPCTSTR pszProgramPath,
+                           LPCTSTR pszParameters,
+                           LPCTSTR pszDescription,
+                           LPCTSTR pszAuthor) {
     if (NULL == m_lpRootFolder) {
       return FALSE;
     }
 
     Delete(pszTaskName);
 
-    ITaskDefinition *pTaskDefinition = NULL;
+    ITaskDefinition* pTaskDefinition = NULL;
     HRESULT hr = m_lpITS->NewTask(0, &pTaskDefinition);
     if (FAILED(hr)) {
       return FALSE;
     }
 
-    IRegistrationInfo *pRegInfo = NULL;
+    IRegistrationInfo* pRegInfo = NULL;
     CComVariant variantAuthor(NULL);
     variantAuthor = pszAuthor;
     CComVariant variantDescription(NULL);
@@ -84,7 +87,7 @@ public:
     hr = pRegInfo->put_Description(variantDescription.bstrVal);
     pRegInfo->Release();
 
-    IPrincipal *pPrincipal = NULL;
+    IPrincipal* pPrincipal = NULL;
     hr = pTaskDefinition->get_Principal(&pPrincipal);
     if (FAILED(hr)) {
       return FALSE;
@@ -94,7 +97,7 @@ public:
     hr = pPrincipal->put_RunLevel(TASK_RUNLEVEL_HIGHEST);
     pPrincipal->Release();
 
-    ITaskSettings *pSettting = NULL;
+    ITaskSettings* pSettting = NULL;
     hr = pTaskDefinition->get_Settings(&pSettting);
     if (FAILED(hr)) {
       return FALSE;
@@ -107,20 +110,20 @@ public:
     hr = pSettting->put_MultipleInstances(TASK_INSTANCES_PARALLEL);
     pSettting->Release();
 
-    IActionCollection *pActionCollect = NULL;
+    IActionCollection* pActionCollect = NULL;
     hr = pTaskDefinition->get_Actions(&pActionCollect);
     if (FAILED(hr)) {
       return FALSE;
     }
-    IAction *pAction = NULL;
+    IAction* pAction = NULL;
 
     hr = pActionCollect->Create(TASK_ACTION_EXEC, &pAction);
     pActionCollect->Release();
 
     CComVariant variantProgramPath(NULL);
     CComVariant variantParameters(NULL);
-    IExecAction *pExecAction = NULL;
-    hr = pAction->QueryInterface(IID_IExecAction, (PVOID *)(&pExecAction));
+    IExecAction* pExecAction = NULL;
+    hr = pAction->QueryInterface(IID_IExecAction, (PVOID*)(&pExecAction));
     if (FAILED(hr)) {
       pAction->Release();
       return FALSE;
@@ -133,19 +136,19 @@ public:
     pExecAction->put_Arguments(variantParameters.bstrVal);
     pExecAction->Release();
 
-    ITriggerCollection *pTriggers = NULL;
+    ITriggerCollection* pTriggers = NULL;
     hr = pTaskDefinition->get_Triggers(&pTriggers);
     if (FAILED(hr)) {
       return FALSE;
     }
 
-    ITrigger *pTrigger = NULL;
+    ITrigger* pTrigger = NULL;
     hr = pTriggers->Create(TASK_TRIGGER_LOGON, &pTrigger);
     if (FAILED(hr)) {
       return FALSE;
     }
 
-    IRegisteredTask *pRegisteredTask = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
     CComVariant variantTaskName(NULL);
     variantTaskName = pszTaskName;
     hr = m_lpRootFolder->RegisterTaskDefinition(
@@ -197,7 +200,7 @@ public:
     CComVariant variantTaskName(NULL);
     CComVariant variantEnable(NULL);
     variantTaskName = pszTaskName;
-    IRegisteredTask *pRegisteredTask = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
 
     hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
     if (FAILED(hr) || (NULL == pRegisteredTask)) {
@@ -216,7 +219,7 @@ public:
     CComVariant variantTaskName(NULL);
     CComVariant variantEnable(NULL);
     variantTaskName = pszTaskName;
-    IRegisteredTask *pRegisteredTask = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
 
     hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
     if (FAILED(hr) || (NULL == pRegisteredTask)) {
@@ -248,7 +251,7 @@ public:
     variantTaskName = pszTaskName;
     variantParameters = pszParam;
 
-    IRegisteredTask *pRegisteredTask = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
     hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
     if (FAILED(hr) || (NULL == pRegisteredTask)) {
       return FALSE;
@@ -272,7 +275,7 @@ public:
     CComVariant variantTaskName(NULL);
     CComVariant variantEnable(NULL);
     variantTaskName = pszTaskName;
-    IRegisteredTask *pRegisteredTask = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
 
     hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
     if (FAILED(hr) || (NULL == pRegisteredTask)) {
@@ -297,7 +300,7 @@ public:
     CComVariant variantEnable(NULL);
     variantTaskName = pszTaskName;
     variantEnable = bEnable;
-    IRegisteredTask *pRegisteredTask = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
 
     hr = m_lpRootFolder->GetTask(variantTaskName.bstrVal, &pRegisteredTask);
     if (FAILED(hr) || (NULL == pRegisteredTask)) {
@@ -317,11 +320,11 @@ public:
     HRESULT hr = S_OK;
     CComVariant variantTaskName(NULL);
     variantTaskName = pszTaskName;
-    IRegisteredTask *pRegisteredTask = NULL;
-    ITaskDefinition *pTaskDefinition = NULL;
-    IActionCollection *pActionColl = NULL;
-    IAction *pAction = NULL;
-    IExecAction *pExecAction = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
+    ITaskDefinition* pTaskDefinition = NULL;
+    IActionCollection* pActionColl = NULL;
+    IAction* pAction = NULL;
+    IExecAction* pExecAction = NULL;
 
     bool bRet = false;
     do {
@@ -341,7 +344,7 @@ public:
       if (FAILED(hr) || !pAction)
         break;
 
-      hr = pAction->QueryInterface(IID_IExecAction, (PVOID *)(&pExecAction));
+      hr = pAction->QueryInterface(IID_IExecAction, (PVOID*)(&pExecAction));
       if (FAILED(hr) || !pExecAction)
         break;
 
@@ -378,11 +381,11 @@ public:
     HRESULT hr = S_OK;
     CComVariant variantTaskName(NULL);
     variantTaskName = pszTaskName;
-    IRegisteredTask *pRegisteredTask = NULL;
-    ITaskDefinition *pTaskDefinition = NULL;
-    IActionCollection *pActionColl = NULL;
-    IAction *pAction = NULL;
-    IExecAction *pExecAction = NULL;
+    IRegisteredTask* pRegisteredTask = NULL;
+    ITaskDefinition* pTaskDefinition = NULL;
+    IActionCollection* pActionColl = NULL;
+    IAction* pAction = NULL;
+    IExecAction* pExecAction = NULL;
 
     bool bRet = false;
     do {
@@ -402,7 +405,7 @@ public:
       if (FAILED(hr) || !pAction)
         break;
 
-      hr = pAction->QueryInterface(IID_IExecAction, (PVOID *)(&pExecAction));
+      hr = pAction->QueryInterface(IID_IExecAction, (PVOID*)(&pExecAction));
       if (FAILED(hr) || !pExecAction)
         break;
 
@@ -432,29 +435,37 @@ public:
     return bRet;
   }
 
-protected:
-  ITaskService *m_lpITS;
-  ITaskFolder *m_lpRootFolder;
+ protected:
+  ITaskService* m_lpITS;
+  ITaskFolder* m_lpRootFolder;
 };
 
 ScheduleTask::ScheduleTask() : impl_(new ScheduleTaskImpl()) {}
 
-ScheduleTask::~ScheduleTask() { SAFE_DELETE(impl_); }
+ScheduleTask::~ScheduleTask() {
+  SAFE_DELETE(impl_);
+}
 
-bool ScheduleTask::Delete(LPCTSTR pszTaskName) { return impl_->Delete(pszTaskName) == TRUE; }
+bool ScheduleTask::Delete(LPCTSTR pszTaskName) {
+  return impl_->Delete(pszTaskName) == TRUE;
+}
 
 bool ScheduleTask::DeleteFolder(LPCTSTR pszFolderName) {
   return impl_->DeleteFolder(pszFolderName) == TRUE;
 }
 
-bool ScheduleTask::NewLoginTriggerTask(LPCTSTR pszTaskName, LPCTSTR pszProgramPath,
-                                       LPCTSTR pszParameters, LPCTSTR pszDescription,
+bool ScheduleTask::NewLoginTriggerTask(LPCTSTR pszTaskName,
+                                       LPCTSTR pszProgramPath,
+                                       LPCTSTR pszParameters,
+                                       LPCTSTR pszDescription,
                                        LPCTSTR pszAuthor) {
   return impl_->NewLoginTriggerTask(pszTaskName, pszProgramPath, pszParameters, pszDescription,
                                     pszAuthor) == TRUE;
 }
 
-bool ScheduleTask::IsExist(LPCTSTR pszTaskName) { return impl_->IsExist(pszTaskName) == TRUE; }
+bool ScheduleTask::IsExist(LPCTSTR pszTaskName) {
+  return impl_->IsExist(pszTaskName) == TRUE;
+}
 
 bool ScheduleTask::IsTaskValid(LPCTSTR pszTaskName) {
   return impl_->IsTaskValid(pszTaskName) == TRUE;
@@ -464,7 +475,9 @@ bool ScheduleTask::Run(LPCTSTR pszTaskName, LPCTSTR pszParam) {
   return impl_->Run(pszTaskName, pszParam) == TRUE;
 }
 
-bool ScheduleTask::IsEnable(LPCTSTR pszTaskName) { return impl_->IsEnable(pszTaskName) == TRUE; }
+bool ScheduleTask::IsEnable(LPCTSTR pszTaskName) {
+  return impl_->IsEnable(pszTaskName) == TRUE;
+}
 
 bool ScheduleTask::SetEnable(LPCTSTR pszTaskName, bool bEnable) {
   return impl_->SetEnable(pszTaskName, bEnable) == TRUE;
@@ -478,5 +491,5 @@ bool ScheduleTask::GetParameters(LPCTSTR pszTaskName, long lActionIndex, LPTSTR 
   return impl_->GetParameters(pszTaskName, lActionIndex, pszParameters);
 }
 
-} // namespace akali
+}  // namespace akali
 #endif

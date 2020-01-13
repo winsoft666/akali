@@ -49,7 +49,8 @@ inline wchar_t EasyCharToUpperW(wchar_t in) {
 template <typename T, typename Func>
 typename std::enable_if<std::is_same<char, T>::value || std::is_same<wchar_t, T>::value,
                         std::basic_string<T, std::char_traits<T>, std::allocator<T>>>::type
-StringCaseConvert(const std::basic_string<T, std::char_traits<T>, std::allocator<T>> &str, Func func) {
+StringCaseConvert(const std::basic_string<T, std::char_traits<T>, std::allocator<T>>& str,
+                  Func func) {
   std::basic_string<T, std::char_traits<T>, std::allocator<T>> ret = str;
   std::transform(ret.begin(), ret.end(), ret.begin(), func);
   return ret;
@@ -60,7 +61,7 @@ typename std::enable_if<
     std::is_same<std::string, T>::value || std::is_same<std::wstring, T>::value ||
         std::is_same<std::u16string, T>::value || std::is_same<std::u32string, T>::value,
     std::vector<T>>::type
-StringSplit(const T &src, const T &delimiter, bool include_empty_string = true) {
+StringSplit(const T& src, const T& delimiter, bool include_empty_string = true) {
   std::vector<T> fields;
   typename T::size_type offset = 0;
   typename T::size_type pos = src.find(delimiter, 0);
@@ -78,5 +79,5 @@ StringSplit(const T &src, const T &delimiter, bool include_empty_string = true) 
     fields.push_back(t);
   return fields;
 }
-} // namespace akali
-#endif // !AKALI_STRING_HELPER_H__
+}  // namespace akali
+#endif  // !AKALI_STRING_HELPER_H__

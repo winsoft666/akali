@@ -22,29 +22,30 @@
 
 namespace akali {
 typedef struct QueueElem {
-  void *dataStartAddress; // start address of the data that we allocated.
-  void *dataReadAddress; // address of the data in buffer. Next time, we get data from this address.
-  unsigned int size;     // the size of the data.
-  struct QueueElem *prev;
-  struct QueueElem *next;
+  void* dataStartAddress;  // start address of the data that we allocated.
+  void*
+      dataReadAddress;  // address of the data in buffer. Next time, we get data from this address.
+  unsigned int size;    // the size of the data.
+  struct QueueElem* prev;
+  struct QueueElem* next;
 } QUEUE_ELEMENT;
 
 class AKALI_API BufferQueue {
-public:
-  explicit BufferQueue(const std::string &queue_name = "");
+ public:
+  explicit BufferQueue(const std::string& queue_name = "");
   ~BufferQueue();
 
-  bool AddToFront(void *pSrcData, unsigned int nSrcDataSize);
+  bool AddToFront(void* pSrcData, unsigned int nSrcDataSize);
 
-  bool AddToLast(void *pSrcData, unsigned int nSrcDataSize);
+  bool AddToLast(void* pSrcData, unsigned int nSrcDataSize);
 
-  unsigned int PopFromFront(void *pDestData, unsigned int nSize);
+  unsigned int PopFromFront(void* pDestData, unsigned int nSize);
 
-  unsigned int PopFromLast(void *pDestData, unsigned int nSize);
+  unsigned int PopFromLast(void* pDestData, unsigned int nSize);
 
-  unsigned int GetFromFront(void *pDestData, unsigned int nSize);
+  unsigned int GetFromFront(void* pDestData, unsigned int nSize);
 
-  unsigned int GetFromLast(void *pDestData, unsigned int nSize);
+  unsigned int GetFromLast(void* pDestData, unsigned int nSize);
 
   unsigned int Clear();
 
@@ -52,22 +53,23 @@ public:
 
   unsigned int GetTotalDataSize() const;
 
-  unsigned int PopDataCrossElement(void *pOutputBuffer, unsigned int nBytesToRead,
-                                   int *pBufferIsThrown);
+  unsigned int PopDataCrossElement(void* pOutputBuffer,
+                                   unsigned int nBytesToRead,
+                                   int* pBufferIsThrown);
 
   unsigned int RemoveData(unsigned int nBytesToRemove);
 
   unsigned int GetFrontDataSize();
   unsigned int GetLastDataSize();
 
-  int64_t ToOneBuffer(char **ppBuf) const;
-  int64_t ToOneBufferWithNullEnding(char **ppBuf) const;
+  int64_t ToOneBuffer(char** ppBuf) const;
+  int64_t ToOneBufferWithNullEnding(char** ppBuf) const;
 
-private:
+ private:
   class BufferQueueImpl;
-  BufferQueueImpl *impl_;
+  BufferQueueImpl* impl_;
 
   AKALI_DISALLOW_COPY_AND_ASSIGN(BufferQueue);
 };
-} // namespace akali
-#endif //! AKALI_BUFFER_QUEUE_H__
+}  // namespace akali
+#endif  //! AKALI_BUFFER_QUEUE_H__

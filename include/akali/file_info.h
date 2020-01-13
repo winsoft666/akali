@@ -30,14 +30,14 @@
 
 namespace akali {
 class AKALI_API FileInfo {
-public:
+ public:
   FileInfo();
   ~FileInfo();
 
   bool Create(HMODULE hModule = NULL);
-  bool Create(const std::wstring &strFileName);
+  bool Create(const std::wstring& strFileName);
 
-public:
+ public:
   WORD GetFileVersion(int nIndex) const;
   WORD GetProductVersion(int nIndex) const;
   DWORD GetFileFlagsMask() const;
@@ -67,12 +67,15 @@ public:
   FILETIME GetLastAccessTime() const;
   FILETIME GetLastWriteTime() const;
 
-private:
+ private:
   virtual void Reset();
-  bool GetTranslationId(LPVOID lpData, UINT unBlockSize, WORD wLangId, DWORD &dwId,
+  bool GetTranslationId(LPVOID lpData,
+                        UINT unBlockSize,
+                        WORD wLangId,
+                        DWORD& dwId,
                         BOOL bPrimaryEnough = FALSE);
 
-private:
+ private:
   VS_FIXEDFILEINFO m_FileInfo;
 
   std::wstring m_strCompanyName;
@@ -92,6 +95,6 @@ private:
   FILETIME m_ftLastAccessTime;
   FILETIME m_ftLastWriteTime;
 };
-} // namespace akali
+}  // namespace akali
 #endif
 #endif

@@ -16,7 +16,7 @@
 
 #ifdef AKALI_WIN
 #include <tchar.h>
-#include <shlobj.h> // for IsUserAnAdmin
+#include <shlobj.h>  // for IsUserAnAdmin
 #include <Shlwapi.h>
 #include <strsafe.h>
 #include <WtsApi32.h>
@@ -56,7 +56,7 @@ BOOL ProcessFinder::ProcessFirst(PPROCESSENTRY32 ppe) const {
   BOOL fOk = Process32First(m_hSnapShot, ppe);
 
   if (fOk && (ppe->th32ProcessID == 0))
-    fOk = ProcessNext(ppe); // remove the "[System Process]" (PID = 0)
+    fOk = ProcessNext(ppe);  // remove the "[System Process]" (PID = 0)
 
   return fOk;
 }
@@ -65,7 +65,7 @@ BOOL ProcessFinder::ProcessNext(PPROCESSENTRY32 ppe) const {
   BOOL fOk = Process32Next(m_hSnapShot, ppe);
 
   if (fOk && (ppe->th32ProcessID == 0))
-    fOk = ProcessNext(ppe); // remove the "[System Process]" (PID = 0)
+    fOk = ProcessNext(ppe);  // remove the "[System Process]" (PID = 0)
 
   return fOk;
 }
@@ -173,7 +173,7 @@ BOOL EnablePrivilege(LPCTSTR szPrivilege, BOOL fEnable) {
   return fOk;
 }
 
-BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin) {
+BOOL CheckProcessUserIsAdmin(BOOL* pIsAdmin) {
   BOOL bResult = FALSE;
   HANDLE hToken = FALSE;
   DWORD dwSize;
@@ -191,7 +191,7 @@ BOOL CheckProcessUserIsAdmin(BOOL *pIsAdmin) {
       CreateWellKnownSid(WinBuiltinAdministratorsSid, NULL, &adminSID, &dwSize);
 
       HANDLE hUnfilteredToken = NULL;
-      GetTokenInformation(hToken, TokenLinkedToken, (VOID *)&hUnfilteredToken, sizeof(HANDLE),
+      GetTokenInformation(hToken, TokenLinkedToken, (VOID*)&hUnfilteredToken, sizeof(HANDLE),
                           &dwSize);
 
       if (CheckTokenMembership(hUnfilteredToken, &adminSID, pIsAdmin))
@@ -296,17 +296,17 @@ BOOL CreateUserProcess(PCTSTR pszFilePath) {
 
   TCHAR szTmp[1024] = {0};
   StringCchCopy(szTmp, 1024, pszFilePath);
-  BOOL ret = CreateProcessAsUserW(hUserTokenDup,   // client's access token
-                                  NULL,            // file to execute
-                                  szTmp,           // command line
-                                  NULL,            // pointer to process SECURITY_ATTRIBUTES
-                                  NULL,            // pointer to thread SECURITY_ATTRIBUTES
-                                  FALSE,           // handles are not inheritable
-                                  dwCreationFlags, // creation flags
-                                  pEnv,            // pointer to new environment block
-                                  NULL,            // name of current directory
-                                  &si,             // pointer to STARTUPINFO structure
-                                  &pi              // receives information about new process
+  BOOL ret = CreateProcessAsUserW(hUserTokenDup,    // client's access token
+                                  NULL,             // file to execute
+                                  szTmp,            // command line
+                                  NULL,             // pointer to process SECURITY_ATTRIBUTES
+                                  NULL,             // pointer to thread SECURITY_ATTRIBUTES
+                                  FALSE,            // handles are not inheritable
+                                  dwCreationFlags,  // creation flags
+                                  pEnv,             // pointer to new environment block
+                                  NULL,             // name of current directory
+                                  &si,              // pointer to STARTUPINFO structure
+                                  &pi               // receives information about new process
   );
 
   if (hProcess)
@@ -330,7 +330,7 @@ BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
   GetVersionEx(&VersionTmp);
   BOOL res = FALSE;
 
-  if (VersionTmp.dwMajorVersion >= 6) { // vista above.
+  if (VersionTmp.dwMajorVersion >= 6) {  // vista above.
     BOOL(WINAPI * pfnChangeMessageFilterEx)
     (HWND, UINT, DWORD, PCHANGEFILTERSTRUCT);
     BOOL(WINAPI * pfnChangeMessageFilter)(UINT, DWORD);
@@ -341,7 +341,7 @@ BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
     HINSTANCE hlib = LoadLibrary(_T("user32.dll"));
 
     if (hlib != NULL) {
-      (FARPROC &)pfnChangeMessageFilterEx = GetProcAddress(hlib, "ChangeWindowMessageFilterEx");
+      (FARPROC&)pfnChangeMessageFilterEx = GetProcAddress(hlib, "ChangeWindowMessageFilterEx");
 
       if (pfnChangeMessageFilterEx != NULL && hWnd != NULL) {
         res = pfnChangeMessageFilterEx(hWnd, uMessageID, (bAllow ? MSGFLT_ADD : MSGFLT_REMOVE),
@@ -350,7 +350,7 @@ BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
 
       // If failed, try again.
       if (!res) {
-        (FARPROC &)pfnChangeMessageFilter = GetProcAddress(hlib, "ChangeWindowMessageFilter");
+        (FARPROC&)pfnChangeMessageFilter = GetProcAddress(hlib, "ChangeWindowMessageFilter");
 
         if (pfnChangeMessageFilter != NULL) {
           res = pfnChangeMessageFilter(uMessageID, (bAllow ? MSGFLT_ADD : MSGFLT_REMOVE));
@@ -368,5 +368,5 @@ BOOL UIPIMsgFilter(HWND hWnd, UINT uMessageID, BOOL bAllow) {
 
   return res;
 }
-} // namespace akali
+}  // namespace akali
 #endif

@@ -27,12 +27,12 @@
 
 namespace akali {
 
-void TraceMsgW(const wchar_t *lpFormat, ...) {
+void TraceMsgW(const wchar_t* lpFormat, ...) {
   if (!lpFormat)
     return;
 
 #ifdef AKALI_WIN
-  wchar_t *pMsgBuffer = NULL;
+  wchar_t* pMsgBuffer = NULL;
   unsigned int iMsgBufCount = 0;
 
   va_list arglist;
@@ -47,7 +47,7 @@ void TraceMsgW(const wchar_t *lpFormat, ...) {
       pMsgBuffer = NULL;
     }
 
-    pMsgBuffer = (wchar_t *)malloc(iMsgBufCount * sizeof(wchar_t));
+    pMsgBuffer = (wchar_t*)malloc(iMsgBufCount * sizeof(wchar_t));
 
     if (!pMsgBuffer) {
       break;
@@ -77,12 +77,12 @@ void TraceMsgW(const wchar_t *lpFormat, ...) {
 #endif
 }
 
-void TraceMsgA(const char *lpFormat, ...) {
+void TraceMsgA(const char* lpFormat, ...) {
   if (!lpFormat)
     return;
 
 #ifdef AKALI_WIN
-  char *pMsgBuffer = NULL;
+  char* pMsgBuffer = NULL;
   unsigned int iMsgBufCount = 0;
 
   va_list arglist;
@@ -97,7 +97,7 @@ void TraceMsgA(const char *lpFormat, ...) {
       pMsgBuffer = NULL;
     }
 
-    pMsgBuffer = (char *)malloc(iMsgBufCount * sizeof(char));
+    pMsgBuffer = (char*)malloc(iMsgBufCount * sizeof(char));
 
     if (!pMsgBuffer) {
       break;
@@ -126,4 +126,4 @@ void TraceMsgA(const char *lpFormat, ...) {
   printf("%s\n", msgBuf);
 #endif
 }
-} // namespace akali
+}  // namespace akali

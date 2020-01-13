@@ -20,12 +20,12 @@
 #include "akali/akali_export.h"
 
 namespace akali {
-AKALI_API std::string GetStringMd5(const void *buffer, unsigned int buffer_size);
+AKALI_API std::string GetStringMd5(const void* buffer, unsigned int buffer_size);
 
 #ifdef AKALI_WIN
-AKALI_API std::string GetFileMd5(const std::wstring &file_path);
+AKALI_API std::string GetFileMd5(const std::wstring& file_path);
 #else
-AKALI_API std::string GetFileMd5(const std::string &file_path);
+AKALI_API std::string GetFileMd5(const std::string& file_path);
 #endif
-} // namespace akali
+}  // namespace akali
 #endif

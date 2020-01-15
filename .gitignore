@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+/build
+include/akali_config.h

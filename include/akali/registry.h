@@ -56,11 +56,13 @@ class AKALI_API RegKey {
   HRESULT GetDWORDValue(LPCWSTR pszValueName, DWORD* pdwDataOut) const;
   HRESULT GetBINARYValue(LPCWSTR pszValueName, LPBYTE pbDataOut, int cbDataOut) const;
   HRESULT GetSZValue(LPCWSTR pszValueName, OUT std::wstring& strValue) const;
+  HRESULT GetExpandSZValue(LPCWSTR pszValueName, bool bRetrieveExpandedString, OUT std::wstring& strValue) const;
   HRESULT GetMultiSZValue(LPCWSTR pszValueName, OUT std::vector<std::wstring>& vStrValues) const;
   int GetValueBufferSize(LPCWSTR pszValueName) const;
   HRESULT SetDWORDValue(LPCWSTR pszValueName, DWORD dwData);
   HRESULT SetBINARYValue(LPCWSTR pszValueName, const LPBYTE pbData, int cbData);
   HRESULT SetSZValue(LPCWSTR pszValueName, const std::wstring& strData);
+  HRESULT SetExpandSZValue(LPCWSTR pszValueName, const std::wstring& strData);
   HRESULT SetMultiSZValue(LPCWSTR pszValueName, const std::vector<std::wstring>& vStrValues);
 
   HRESULT GetSubKeys(std::vector<std::wstring>& subKeys);
@@ -75,6 +77,7 @@ class AKALI_API RegKey {
   mutable HKEY m_hkey;
   HANDLE m_hChangeEvent;
   HANDLE m_hNotifyThr;
+  DWORD m_dwSamDesired;
   DWORD m_dwChangeFilter;
   std::wstring m_strSubKey;
   bool m_bWatchSubtree;

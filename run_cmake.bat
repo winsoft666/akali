@@ -40,7 +40,9 @@ if "%~2" NEQ "" (
 	set VCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET%-%~2
 	if "%~2" EQU "windows" (
 		if "%~1" EQU "x64" (
-			set CMAKE_GENERATOR=%CMAKE_GENERATOR% Win64
+			set ARCH=x64
+		) else (
+			set ARCH=Win32
 		)
 	)
 )
@@ -63,7 +65,9 @@ goto :eof
 setlocal
 set VCPKG_TARGET_TRIPLET=
 set BUILD_SHARED_LIBS=
-set CMAKE_GENERATOR=Visual Studio 15 2017
+set CMAKE_GENERATOR=Visual Studio 16 2019
+set TOOLSET=v141
+set ARCH=Win32
 
 call :ParseArgs %*
 
@@ -81,6 +85,6 @@ if "" == "%BUILD_SHARED_LIBS%" (
 
 vcpkg install gtest:%VCPKG_TARGET_TRIPLET%
 
-cmake.exe -G "%CMAKE_GENERATOR%" -DCMAKE_TOOLCHAIN_FILE=D:\sourcecode\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DCMAKE_INSTALL_PREFIX=D:\Teemo -DBUILD_TESTS=ON -S %~dp0 -B %~dp0build
+cmake.exe -G "%CMAKE_GENERATOR%" -T "%TOOLSET%" -A "%ARCH%" -DCMAKE_TOOLCHAIN_FILE=D:\sourcecode\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DCMAKE_INSTALL_PREFIX=D:\Akali -DBUILD_TESTS=ON -S %~dp0 -B %~dp0build
 endlocal
 goto :eof

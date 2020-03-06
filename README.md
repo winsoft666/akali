@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/winsoft666/akali.svg?branch=master)](https://travis-ci.com/winsoft666/akali)
+[![Vcpkg package](https://img.shields.io/badge/Vcpkg-package-blueviolet)](https://github.com/microsoft/vcpkg/tree/master/ports/akali)
 
 [>>> 中文版](README_ch.md)
 

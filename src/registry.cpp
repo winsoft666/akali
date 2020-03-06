@@ -27,6 +27,7 @@ RegKey::RegKey(HKEY hkeyRoot, LPCWSTR pszSubKey)
     , m_hNotifyThr(NULL)
     , m_bWatchSubtree(false)
     , m_dwChangeFilter(0)
+    , m_dwSamDesired(0)
     , m_strSubKey(pszSubKey) {}
 
 RegKey::~RegKey(void) {
@@ -40,6 +41,7 @@ LSTATUS RegKey::Open(REGSAM samDesired, bool bCreate) {
   LSTATUS dwResult = ERROR_SUCCESS;
   Close();
 
+  m_dwSamDesired = samDesired;
   if (bCreate) {
     DWORD dwDisposition;
     dwResult = RegCreateKeyEx(m_hkeyRoot, m_strSubKey.c_str(), 0, NULL, 0, samDesired, NULL,
@@ -87,6 +89,8 @@ void RegKey::Close(void) {
     CloseHandle(m_hNotifyThr);
     m_hNotifyThr = NULL;
   }
+
+  m_dwSamDesired = 0;
 }
 
 HRESULT RegKey::WatchForChange(DWORD dwChangeFilter, bool bWatchSubtree) {
@@ -206,6 +210,45 @@ HRESULT RegKey::GetSZValue(LPCWSTR pszValueName, OUT std::wstring& strValue) con
   return hr;
 }
 
+HRESULT RegKey::GetExpandSZValue(LPCWSTR pszValueName,
+                                 bool bRetrieveExpandedString,
+                                 OUT std::wstring& strValue) const {
+  WCHAR szBuf[MAX_PATH] = {0};
+  DWORD dwSize = MAX_PATH * sizeof(WCHAR);
+  DWORD dwFlags = RRF_RT_ANY | RRF_ZEROONFAILURE;
+  if (!bRetrieveExpandedString) {
+    dwFlags |= RRF_NOEXPAND;
+    dwFlags |= RRF_RT_REG_EXPAND_SZ;
+  }
+  else {
+    dwFlags |= RRF_RT_REG_SZ;
+  }
+
+  if (m_dwSamDesired & KEY_WOW64_64KEY)
+    dwFlags |= RRF_SUBKEY_WOW6464KEY;
+  else if (m_dwSamDesired & KEY_WOW64_32KEY)
+    dwFlags |= RRF_SUBKEY_WOW6432KEY;
+  else
+    dwFlags |= RRF_SUBKEY_WOW6432KEY;
+
+  LSTATUS status =
+      RegGetValueW(m_hkeyRoot, m_strSubKey.c_str(), pszValueName, dwFlags, NULL, szBuf, &dwSize);
+  if (status == ERROR_MORE_DATA) {
+    WCHAR* pBuf = new WCHAR[dwSize / sizeof(WCHAR)];
+    memset(pBuf, 0, dwSize);
+    status =
+        RegGetValueW(m_hkeyRoot, m_strSubKey.c_str(), pszValueName, dwFlags, NULL, pBuf, &dwSize);
+
+    strValue.assign(pBuf, dwSize);
+    SAFE_DELETE_ARRAY(pBuf);
+  }
+  else if (status == ERROR_SUCCESS) {
+    strValue.assign(szBuf, dwSize);
+  }
+
+  return status;
+}
+
 HRESULT RegKey::GetMultiSZValue(LPCWSTR pszValueName,
                                 OUT std::vector<std::wstring>& vStrValues) const {
   HRESULT hr = E_FAIL;
@@ -246,6 +289,11 @@ HRESULT RegKey::SetBINARYValue(LPCWSTR pszValueName, const LPBYTE pbData, int cb
 
 HRESULT RegKey::SetSZValue(LPCWSTR pszValueName, const std::wstring& strData) {
   return SetValue(pszValueName, REG_SZ, (const LPBYTE)strData.c_str(),
+                  (strData.length()) * sizeof(WCHAR));
+}
+
+HRESULT RegKey::SetExpandSZValue(LPCWSTR pszValueName, const std::wstring& strData) {
+  return SetValue(pszValueName, REG_EXPAND_SZ, (const LPBYTE)strData.c_str(),
                   (strData.length()) * sizeof(WCHAR));
 }
 

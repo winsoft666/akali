@@ -372,7 +372,7 @@ bool Process::Kill(const string_type& executed_file_name, bool /*force*/) noexce
   if (executed_file_name.length() == 0)
     return false;
 
-  bool ret = true;
+  bool ret = false;
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
   if (snapshot) {
@@ -383,11 +383,9 @@ bool Process::Kill(const string_type& executed_file_name, bool /*force*/) noexce
       do {
         if (lstrcmpi(process.szExeFile, executed_file_name.c_str()) == 0) {
           HANDLE process_handle = OpenProcess(PROCESS_TERMINATE, FALSE, process.th32ProcessID);
-          if (!process_handle)
-            ret = false;
           if (process_handle) {
-            if (!TerminateProcess(process_handle, 2))
-              ret = false;
+            if (::TerminateProcess(process_handle, 2))
+              ret = true;
             CloseHandle(process_handle);
           }
         }
@@ -439,9 +437,10 @@ void Process::RecursiveKill(const string_type& dir, bool exclude_self) noexcept 
             if (_tcscmp(filedata.cFileName, pSelf) == 0)
               teminate = false;
           }
-          if (teminate)
-            while (TerminateProcess(filedata.cFileName, 333))
-              ;
+          if (teminate) {
+            int tryTimes = 0;
+            while (Process::Kill(filedata.cFileName, 333) && ++tryTimes < 20);
+          }
         }
       }
     }
@@ -473,9 +472,10 @@ void Process::RecursiveKill(const string_type& dir, bool exclude_self) noexcept 
               if (_tcscmp(filedata.cFileName, pSelf) == 0)
                 teminate = false;
             }
-            if (teminate)
-              while (TerminateProcess(filedata.cFileName, 2))
-                ;
+            if (teminate) {
+              int tryTimes = 0;
+              while (Process::Kill(filedata.cFileName, 2) && ++tryTimes < 20);
+            }
           }
         }
       }

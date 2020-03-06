@@ -7,6 +7,7 @@ TEST(WinProcessTest, Create1) {
   EXPECT_TRUE(p.GetId() != 0);
   EXPECT_TRUE(p.Successed());
   EXPECT_TRUE(p.Kill(p.GetId()));
+
 }
 #else
 TEST(UnixProcessTest, Create1) {

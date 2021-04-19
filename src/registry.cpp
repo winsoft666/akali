@@ -239,11 +239,11 @@ HRESULT RegKey::GetExpandSZValue(LPCWSTR pszValueName,
     status =
         RegGetValueW(m_hkeyRoot, m_strSubKey.c_str(), pszValueName, dwFlags, NULL, pBuf, &dwSize);
 
-    strValue.assign(pBuf, dwSize);
+    strValue = pBuf;
     SAFE_DELETE_ARRAY(pBuf);
   }
   else if (status == ERROR_SUCCESS) {
-    strValue.assign(szBuf, dwSize);
+    strValue = szBuf;
   }
 
   return status;
